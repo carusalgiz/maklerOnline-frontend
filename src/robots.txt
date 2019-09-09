@@ -1,0 +1,3 @@
+User-agent: *
+Sitemap: https://makleronline.net/#/sitemap.xml
+Host: makleronline.net

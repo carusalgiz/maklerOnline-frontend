@@ -1,0 +1,354 @@
+
+.bar1, .bar2, .bar3{
+  width: 25px;
+  height: 2px;
+  background-color: #b8b8b8;
+  margin: 3px 0;
+  transition: 0.4s;
+}
+.hideMenu{
+  margin: 0 30px;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.companyName{
+  flex-grow: 1;
+  padding-left: 20px;
+  font-family: Cadillac, sans-serif;
+  font-size: 14px;
+  color: #b8b8b8;
+}
+.stepDescription{
+  display: flex;
+  align-items: center;
+}
+.howItWorks{
+      padding: 35px 20px 35px 20px;
+  background-color: white;
+  font-family: Cadillac, sans-serif;
+  font-size: 14px;
+  color: #414141;
+}
+.titleWorks{
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+.step{
+  margin-bottom: 20px;
+  display: flex;
+  width: calc(100vw - 40px);
+}
+.stepNum{
+  padding-right: 30px;
+  display: flex;
+  justify-content: center;
+  flex: 0 0 10%;
+  font-family: Stolzl, cursive;
+  font-size: 40px;
+  color: #677578;
+}
+.textRent{
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+.countLine.mobile{
+  padding: 10px 0;
+  flex-direction: column;
+  justify-content: center;
+  height: 123px;
+  background-color: #252f32;
+}
+.add{
+  position: relative;
+  top: -10px;
+  font-family: Cadillac, sans-serif;
+  font-size: 14px;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+.footer-bottom{
+  flex-direction: column;
+  top: -60px;
+  padding-bottom: 0;
+  position: unset;
+  margin-left: 20px;
+margin-right: 20px;
+width: calc(100vw - 40px);
+  font-size: 10px;
+}
+.contacts-left{
+  display: flex;
+  flex-direction: column;
+  line-height: 25px;
+  width: 120px;
+}
+.contacts-left{
+  width: 150px;
+}
+.contacts-right{
+  display: flex;
+  flex-direction: column;
+  line-height: 25px;
+  width: auto;
+}
+.footer-title{
+  margin-bottom: 16px;
+  font-size: 14px;
+  min-width: 180px;
+}
+.partnership{
+  flex-grow: 1;
+  align-items: center;
+}
+.contacts{
+    margin-left: 20px;
+  margin-right: 20px;
+}
+.contacts, .partnership{
+  display: flex;
+  flex-direction: column;
+  max-width: calc(100vw - 40px);
+}
+.line{
+  height: 3px;
+  border-bottom: white solid 1px;
+  width: calc(100vw - 30px);
+  margin: 0 15px 20px 15px;
+}
+.login-block {
+  display: flex;
+  flex-grow: 1;
+  justify-content: flex-end;
+}
+.footer-top, .footer-center, .footer-bottom{
+  font-family: Cadillac, sans-serif;
+  font-size: 12px;
+  color: white;
+  letter-spacing: .086rem;
+  display: flex;
+  padding-bottom: 30px;
+}
+.footer-top{
+  width: 100vw;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 20px;
+}
+.footer-center{
+  width: calc(100vw - 340px);
+}
+.button-login{
+  font-size: 14px;
+  color: white;
+  border: 1px solid white;
+  height: 40px;
+  width: calc(100vw - 40px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Cadillac, sans-serif;
+  letter-spacing: .086rem;
+  transition: 0.3s;
+}
+.button-login:hover {
+  background-color: white;
+  color: #4b4b4b;
+}
+.social-icons{
+  display: flex;
+  justify-content: space-between;
+  padding: 30px 0 20px 0;
+  width: calc(100vw - 60px);
+}
+.social-icons img{
+  height: 40px;
+  width: 40px;
+  margin: 0 5px;
+}
+a.social-link{
+  text-decoration: none;
+  color: white;
+  max-width: 200px;
+}
+.icon{
+  margin-left: 15px;
+}
+.footer{
+  width: 100vw;
+  background-color: #252f32;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+.innerObj{
+  margin: 0 15px;
+}
+.special{
+  font-size: 90px;
+}
+.firstMenuObj{
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+.lastMenuObj{
+  margin-right: 120px;
+}
+.anniversaryDate{
+  font-family: Helvetica, sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  line-height: 30px;
+}
+.year{
+  font-family: Helvetica, sans-serif;
+  position: relative;
+  margin-left: 15px;
+  top: -17px;
+  left: -7px;
+  font-size: 10px;
+  margin-right: 0;
+}
+.anniversaryYear{
+  position: relative;
+  font-family: Sail, sans-serif;
+  top: -14px;
+  font-size: 80px;
+}
+.countLineNumber{
+  font-style: italic;
+  font-weight: bold;
+  font-family: Stolzl, cursive;
+  color: white;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  font-size: 32px;
+}
+.countLineWord{
+  font-style: normal;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  font-weight: normal;
+  font-family: Cadillac, sans-serif;
+  color: #d3d5d6;
+}
+.title{
+  font-family: Cadillac, sans-serif;
+  letter-spacing: 0.09em;
+  display: flex;
+  flex-direction: column;
+}
+.uselessLineHome{
+  align-items: center;
+  height: 50px;
+  width: 100vw;
+  background-color: #252f32;
+  display: flex;
+  transition: 0.3s;
+}
+.logoTitle1{
+  font-size: 26px;
+  margin-top: 80px;
+}
+.infoText{
+  color: #4b4b4b;
+  background-color: #f7f7f7;
+  padding: 10px 20px;
+  margin: 0 16px;
+  font-size: 14px;
+  position: relative;
+  top: 52vh;
+  display: flex;
+  justify-content: center;
+  letter-spacing: 0;
+}
+.logoTitle2{
+  letter-spacing: 0.10em;
+  color: white;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  top: 60vh;
+  font-size: 16px;
+}
+.logoTitle3{
+  font-size: 50px;
+  position: relative;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  top: 37px;
+  left: 20px;
+  margin: 0;
+  max-width: calc(100vw - 20px);
+}
+.picture{
+  height: 100vh;
+  overflow: hidden;
+}
+.mainHome{
+  height: max-content;
+  transition: 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-size: auto calc(100vh - 65px);
+  margin-top: 90px;
+  min-height: 100vh;
+  background: unset;
+  background: url('../../../../assets/background-main1.jpg');
+  background-position-x: 80%;
+  background-size: auto 100vh;
+}
+.inner-main{
+  height: 100%;
+}
+.inner-main::-webkit-scrollbar { width: 0;height: 0; }
+.mainImg{
+  width: 100vw;
+}
+.countLine{
+  height: 214px;
+  width: 100vw;
+  background-color: white;
+  display: flex;
+  align-items: center;
+}
+.countLine.yearBlock{
+  height: 117px;
+}
+.imgnondisp{
+  display: none;
+}
+.openMain{
+    display: block;
+}
+.closeMain{
+    display: none;
+}
+#num1, #num2, #num3{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+#num1, #num3{
+  flex: 0 0 35%;
+}
+#num2{
+  flex: 0 0 30%;
+}
+
+@media all and (max-width: 450px){
+  .logoTitle3{
+    font-size: 24px;
+  }
+  .logoTitle3 .special{
+    font-size: 34px;
+  }
+}

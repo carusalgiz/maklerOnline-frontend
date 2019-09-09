@@ -1,0 +1,131 @@
+<!--The content below is only a placeholder and can be replaced.  || innerBlockOpen == 'menu'-->
+<div  [class.openMain]="blockOpenInput == 'open_menu'"
+      [class.closeMain]="blockOpenInput != 'open_menu'">
+
+
+<div style="-webkit-overflow-scrolling: touch;max-height: 100%;">
+<header class="header" [style.top.px]="headerPos">
+  <div class="top-logo-block">
+      <a class="logo-mobile" style="outline: none;text-decoration: none"
+           href="//makleronline.net/#/m">
+        <div>MAKLERONLINE</div>
+        <div class="logo-mobile-title">ГРУППА КОМПАНИЙ ZAVRUS</div>
+      </a>
+    <div class="hideMenu" (click)="checklogin();displayMenu('show');menuOpen('open')">
+      <div class="bar1"></div>
+      <div class="bar2"></div>
+      <div class="bar3"></div>
+    </div>
+    <div class="hideMenu exit-close" (click)="closeFunc('smth');menuOpen('close')">
+      <div class="barExit1"></div>
+      <div class="barExit2"></div>
+    </div>
+  </div>
+</header>
+
+<div class="menuMobile" [class.open]="mobileMenuActive">
+  <div style="display: flex;margin-bottom: 25px;">
+    <a class="logo-mobile contact-menu-info"   (click)="displayMenu('hide');closeButtons(); homePageOpen(false);menuOpen('close')"
+       href="//makleronline.net/#/m"  style="outline: none;text-decoration: none;margin-left: 30px;color: #8F8F8F" [class.close]="logged_in">
+      <div>MAKLERONLINE</div>
+      <div class="logo-mobile-title">ГРУППА КОМПАНИЙ ZAVRUS</div>
+    </a>
+    <div class="contact-block contact-menu-info" [class.close]="!logged_in">
+      <div><img src="../../../assets/unnamed.png" width="30px" height="30px"></div>
+      <div class="contact-info">
+        <div>{{userEmail}}</div>
+        <div>Доступ Премиум</div>
+      </div>
+    </div>
+    <div style="margin-right: 30px;height: 20px;" (click)="displayMenu('hide');menuOpen('close')">
+      <div class="barMenu1"></div>
+      <div class="barMenu2"></div>
+    </div>
+  </div>
+  <!-- <div class="contact-mobile">
+    <img src="../../../assets/photo.PNG" width="50px" height="50px">
+    <div class="user-mobile-menu">
+      <div>ИВАНОВ Иван</div>
+      <div style="font-size: 10px">ЭКСПЕРТ</div>
+    </div>
+  </div> -->
+  <div class="line"></div>
+  <ul>
+    <li><a style="outline: none;text-decoration: none"  class="mobileBlock" (click)=" displayMenu('hide');closeButtons(); homePageOpen(false);menuOpen('close')"
+           href="//makleronline.net/#/m">
+      <div class="mobUl">ГЛАВНАЯ</div>
+    </a></li>
+    <li>
+      <a class="mobileBlock" (click)="objectMenu = !objectMenu">
+        <div class="mobUl">ПРЕДЛОЖЕНИЯ</div>
+    </a>
+      <ul class="innerUL" *ngIf="objectMenu">
+        <!--<li>-->
+          <!--<div style="display: flex">-->
+            <!--<div (click)="closeButtons()">ДОБАВИТЬ ОБЪЕКТ</div>-->
+            <!--<div style="margin-left: 15px">-->
+              <!--<div class="plusBar"></div>-->
+              <!--<div class="plusBar1"></div>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</li>-->
+        <li>
+          <div style="display: flex">
+            <div style="flex-grow: 1" (click)="displayMenu('hide');closeButtons();homePageOpen(true);menuOpen('close')">
+              <a style="outline: none;text-decoration: none" class="innerMenu" href="//makleronline.net/#/m/objects/list">Все предложения</a></div>
+          </div>
+        </li>
+        <li>
+          <div style="display: flex">
+            <div (click)="displayMenu('hide');closeButtons();menuOpen('close')"  style="flex-grow: 1"><a style="outline: none;text-decoration: none" class="innerMenu" href="//makleronline.net/#/m/objects/filters">Избранное</a></div>
+          </div>
+        </li>
+        <li>
+          <div style="display: flex">
+            <div (click)="displayMenu('hide');closeButtons();menuOpen('close')" style="flex-grow: 1"><a style="outline: none;text-decoration: none" class="innerMenu" href="//makleronline.net/#/m/objects/history">Добавить предложение</a></div>
+          </div>
+        </li>
+      </ul>
+    </li>
+        <!--<li><a class="mobileBlock" (click)="displayMenu('hide');closeButtons(); homePageOpen(true)">-->
+          <!--<div class="mobUl">ПРОСМОТРЕННОЕ</div>-->
+        <!--</a></li>-->
+        <!--<li><a class="mobileBlock" (click)="displayMenu('hide');closeButtons(); homePageOpen(true)">-->
+          <!--<div class="mobUl">ИЗБРАННОЕ</div>-->
+        <!--</a></li>-->
+    <!--<li><a style="outline: none;text-decoration: none" class="mobileBlock" (click)="displayMenu('hide');closeButtons();menuOpen('close'); homePageOpen(true)">-->
+      <!--<div class="mobUl">ОСТАВИТЬ ОТЗЫВ</div>-->
+    <!--</a></li>-->
+    <!--<li><a style="outline: none;text-decoration: none" class="mobileBlock" (click)="displayMenu('hide');closeButtons(); menuOpen('close');homePageOpen(true)">-->
+      <!--<div class="mobUl">МОИ ЗАЯВКИ</div>-->
+    <!--</a></li>-->
+        <!--<li><a class="mobileBlock" (click)="displayMenu('hide');closeButtons(); homePageOpen(true)">-->
+          <!--<div class="mobUl">ДОБАВИТЬ ОБЪЕКТ</div>-->
+        <!--</a></li>-->
+    <li><a style="outline: none;text-decoration: none" class="mobileBlock" (click)="openBlock('pay'); homePageOpen(false);">
+      <div class="mobUl">ОПЛАТА</div>
+    </a></li>
+    <li><a style="outline: none;text-decoration: none" class="mobileBlock exit" [class.close]="logged_in"  (click)="openBlock('login'); homePageOpen(false);">
+      <div class="mobUl">ВОЙТИ</div>
+    </a></li>
+    <li><a style="outline: none;text-decoration: none" class="mobileBlock exit"  [class.close]="!logged_in" *ngIf="logged_in" (click)=" log_out(); homePageOpen(false);">
+      <div class="mobUl">ВЫЙТИ</div>
+    </a></li>
+  </ul>
+</div>
+</div>
+</div>
+<div class="add-block-menu" [class.open]="blockOpenInput == 'open_login' || innerBlockOpen == 'login'" >
+  <app-login [otherComponent]="false" [itemOpen]="true" (userLoggedIn)="checklogin()" (blockClose)="closeFunc($event)"
+  ></app-login>
+</div>
+<div class="add-block-menu open" *ngIf="blockOpenInput == 'open_pay' || innerBlockOpen == 'pay'">
+  <app-pay [otherComponent]="false" [updateBalance]="logged_in" [itemOpen]="true" [redirect]="redirect" (days)="days = $event" (time)="time = $event" (blockClose)="closeFunc($event)">
+  </app-pay>
+</div>
+  <div class="add-block-menu" [class.open]="blockOpenInput == 'open_proposal' || innerBlockOpen == 'proposal'">
+  <app-proposal (blockClose)="closeFunc($event)" (checkOutput)="closeFunc($event); addFunc($event); openBlock($event)"></app-proposal>
+  </div>
+  <div class="add-block-menu" [class.open]="blockOpenInput == 'open_agreement' || innerBlockOpen == 'agreement'"><app-agreement (blockClose)="closeFunc($event)" [mode]="'agreement'"></app-agreement></div>
+  <div class="add-block-menu" [class.open]="blockOpenInput == 'open_agreement_add' || innerBlockOpen == 'agreement_add'"><app-agreement (blockClose)="closeFunc($event)" [mode]="'addition'"></app-agreement></div>
+

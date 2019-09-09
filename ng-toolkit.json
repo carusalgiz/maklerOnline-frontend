@@ -1,0 +1,8 @@
+{
+  "universal": {
+    "project": "maklerOnline-fe",
+    "skipInstall": false,
+    "directory": ".",
+    "http": true
+  }
+}

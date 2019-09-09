@@ -1,0 +1,116 @@
+<app-menu [headerPos]="headerPos" (openMenu)="menuMode($event)" [blockOpenInput]="blockInputOpen" *ngIf="(blockInputOpen != 'open_item' && blockMode != 'item') || (blockInputOpen != 'open_menu' && blockMode == 'item') "></app-menu>
+<div [class.openMain]="!menuOpen && blockInputOpen != 'open_login' && blockInputOpen != 'open_pay'" [class.closeMain]="menuOpen || blockInputOpen == 'open_login' || blockInputOpen == 'open_pay'">
+  <!--<a class="show-items" *ngIf="blockMode == 'filters'" (click)="get_list();this.blockMode = 'items'">-->
+    <!--<div class="show-items-button">-->
+      <!--<span>ПОКАЗАТЬ <span class="numObj">{{countOfItems}}</span> ПРЕДЛОЖЕНИЙ</span>-->
+      <!--<div class="exitButton">-->
+        <!--<div class="barMenu1"></div>-->
+        <!--<div class="barMenu2"></div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</a>-->
+  <div class="bottom-buttons1" *ngIf="blockMode == 'item' && !logged_in" (click)="blockInputOpen = 'open_login'">
+    <a class="show-contact-button" style=" text-decoration: none">
+      <!--<img src="../../../../assets/phone-white.png" width="30px" height="30px">-->
+      <!--<span style="margin-left: 20px">+ 7 (924) 403-00-01</span>-->
+      <span>КОНТАКТЫ</span>
+    </a>
+  </div>
+  <div class="bottom-buttons1" *ngIf="blockMode == 'item' && logged_in && timeAdd != 'true'" (click)="blockInputOpen = 'open_pay'">
+    <a class="show-contact-button" style=" text-decoration: none">
+      <!--<img src="../../../../assets/phone-white.png" width="30px" height="30px">-->
+      <!--<span style="margin-left: 20px">+ 7 (924) 403-00-01</span>-->
+      <span>КОНТАКТЫ</span>
+    </a>
+  </div>
+  <div class="bottom-buttons1" *ngIf="blockMode == 'item' && logged_in && timeAdd == 'true'">
+    <a class="show-contact-button" style=" text-decoration: none;background-color: #00695C">
+      <img src="../../../../assets/phone-white.png" width="30px" height="30px">
+      <span style="margin-left: 20px">+ 7 (924) 403-00-01</span>
+    </a>
+  </div>
+  <!--(click)="openBlock('app')"-->
+  <div class="bottom-buttons1" *ngIf="blockMode == 'filters'" (click)="get_list();this.blockMode = 'items'">
+    <div class="show-contact-button" style="background-color: #252f32">
+      <!--<span>ОСТАВИТЬ ЗАЯВКУ</span>-->
+      <span>ПОКАЗАТЬ <span class="numObj">{{countOfItems}}</span> ПРЕДЛОЖЕНИЙ</span>
+      <!--<div class="exitButton">-->
+        <!--<div class="barMenu1"></div>-->
+        <!--<div class="barMenu2"></div>-->
+      <!--</div>-->
+    </div>
+  </div>
+  <a class="bottom-buttons1 hideFilterButton" *ngIf="blockMode == 'items'" (click)="this.blockMode = 'filters'" [style.bottom.px]="bottomPxButton">
+    <div class="show-contact-button" style="background-color: #252f32">
+      <span>ПЕРЕЙТИ К ФИЛЬТРАМ</span>
+      <div class="exitButton">
+        <div class="barMenu1"></div>
+        <div class="barMenu2"></div>
+      </div>
+    </div>
+  </a>
+  <div class="main-objects" [style.padding-top.px]="mainObjectsPadding" [class.item-full-open]=" blockMode == 'item'" *ngIf="blockInputOpen != 'open_login' && blockInputOpen != 'open_pay'">
+    <div class="inner-left">
+      <div class="map" [class.open]="mapOpen"
+           *ngIf="this.blockMode == 'map';">
+        <agm-map class="map-inner" [latitude]="lat" [longitude]="lng" [zoom]="15" [disableDefaultUI]="true"
+                 [styles]="styles">
+          <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+        </agm-map>
+      </div>
+      <app-item  (closeItem)="blockInputOpen = 'open_menu'; blockMode = 'items'" [class.open]="blockMode == 'item' && (blockInputOpen =='open_menu' || blockInputOpen == 'close_menu')" *ngIf="blockMode == 'item' && (blockInputOpen =='open_menu' || blockInputOpen == 'close_menu')" [id]="item.id" [currentPage]="currentPage"
+                (similarItem)="similarObj($event)" (showInfoEvent)="info($event)"
+                (favouriteItemEvent)="addFav($event)" (contactPos)="setContactPos($event)" [item]="item" [mode]="'full'"
+                [similarOpen]="false">
+      </app-item>
+
+      <div class="filters open" *ngIf="this.blockMode != 'map'" (touchstart)="touchstart($event)" (touchend)="touchend($event)">
+        <div class="scroll-items open"
+             *ngIf="blockMode == 'items'">
+          <app-item *ngFor="let obj of items, let i = index" [item]="obj" [id]="i" [mode]="'middle'"
+                    [watched]="watchedItems.indexOf(i) != -1"
+                    (click)="checkClick(i,obj, $event)">
+          </app-item>
+        </div>
+        <app-filters-mobile *ngIf="blockMode == 'filters'" class="filters-box" (coordsPol)="getCoords($event)" [initCoords]="initCoords" [initZoom]="initZoom"
+                            [class.open]="blockMode == 'filters'" (sendFilters)="setFilters($event)"
+                            (sendSort)="setSort($event)" (sendEquipment)="setEquipment($event)"
+                            (countOfItems)="countOfItems = $event"
+                            (sendMainButtonActive)="getFiltersClicked($event)" (changedCenter)="initCoords = $event" (changedZoom)="initZoom = $event"></app-filters-mobile>
+
+
+        <!--<div *ngIf="loginActive">-->
+          <!--<app-login [otherComponent]="false" [itemOpen]="true" (blockClose)="close($event)"-->
+          <!--&gt;</app-login>-->
+        <!--</div>-->
+        <!--<div *ngIf="payActive">-->
+          <!--<app-pay [itemOpen]="true" (blockClose)="close($event)"></app-pay>-->
+        <!--</div>-->
+        <div *ngIf="blockMode == 'contact'">
+          <app-contact [itemOpen]="true" (checkPay)="info($event)" (blockClose)="close($event)"></app-contact>
+        </div>
+        <div *ngIf="blockMode == 'egrn'">
+          <app-egrn [item]="item" [itemOpen]="true" (blockClose)="close($event)"></app-egrn>
+        </div>
+
+        <div class="history" *ngIf="blockMode == 'history'">
+          <div class="inner-history-objects">
+            <div class="scroll-items open">
+              <div style="display: flex;justify-content: center;    margin-top: 10px;">
+                <div class="history-obj"
+                     style="font-size: 15px;margin-top: 5px;margin-bottom: 10px;text-align: center;padding: 0;">
+                  CЕГОДНЯ
+                </div>
+              </div>
+              <div style="border-bottom:1px solid #9d8c6c;width: calc(100% - 50px);margin: 10px 25px;"></div>
+              <app-item *ngFor="let it of historyItems, let i = index" style="border-bottom: 1px solid #d3d5d6" [historyOpen]="true" [historyId]="i" [id]="it.id" [routerLink]="['../../objects', 'item']" [item]="it" [mode]="'middle'">
+              </app-item>
+              <div class="button-history">ЗА ВСЕ ВРЕМЯ</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

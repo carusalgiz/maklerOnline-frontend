@@ -1,0 +1,75 @@
+<div class="main">
+  <div class="right-block addRight">
+    <div class="exitButton" *ngIf="itemOpen" (click)="blockCloseFunc('egrn')">
+      <div class="barMenu1"></div>
+      <div class="barMenu2"></div>
+    </div>
+    <div class="contact-info">
+      <div class="contact-photo-rating">
+        <img src="../assets/photo.PNG" width="60px" height="60px"/>
+        <div class="s_rating">
+          <div class="s_rating_block">
+            <input name="s_rating" value="5" id="s_rating_5" type="radio" />
+            <label for="s_rating_5" class="s_label_rating"></label>
+          </div>
+          <span class="rating-count">4,25</span>
+        </div>
+      </div>
+      <div class="contact-user-info">
+        <span class="rating-count" style="font-weight: bold">ИВАНОВ Иван</span>
+        <span class="text" style="font-size: 10px">ЭКСПЕРТ</span>
+        <div class="line top"></div>
+        <div class="user-info">
+          <div class="text">Телефон рабочий</div>
+          <div class="text">+7(4212) 63-77-55</div>
+        </div>
+        <div class="line top"></div>
+        <div class="text">Электронный адрес</div>
+        <div class="line top"></div>
+        <div class="text">Организация</div>
+        <div class="line top"></div>
+        <div class="text">Сайт</div>
+      </div>
+    </div>
+    <div class="line add"></div>
+    <div style="margin-bottom: 30px;margin-right: 30px;">
+      <span class="font" style="font-size: 16px;width: 22vw;">ЗАПРОСИТЬ ИНФОРМАЦИЮ ИЗ ГОСУДАРСТВЕННОГО РЕЕСТРА</span>
+    </div>
+    <div style="margin-right: 30px">
+      <div class="input-block">
+        <div class="text">Ваше имя</div>
+        <input type="text" class="input-field"/>
+      </div>
+      <div class="line bottom"></div>
+      <div class="input-block">
+        <div class="text">Телефон</div>
+        <input type="text" class="input-field"/>
+      </div>
+      <div class="line bottom"></div>
+      <div class="input-block">
+        <div class="text">Электронный адрес</div>
+        <input type="text" class="input-field"/>
+      </div>
+    </div>
+    <div class="line add"></div>
+    <div style="margin-bottom: 30px; display: flex; flex-direction: column">
+      <span class="font" style="font-size: 16px">ИНФОРМАЦИЯ НА ОБЪЕКТ ПО АДРЕСУ</span>
+      <div class="font" style="font-size: 16px">
+        <span>г.Хабаровск,ул.</span>
+        <span style="text-transform: uppercase;margin-left:5px">{{item.address}}</span>
+        <span style="margin-left:5px">{{item.house_num}}</span>
+      </div>
+    </div>
+    <div class="button-choose" (click)="selectedERGNButton($event)">ЗАКАЗАТЬ ОБЩИЕ СВЕДЕНИЯ ОБ ОБЪЕКТЕ</div>
+    <div class="button-choose" (click)="selectedERGNButton($event)">ЗАКАЗАТЬ ПЕРЕХОД ПРАВА СОБСТВЕННОСТИ</div>
+    <div class="check-block font" style="margin-top: 40px;">
+      <div class="input" (click)="check=!check"><img *ngIf="check" src="../assets/check-mark.png" height="20px" width="20px"> </div>
+      <span>Регистрируясь в домене, я согласен с условиями использования и политикой конфиденциальности.</span>
+    </div>
+    <div class="check-block font">
+      <div class="input" (click)="checkNews=!checkNews"><img *ngIf="checkNews" src="../assets/check-mark.png" height="20px" width="20px"> </div>
+      <span>​ Я даю согласие на подписку на обновления и новостную рассылку.</span>
+    </div>
+    <div class="button-next">ЗАКАЗАТЬ ВЫПИСКУ</div>
+  </div>
+</div>

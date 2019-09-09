@@ -1,0 +1,69 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<header class="header">
+  <div class="top-logo-block"  >
+    <div class="logo">
+      <div><span class="logoTitle1">МАКЛЕР</span><span class="logoTitle2">ОНЛАЙН</span></div>
+      <div style="line-height: 9px;"><span class="logoTitle3">ГРУППА КОМПАНИЙ ZAVRUS</span></div>
+    </div>
+    <div class="lineh"></div>
+    <div class="logo right">
+      <div style="font-size: 16px">НЕДВИЖИМОСТЬ</div>
+      <div style="line-height: 9px; font-size: 10px;margin-top: 4px;">ХАБАРОВСК</div>
+    </div>
+  </div>
+  <div class="menu">
+    <ul>
+      <li>
+        <div class="ext">
+          <a class="menuBlock" (mousedown)="timeUpdate()" (click)="ymFunc('main-menu');selected($event)" href="//makleronline.net/#/d" routerLinkActive="active">ГЛАВНАЯ</a>
+        </div>
+      </li>
+      <li>
+        <div class="ext">
+          <a class="menuBlock" (mousedown)="timeUpdate()" (click)="ymFunc('offer-menu');selected($event); update()" href="//makleronline.net/#/d/objects/list"
+               routerLinkActive="active">ПРЕДЛОЖЕНИЯ
+          </a>
+        </div>
+      </li>
+      <!--<li>-->
+        <!--<div class="ext">-->
+          <!--<a class="menuBlock" (mousedown)="timeUpdate()" (click)="selected($event)">ЗАЯВКИ</a>-->
+        <!--</div>-->
+      <!--</li>-->
+      <!--<li>-->
+        <!--<div class="ext">-->
+          <!--<a class="menuBlock" (mousedown)="timeUpdate()" (click)="selected($event)">ОТЗЫВЫ</a>-->
+        <!--</div>-->
+      <!--</li>-->
+      <!--<li>-->
+        <!--<div class="ext">-->
+          <!--<a class="menuBlock"  (mousedown)="timeUpdate()" (click)="selected($event)">СООБЩЕНИЯ</a>-->
+        <!--</div>-->
+      <!--</li>-->
+      <li>
+        <div class="ext">
+          <a class="menuBlock" (click)="ymFunc('pay-menu');openBlock('pay')">ОПЛАТА</a>
+        </div>
+      </li>
+      <li *ngIf="userEmail == 'email'">
+        <div class="ext">
+          <a class="menuBlock" (click)="ymFunc('login-menu');openBlock('login')">ВОЙТИ</a>
+        </div>
+      </li>
+      <li *ngIf="userEmail != 'email'">
+        <div class="ext">
+          <a class="menuBlock" (click)="log_out()">ВЫЙТИ</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="loggedIn">
+    <div class="email">{{userEmail}}</div>
+    <div class="time" id="timeHeader">{{days}}{{time}}</div>
+  </div>
+</header>
+<div class="uselessLine"></div>
+<app-login class="right-slide-box" [itemOpen]="true" (userLoggedIn)="checklogin()"  (blockClose)="closeBlock($event)" (loggingMode)="Logging.emit($event)"></app-login>
+<app-pay class="right-slide-box" [itemOpen]="true" [redirect]="redirect" (payingMode)="Paying.emit($event)" [updateBalance]="loggedIn" (logout)="log_out()" (days)="days = $event" (time)="time = $event" (blockClose)="closeBlock($event)"></app-pay>
+<div class="right-slide-box agreement"><app-agreement (blockClose)="closeBlock($event)" [mode]="'agreement'"></app-agreement></div>
+<div class="right-slide-box agreement"><app-agreement (blockClose)="closeBlock($event)" [mode]="'addition'"></app-agreement></div>

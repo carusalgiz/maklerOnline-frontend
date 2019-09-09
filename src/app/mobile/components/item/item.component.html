@@ -1,0 +1,269 @@
+<div class="catalog-item" [class.item-full-open]="mode == 'full'"
+     (window:resize)="onResize()">
+  <div *ngIf="mode == 'middle'" class="mobile-blocks">
+    <div class="inner-mobile-block">
+      <div class="top-block">
+        <div class="street"><span>{{item?.address}} {{item?.house_num}}</span><div class="commission">{{item?.city}}, {{item?.admArea}}</div></div>
+      </div>
+      <div *ngIf="(mode == 'middle') || (mode =='full')">
+        <div *ngIf="imgLen == 0" class="photoBlock" style="background-size: 100% 100%;background-image: url('../../../../assets/noph.png')"  [class.watched]="watched == true"
+             [class.historyOpen]="historyOpen == true"
+             (click)="galleryOpen()">
+          <div class="starFav" (click)="item.is_fav = !item.is_fav">
+            <img class="starImg" [class.open]="!item.is_fav"  src="../../../../assets/4-4%20—mobil.png" width="22px">
+            <img class="starImg" [class.open]="item.is_fav" src="../../../../assets/4-4%20watched.png" width="22px">
+          </div>
+           </div>
+        <div *ngIf="imgLen != 0" class="photoBlock" [class.watched]="watched == true" style="    background-size: 100% 100%;"
+             [class.historyOpen]="historyOpen == true"
+             (click)="galleryOpen()">
+            <img class="img"
+                 [title]="'makleronline снять ' + item?.roomsCount + ' комнатную квартиру в хабаровске без посредников'"
+                 [alt]="'makleronline аренда ' + item?.roomsCount + ' комнатной квартиры в хабаровске без посредников'"
+                 [src]="src">
+            <div class="no-photo">{{photo_no_title}}</div>
+          <div class="starFav">
+            <img class="starImg" [class.open]="!item.is_fav"  src="../../../../assets/4-4%20—mobil.png" width="22px">
+            <img class="starImg" [class.open]="item.is_fav" src="../../../../assets/4-4%20watched.png" width="22px">
+          </div>
+        </div>
+        <div class="bottom-block">
+          <div class="topPart">
+            <div class="info">
+              <div class="rooms"><span>{{item?.roomsCount}} комнатная квартира</span></div>
+              <div><span>{{item?.floor}} / {{item?.floorsCount}} этаж </span></div>
+              <div><span>Площадь {{item?.squareTotal}} кв.м</span></div>
+            </div>
+            <div class="info" style="align-items: flex-end;">
+              <div class="price">
+                <div><span class="price-num" style="font-weight: bold;">{{formattedPrice}}</span></div>
+              </div>
+              <div><span style="font-size: 11px; color: #677578">РУБЛЕЙ / МЕСЯЦ</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div *ngIf="(mode == 'full')">
+      <div class="top-block">
+        <a class="itemArrowBack" (click)="closeItemBlock()"  href="//makleronline.net/#/m/objects/list"><img src="../../../../assets/arrow-item.png" class="iconImg" width="30px"></a>
+         <div class="info" *ngIf="mode == 'full'" style="align-items: flex-end;justify-content: center;padding-right: 20px;">
+          <div class="price">
+            <div><span class="price-num" style="font-weight: bold;">{{formattedPrice}}</span></div>
+          </div>
+          <div><span style="font-size: 11px; color: #677578">РУБЛЕЙ / МЕСЯЦ</span></div>
+        </div>
+      </div>
+      <div>
+        <div *ngIf="imgLen == 0" class="photoBlock" style="background-size: 100% 100%;background-image: url('../../../../assets/noph.png')" [class.watched]="watched == true"
+             [class.historyOpen]="historyOpen == true"
+             (click)="galleryOpen()">
+          <div class="starFav" (click)="item.is_fav = !item.is_fav">
+            <img class="starImg" [class.open]="!item.is_fav"  src="../../../../assets/4-4%20—mobil.png" width="22px">
+            <img class="starImg" [class.open]="item.is_fav" src="../../../../assets/4-4%20watched.png" width="22px">
+          </div>
+            <div class="no-photo">{{photo_no_title}}</div>
+        </div>
+        <div *ngIf="imgLen != 0" class="photoBlock" style="    background-size: 100% 100%;" [ngStyle]="{'background-image': 'url('+imgSrc+')'}" [class.watched]="watched == true"
+             [class.historyOpen]="historyOpen == true"
+             (click)="galleryOpen()">
+          <div class="starFav">
+            <img class="starImg" [class.open]="!item.is_fav"  src="../../../../assets/4-4%20—mobil.png" width="22px">
+            <img class="starImg" [class.open]="item.is_fav" src="../../../../assets/4-4%20watched.png" width="22px">
+          </div>
+        </div>
+        <div class="bottom-block">
+          <div class="street bottom" *ngIf="mode == 'full'"><span>{{item?.address}} {{item?.house_num}}</span><div class="commission">{{item?.city}}, {{item?.admArea}}</div></div>
+          <div class="lineFull"></div>
+          <span class="titleFull">Дополнительная информация</span>
+          <div class="leftTopFullBlock">
+            <div class="commission" id="busStop">Остановка {{objStop}}</div>
+            <div class="commission" id="timeToBus">Время в пути: {{timeToBusStop}}</div>
+            <div class="commission add-margin">Добавлено {{addDate}}</div>
+          </div>
+          <div class="topPart">
+            <div class="info">
+              <div class="rooms"><span>{{item?.roomsCount}} комнатная квартира</span></div>
+              <div><span>{{item?.floor}} / {{item?.floorsCount}} этаж </span></div>
+              <div><span>Площадь {{item?.squareTotal}} кв.м</span></div>
+            </div>
+          </div>
+            <div class="conditions">
+              <div class="inner-add-top">
+                <span>КОМПЛЕКТАЦИЯ ОБЪЕКТА</span>
+              </div>
+              <p style="margin: 0">
+                {{conveniences}}
+              </p>
+              <div class="inner-add-top">
+                <span>УСЛОВИЯ НАЙМА</span>
+              </div>
+              <p style="margin: 0">{{conditions}}</p>
+            </div>
+        </div>
+      </div>
+      <div class="additional">
+        <div class="lineFull"></div>
+        <span class="titleFull">Данные арендодателя</span>
+        <div class="contactBlock topRightInner">
+          <div class="contactLineBlock">
+            <div class="one">Телефон рабочий</div>
+            <div class="two"><span *ngIf="time == 'true' && loggedIn" style="font-size: 16px">{{item?.phone}}</span></div>
+          </div>
+          <div class="contactLineBlock">
+            <div class="one">Электронный адрес</div>
+            <div class="two"><span *ngIf="time == 'true' && loggedIn">{{item?.email}}</span></div>
+          </div>
+          <div class="contactLineBlock" style="padding-bottom: 10px">
+            <div class="one">Сайт</div>
+            <div class="two"></div>
+          </div>
+        </div>
+        <!--<div class="description">-->
+          <!--<div class="additional-block top">-->
+            <!--<div class="inner-add-top">-->
+              <!--<span>КОМПЛЕКТАЦИЯ ОБЪЕКТА</span>-->
+            <!--</div>-->
+            <!--<p style="margin: 0">-->
+              <!--{{conveniences}}-->
+            <!--</p>-->
+            <!--<div class="inner-add-top">-->
+              <!--<span>УСЛОВИЯ НАЙМА</span>-->
+            <!--</div>-->
+            <!--<p style="margin: 0">{{conditions}}</p>-->
+          <!--</div>-->
+        <!--</div>-->
+        <!--<div class="button-block">-->
+        <!--<div class="button-inner-text">ОТЗЫВЫ ПО ОБЪЕКТУ</div>-->
+        <!--<div class="button-inner-line"></div>-->
+        <!--<p>Мнения,и рекомендации других пользоватей – безусловно самое оптимальное социальное доказательство качества товара. </p>-->
+        <!--<input type="button" value="ПОКАЗАТЬ ОТЗЫВЫ" class="news-button" (click)="showInfo('login')">-->
+        <!--</div>-->
+        <div class="map filters-map open" id="filters-map-map"></div>
+        <!--<div class="map filters-map" id="filters-panorama"></div>-->
+        <div class="nearby-block">
+          <span style="font-weight: bold;">ЧТО РЯДОМ</span>
+          <span style="font-size: 14px;color: #677578;">Объекты инфраструктуры, развлечения...</span>
+        </div>
+        <div class="line"></div>
+        <div class="additional-nearby-block">
+          <div class="inner-additional" *ngFor="let obj of nrObjs, let i = index">
+            <div class="nearby">
+              <span>{{obj.name}} - {{obj.type}}</span>
+              <span class="bottom-text">{{obj.description}}</span>
+            </div>
+            <div style="min-width: 40px;">
+              <span>{{obj.distance}} м</span>
+            </div>
+          </div>
+        </div>
+        <!--<div class="button-block" style="flex: 0 0 calc(100% - 60px);">-->
+        <!--<div class="button-inner-text">ЗАКАЗАТЬ ВЫПИСКУ ИЗ ГОСРЕЕСТРА</div>-->
+        <!--<div class="button-inner-line"></div>-->
+        <!--<p>Выписка из ЕГРН (ЕГРП) показывает, права и обременения на недвижимое имущество, (в т. ч. у конкретного лица). </p>-->
+        <!--<input type="button" value="ЗАКАЗАТЬ ВЫПИСКУ С ЕГРН" class="news-button" (click)="showInfo('egrn')">-->
+        <!--</div>-->
+        <div class="additional-rating-block">
+          <div class="inner-add-top" style="padding: 25px 0 20px 20px">
+            <span>РЕЙТИНГ ПРИВЛЕКАТЕЛЬНОСТИ</span>
+          </div>
+          <div class="line"></div>
+          <app-rating></app-rating>
+        </div>
+        <!--<div class="inner-add-top similar">-->
+          <!--<span>ПОХОЖИЕ ОБЪЕКТЫ</span>-->
+        <!--</div>-->
+        <!--<div style="display: flex;margin-bottom: 20px;">-->
+          <!--<div class="similar-button" [class.active]="nearButton" [class.disable]="!nearButton"-->
+               <!--(click)="nearButton = true">-->
+            <!--<div style="display: flex; flex-direction: column">-->
+              <!--<span>РЯДОМ</span>-->
+              <!--<div class="wordLine" [class.active]="nearButton"></div>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<div class="similar-button" [class.active]="!nearButton" [class.disable]="nearButton"-->
+               <!--(click)="nearButton = false">-->
+            <!--<div style="display: flex; flex-direction: column">-->
+              <!--<span>ПО ЦЕНЕ</span>-->
+              <!--<div class="wordLine" [class.active]="!nearButton"></div>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+
+        <!--<div class="carousel open" id="carousel">-->
+          <!--&lt;!&ndash;<div class="arrow left" (click)="prev()"><img src="../../../../assets/arrowl.png"></div>&ndash;&gt;-->
+          <!--<div class="objects">-->
+            <!--<ul id="carousel-ul">-->
+              <!--<li class="carousel-li" *ngFor="let obj of items">-->
+                <!--<app-item class="app" [similarOpen]="true" [item]="obj" [mode]="'middle'"-->
+                          <!--(click)="similarItemOpen(obj)">-->
+                <!--</app-item>-->
+              <!--</li>-->
+            <!--</ul>-->
+          <!--</div>-->
+          <!--&lt;!&ndash;<div class="arrow right" (click)="next()"><img src="../../../../assets/arrowr.png"></div>&ndash;&gt;-->
+        <!--</div>-->
+
+        <!--<div class="button-block">-->
+        <!--<div class="button-inner-text">"ДОБАВЬТЕ ОБЪЕКТ В ИЗБРАННОЕ"</div>-->
+        <!--<div class="button-inner-line"></div>-->
+        <!--<p>Вы всегда можете просмотреть объекты из множества интересных Вам, и выбрать то что нужно. </p>-->
+        <!--<input type="button" value="ДОБАВИТЬ В ИЗБРАННОЕ" class="news-button" (click)="favouriteItem(item?.id)">-->
+        <!--</div>-->
+
+        <!--<div class="button-block">-->
+          <!--<div class="button-inner-text">ОСТАВИТЬ ЗАЯВКУ</div>-->
+          <!--<div class="button-inner-line"></div>-->
+          <!--<p style="margin: 0;height: auto;">Это бесплатно.Ничего не надо искать</p>-->
+          <!--<p style="margin: 0;height: auto;">Первым получить доступ к поступившим объектам.</p>-->
+          <!--<div class="news-button">-->
+            <!--<span>ОСТАВИТЬ ЗАЯВКУ</span>-->
+            <!--<div class="exitButton">-->
+              <!--<div class="barMenu1"></div>-->
+              <!--<div class="barMenu2"></div>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+        <!--<div class="inner-add-top" style="padding: 25px 0 20px 20px">-->
+          <!--<span>КОНТАКТНЫЕ ДАННЫЕ</span>-->
+        <!--</div>-->
+        <!--<div class="line"></div>-->
+        <!--<app-contact id="contact" [itemOpen]="true" [fullItem]="true"></app-contact>-->
+      </div>
+    </div>
+
+</div>
+
+
+<!--блок с галереей-->
+<div class="bigGalleryBlock" *ngIf="photoBlockOpen" (window:resize)="onResize()">
+  <div class="photoMenuTop">
+    <div class="arrow photo-left" (click)="prevImg()">
+      <div class="barArrowLeft1"></div>
+      <div class="barArrowLeft2"></div>
+    </div>
+    <div class="arrow photo-right" (click)="nextImg()">
+      <div class="barArrowRight1"></div>
+      <div class="barArrowRight2"></div>
+    </div>
+    <div class="exitButton" (click)="galleryClose()">
+      <div class="barMenu1"></div>
+      <div class="barMenu2"></div>
+    </div>
+  </div>
+  <div class="photo-block">
+    <div class="photoGallery" id="anchor">
+      <div class="photos">
+        <ul id="photoGallery-ul">
+          <li class="photoGallery-li" *ngFor="let img of item?.photoUrl">
+            <div class="photo-img">
+              <img class="inner-img" src="{{img}}"/>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

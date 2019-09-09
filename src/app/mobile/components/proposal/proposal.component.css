@@ -1,0 +1,82 @@
+.main::-webkit-scrollbar { width: 0;height: 0; }
+.right-block::-webkit-scrollbar { width: 0;height: 0; }
+.main{
+  display: flex;
+  overflow-y: scroll;
+  /*z-index: 1500;*/
+  top: 97px;
+  position: relative;
+  transition: 0.3s;
+  -webkit-overflow-scrolling: touch;
+}
+.right-block{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: 0.3s;
+  width: 100vw;
+  max-width: unset;
+  height: max-content;
+  min-width: unset;
+  background-color: white;
+}
+.stepDescription{
+  display: flex;
+  align-items: center;
+}
+.howItWorks{
+  padding: 35px 20px 35px 20px;
+  background-color: white;
+  font-family: Cadillac, sans-serif;
+  font-size: 14px;
+  color: #414141;
+}
+.titleWorks{
+  font-size: 12px;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+}
+.step{
+  margin-bottom: 20px;
+  display: flex;
+  width: calc(100vw - 40px);
+}
+.stepNum{
+  padding-right: 30px;
+  display: flex;
+  justify-content: center;
+  flex: 0 0 10%;
+  font-family: Stolzl, cursive;
+  font-size: 40px;
+  color: #677578;
+}
+.button-next{
+  font-size: 14px;
+  background-color: #252f32;
+  color: white;
+  height: 45px;
+  min-width: 270px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Cadillac, sans-serif;
+  margin-bottom: 36px;
+}
+.arrowBar1, .arrowBar2{
+  width: 13px;
+  height: 2px;
+  border-radius: 5px;
+  background-color: #fff;
+  margin: 3px 0;
+}
+.arrowBar1{
+  transform: rotate(37deg) translate(0px,2px);
+}
+.arrowBar2{
+  transform: rotate(-37deg) translate(-4px,3px);
+}
+.arrowBars{
+  height: 20px;
+  margin-left: 10px;
+}

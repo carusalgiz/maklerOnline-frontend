@@ -1,0 +1,156 @@
+<app-menu></app-menu>
+<div  class="mobileTopMenu" *ngIf="width <= 1050">
+  <div class="TopMenu-button-tablet arrows-mobile" routerLinkActive="active"
+       [routerLink]="['../../objects', 'list']"
+       (click)="selected($event);info('objects');deskOpen(false);activeButton = 'items';historyClose();historyActive = false;mapBig = false;filtersActive = true;
+                 itemsActive = true;filtersInnerActive = false; itemOpen = true;loginActive = false; contactActive = false;mapActive = true;ergnActive = false;">
+    <div class="TopMenu-button-word-tablet" (click) = "get_list()"><img src="../../../../assets/1-1.png" class="iconImg" width="35px"><div style="margin-bottom: 2px"></div></div>
+  </div>
+  <div class="TopMenu-button-tablet arrows-mobile" routerLinkActive="active"
+       [routerLink]="['../../objects', 'filters']"
+       (click)="selected($event);info('filters');deskOpen(false);activeButton = 'filters';historyClose();historyActive = false;mapBig = false;filtersActive = true;itemsActive = false;
+            filtersInnerActive = true; itemOpen = true;loginActive = false;contactActive = false;mapActive = true;ergnActive = false;">
+    <div class="TopMenu-button-word-tablet"><img src="../../../../assets/2-2.png" class="iconImg" width="35px"><div style="margin-bottom: 2px"></div></div>
+  </div>
+  <div class="TopMenu-button-tablet arrows-mobile" routerLinkActive="active"
+       (click)="selected($event);historyOpen();historyActive = true;filtersActive = true"  [routerLink]="['../../objects', 'history']">
+    <div class="TopMenu-button-word-tablet"><img class="iconImg" src="../../../../assets/3-3.png" width="30px"></div>
+  </div>
+</div>
+
+<div class="add-obj-ext" *ngIf="width > 1050 && mapActive">
+  <div class="add-object">
+    <div class="plusExt">
+      <div class="bar1"></div>
+      <div class="bar2"></div>
+    </div>
+    <div>ДОБАВИТЬ ОБЪЕКТ</div>
+  </div>
+</div>
+<div class="address-block" *ngIf="!mapActive && !shortversion && !mapBig && width > 1520">
+  <div class="street">
+    <span>ул.</span> <span style="text-transform: uppercase;margin-left:5px">{{item.address}}</span> <span
+    style="margin-left:5px">{{item.house_num}}</span>
+  </div>
+  <span style="text-transform: uppercase;font-size: 10px">Хабаровск</span>
+</div>
+<div class="map-buttons" *ngIf="width > 1050 && mapBig">
+  <div class="map-button" (click)="info('map');mapBig = true; mapActive = true; selected($event)"
+       [routerLink]="['../../objects', 'map']">
+    <div class="selectedButton">КАРТА</div>
+  </div>
+  <div class="map-button" (click)="info('panorama');mapBig = true; mapActive = true; selected($event)"
+       [routerLink]="['../../objects', 'map']">
+    <div class="selectedButton">ПАНОРАМА</div>
+  </div>
+  <div class="map-button" (click)="info('routes');mapBig = true; mapActive = true; selected($event)"
+       [routerLink]="['../../objects', 'map']">
+    <div class="selectedButton">МАРШРУТЫ</div>
+  </div>
+</div>
+<div class="filters-menu-desktop" (window:resize)="onResize()" *ngIf="width > 1050">
+  <div class="TopMenu-button-tablet" routerLinkActive="active"
+       [routerLink]="['../../objects', 'list']"
+       (click)="selected($event);info('objects');deskOpen(false);activeButton = 'items';historyClose();historyActive = false;mapBig = false;filtersActive = true;
+                 itemsActive = true;filtersInnerActive = false; itemOpen = true;loginActive = false; contactActive = false;mapActive = true;ergnActive = false;">
+    <div class="TopMenu-button-word-tablet" (click) = "get_list()">СПИСОК</div>
+  </div>
+  <div class="TopMenu-button-tablet" routerLinkActive="active"
+       [routerLink]="['../../objects', 'filters']"
+       (click)="selected($event);info('filters');deskOpen(false);activeButton = 'filters';historyClose();historyActive = false;mapBig = false;filtersActive = true;itemsActive = false;
+            filtersInnerActive = true; itemOpen = true;loginActive = false;contactActive = false;mapActive = true;ergnActive = false;">
+    <div class="TopMenu-button-word-tablet" style="border-bottom: 2px solid #9d8c6c">ФИЛЬТРЫ</div>
+  </div>
+  <div class="TopMenu-button-tablet" routerLinkActive="active"
+       (click)="historyOpen();historyActive = true;filtersActive = true"  [routerLink]="['../../objects', 'history']">
+    <div class="TopMenu-button-word-tablet">ПРОСМОТРЕНО</div>
+  </div>
+</div>
+<div class="bottom-buttons" *ngIf="itemOpen && width < 1050">
+  <div class="show-contact-button" (click)="showContact()">
+    ПОКАЗАТЬ КОНТАКТЫ
+  </div>
+</div>
+<div class="main-objects">
+  <div class="inner-left">
+    <div class="map" [class.mapBig]="mapBig" [class.open]="filtersActive && !mapBig && !itemsActive && !filtersInnerActive">
+      <!--планшет-->
+      <agm-map *ngIf="mapActive && width < 1050 && !desktopOpen && !itemsActive && !filtersInnerActive" class="map-inner" [latitude]="lat" [longitude]="lng" [zoom]="15" [disableDefaultUI]="true"
+               [styles]="styles">
+        <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+      </agm-map>
+      <app-object-page class="desk open" *ngIf="desktopOpen && !mapActive && width < 1050 && !mapBig" [item]="item"
+                          (showInfoEvent)="info($event)" (similarClicked)="similarObj($event)"
+                          [favourite]="favouriteList.indexOf(item.id) != -1" (favouriteClicked)="addFav($event)"></app-object-page>
+    </div>
+    <div class="map" [class.open]="mobile && mapOpen"
+         *ngIf="mobile && mapOpen && !historyActive && !itemOpen">
+      <agm-map class="map-inner" [latitude]="lat" [longitude]="lng" [zoom]="15" [disableDefaultUI]="true" [styles]="styles">
+        <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+      </agm-map>
+    </div>
+    <div class="filters" *ngIf="!mapBig " [class.open]="(desktopOpen && (loginActive || payActive || ergnActive || contactActive) && width < 1050)"
+         [class.mobile-open]="(desktopOpen || itemOpen) && (loginActive || payActive || ergnActive || contactActive) && width < 1050">
+      <div class="scroll-items" [class.open]="itemsActive" *ngIf="!loginActive && !contactActive && !mobile && !historyActive">
+        <div style="display: flex;justify-content: center;background-color: #f7f7f7;padding-top: 10px;">
+          <div class="history-obj" style="font-size: 15px;margin-top: 5px;margin-bottom: 10px;text-align: center;padding: 0;">
+            CЕГОДНЯ
+          </div>
+        </div>
+        <app-item *ngFor="let obj of items, let i = index" [item]="obj"  [id]="i" [mode]="'middle'" [similarOpen]="false"
+                  [watched]="watchedItems.indexOf(i) != -1" [routerLink]="['../../objects', 'item']"
+                  (click)="getObj(i);deskOpen(true);ergnActive = false; contact(); desktopOpen = true;mapBig = false; mapActive = false">
+        </app-item>
+      </div>
+      <div class="scroll-items" [class.open]="itemsActive" *ngIf="!loginActive && !contactActive && mobile && !mobileItemOpen && !historyActive"
+           (click)="watched = false;filtersMenuActive = false;filtersActive = false;ergnActive = false">
+        <div style="display: flex;justify-content: center;background-color: #f7f7f7; padding-top: 10px;">
+          <div class="history-obj" style="text-align: center">
+            ДОБАВЛЕНО ЗА CЕГОДНЯ
+          </div>
+        </div>
+        <app-item *ngFor="let obj of items, let i = index" [item]="obj"  [id]="i" [mode]="'middle'" [watched]="watchedItems.indexOf(i) != -1"
+                  [routerLink]="['../../objects', 'item']"
+                  (click)="getObj(i); item = obj;mobileItemFunc();">
+        </app-item>
+      </div>
+
+      <app-filters *ngIf="!loginActive && !contactActive && filtersInnerActive" class="filters-box"
+                       [class.open]="filtersInnerActive && !mobile" (sendFilters)="setFilters($event)" (sendSort)="setSort($event)"></app-filters>
+
+      <div *ngIf="loginActive">
+        <app-login [otherComponent]="false" [itemOpen]="true" (blockClose)="close($event)"
+        ></app-login>
+      </div>
+      <div *ngIf="payActive">
+        <app-pay [itemOpen]="true" (blockClose)="close($event)"></app-pay>
+      </div>
+      <div *ngIf="contactActive">
+        <app-contact [itemOpen]="true" (checkPay)="info($event)" (blockClose)="close($event)"></app-contact>
+      </div>
+      <div  *ngIf="ergnActive">
+        <app-egrn [item]="item" [itemOpen]="true" (blockClose)="close($event)"></app-egrn>
+      </div>
+      <div class="filters-box testBlock" [class.open]="test" *ngIf="test"><input type="button" value="ЗАКРЫТЬ"
+                                                                                 (click)="info('contact')"/></div>
+      <div class="history" *ngIf="historyActive">
+        <div class="inner-history-objects">
+          <div class="scroll-items open">
+            <div style="display: flex;justify-content: center;    margin-top: 10px;">
+              <div class="history-obj" style="font-size: 15px;margin-top: 5px;margin-bottom: 10px;text-align: center;padding: 0;">
+                CЕГОДНЯ
+              </div>
+            </div>
+            <div style="border-bottom:1px solid #9d8c6c;width: calc(100% - 50px);margin: 10px 25px;"></div>
+            <app-item  *ngFor="let it of historyItems, let i = index" (click)="activeButton = 'item';
+                  historyClose();changeTime(it,i);historyActive = false;deskOpen(true);ergnActive = false; contact(); desktopOpen = true;mapBig = false;
+                  mapActive = false" [historyOpen]="true" [historyId]="i"  [id]="i" [item]="it" [mode]="'middle'">
+            </app-item>
+            <div class="button-history">ЗА ВСЕ ВРЕМЯ</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

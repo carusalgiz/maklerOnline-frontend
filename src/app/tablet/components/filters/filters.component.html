@@ -1,0 +1,328 @@
+<div class="filters-inner" (window:resize) = "onResize()">
+  <span class="title">ВЫБЕРИТЕ КРИТЕРИИ ПОИСКА</span>
+  <div *ngIf="width > 1000">
+    <div class="add-button" style="margin-top: 20px;"  (click)="cityButton = !cityButton">
+      <div class="plusExt" [class.change]="cityButton">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+      </div>
+      <span class="filterButton">НАСЕЛЕННЫЙ ПУНКТ</span>
+    </div>
+    <div class="additional-block" [class.open]="cityButton">
+      <div class="button-box">
+        <div (click)="changeNameButton(0, city, 'cityButton')"><span>{{city}}</span></div>
+      </div>
+    </div>
+    <div class="add-button" (click)="offer = !offer">
+      <div class="plusExt" [class.change]="offer">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+      </div>
+      <span class="filterButton">ТИП ПРЕДЛОЖЕНИЯ</span>
+    </div>
+    <div class="additional-block" [class.open]="offer">
+      <div class="button-box">
+        <div (click)="changeNameButton(1, 'БЕЗ КОМИССИИ', 'offer')"><span>БЕЗ КОМИССИИ</span></div>
+        <div (click)="changeNameButton(1, 'С КОМИССИЕЙ', 'offer')"><span>С КОМИССИЕЙ</span></div>
+        <div (click)="changeNameButton(1, 'ВСЕ', 'offer')"><span>ВСЕ</span></div>
+      </div>
+    </div>
+    <div class="add-button" (click)="typeOfObject = !typeOfObject">
+      <div class="plusExt" [class.change]="typeOfObject">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+      </div>
+      <span class="filterButton">ТИП ОБЪЕКТА</span>
+    </div>
+    <div class="additional-block" [class.open]="typeOfObject">
+      <div class="button-box">
+        <div (click)="changeNameButton(2, 'КОМНАТА', 'typeOfObject')"><span>КОМНАТА</span></div>
+        <div (click)="changeNameButton(2, 'КВАРТИРА', 'typeOfObject')"><span>КВАРТИРА</span></div>
+        <div (click)="changeNameButton(2, 'ДОМ/КОТТЕДЖ/ДАЧА', 'typeOfObject')"><span>ДОМ/КОТТЕДЖ/ДАЧА</span></div>
+      </div>
+    </div>
+    <div class="add-button" (click)="countOfRooms = !countOfRooms">
+      <div class="plusExt" [class.change]="countOfRooms">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+      </div>
+      <span class="filterButton">КОЛИЧЕСТВО КОМНАТ</span>
+    </div>
+    <div class="additional-block" [class.open]="countOfRooms">
+      <div class="button-box">
+        <div (click)="changeNameButton(3, '1 КОМН.', 'countOfRooms')"><span>1 КОМН.</span></div>
+        <div (click)="changeNameButton(3, '2 КОМН.', 'countOfRooms')"><span>2 КОМН.</span></div>
+        <div (click)="changeNameButton(3, '3 КОМН.', 'countOfRooms')"><span>3 КОМН.</span></div>
+        <div (click)="changeNameButton(3, '4 КОМН. +', 'countOfRooms')"><span>4 КОМН. +</span></div>
+      </div>
+    </div>
+    <div class="add-button" (click)="cost = !cost">
+      <div class="plusExt" [class.change]="cost">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+      </div>
+      <span class="filterButton">СТОИМОСТЬ ДО...</span>
+    </div>
+    <div class="additional-block" [class.open]="cost">
+      <div class="button-box">
+        <div (click)="changeNameButton(4, '10000', 'cost')"><span>10000</span></div>
+        <div (click)="changeNameButton(4, '20000', 'cost')"><span>20000</span></div>
+        <div (click)="changeNameButton(4, '30000', 'cost')"><span>30000</span></div>
+        <div (click)="changeNameButton(4, '40000+', 'cost')"><span>40000+</span></div>
+      </div>
+    </div>
+    <div class="add-button">
+      <div class="plusExt">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+      </div>
+      <span>КОМПЛЕКТАЦИЯ ОБЪЕКТА</span>
+    </div>
+    <div class="add-button">
+      <div class="plusExt">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+      </div>
+      <span>УСЛОВИЯ НАЙМА</span>
+    </div>
+    <div class="add-button" (click)="sort = !sort">
+      <div class="plusExt" [class.change]="sort">
+        <div class="bar1"></div>
+        <div class="bar2"></div>
+      </div>
+      <span class="filterButton">СОРТИРОВАТЬ ПО...</span>
+    </div>
+    <div class="additional-block" [class.open]="sort">
+      <div class="button-box">
+        <div (click)="changeNameButton(5, 'ДАТЕ ДОБАВЛЕНИЯ', 'sort')"><span>ДАТЕ ДОБАВЛЕНИЯ</span></div>
+        <div (click)="changeNameButton(5, 'СТОИМОСТИ', 'sort')"><span>СТОИМОСТИ</span></div>
+        <div (click)="changeNameButton(5, 'РЕЙТИНГУ', 'sort')"><span>РЕЙТИНГУ</span></div>
+      </div>
+    </div>
+    <div class="block" *ngIf="width < 600">
+      <span class="type">ОПРЕДЕЛИТЬ ЛОКАЦИЮ ДЛЯ ПОИСКА ОБЪЕКТА</span>
+      <div class="map-box">
+        <input type="button" class="button map-button" value="ПЕРЕЙТИ К КАРТЕ" [routerLink]="['../../../../../../objects', false, false, false, false, false]">
+        <p class="map-text">Для определения локации поиска объекта воспользуйтесь картой</p>
+      </div>
+    </div>
+    <div class="button-box">
+      <input type="button" class="button clear" value="ОЧИСТИТЬ ФИЛЬТРЫ" (click)="clear()" style="margin-bottom: 25px">
+    </div>
+
+  <div class="additional">
+    <span class="title">ДОПОЛНИТЕЛЬНЫЕ ВОЗМОЖНОСТИ</span>
+  </div>
+  <div class="add-button" (click)="openNews = !openNews">
+    <div class="plusExt" [class.change]="openNews">
+      <div class="bar1"></div>
+      <div class="bar2"></div>
+    </div>
+    <span>ОФОРМИТЬ РАССЫЛКУ</span>
+  </div>
+  <div class="additional-block" [class.open]="openNews">
+    <p class="add-text">Уютная двушка с отличным ремонтом в 150 метрах от м. Молодежная. Полностью оборудована мебелью и техникой, всё в отличном состоянии.</p>
+    <input type="text" value="Введите ваш e-mail" class="email">
+    <input type="button" value="Подписаться" class="news-button">
+  </div>
+  <div class="add-button" (click)="manager = !manager">
+    <div class="plusExt" [class.change]="manager">
+      <div class="bar1"></div>
+      <div class="bar2"></div>
+    </div>
+    <span>ВАШ ПЕРСОНАЛЬНЫЙ МЕНЕДЖЕР</span>
+  </div>
+  <div class="additional-block"  [class.open]="manager">
+    <p class="add-text">​Заказывая эту услугу,вы нанимаете персонального менеджера, который найдет нужные вам варианты,договорится  о просмотре объектов в удобное Вам время, и проконтролирует юридическую чистоту заключения договора найма жилья.Также Вы получите отчет о проделанной работе на Вашу почту и в личный кабинет сайта.</p>
+    <input type="button" value="Заказать" class="news-button">
+  </div>
+  <div class="add-button" (click)="realtor =! realtor">
+    <div class="plusExt" [class.change]="realtor">
+      <div class="bar1"></div>
+      <div class="bar2"></div>
+    </div>
+    <span>НАНЯТЬ ПРОФЕССИОНАЛЬНОГО РИЭЛТОРА</span>
+  </div>
+  <div class="additional-block"  [class.open]="realtor">
+    <p class="add-text">Нанять риэлтора с хорошим рейтингом.</p>
+    <input type="button" value="НАНЯТЬ" class="news-button">
+  </div>
+  </div>
+
+  <!--tablet version-->
+  <div *ngIf="width > 650 && width < 1000">
+    <div class="filters-tablet">
+      <div class="innerLeftBlock-filters-tablet">
+        <div class="add-button"  (click)="cityButton = !cityButton">
+          <span class="add-button-title">НАСЕЛЕННЫЙ ПУНКТ</span>
+          <div class="plusExt" [class.change]="cityButton">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+          </div>
+        </div>
+        <div class="additional-block" [class.open]="cityButton">
+          <div class="button-box">
+            <div><span>{{city}}</span></div>
+          </div>
+        </div>
+        <div class="add-button" (click)="offer = !offer">
+          <span class="add-button-title">ТИП ПРЕДЛОЖЕНИЯ</span>
+          <div class="plusExt" [class.change]="offer">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+          </div>
+        </div>
+        <div class="additional-block" [class.open]="offer">
+          <div class="button-box">
+            <div><span>БЕЗ КОМИССИИ</span></div>
+            <div><span>С КОМИССИЕЙ</span></div>
+            <div><span>ВСЕ</span></div>
+          </div>
+        </div>
+        <div class="add-button" (click)="typeOfObject = !typeOfObject">
+          <span class="add-button-title">ТИП ОБЪЕКТА</span>
+          <div class="plusExt" [class.change]="typeOfObject">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+          </div>
+        </div>
+        <div class="additional-block" [class.open]="typeOfObject">
+          <div class="button-box">
+            <div><span>КОМНАТА</span></div>
+            <div><span>КВАРТИРА</span></div>
+            <div><span>ДОМ/КОТТЕДЖ/ДАЧА</span></div>
+          </div>
+        </div>
+        <div class="add-button" (click)="countOfRooms = !countOfRooms">
+          <span class="add-button-title">КОЛИЧЕСТВО КОМНАТ</span>
+          <div class="plusExt" [class.change]="countOfRooms">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+          </div>
+        </div>
+        <div class="additional-block" [class.open]="countOfRooms">
+          <div class="button-box">
+            <div><span>1 КОМН.</span></div>
+            <div><span>2 КОМН.</span></div>
+            <div><span>3 КОМН.</span></div>
+            <div><span>4 КОМН. +</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="innerRightBlock-filters-tablet">
+        <div class="add-button" (click)="cost = !cost">
+          <span class="add-button-title">СТОИМОСТЬ ДО...</span>
+          <div class="plusExt" [class.change]="cost">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+          </div>
+        </div>
+        <div class="additional-block" [class.open]="cost">
+          <div class="button-box">
+            <div><span>10000</span></div>
+            <div><span>20000</span></div>
+            <div><span>30000</span></div>
+            <div><span>40000+</span></div>
+          </div>
+        </div>
+        <div class="add-button">
+          <span class="add-button-title">КОМПЛЕКТАЦИЯ ОБЪЕКТА</span>
+          <div class="plusExt">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+          </div>
+
+        </div>
+        <div class="add-button">
+          <span class="add-button-title">УСЛОВИЯ НАЙМА</span>
+          <div class="plusExt">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+          </div>
+
+        </div>
+        <div class="add-button" (click)="sort = !sort">
+          <span class="add-button-title">СОРТИРОВАТЬ ПО...</span>
+          <div class="plusExt" [class.change]="sort">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+          </div>
+        </div>
+        <div class="additional-block" [class.open]="sort">
+          <div class="button-box">
+            <div><span>ДАТЕ ДОБАВЛЕНИЯ</span></div>
+            <div><span>СТОИМОСТИ</span></div>
+            <div><span>РЕЙТИНГУ</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="additional">
+      <div class="additional">
+        <span class="title">ДОПОЛНИТЕЛЬНЫЕ ВОЗМОЖНОСТИ</span>
+      </div>
+      <div class="innerLeftBlock-filters-tablet" style="margin-left: 30px;">
+        <div class="add-button" (click)="openNews = !openNews">
+          <span class="add-button-title">ОФОРМИТЬ РАССЫЛКУ</span>
+          <div class="plusExt" [class.change]="openNews">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+          </div>
+
+        </div>
+        <div class="additional-block" [class.open]="openNews">
+          <p class="add-text" style="width: auto">Уютная двушка с отличным ремонтом в 150 метрах от м. Молодежная. Полностью оборудована мебелью и техникой, всё в отличном состоянии.</p>
+          <input type="text" value="Введите ваш e-mail" class="email" style="width: auto;">
+          <input type="button" value="Подписаться" class="news-button" style="width: auto">
+        </div>
+        <div class="add-button" (click)="manager = !manager">
+          <span class="add-button-title">ВАШ ПЕРСОНАЛЬНЫЙ МЕНЕДЖЕР</span>
+          <div class="plusExt" [class.change]="manager">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+          </div>
+
+        </div>
+        <div class="additional-block"  [class.open]="manager">
+          <p class="add-text" style="width: auto">​Заказывая эту услугу,вы нанимаете персонального менеджера, который найдет нужные вам варианты,договорится  о просмотре объектов в удобное Вам время, и проконтролирует юридическую чистоту заключения договора найма жилья.Также Вы получите отчет о проделанной работе на Вашу почту и в личный кабинет сайта.</p>
+          <input type="button" value="Заказать" class="news-button" style="width: auto">
+        </div>
+        <div class="add-button" (click)="realtor =! realtor">
+          <span class="add-button-title">НАНЯТЬ ПРОФЕССИОНАЛЬНОГО РИЭЛТОРА</span>
+          <div class="plusExt" [class.change]="realtor">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+          </div>
+        </div>
+        <div class="additional-block"  [class.open]="realtor">
+          <p class="add-text">Нанять риэлтора с хорошим рейтингом.</p>
+          <input type="button" value="НАНЯТЬ" class="news-button" style="width: auto">
+        </div>
+      </div>
+    </div>
+    <div class="tablet-inner-line"></div>
+    <div class="filters-tablet" style="box-shadow: 0 6px 12px darkgrey">
+      <div class="button-box">
+        <input type="button" class="button clear" (click)="additional=!additional" value="ДОПОЛНИТЕЛЬНЫЕ ВОЗМОЖНОСТИ" style="margin-bottom: 25px">
+      </div>
+      <div class="button-box">
+        <input type="button" class="button clear" value="ОЧИСТИТЬ ФИЛЬТРЫ" (click)="clear()" style="margin-bottom: 25px">
+      </div>
+    </div>
+    <a class="mapButton" *ngIf="!drawActive && !clearActive" (click)="draw(); drawActive = true; clearActive = true">
+      <div [class.drawMap]="!drawActive" class="mapButton">
+        <span>Нарисовать</span>
+      </div>
+    </a>
+    <!--</div>-->
+    <a class="mapButton" *ngIf="clearActive" (click)="clearMap();drawActive = false">
+      <div  [class.clearMap]="clearActive" class="mapButton">
+        <span>Очистить</span>
+      </div>
+    </a>
+    <div class="tablet-map">
+      <div class="map filters-map open" id="ymapsContainer"><canvas id="canvas" class="canvas"></canvas></div>
+    </div>
+  </div>
+</div>

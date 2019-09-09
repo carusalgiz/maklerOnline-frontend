@@ -1,0 +1,101 @@
+<app-menu *ngIf="!itemOpen"></app-menu>
+<div class="right-block addRight"  [class.fullPage]="!itemOpen">
+  <div class="hideMenu" *ngIf="itemOpen" (click)="blockCloseFunc('pay');">
+    <div class="barExit1"></div>
+    <div class="barExit2"></div>
+  </div>
+  <div class="account-balance font">
+    <div>
+      <span style="margin-right: 15px">ВАШ БАЛАНС:</span>
+      <span style="font-size: 26px">{{balance}} р</span>
+    </div>
+    <div>
+      <span style="margin-right: 30px">ОСТАЛОСЬ:</span>
+      <span style="font-size: 26px">{{resDay}}</span><span style="margin-left: 5px;margin-right: 15px">ДНЕЙ</span>
+      <span style="font-size: 26px">{{resTime}}</span>
+    </div>
+  </div>
+  <!--<span class="font" style="font-size: 16px;">ВЫБЕРИТЕ КАТЕГОРИЮ</span>-->
+  <div class="add-button" [class.open]="sam" (click)="ymFunc('ya-sam-pay');sam = !sam" style="margin-top: 30px;">
+    <span>Я САМ</span>
+    <div class="bottomWordInButton">
+      <span class="button-bottom">ПРОВЕРЕННЫЕ ОБЪЯВЛЕНИЯ</span>
+    </div>
+
+  </div>
+  <div class="additional-block" [class.open]="sam">
+    <div class="button-box">
+      <div [class.selected]="selectedButton[0]?.block == '0-0'" (click)="payment('0-0', 'type_one', '15000')"><p>1 ДЕНЬ</p><span>150 Р</span></div>
+      <div [class.selected]="selectedButton[0]?.block == '0-1'" (click)="payment('0-1', 'type_two', '30000')"><p>3 ДНЯ</p><span>300 Р</span></div>
+      <div [class.selected]="selectedButton[0]?.block == '0-2'" (click)="payment('0-2', 'type_three', '56000')"><p>НЕДЕЛЯ</p><span>560 Р</span></div>
+      <div [class.selected]="selectedButton[0]?.block == '0-3'" (click)="payment('0-3', 'type_four', '150000')"><p>МЕСЯЦ</p><span>1500 Р</span></div>
+    </div>
+  </div>
+  <div class="add-button" (click)="ymFunc('special-pay');" [class.open]="special">
+    <span>ОСОБОЕ ВНИМАНИЕ</span>
+    <div class="bottomWordInButton">
+      <span class="button-bottom">ТОЛЬКО АКТУАЛЬНЫЕ ОБЪЯВЛЕНИЯ</span>
+    </div>
+
+  </div>
+  <div class="additional-block" [class.open]="special">
+    <div class="button-box">
+      <div [class.selected]="selectedButton[0]?.block == '1-0'" (click)="payment('1-0', 'type_one', '150.00')"><p>1 ДЕНЬ</p><span>150 Р</span></div>
+      <div [class.selected]="selectedButton[0]?.block == '1-1'" (click)="payment('1-1', 'type_two', '300.00')"><p>3 ДНЯ</p><span>300 Р</span></div>
+      <div [class.selected]="selectedButton[0]?.block == '1-2'" (click)="payment('1-2', 'type_three', '560.00')"><p>НЕДЕЛЯ</p><span>560 Р</span></div>
+      <div [class.selected]="selectedButton[0]?.block == '1-3'" (click)="payment('1-3', 'type_four', '1500.00')"><p>МЕСЯЦ</p><span>1500 Р</span></div>
+    </div>
+  </div>
+  <div class="add-button"  (click)="ymFunc('premium-pay');" [class.open]="premium">
+    <span>ПРЕМИУМ</span>
+    <div class="bottomWordInButton">
+      <SPAN class="button-bottom">ПЕРСОНАЛЬНЫЙ ПОДХОД</SPAN>
+    </div>
+
+  </div>
+  <div class="additional-block" [class.open]="premium">
+    <div class="button-box">
+      <div [class.selected]="selectedButton[0]?.block == '2-0'" (click)="payment('2-0', 'type_one', '150.00')"><p>1 ДЕНЬ</p><span>150 Р</span></div>
+      <div [class.selected]="selectedButton[0]?.block == '2-1'" (click)="payment('2-1', 'type_one', '150.00')"><p>3 ДНЯ</p><span>300 Р</span></div>
+      <div [class.selected]="selectedButton[0]?.block == '2-2'" (click)="payment('2-2', 'type_one', '150.00')"><p>НЕДЕЛЯ</p><span>560 Р</span></div>
+      <div [class.selected]="selectedButton[0]?.block == '2-3'" (click)="payment('2-3', 'type_one', '150.00')"><p>МЕСЯЦ</p><span>1500 Р</span></div>
+    </div>
+  </div>
+  <div class="add-button" [class.open]="publish" style="border-bottom: 1px solid #a2a0a0">
+    <span>ОПУБЛИКОВАТЬ ОБЪЯВЛЕНИЕ</span>
+    <div class="bottomWordInButton">
+      <span class="button-bottom">БЫСТРО СДАТЬ НЕДВИЖИМОСТЬ</span>
+    </div>
+
+  </div>
+  <div class="additional-block" [class.open]="publish">
+    <div class="button-box">
+      <div [class.selected]="selectedButton[0]?.block == '3-0'" (click)="payment('3-0', 'type_one', '150.00')"><p>1 ДЕНЬ</p><span>150 Р</span></div>
+      <div [class.selected]="selectedButton[0]?.block == '3-1'" (click)="payment('3-1', 'type_one', '150.00')"><p>3 ДНЯ</p><span>300 Р</span></div>
+      <div [class.selected]="selectedButton[0]?.block == '3-2'" (click)="payment('3-2', 'type_one', '150.00')"><p>НЕДЕЛЯ</p><span>560 Р</span></div>
+      <div [class.selected]="selectedButton[0]?.block == '3-3'" (click)="payment('3-3', 'type_one', '150.00')"><p>МЕСЯЦ</p><span>1500 Р</span></div>
+    </div>
+  </div>
+  <div class="add-button" [class.open]="makler" style="border-bottom: 1px solid #a2a0a0">
+    <span>СЕРВИС УМНЫЙ МАКЛЕР</span>
+    <div class="bottomWordInButton">
+      <span class="button-bottom">ИНСТРУМЕНТ ДЛЯ РАБОТЫ МАКЛЕРА</span>
+    </div>
+
+  </div>
+  <div class="additional-block" [class.open]="makler">
+    <div class="button-box">
+      <div [class.selected]="selectedButton[0]?.block == '4-0'" (click)="payment('4-0', 'type_one', '150.00')"><p>1 ДЕНЬ</p><span>150 Р</span></div>
+      <div [class.selected]="selectedButton[0]?.block == '4-1'" (click)="payment('4-1', 'type_one', '150.00')"><p>3 ДНЯ</p><span>300 Р</span></div>
+      <div [class.selected]="selectedButton[0]?.block == '4-2'" (click)="payment('4-2', 'type_one', '150.00')"><p>НЕДЕЛЯ</p><span>560 Р</span></div>
+      <div [class.selected]="selectedButton[0]?.block == '4-3'" (click)="payment('4-3', 'type_one', '150.00')"><p>МЕСЯЦ</p><span>1500 Р</span></div>
+    </div>
+  </div>
+  <div class="bottom-text-info">
+      <span>
+        <span style="font-weight: bold">ВНИМАНИЕ!</span> Оплата происходит через ПАО СБЕРБАНК с использованием банковских карт.
+        Все оплаты происходят официально и через защищенные от мошенников банковские страницы,
+        согласно 54 Федеральному закону после оплаты Вы получаете электронный чек.
+      </span>
+  </div>
+</div>

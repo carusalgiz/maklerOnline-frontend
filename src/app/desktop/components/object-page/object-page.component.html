@@ -1,0 +1,200 @@
+<div class="photo-map-block" (window:resize) = "onResize()">
+  <div class="photo-block">
+    <div class="photoGallery" id="anchor">
+      <div class="photos">
+        <ul id="photoGallery-ul">
+          <li class="photoGallery-li" *ngFor="let img of item.photo"><div class="photo-img">
+            <img class="inner-img" src="{{img}}"/>
+            <img class="back-img" src="{{img}}"/>
+          </div></li>
+        </ul>
+      </div>
+      <div class="arrow photo-left" (click)="prevImg()"><img src="../assets/arrowl.png"></div>
+      <div class="arrow photo-right" (click)="nextImg()"><img src="../assets/arrowr.png"></div>
+      <div class="favourite" (click)="addFav(item.id)">
+        <div class="fav-inner" id="imgdesk{{item.id}}"></div>
+      </div>
+    </div>
+  </div>
+  <div class="map">
+    <agm-map class="map-inner" [latitude]="lat" [longitude]="lng" [zoom]="15" [disableDefaultUI]="true" [styles]="styles">
+      <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+    </agm-map>
+  </div>
+</div>
+
+<!-- дополнительные три блока -->
+<div class="additional" [class.tablet]="width < 1425">
+  <div style="display: flex; flex-direction: column">
+    <div class="two-blocks" [class.tablet]="width < 1425">
+      <div [class.block]="width >= 1515" [class.tablet-block]="width < 1515"> <!-- первый блок -->
+        <div style="flex: 0 0 50%;">
+          <div class="inner-add-top">
+            <span>ОПИСАНИЕ ОБЪЕКТА</span>
+          </div>
+          <div class="line"></div>
+          <div class="inner-additional-block">
+            <div class="test">
+              <div class="address-block">
+                <div class="price"><!-- <img src="../assets/ruble.png"> --> <span style="margin-right: 8px">₽</span> <span>{{item.price}}</span><span style="font-size: 14px">/мес.</span></div>
+                <div class="street">
+                  <span>ул.</span> <span style="text-transform: uppercase;margin-left:5px">{{item.address}}</span> <span style="margin-left:5px">{{item.house_num}}</span>
+                </div>
+                <span style="color: #252f32;; font-size: 12px">г.Хабаровск, Центральный район</span>
+              </div>
+              <div class="info">
+                <div><span>{{item.roomsCount}} комнатная квартира</span></div>
+                <div><span>{{item.floor}}/{{item.floorsCount}} этаж </span><span> {{item.squareTotal}}кв.м</span></div>
+                <div>Без комиссии</div>
+              </div>
+              <div class="description">
+                <p>Уютная двушка с отличным ремонтом в 150 метрах от м. Молодежная. Полностью оборудована мебелью и техникой, всё в отличном состоянии.</p>
+                <p style="margin-top: 30px">Можно с детьми,Можно с животными, Можно курить, Можно
+                  под мероприятия,Можно на месяц</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="button-block">
+          <div class="button-inner-text">"ОТЗЫВЫ ПО ОБЪЕКТУ"</div>
+          <div class="button-inner-line"></div>
+          <p>Мы проверяем каждое объявление и гарантируем, что объект сдается без комиссии. </p>
+          <input type="button" value="ПОСМОТРЕТЬ ОТЗЫВЫ" class="news-button" (click)="showInfo('login')">
+        </div>
+      </div>
+      <div [class.block]="width >= 1515"  [class.tablet-block]="width < 1515"> <!-- второй блок -->
+        <div style="flex: 0 0 50%;">
+          <div class="line top"></div>
+          <div class="inner-add-top">
+            <span>РЕЙТИНГ ПРИВЛЕКАТЕЛЬНОСТИ</span>
+          </div>
+          <div class="line"></div>
+          <div class="inner-additional-block additional-rating-block">
+            <div class="test">
+              <div style="margin: 0 0 30px 30px;padding-top: 5px;">
+                <app-rating></app-rating>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="button-block">
+          <div class="button-inner-text">"ДОБАВЬТЕ ОБЪЕКТ В ИЗБРАННОЕ"</div>
+          <div class="button-inner-line"></div>
+          <p>Вы всегда можете просмотреть объекты из множества интересных Вам, и выбрать то что нужно. </p>
+          <input type="button" value="ДОБАВИТЬ В ИЗБРАННОЕ" class="news-button" (click)="showInfo('test')">
+        </div>
+      </div> <!-- конец второго блока -->
+      <div [class.block]="width >= 1515"  [class.tablet-block]="width < 1515"> <!-- третий блок -->
+        <div style="flex: 0 0 50%;">
+          <div class="line top"></div>
+          <div class="nearby-block">
+            <span style="color: #3b4345">ЧТО РЯДОМ</span>
+            <span style="font-size: 12px;color: #4b4b4b">Объекты инфраструктуры, развлечения, питания...</span>
+          </div>
+          <div class="line"></div>
+          <div class="inner-additional-block plus">
+            <div class="test">
+              <div class="additional-nearby-block">
+                <div class="inner-additional">
+                  <div class="nearby">
+                    <span>Центральный продовольственный рынок </span>
+                    <span class="bottom-text">Рынок · улица Льва Толстого, 19</span>
+                  </div>
+                  <div style="flex: 0 0 10%">
+                    <span>50м</span>
+                  </div>
+                </div>
+                <div class="inner-additional">
+                  <div class="nearby">
+                    <span>Железнодорожный вокзал Хабаровск-1</span>
+                    <span class="bottom-text">Железнодорожный вокзал · Ленинградская улица, 58</span>
+                  </div>
+                  <div style="flex: 0 0 10%">
+                    <span>500м</span>
+                  </div>
+                </div>
+                <div class="inner-additional">
+                  <div class="nearby">
+                    <span>Площадь Ленина</span>
+                    <span class="bottom-text">Хабаровск, Россия</span>
+                  </div>
+                  <div style="flex: 0 0 10%">
+                    <span>300м</span>
+                  </div>
+                </div>
+                <div class="inner-additional">
+                  <div class="nearby">
+                    <span>Парк Динамо</span>
+                    <span class="bottom-text">Парк культуры и отдыха · Россия, Хабаровск, парк Динамо</span>
+                  </div>
+                  <div style="flex: 0 0 10%">
+                    <span>300м</span>
+                  </div>
+                </div>
+                <div class="inner-additional">
+                  <div class="nearby">
+                    <span>Кинотеатр Дружба</span>
+                    <span class="bottom-text">Кинотеатр · Амурский бульвар, 56А</span>
+                  </div>
+                  <div style="flex: 0 0 10%">
+                    <span>400м</span>
+                  </div>
+                </div>
+                <div class="inner-additional">
+                  <div class="nearby">
+                    <span>Краевой музыкальный театр </span>
+                    <span class="bottom-text">Театр · улица Карла Маркса, 64</span>
+                  </div>
+                  <div style="flex: 0 0 10%">
+                    <span>300м</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="nearby-button-block">
+          <div class="button-block" style="flex: 0 0 calc(100% - 60px);">
+            <div class="button-inner-text">"ИНФОРМАЦИЯ ИЗ ГОСУДАРСТВЕННОГО  РЕЕСТРА"</div>
+            <div class="button-inner-line"></div>
+            <p>Закажите выписку из Единого Государственного реестра, и Вы будете знать кто является собственником. </p>
+            <input type="button" value="ЗАКАЗАТЬ ВЫПИСКУ С ЕГРН" class="news-button" (click)="showInfo('egrn')">
+          </div>
+        </div>
+      </div> <!-- конец третьего блока -->
+    </div>
+  </div>
+</div>
+
+<!-- Блок с похожими объектами -->
+<div class="similar-objects">
+  <div class="carousel-text">
+    <span style="font-size: 25px">ПОХОЖИЕ ОБЪЕКТЫ</span>
+  </div>
+  <div style="display: flex">
+    <div class="similar-button" [class.active]="nearButton" (click)="nearButton = true">
+      ПОХОЖИЕ ОБЪЕКТЫ РЯДОМ
+    </div>
+    <div class="similar-button" [class.active]="!nearButton" (click)="nearButton = false">
+      ПОХОЖИЕ ОБЪЕКТЫ ПО ЦЕНЕ
+    </div>
+  </div>
+  <div class="similar-arrows">
+    <div class="arrow left" (click)="prev()"><img src="../../../../assets/arL.png"></div>
+    <span>{{items.length}} объявлений</span>
+    <div class="arrow right" (click)="next()"><img src="../../../../assets/arR.png"></div>
+  </div>
+  <div class="carousel">
+    <div class="objects">
+      <ul id="carousel-ul">
+        <li class="carousel-li" *ngFor="let obj of items" (click)="getSimilarObject(obj)">
+          <!--<app-item class="app-item" [similarOpen] = "true"  [item] = "obj" [watched]="watchedItems.indexOf(obj.id) != -1" [mode]="'middle'">-->
+        <!--</app-item>-->
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div *ngIf="width < 1050">
+  <app-contact [size]="'tablet'"></app-contact>
+</div>

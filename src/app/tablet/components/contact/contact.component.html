@@ -1,0 +1,86 @@
+<div class="main" [class.tablet-main]="size == 'tablet'" [class.mobile-main]="size == 'small'" [class.fullOpen]="fullItem">
+  <div class="right-block" [class.tablet-right]="size == 'tablet'">
+    <div [class.tablet]="size == 'tablet'"> <!-- Первый блок -->
+      <div class="contact-info"  [class.tablet-add]="size == 'tablet'" [class.mobile]="size == 'small'">
+        <div class="contact-photo-rating">
+          <img src="../../../../assets/photo.PNG" [class.photo-mobile]="size == 'small'" width="60px" height="60px"/>
+          <div class="s_rating">
+            <div class="s_rating_block"  [class.mobile]="size == 'small'">
+              <input name="s_rating" value="5" id="s_rating_5" type="radio" />
+              <label for="s_rating_5" class="s_label_rating"></label>
+            </div>
+            <span class="rating-count" [class.mobile]="size == 'small'">4,25</span>
+          </div>
+        </div>
+
+        <div class="contact-user-info">
+          <span class="rating-count" style="font-weight: bold">ИВАНОВ Иван</span>
+          <span class="text" style="font-size: 10px">ЭКСПЕРТ</span>
+          <div class="exitButton" *ngIf="itemOpen && !fullItem" (click)="blockCloseFunc('contact')">
+            <div class="barMenu1"></div>
+            <div class="barMenu2"></div>
+          </div>
+          <div class="line top"></div>
+          <div class="user-info">
+            <div class="text ext">Телефон рабочий</div>
+            <div class="text">+7(4212) 63-77-55</div>
+          </div>
+          <div class="line top" [class.mobile]="size == 'small'"></div>
+          <div class="text">Электронный адрес</div>
+          <div class="line top" [class.mobile]="size == 'small'"></div>
+          <div class="text">Организация</div>
+          <div class="line top" [class.mobile]="size == 'small'"></div>
+          <div class="text">Сайт</div>
+        </div>
+
+      </div>
+      <div class="line add" [class.mobile]="size == 'small'" *ngIf="size == 'small'"></div>
+      <div class="line add" [class.mobile]="size == 'small'" *ngIf="size != 'tablet' && size != 'small'"></div>
+      <div *ngIf="size != 'small'"  [class.tablet-add]="size == 'tablet'" [class.info-ext]="size == 'tablet'"  [class.tablet-add-ext]="size == 'tablet'">
+        <div style="margin-bottom: 30px;">
+                            <span class="font" style="font-size: 16px" [class.mob]="size == 'tablet'">
+                                ЗАПРОСИТЬ ИНФОРМАЦИЮ
+                                ОБ ЭТОМ ОБЪЕКТЕ
+                            </span>
+        </div>
+        <div style="margin-right: 30px">
+          <div class="input-block">
+            <div class="text">Ваше имя</div>
+            <input type="text" class="input-field"/>
+          </div>
+          <div class="line bottom"></div>
+          <div class="input-block">
+            <div class="text">Телефон</div>
+            <input type="text" class="input-field"/>
+          </div>
+          <div class="line bottom"></div>
+          <div class="input-block">
+            <div class="text">Электронный адрес</div>
+            <input type="text" class="input-field"/>
+          </div>
+          <div class="line bottom"></div>
+          <div class="input-block" style="align-items: normal;flex-direction: column">
+            <div class="text" style="margin-bottom: 10px">Текст</div>
+            <textarea>Меня заинтересовал этот объект, пожалуйста свяжитесь со мной.</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="size != 'small'" [class.tablet]="size == 'tablet'"> <!-- Второй блок -->
+      <div  [class.tablet-add.ext]="size == 'tablet'">
+        <div class="line add" *ngIf="size == 'tablet' && size != 'small'"></div>
+        <div class="line bottom" *ngIf="size != 'tablet'"></div>
+      </div>
+      <div  [class.tablet-add]="size == 'tablet'" [class.tablet-add-ext]="size == 'tablet'">
+        <div class="line add" *ngIf="size == 'tablet' && size != 'small'"></div>
+        <div class="button-next">ЗАПРОСИТЬ ИНФОРМАЦИЮ</div>
+        <p class="text text-add">
+          Нажимая запрос на отправку,вы соглашаетесь с тем, что MaklerOnline и специалисты по недвижимости могут связаться с вами по
+          телефону или тексту с вашим запросом,что может включать использование автоматизированных средств. Вы не обязаны
+          соглашаться на условие аренды какой-либо недвижимости, или услуги. Вы также соглашаетесь с нашими условиями
+          пользования сайта.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
