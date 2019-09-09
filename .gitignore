@@ -37,3 +37,7 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+src/app/.ftpconfig
+ssl/makleronline.net
+ssl/your_domain.crt
+ssl/your_domain.key
