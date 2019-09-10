@@ -4,12 +4,14 @@ import {AsyncSubject} from 'rxjs/AsyncSubject';
 import {map} from 'rxjs/operators';
 import {Item} from '../item';
 import {PaymentResult} from "../desktop/components/class/main_classes";
+import {ConfigService} from "./config.service";
 
 
 @Injectable()
 export class AccountService {
-
-  constructor(private _http: HttpClient) {
+    servUrl: any;
+  constructor(private _http: HttpClient, config: ConfigService) {
+      this.servUrl = config.getConfig('servUrl');
   }
 // , filter: any, sort: any
   getObjects(x: any, y: any, type: any, radius: any) {
@@ -55,7 +57,7 @@ export class AccountService {
     query.push('mode=' + mode);
     query.push('recoverMethod=' + recoverMethod);
 
-    let _resourceUrl = 'https://maklersoft.ru/login/account?' + query.join('&');
+    let _resourceUrl =  this.servUrl + '/login/account?' + query.join('&');
     console.log(_resourceUrl);
     let ret_subj = <AsyncSubject<any>>new AsyncSubject();
 
@@ -71,7 +73,7 @@ export class AccountService {
   }
   saveUser(accountId: any, email_block: any, phone_block: any) {
     const body = {accountId: accountId, emailBlock: email_block, phoneBlock: phone_block, sourceCode: "internet"};
-    let _resourceUrl = 'https://maklersoft.ru/person/save';
+    let _resourceUrl =  this.servUrl + '/person/save';
     console.log(_resourceUrl + JSON.stringify(body));
 
     let ret_subj = <AsyncSubject<any>>new AsyncSubject();
@@ -107,7 +109,7 @@ export class AccountService {
     query.push('return_url=' + document.location.href.replace('#', 'ю'));
     console.log(query.toString());
 
-    let _resourceUrl = 'https://maklersoft.ru/person/payment?' + query.join('&');
+    let _resourceUrl =  this.servUrl + '/person/payment?' + query.join('&');
     console.log(_resourceUrl);
     // console.log(_resourceUrl + JSON.stringify(body));
     let ret_subj = <AsyncSubject<any>>new AsyncSubject();
@@ -125,7 +127,7 @@ export class AccountService {
   }
   // ????????????????????????????????????????
   checkBalance() {
-    let _resourceUrl = 'https://maklersoft.ru/person/balance?';
+    let _resourceUrl =  this.servUrl + '/person/balance?';
     // console.log(_resourceUrl);
     let ret_subj = <AsyncSubject<any>>new AsyncSubject();
 
@@ -142,7 +144,7 @@ export class AccountService {
   }
   checklogin() {
     let ret_subj = <AsyncSubject<any>>new AsyncSubject();
-    let _resourceUrl = 'https://maklersoft.ru/person/checklogin';
+    let _resourceUrl =  this.servUrl + '/person/checklogin';
     this._http.get(_resourceUrl, {withCredentials: true}).pipe(
       map((res: Response) => res)).subscribe(
       raw => {
@@ -164,7 +166,7 @@ export class AccountService {
     return ret_subj;
   }
   logout() {
-    let _resourceUrl = 'https://maklersoft.ru/person/logout';
+    let _resourceUrl =  this.servUrl + '/person/logout';
     // , responseType: 'text'
     this._http.post(_resourceUrl, '', {withCredentials: true}).pipe(
       map((res: Response) => res)).subscribe(
@@ -175,7 +177,7 @@ export class AccountService {
     );
   }
   getFavObjects() {
-    let _resourceUrl = 'https://maklersoft.ru/person/getFavObjects';
+    let _resourceUrl =  this.servUrl + '/person/getFavObjects';
     let ret_subj = <AsyncSubject<any>>new AsyncSubject();
     // console.log(_resourceUrl);
 
@@ -209,7 +211,7 @@ export class AccountService {
   }
   delFavObject(object_id: any) {
     const body = {object_id: object_id};
-    let _resourceUrl = 'https://maklersoft.ru/person/delFavObject';
+    let _resourceUrl =  this.servUrl + '/person/delFavObject';
     // console.log(_resourceUrl + JSON.stringify(body));
     let ret_subj = <AsyncSubject<any>>new AsyncSubject();
 
@@ -227,7 +229,7 @@ export class AccountService {
   }
   addFavObject( object_id: any) {
     const body = {object_id: object_id};
-    let _resourceUrl = 'https://maklersoft.ru/person/addFavObject';
+    let _resourceUrl =  this.servUrl + '/person/addFavObject';
     // console.log(_resourceUrl + JSON.stringify(body));
     let ret_subj = <AsyncSubject<any>>new AsyncSubject();
 
@@ -247,7 +249,7 @@ export class AccountService {
     let query = [];
     query.push('login=' + email);
     query.push('pass=' + pass);
-    let _resourceUrl = 'https://maklersoft.ru/person/get?' + query.join('&');
+    let _resourceUrl =  this.servUrl + '/person/get?' + query.join('&');
     let ret_subj = <AsyncSubject<any>>new AsyncSubject();
     // console.log(_resourceUrl);
 

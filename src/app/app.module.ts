@@ -16,6 +16,7 @@ import { NgxMaskModule } from 'ngx-mask';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxMetrikaModule } from '@kolkov/ngx-metrika';
 import { NgxMetrikaService } from '@kolkov/ngx-metrika';
+import { ConfigService} from "./services/config.service";
 
 const appRoutes: Routes = [
     { path: 'm', loadChildren: './mobile/mobile.module#MobileModule'},
@@ -55,7 +56,7 @@ const appRoutes: Routes = [
   ],
   exports: [RouterModule],
     bootstrap: [AppComponent],
-  providers: [ {provide: LocationStrategy, useClass: HashLocationStrategy}, OfferService, AccountService, NgxMetrikaService],
+  providers: [ {provide: LocationStrategy, useClass: HashLocationStrategy}, OfferService, AccountService, NgxMetrikaService, ConfigService],
 })
 
 export class AppModule {

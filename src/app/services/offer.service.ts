@@ -3,12 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import {AsyncSubject} from "rxjs/AsyncSubject";
 import {map} from 'rxjs/operators';
 import {Item} from "../item";
+import {ConfigService} from "./config.service";
 
 
 @Injectable()
 export class OfferService {
-
-  constructor(private _http: HttpClient) {}
+    servUrl: any;
+  constructor(private _http: HttpClient, config: ConfigService) {
+      this.servUrl = config.getConfig('servUrl');
+  }
 
   list(page: number, perPage: number, filter: any, sort: any, equipment: any, coords: any) {
     // console.log('offers list');
@@ -31,7 +34,7 @@ export class OfferService {
       // addDate finalRaiting
       query.push('search_area=' + JSON.stringify(coords));
     }
-    let _resourceUrl = 'https://maklersoft.ru/offer/list?' + query.join("&");
+    let _resourceUrl =  this.servUrl + '/offer/list?' + query.join("&");
 
     let ret_subj = <AsyncSubject<Item[]>>new AsyncSubject();
 

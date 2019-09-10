@@ -1,6 +1,8 @@
 import { Component, OnInit, AfterViewInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import json_data from '../assets/project.config.json';
+import {ConfigService} from "./services/config.service";
 
 
 @Component({
@@ -12,10 +14,13 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 
 export class AppComponent implements OnInit, AfterViewInit {
     deviceInfo = null;
-    constructor( private route: ActivatedRoute, private deviceService: DeviceDetectorService) {
-     this.resolveDevice();
 
+    siteUrl = "";
+    constructor( private route: ActivatedRoute, private deviceService: DeviceDetectorService, private  config: ConfigService) {
+        this.siteUrl = this.config.getConfig('siteUrl');
+        this.resolveDevice();
     }
+
     title = 'app';
     delta = 0;
     width = document.documentElement.clientWidth;
@@ -634,6 +639,7 @@ export class AppComponent implements OnInit, AfterViewInit {
             }
         }
     }
+
     resolveDevice() {
       this.deviceInfo = this.deviceService.getDeviceInfo();
       const isMobile = this.deviceService.isMobile();
@@ -643,26 +649,26 @@ export class AppComponent implements OnInit, AfterViewInit {
       console.log(document.location.href);
       let url = document.location.href;
 
-      if (url.indexOf('makleronline.net/#/m') == -1 && url.indexOf('makleronline.net/#/d') == -1 && url.indexOf('makleronline.net/#/sitemap.xml') == -1 &&
-          url.indexOf('makleronline.net/#/t') == -1 && url.indexOf('makleronline.net:4000') == -1) {
+      if (url.indexOf(this.siteUrl + '/#/m') == -1 && url.indexOf(this.siteUrl + '/#/d') == -1 && url.indexOf(this.siteUrl + '/#/sitemap.xml') == -1 &&
+          url.indexOf(this.siteUrl + '/#/t') == -1 && url.indexOf(this.siteUrl + ':4000') == -1) {
         if (isMobile) {
-          document.location.href = '//makleronline.net/#/m';
+          document.location.href = '//' + this.siteUrl + '/#/m';
         } else if (isDesktopDevice) {
-          document.location.href = '//makleronline.net/#/d';
+          document.location.href = '//' + this.siteUrl + '/#/d';
         } else if (isTablet) {
-          document.location.href = '//makleronline.net/#/t';
+          document.location.href = '//' + this.siteUrl + '/#/t';
         } else {
-            document.location.href = '//makleronline.net/#/d';
+            document.location.href = '//' + this.siteUrl + '/#/d';
         }
       }
 
-        if (url.indexOf('makleronline.net:4000') != -1) {
+        if (url.indexOf(this.siteUrl + ':4000') != -1) {
             if (isMobile) {
-                document.location.href = '//makleronline.net:4000/m';
+                document.location.href = '//' + this.siteUrl + ':4000/m';
             } else if (isDesktopDevice) {
-                document.location.href = '//makleronline.net:4000/d';
+                document.location.href = '//' + this.siteUrl + ':4000/d';
             } else if (isTablet) {
-                document.location.href = '//makleronline.net:4000/t';
+                document.location.href = '//' + this.siteUrl + ':4000/t';
             }
         }
     }

@@ -4,6 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {OfferService} from '../../../services/offer.service';
 import {AccountService} from '../../../services/account.service';
 import { NgxMetrikaService } from '@kolkov/ngx-metrika';
+import {ConfigService} from "../../../services/config.service";
 
 @Component({
   selector: 'app-menu',
@@ -19,14 +20,16 @@ export class MenuComponent implements OnInit {
   text: any;
   agreement: any;
     subscription: any;
+    siteUrl: any;
 
   @Output() updateItems = new EventEmitter();
     @Output() Logging = new EventEmitter();
     @Output() Paying = new EventEmitter();
 
-  constructor(private ym: NgxMetrikaService, @Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute,
+  constructor(private ym: NgxMetrikaService, @Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, config: ConfigService,
               private _offer_service: OfferService,
               private _account_service: AccountService) {
+      this.siteUrl = config.getConfig('siteUrl');
   }
 
   ngOnInit() {
