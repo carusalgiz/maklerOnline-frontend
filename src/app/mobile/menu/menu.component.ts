@@ -4,6 +4,7 @@ import {Item} from '../../item';
 import {ActivatedRoute} from '@angular/router';
 import {OfferService} from '../../services/offer.service';
 import {AccountService} from '../../services/account.service';
+import {ConfigService} from "../../services/config.service";
 
 @Component({
   selector: 'app-menu',
@@ -23,15 +24,17 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
   redirect = false;
   text: any;
   agreement: any;
-
+    siteUrl: any;
   innerBlockOpen = 'menu';
   @Input() blockOpenInput: String;
     @Input() headerPos: number;
   @Output() openMenu = new EventEmitter();
     @Output() blockClosed = new EventEmitter();
-  constructor(@Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute,
+  constructor(@Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, config: ConfigService,
               private _offer_service: OfferService,
-              private _account_service: AccountService) {}
+              private _account_service: AccountService) {
+      this.siteUrl = config.getConfig('siteUrl');
+  }
 
   ngOnInit() {
     this.checklogin();

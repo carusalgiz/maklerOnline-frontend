@@ -9,6 +9,11 @@
         <div *ngIf="imgLen == 0" class="photoBlock" style="background-size: 100% 100%;background-image: url('../../../../assets/noph.png')"  [class.watched]="watched == true"
              [class.historyOpen]="historyOpen == true"
              (click)="galleryOpen()">
+            <img class="img"
+                 [title]="'makleronline снять ' + item?.roomsCount + ' комнатную квартиру в хабаровске без посредников'"
+                 [alt]="'makleronline аренда ' + item?.roomsCount + ' комнатной квартиры в хабаровске без посредников'"
+                 [src]="src">
+            <div class="no-photo">{{photo_no_title}}</div>
           <div class="starFav" (click)="item.is_fav = !item.is_fav">
             <img class="starImg" [class.open]="!item.is_fav"  src="../../../../assets/4-4%20—mobil.png" width="22px">
             <img class="starImg" [class.open]="item.is_fav" src="../../../../assets/4-4%20watched.png" width="22px">
@@ -48,7 +53,7 @@
 
     <div *ngIf="(mode == 'full')">
       <div class="top-block">
-        <a class="itemArrowBack" (click)="closeItemBlock()"  href="//makleronline.net/#/m/objects/list"><img src="../../../../assets/arrow-item.png" class="iconImg" width="30px"></a>
+        <a class="itemArrowBack" (click)="closeItemBlock()"  href="//{{siteUrl}}/#/m/objects/list"><img src="../../../../assets/arrow-item.png" class="iconImg" width="30px"></a>
          <div class="info" *ngIf="mode == 'full'" style="align-items: flex-end;justify-content: center;padding-right: 20px;">
           <div class="price">
             <div><span class="price-num" style="font-weight: bold;">{{formattedPrice}}</span></div>
@@ -60,15 +65,25 @@
         <div *ngIf="imgLen == 0" class="photoBlock" style="background-size: 100% 100%;background-image: url('../../../../assets/noph.png')" [class.watched]="watched == true"
              [class.historyOpen]="historyOpen == true"
              (click)="galleryOpen()">
+            <img class="img"
+                 [title]="'makleronline снять ' + item?.roomsCount + ' комнатную квартиру в хабаровске без посредников'"
+                 [alt]="'makleronline аренда ' + item?.roomsCount + ' комнатной квартиры в хабаровске без посредников'"
+                 [src]="src">
+            <div class="no-photo">{{photo_no_title}}</div>
           <div class="starFav" (click)="item.is_fav = !item.is_fav">
             <img class="starImg" [class.open]="!item.is_fav"  src="../../../../assets/4-4%20—mobil.png" width="22px">
             <img class="starImg" [class.open]="item.is_fav" src="../../../../assets/4-4%20watched.png" width="22px">
           </div>
-            <div class="no-photo">{{photo_no_title}}</div>
+
         </div>
         <div *ngIf="imgLen != 0" class="photoBlock" style="    background-size: 100% 100%;" [ngStyle]="{'background-image': 'url('+imgSrc+')'}" [class.watched]="watched == true"
              [class.historyOpen]="historyOpen == true"
              (click)="galleryOpen()">
+            <img class="img"
+                 [title]="'makleronline снять ' + item?.roomsCount + ' комнатную квартиру в хабаровске без посредников'"
+                 [alt]="'makleronline аренда ' + item?.roomsCount + ' комнатной квартиры в хабаровске без посредников'"
+                 [src]="src">
+            <div class="no-photo">{{photo_no_title}}</div>
           <div class="starFav">
             <img class="starImg" [class.open]="!item.is_fav"  src="../../../../assets/4-4%20—mobil.png" width="22px">
             <img class="starImg" [class.open]="item.is_fav" src="../../../../assets/4-4%20watched.png" width="22px">
@@ -257,9 +272,9 @@
     <div class="photoGallery" id="anchor">
       <div class="photos">
         <ul id="photoGallery-ul">
-          <li class="photoGallery-li" *ngFor="let img of item?.photoUrl">
+          <li class="photoGallery-li" *ngFor="let img of item?.photos">
             <div class="photo-img">
-              <img class="inner-img" src="{{img}}"/>
+              <img class="inner-img" src="{{img?.href}}"/>
             </div>
           </li>
         </ul>

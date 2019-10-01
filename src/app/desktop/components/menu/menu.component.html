@@ -15,12 +15,12 @@
     <ul>
       <li>
         <div class="ext">
-          <a class="menuBlock" (mousedown)="timeUpdate()" (click)="ymFunc('main-menu');selected($event)" href="//{{siteUrl}}/#/d" routerLinkActive="active">ГЛАВНАЯ</a>
+          <a class="menuBlock" (mousedown)="timeUpdate()" (click)="ymFunc('main-menu')" href="//{{siteUrl}}/#/d" routerLinkActive="active">ГЛАВНАЯ</a>
         </div>
       </li>
       <li>
         <div class="ext">
-          <a class="menuBlock" (mousedown)="timeUpdate()" (click)="ymFunc('offer-menu');selected($event); update()" href="//{{siteUrl}}/#/d/objects/list"
+          <a class="menuBlock" (mousedown)="timeUpdate()" (click)="ymFunc('offer-menu'); update()" href="//{{siteUrl}}/#/d/objects/list"
                routerLinkActive="active">ПРЕДЛОЖЕНИЯ
           </a>
         </div>
@@ -67,3 +67,19 @@
 <app-pay class="right-slide-box" [itemOpen]="true" [redirect]="redirect" (payingMode)="Paying.emit($event)" [updateBalance]="loggedIn" (logout)="log_out()" (days)="days = $event" (time)="time = $event" (blockClose)="closeBlock($event)"></app-pay>
 <div class="right-slide-box agreement"><app-agreement (blockClose)="closeBlock($event)" [mode]="'agreement'"></app-agreement></div>
 <div class="right-slide-box agreement"><app-agreement (blockClose)="closeBlock($event)" [mode]="'addition'"></app-agreement></div>
+<div class="right-slide-box access_token">
+    <div class="hideMenu" (click)="closeBlock('access_token');">
+        <div class="barExit1"></div>
+        <div class="barExit2"></div>
+    </div>
+    <div class="instruction">
+        Для публикации объявлений в соц.сети Вконтакте необходимо получить уникальный ключ пользователя. Для этого необходимо выполнить следующие шаги:
+        <div class="step">1. В появившемся окошке нажать "Разрешить". После этого произойдет переход на страницу с ключом</div>
+        <div class="step">2. Из адресной строки окошка необходимо скопировать ключ, который находится между "access_token=" и знаком "&". Таким образом ключ будет примерно такого вида:   129a181fc57e48ff29a4c5c56d953243e55ca6d458d552e130be4fc8b6f7e7ce90c57e938d5c85ced3e75</div>
+        <div class="step">3. Полученный ключ вставляем в поле ниже</div>
+        <div class="step">4. Нажимаем сохранить</div>
+        <div class="step">5. Вы прекрасны!</div>
+        <input style="width: 330px;" id="access_token" [(ngModel)]="token">
+        <div style="width: 200px; height: 30px; background-color: pink; margin-left: calc(50% - 100px); text-align: center; margin-top: 15px" (click)="save_token()">Сохранить</div>
+    </div>
+</div>

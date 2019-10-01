@@ -7,7 +7,7 @@
 <header class="header" [style.top.px]="headerPos">
   <div class="top-logo-block">
       <a class="logo-mobile" style="outline: none;text-decoration: none"
-           href="//makleronline.net/#/m">
+           href="//{{siteUrl}}/#/m">
         <div>MAKLERONLINE</div>
         <div class="logo-mobile-title">ГРУППА КОМПАНИЙ ZAVRUS</div>
       </a>
@@ -26,7 +26,7 @@
 <div class="menuMobile" [class.open]="mobileMenuActive">
   <div style="display: flex;margin-bottom: 25px;">
     <a class="logo-mobile contact-menu-info"   (click)="displayMenu('hide');closeButtons(); homePageOpen(false);menuOpen('close')"
-       href="//makleronline.net/#/m"  style="outline: none;text-decoration: none;margin-left: 30px;color: #8F8F8F" [class.close]="logged_in">
+       href="//{{siteUrl}}/#/m"  style="outline: none;text-decoration: none;margin-left: 30px;color: #8F8F8F" [class.close]="logged_in">
       <div>MAKLERONLINE</div>
       <div class="logo-mobile-title">ГРУППА КОМПАНИЙ ZAVRUS</div>
     </a>
@@ -52,7 +52,7 @@
   <div class="line"></div>
   <ul>
     <li><a style="outline: none;text-decoration: none"  class="mobileBlock" (click)=" displayMenu('hide');closeButtons(); homePageOpen(false);menuOpen('close')"
-           href="//makleronline.net/#/m">
+           href="//{{siteUrl}}/#/m">
       <div class="mobUl">ГЛАВНАЯ</div>
     </a></li>
     <li>
@@ -72,17 +72,17 @@
         <li>
           <div style="display: flex">
             <div style="flex-grow: 1" (click)="displayMenu('hide');closeButtons();homePageOpen(true);menuOpen('close')">
-              <a style="outline: none;text-decoration: none" class="innerMenu" href="//makleronline.net/#/m/objects/list">Все предложения</a></div>
+              <a style="outline: none;text-decoration: none" class="innerMenu" href="//{{siteUrl}}/#/m/objects/list">Все предложения</a></div>
           </div>
         </li>
         <li>
           <div style="display: flex">
-            <div (click)="displayMenu('hide');closeButtons();menuOpen('close')"  style="flex-grow: 1"><a style="outline: none;text-decoration: none" class="innerMenu" href="//makleronline.net/#/m/objects/filters">Избранное</a></div>
+            <div (click)="displayMenu('hide');closeButtons();menuOpen('close')"  style="flex-grow: 1"><a style="outline: none;text-decoration: none" class="innerMenu" href="//{{siteUrl}}/#/m/objects/filters">Избранное</a></div>
           </div>
         </li>
         <li>
           <div style="display: flex">
-            <div (click)="displayMenu('hide');closeButtons();menuOpen('close')" style="flex-grow: 1"><a style="outline: none;text-decoration: none" class="innerMenu" href="//makleronline.net/#/m/objects/history">Добавить предложение</a></div>
+            <div (click)="displayMenu('hide');closeButtons();menuOpen('close')" style="flex-grow: 1"><a style="outline: none;text-decoration: none" class="innerMenu" href="//{{siteUrl}}/#/m/objects/history">Добавить предложение</a></div>
           </div>
         </li>
       </ul>

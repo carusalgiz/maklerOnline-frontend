@@ -16,6 +16,44 @@ div:hover, span:hover, p:hover {
   overflow-y: auto;
   top: 195px;
 }
+.instruction{
+    padding: 20px;
+    font-size: 14px;
+    font-family: Cadillac, sans-serif;
+}
+.step{
+    padding: 5px 0 0 15px;
+}
+.barExit1, .barExit2{
+    width: 25px;
+    height: 1px;
+    background-color: #8F8F8F;
+    margin: 3px 0;
+}
+.barExit1{
+    transform: rotate(45deg) translate(13px,6px);
+}
+.barExit2{
+    transform: rotate(-45deg) translate(-3px, 10px);
+}
+.hideMenu{
+    position: relative;
+    right: -190px;
+    top: -30px;
+    width: 30px;
+    height: 30px;
+    transition: .03s;
+    margin-top: 15px;
+}
+.hideMenu:hover .barExit1{
+    background-color: #252f32;
+    height: 2px;
+    transform: rotate(45deg) translate(14px,6px);
+}
+.hideMenu:hover .barExit2{
+    background-color: #252f32;
+    height: 2px;
+}
 .right-slide-box.agreement{
   width: 450px;
   right: -450px;

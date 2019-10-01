@@ -1,8 +1,9 @@
 import { Component, OnInit, AfterViewInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import json_data from '../assets/project.config.json';
 import {ConfigService} from "./services/config.service";
+import {split} from 'ts-node';
+import {AccountService} from './services/account.service';
 
 
 @Component({
@@ -16,7 +17,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     deviceInfo = null;
 
     siteUrl = "";
-    constructor( private route: ActivatedRoute, private deviceService: DeviceDetectorService, private  config: ConfigService) {
+    constructor( private route: ActivatedRoute, private deviceService: DeviceDetectorService, private  config: ConfigService,private _account_service: AccountService) {
         this.siteUrl = this.config.getConfig('siteUrl');
         this.resolveDevice();
     }
@@ -648,9 +649,43 @@ export class AppComponent implements OnInit, AfterViewInit {
 
       console.log(document.location.href);
       let url = document.location.href;
+       if (url.indexOf('access_token') != -1) {
+
+            let str = url.split('=');
+            let params = [];
+            for (let i = 1; i < str.length; i++) {
+                let par = str[i].split('&');
+                params.push(par[0]);
+            }
+            let user_data = params[params.length-1].split('_');
+            // http://dev.makleronline.net/#access_token=c31fd5f6d4f59538fb482e92210fb4e39d5073e142bc599d01919d091cb32322c9be887938e4a40682c37&expires_in=86400&user_id=122956555&state=123456
+            let body = {
+                access_token: params[0],
+                user_id_vk: params[2],
+                user_id: user_data[0],
+                obj_id: user_data[1]
+            };
+           this._account_service.save_access_token(body).subscribe(res => {
+               console.log(res);
+               if (res != undefined) {
+                   let data = JSON.parse(JSON.stringify(res));
+                   if (data.obj_id != undefined) {
+                       window.location.href = this.siteUrl + "/#/d/objects/" + data.obj_id;
+                   } else {
+                       alert(data.error)
+                   }
+               }
+           });
+           // this._account_service.publish(params[0]).subscribe(res => {
+           //     console.log(res);
+           //     console.log(res);
+           // });
+           window.location.href = "https://api.vk.com/method/wall.post?owner_id=-186613956&message=%D0%A2%D0%B5%D1%81%D1%82%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%BF%D0%BE%D1%81%D1%82&access_token=6daefd335a545179be2612f5e332a6c4439af3e7099721ce2593409d3fed901cd39bd90891debfd6776f9&v=5.101";
+       }
+    setTimeout(e =>{ console.log('done!')}, 5000);
 
       if (url.indexOf(this.siteUrl + '/#/m') == -1 && url.indexOf(this.siteUrl + '/#/d') == -1 && url.indexOf(this.siteUrl + '/#/sitemap.xml') == -1 &&
-          url.indexOf(this.siteUrl + '/#/t') == -1 && url.indexOf(this.siteUrl + ':4000') == -1) {
+          url.indexOf(this.siteUrl + '/#/t') == -1 && url.indexOf(this.siteUrl + ':4000') == -1 && url.indexOf('access_token') == -1) {
         if (isMobile) {
           document.location.href = '//' + this.siteUrl + '/#/m';
         } else if (isDesktopDevice) {

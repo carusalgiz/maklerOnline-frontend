@@ -1,7 +1,60 @@
 div:hover, span:hover, p:hover {
     cursor: default;
 }
-
+.popup-groups{
+    position: fixed;
+    width: 400px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    top: 230px;
+    left: calc(50% - 200px);
+    overflow-y: auto;
+    z-index: 99999;
+    box-shadow: 3px 3px 9px grey;
+}
+.publish-button{
+    height: 30px;
+    width: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #4a76a8;
+    color: white;
+    font-family: Cadillac, sans-serif;
+    letter-spacing: 0.05em;
+}
+.group-title{
+    font-family: Cadillac;
+    text-align: center;
+    font-size: 14px;
+    padding: 10px 0;
+}
+.group-box{
+    height: 70px;
+    display: flex;
+    width: calc(100% - 40px);
+    margin: 5px 20px;
+    border: 1px solid #80808061;
+    padding: 5px;
+    font-family: Cadillac, sans-serif;
+    letter-spacing: 0.05em;
+    align-items: center;
+    font-size: 14px;
+}
+.group-box:hover{
+     background-color: #e2e2e252;
+ }
+.group-box:active{
+    background-color: #8080803b;
+}
+.group-pic{
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    margin-left: 15px;
+}
 .starImg {
     display: none;
     position: relative;
@@ -318,6 +371,7 @@ div:hover, span:hover, p:hover {
 .street .special {
     font-weight: bold;
     text-transform: uppercase;
+    margin-left: 3px;
 }
 
 .add-margin {

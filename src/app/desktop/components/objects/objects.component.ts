@@ -158,6 +158,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
+
         if ((this.item === undefined || this.item === null) && this.itemOpen === true) {
             this.filtersActive = true;
         }

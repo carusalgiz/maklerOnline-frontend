@@ -21,7 +21,7 @@ export class MenuComponent implements OnInit {
   agreement: any;
     subscription: any;
     siteUrl: any;
-
+    token: any;
   @Output() updateItems = new EventEmitter();
     @Output() Logging = new EventEmitter();
     @Output() Paying = new EventEmitter();
@@ -150,6 +150,7 @@ export class MenuComponent implements OnInit {
         let data = JSON.parse(JSON.stringify(res));
         if (data.result == 'success' ) {
           this.userEmail = data.email;
+          localStorage.setItem('cur_id', data.user_id);
           this.loggedIn = true;
           this.Logging.emit("true");
         } else {
@@ -164,6 +165,25 @@ export class MenuComponent implements OnInit {
       }
     });
   }
+    save_token() {
+       // alert(this.token);
+        let body = {
+            access_token: this.token,
+            user_id: localStorage.getItem('cur_id'),
+            obj_id: localStorage.getItem('obj_id')
+        };
+        this._account_service.save_access_token(body).subscribe(res => {
+            console.log(res);
+            if (res != undefined) {
+                let data = JSON.parse(JSON.stringify(res));
+                if (data.obj_id != undefined) {
+                    window.location.href = this.siteUrl + "/#/d/objects/" + data.obj_id;
+                } else {
+                    alert(data.error)
+                }
+            }
+        });
+    }
   log_out() {
     this.userEmail = "email";
     this.loggedIn = false;
@@ -253,6 +273,9 @@ export class MenuComponent implements OnInit {
       case 'addition':
         slide.item(3).classList.remove('open');
         break;
+        case 'access_token':
+            slide.item(4).classList.remove('open');
+            break;
     }
   }
 }

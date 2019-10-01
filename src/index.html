@@ -12,11 +12,26 @@
     <meta name="yandex-verification" content="101d86323dc00895" />
     <meta name="google-site-verification" content="-K06RzyEn5ElnW06q4VOkoKfttixlWI7RCdICaAW-Z8" />
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <script src="https://widget.cloudpayments.ru/bundles/cloudpayments"></script>
-  <script src="https://api-maps.yandex.ru/2.1/?apikey=<18c256e1-ccf1-407d-8d8f-9a80eef29fa1>&lang=ru_RU&load=package.full,panorama.isSupported,panorama.locate,panorama.createPlayer,panorama.Player" type="text/javascript"></script>
-  <!--<script src="node_modules/jquery/src/jquery.maskedinput.js"></script>-->
+    <script src="https://vk.com/js/api/openapi.js?162" type="text/javascript"></script>
+    <script type="text/javascript" src="//api.ok.ru/js/fapi5.js" defer="defer"></script>
     </head>
 <body>
+<div id="vk_api_transport"></div>
+<script type="text/javascript">
+    window.vkAsyncInit = function() {
+        VK.init({
+            apiId: 7138237
+        });
+    };
+
+    setTimeout(function() {
+        var el = document.createElement("script");
+        el.type = "text/javascript";
+        el.src = "https://vk.com/js/api/openapi.js?162";
+        el.async = true;
+        document.getElementById("vk_api_transport").appendChild(el);
+    }, 0);
+</script>
 <app-root></app-root>
 </body>
 </html>

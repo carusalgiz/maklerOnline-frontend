@@ -17,6 +17,7 @@ import 'moment/locale/ru.js';
 import {ActivatedRoute} from '@angular/router';
 import {OfferService} from '../../../services/offer.service';
 import {AccountService} from '../../../services/account.service';
+import {ConfigService} from "../../../services/config.service";
 
 
 @Component({
@@ -25,9 +26,10 @@ import {AccountService} from '../../../services/account.service';
     styleUrls: ['./item.component.css']
 })
 export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
-    constructor(@Inject(WINDOW) private window: Window, @Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute,
+    constructor(@Inject(WINDOW) private window: Window, @Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute,config: ConfigService,
                 private _offer_service: OfferService,
                 private _account_service: AccountService) {
+        this.siteUrl = config.getConfig('siteUrl');
     }
 
     @Input() item: Item;
@@ -38,6 +40,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     @Input() id: number;
     @Input() historyId: number;
     @Input() currentPage: string;
+    siteUrl: any;
     loggedIn = false;
     objStop: any;
     timeToBusStop: any;
@@ -65,7 +68,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     imgSrc: any;
     time: any;
     length = false;
-    src: any;
+    src = 'https://makleronline.net/assets/noph.png';
     photo_no_title: any;
     @Output() similarItem = new EventEmitter<Item>();
     @Output() showInfoEvent = new EventEmitter();
@@ -232,6 +235,9 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
             } else {
                 this.imgLen = this.item.photos.length;
             }
+            if (this.item.photos != undefined) {
+                this.src = this.item.photos[0] != undefined ? this.item.photos[0].href : 'https://makleronline.net/assets/noph.png';
+            }
             this.widthDocument = document.documentElement.clientWidth;
 
         }
@@ -240,9 +246,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
 
         if (this.mode == 'full' && this.item != undefined) {
             this.time = this.localStorage.getItem("timeAdd");
-            if (this.item.photos != undefined) {
-                this.src = this.item.photos[0] != undefined ? this.item.photos[0].href : 'https://makleronline.net/assets/noph.png';
-            }
+
             let date = this.item.addDate;
             let day = moment.unix(this.item.addDate);
             let curDate = new Date();

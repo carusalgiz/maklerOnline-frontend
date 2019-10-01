@@ -71,6 +71,67 @@ export class AccountService {
     );
     return ret_subj;
   }
+  save_access_token(body) {
+      let query = [];
+      query.push('access_token=' + body.access_token);
+      query.push('user_id=' + body.user_id);
+      query.push('obj_id=' + body.obj_id);
+
+      let _resourceUrl =  this.servUrl + '/saveAccessToken?'+ query.join('&');
+      let ret_subj = <AsyncSubject<any>>new AsyncSubject();
+
+      this._http.get(_resourceUrl, { withCredentials: true }).pipe(
+          map((res: Response) => res)).subscribe(
+          data => {
+              ret_subj.next(data);
+              ret_subj.complete();
+          },
+          err => console.log(err)
+      );
+      return ret_subj;
+  }
+    sendPost(item:Item) {
+        let query = [];
+        query.push('item=' + JSON.stringify(item));
+        let _resourceUrl =  this.servUrl + '/publish?'+ query.join('&');
+        let ret_subj = <AsyncSubject<any>>new AsyncSubject();
+
+        this._http.post(_resourceUrl, { withCredentials: true }).pipe(
+            map((res: Response) => res)).subscribe(
+            data => {
+                ret_subj.next(data);
+                ret_subj.complete();
+            },
+            err => console.log(err)
+        );
+        return ret_subj;
+    }
+    publish(photo, url, index) {
+        const body = {url: url, photo: photo, index: index};
+        let _resourceUrl =  this.servUrl + '/publish';
+
+        let ret_subj = <AsyncSubject<any>>new AsyncSubject();
+
+        this._http.post(_resourceUrl, JSON.stringify(body)).pipe(
+            map((res: Response) => res)).subscribe(
+
+            data => {
+                // let obj: any;
+                // if (data.result) {
+                //   // obj.hitsCount = data.result.hitsCount;
+                //   obj = data.result;
+                //  // console.log(obj);
+                //   ret_subj.next(obj);
+                //   ret_subj.complete();
+                // }
+                ret_subj.next(data);
+                ret_subj.complete();
+            },
+            err => console.log(err)
+        );
+        console.log(ret_subj);
+        return ret_subj;
+    }
   saveUser(accountId: any, email_block: any, phone_block: any) {
     const body = {accountId: accountId, emailBlock: email_block, phoneBlock: phone_block, sourceCode: "internet"};
     let _resourceUrl =  this.servUrl + '/person/save';
