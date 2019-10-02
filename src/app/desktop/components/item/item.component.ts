@@ -153,6 +153,18 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                 console.log('User cancelled login or did not fully authorize.');
             }
         });
+        FB.api(
+            "100002163630078/feed",
+            "POST",
+            {
+                "message": "This is a test message"
+            },
+            function (response) {
+                if (response && !response.error) {
+                    /* handle the result */
+                }
+            }
+        );
     }
 
     ok_publish(){
