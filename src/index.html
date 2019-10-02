@@ -17,6 +17,7 @@
     </head>
 <body>
 <div id="vk_api_transport"></div>
+<div id="fb_api_transport"></div>
 <script type="text/javascript">
     window.vkAsyncInit = function() {
         VK.init({
@@ -30,6 +31,23 @@
         el.src = "https://vk.com/js/api/openapi.js?162";
         el.async = true;
         document.getElementById("vk_api_transport").appendChild(el);
+    }, 0);
+</script>
+<script type="text/javascript">
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId            : 3174677922603350,
+            autoLogAppEvents : true,
+            xfbml            : true,
+            version          : 'v4.0'
+        });
+    };
+    setTimeout(function() {
+        var el = document.createElement("script");
+        el.type = "text/javascript";
+        el.src = "https://connect.facebook.net/en_US/sdk.js";
+        el.async = true;
+        document.getElementById("fb_api_transport").appendChild(el);
     }, 0);
 </script>
 <app-root></app-root>

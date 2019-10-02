@@ -11,8 +11,10 @@ import {map} from 'rxjs/operators';
 import {ConfigService} from '../../../services/config.service';
 import {AsyncSubject} from 'rxjs';
 import {group} from "@angular/animations";
+import {Md5} from 'ts-md5/dist/md5';
+import { IgApiClient } from 'instagram-private-api';
 declare  var     VK: any;
-declare  var     OKSDK: any;
+declare  var     FB: any;
 @Component({
     selector: 'app-item',
     templateUrl: './item.component.html',
@@ -127,12 +129,32 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                 app_id: 512000104776,
                 app_key: 'CJEKJGJGDIHBABABA'
             };
-            OKSDK.init(config, () => { console.log("ok success!")}, (e) => { console.log(e)});
+            FB.init({
+                appId            : 3174677922603350,
+                autoLogAppEvents : true,
+                xfbml            : true,
+                version          : 'v4.0'
+            });
+           // OKSDK.init(config, () => { console.log("ok success!")}, (e) => { console.log(e)});
 
         }, 1000);
         this.checkParams();
         this.cur_href = document.location.href;
     }
+
+    inst() {
+        FB.login((response) => {
+            if (response.authResponse) {
+                console.log('Welcome!  Fetching your information.... ');
+                FB.api('/me', function(response) {
+                    console.log('Good to see you, ' + response.name + '.');
+                });
+            } else {
+                console.log('User cancelled login or did not fully authorize.');
+            }
+        });
+    }
+
     ok_publish(){
         let obj = this.item;
         let apart_type = '', rooms = '', square = '', conveniencesShort = '', floor = '', price = '';
@@ -189,6 +211,17 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
             "#арендаквартирХабаровск#сдамквартирувХабаровске#недвижимостьХабаровск#сдамснимуквартируХабаровск#арендаkhv#аренданедвижимости\n"
         ;
 
+        let attachment = '{"media":[{"type":"text","text":"hello"}]}';
+        let md5 = Md5.hashStr("st.attachment=" + attachment + '88FD7C038F62AE4C8038B146');
+        console.log(md5);
+        let href = "https://connect.ok.ru/dk" +
+            "?st.cmd=WidgetMediatopicPost" +
+            "&st.app=512000104776" +
+            "&st.attachment=" + attachment +
+            "&st.signature=" + md5 +
+            "&st.popup=on" +
+            "&st.utext=on" ;
+        window.open(href, "Odnoklassniki");
 
     }
 
@@ -755,40 +788,72 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     }
     publishVk(type) {
         console.log(VK);
-        VK.Auth.login(response => {
-            if (response.session) {
-                console.log('expire: ' + response.session.expire);
-                console.log('mid: ' + response.session.mid);
-                console.log('fio: ' + response.session.user.first_name + ' ' + response.session.user.last_name );
-                console.log('userDomain: ' + response.session.user.domain);
-
-                if (response.settings) {
-                    console.log(response.settings);
-                    // Выбранные настройки доступа пользователя если они были запрошены
-                }
-            } else {
-                // Пользователь нажал кнопку Отмена в окне авторизации
-            }
-        },  VK.access.FRIENDS | VK.access.PHOTOS | VK.access.WALL | VK.access.ADS | VK.access.GROUPS  );
+        // VK.Auth.login(response => {
+        //     if (response.session) {
+        //         console.log('expire: ' + response.session.expire);
+        //         console.log('mid: ' + response.session.mid);
+        //         console.log('fio: ' + response.session.user.first_name + ' ' + response.session.user.last_name );
+        //         console.log('userDomain: ' + response.session.user.domain);
+        //
+        //         if (response.settings) {
+        //             console.log(response.settings);
+        //             // Выбранные настройки доступа пользователя если они были запрошены
+        //         }
+        //     } else {
+        //         // Пользователь нажал кнопку Отмена в окне авторизации
+        //     }
+        // },  VK.access.FRIENDS | VK.access.PHOTOS | VK.access.WALL | VK.access.ADS | VK.access.GROUPS  );
 
         setTimeout(() => {
             VK.Auth.getLoginStatus( response => {
+                if (response.status != "connected") {
+                    VK.Auth.login(response => {
+                        if (response.session) {
+                            console.log('expire: ' + response.session.expire);
+                            console.log('mid: ' + response.session.mid);
+                            console.log('fio: ' + response.session.user.first_name + ' ' + response.session.user.last_name );
+                            console.log('userDomain: ' + response.session.user.domain);
+
+                            if (response.settings) {
+                                console.log(response.settings);
+                                // Выбранные настройки доступа пользователя если они были запрошены
+                            }
+                        } else {
+                            // Пользователь нажал кнопку Отмена в окне авторизации
+                        }
+                    },  VK.access.FRIENDS | VK.access.PHOTOS | VK.access.WALL | VK.access.ADS | VK.access.GROUPS  );
+                } else {
                 console.log(response);
-                if (type == 2) { this.groups_choice = true;}
-                if(response.session)
-                {
+                if (type == 2) {
+                    this.groups_choice = true;
+                }
+                if (response.session) {
 
                     let obj = this.item;
                     let apart_type = '', rooms = '', square = '', conveniencesShort = '', floor = '', price = '';
                     switch (obj.typeCode) {
-                        case "room": apart_type = "Комната "; break;
-                        case "apartment": apart_type = "Квартира "; break;
-                        case "house": apart_type = "Дом "; break;
-                        case "dacha": apart_type = "Дача "; break;
-                        case "cottage": apart_type = "Коттедж "; break;
+                        case "room":
+                            apart_type = "Комната ";
+                            break;
+                        case "apartment":
+                            apart_type = "Квартира ";
+                            break;
+                        case "house":
+                            apart_type = "Дом ";
+                            break;
+                        case "dacha":
+                            apart_type = "Дача ";
+                            break;
+                        case "cottage":
+                            apart_type = "Коттедж ";
+                            break;
                     }
-                    if (obj.roomsCount != undefined) { rooms = obj.roomsCount + " комнатная" }
-                    if (obj.squareTotal != undefined) { square = "Площадь " + obj.squareTotal + " кв.м \n"}
+                    if (obj.roomsCount != undefined) {
+                        rooms = obj.roomsCount + " комнатная"
+                    }
+                    if (obj.squareTotal != undefined) {
+                        square = "Площадь " + obj.squareTotal + " кв.м \n"
+                    }
 
                     if (obj.conditions.bedding && obj.conditions.kitchen_furniture && obj.conditions.living_room_furniture) {
                         conveniencesShort += "Мебель да\n";
@@ -829,18 +894,22 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                         "УСЛОВИЯ ПРОЖИВАНИЯ\n" +
                         conveniencesShort +
                         "\n" +
-                       // "http://dev.makleronline.net/#/d" + "\n" +
+                        // "http://dev.makleronline.net/#/d" + "\n" +
                         "#арендаквартирХабаровск#сдамквартирувХабаровске#недвижимостьХабаровск#сдамснимуквартируХабаровск#арендаkhv#аренданедвижимости\n"
                     ;
 
 
                     console.log('photos: ', obj.photos);
-                    if (obj.photos!= undefined && obj.photos.length != 0) {
-                        VK.Api.call('photos.getWallUploadServer',{ uid:  response.session.mid, v: "5.101" }, answer =>{
+                    if (obj.photos != undefined && obj.photos.length != 0) {
+                        VK.Api.call('photos.getWallUploadServer', {uid: response.session.mid, v: "5.101"}, answer => {
                             console.log("get answer: ", answer);
                             let attachs = [];
                             let phlen = 0;
-                            if (obj.photos.length < 6) {phlen = obj.photos.length; } else { phlen = 6}
+                            if (obj.photos.length < 6) {
+                                phlen = obj.photos.length;
+                            } else {
+                                phlen = 6
+                            }
                             for (let i = 0; i < phlen; i++) {
                                 console.log(i, " photo ", obj.photos[i].href);
                                 this._account_service.publish(obj.photos[i].href, answer.response.upload_url, i).pipe(
@@ -865,13 +934,13 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                                                 if (attachs.length == phlen) {
                                                     let attachsStr = '';
                                                     for (let i = 0; i < attachs.length; i++) {
-                                                        if ( i < 9) {
+                                                        if (i < 9) {
                                                             attachsStr += attachs[i] + ',';
                                                         }
                                                     }
                                                     attachsStr += "http://dev.makleronline.net/#/d";
                                                     console.log(attachsStr);
-                                                    attachsStr = attachsStr.slice(0, attachsStr.length-1);
+                                                    attachsStr = attachsStr.slice(0, attachsStr.length - 1);
                                                     if (type == 1) {
                                                         VK.Api.call("wall.post", {
                                                             owner_id: response.session.mid,
@@ -905,27 +974,38 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                                                             for (let q = 0; q < dataAns.items.length; q++) {
                                                                 let type = "", closed = "";
                                                                 switch (dataAns.items[q].type) {
-                                                                    case "group": type = "группа"; break;
-                                                                    case "page" : type = "публичная страница"; break;
-                                                                    case "event": type = "мероприятие"; break;
+                                                                    case "group":
+                                                                        type = "группа";
+                                                                        break;
+                                                                    case "page" :
+                                                                        type = "публичная страница";
+                                                                        break;
+                                                                    case "event":
+                                                                        type = "мероприятие";
+                                                                        break;
                                                                 }
                                                                 switch (dataAns.items[q].is_closed) {
-                                                                    case 0: closed = "oткрытое"; break;
-                                                                    case 1: closed = "закрытое"; break;
-                                                                    case 2: closed = "частное"; break;
+                                                                    case 0:
+                                                                        closed = "oткрытое";
+                                                                        break;
+                                                                    case 1:
+                                                                        closed = "закрытое";
+                                                                        break;
+                                                                    case 2:
+                                                                        closed = "частное";
+                                                                        break;
                                                                 }
 
-                                                              //  if (dataAns.items[q].type == "group") {
-                                                                    this.groups.push({
-                                                                        id: -dataAns.items[q].id,
-                                                                        type: type,
-                                                                        name: dataAns.items[q].name,
-                                                                        href: dataAns.items[q].photo_50,
-                                                                        is_closed: closed
-                                                                    });
-                                                             //   }
+                                                                //  if (dataAns.items[q].type == "group") {
+                                                                this.groups.push({
+                                                                    id: -dataAns.items[q].id,
+                                                                    type: type,
+                                                                    name: dataAns.items[q].name,
+                                                                    href: dataAns.items[q].photo_50,
+                                                                    is_closed: closed
+                                                                });
+                                                                //   }
                                                             }
-
 
 
                                                             console.log(this.groups);
@@ -946,15 +1026,18 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                             }
                         }, onerror);
                     } else {
-                        VK.Api.call("wall.post", {owner_id: response.session.mid, message: post_text, v: "5.101"}, (data) => {
+                        VK.Api.call("wall.post", {
+                            owner_id: response.session.mid,
+                            message: post_text,
+                            v: "5.101"
+                        }, (data) => {
                             alert("Post ID:" + data.response.post_id);
                         });
                     }
-                }
-                else
-                {
+                } else {
                     alert("Для публикации записи необходимо авторизоваться через вк")
                 }
+            }
             });
         }, 1000);
 
