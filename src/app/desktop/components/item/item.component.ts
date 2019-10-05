@@ -13,8 +13,10 @@ import {AsyncSubject} from 'rxjs';
 import {group} from "@angular/animations";
 import {Md5} from 'ts-md5/dist/md5';
 import { IgApiClient } from 'instagram-private-api';
+import { ok } from 'ok.ru';
 declare  var     VK: any;
 declare  var     FB: any;
+declare  var     OKSDK: any;
 @Component({
     selector: 'app-item',
     templateUrl: './item.component.html',
@@ -135,7 +137,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                 xfbml            : true,
                 version          : 'v4.0'
             });
-           // OKSDK.init(config, () => { console.log("ok success!")}, (e) => { console.log(e)});
+            OKSDK.init(config, () => { console.log("ok success!")}, (e) => { console.log(e)});
 
         }, 1000);
         this.checkParams();
@@ -159,9 +161,11 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
             {
                 "message": "This is a test message"
             },
-            function (response) {
+             (response)  => {
                 if (response && !response.error) {
                     /* handle the result */
+                } else {
+                    console.log(response.error);
                 }
             }
         );
@@ -222,18 +226,26 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
             // "http://dev.makleronline.net/#/d" + "\n" +
             "#арендаквартирХабаровск#сдамквартирувХабаровске#недвижимостьХабаровск#сдамснимуквартируХабаровск#арендаkhv#аренданедвижимости\n"
         ;
-
-        let attachment = '{"media":[{"type":"text","text":"hello"}]}';
-        let md5 = Md5.hashStr("st.attachment=" + attachment + '88FD7C038F62AE4C8038B146');
-        console.log(md5);
-        let href = "https://connect.ok.ru/dk" +
-            "?st.cmd=WidgetMediatopicPost" +
-            "&st.app=512000104776" +
-            "&st.attachment=" + attachment +
-            "&st.signature=" + md5 +
-            "&st.popup=on" +
-            "&st.utext=on" ;
-        window.open(href, "Odnoklassniki");
+        let method = "users.getCurrentUser";
+        let params = {
+            "fields": "user.id, user.name"
+        };
+        OKSDK.REST.call(method, params, (status,data,error) => {
+            console.log("status: ", status);
+            console.log("data: ", data);
+            console.log("error: ", error);
+        });
+        // let attachment = '{"media":[{"type":"text","text":"hello"}]}';
+        // let md5 = Md5.hashStr("st.attachment=" + attachment + '88FD7C038F62AE4C8038B146');
+        // console.log(md5);
+        // let href = "https://connect.ok.ru/dk" +
+        //     "?st.cmd=WidgetMediatopicPost" +
+        //     "&st.app=512000104776" +
+        //     "&st.attachment=" + attachment +
+        //     "&st.signature=" + md5 +
+        //     "&st.popup=on" +
+        //     "&st.utext=on" ;
+        // window.open(href, "Odnoklassniki");
 
     }
 

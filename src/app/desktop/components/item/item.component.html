@@ -302,7 +302,7 @@
                         <!--<div class="button-contacts" *ngIf="!logged_in" (click)="openBlock('login')">КОНТАКТЫ</div>-->
                         <!--<div class="button-contacts" *ngIf="logged_in && time == 'true'">КОНТАКТЫ</div>-->
                     </div>
-                    <a class="button-contacts" style="background-color: coral; color: white" (click)="ok_publish()"></a>
+                    <a href="http://www.odnoklassniki.ru/oauth/authorize?client_id=512000104776&response_type=code&redirect_uri={{cur_href}}" title="Одноклассники" class="button-contacts" style="background-color: coral; color: white" ></a>
                     <a class="button-contacts" style="background-color: hotpink; color: white" (click)="inst()"></a>
                     <div style="width: 100%; display: flex; justify-content: center">
                         <div id="vk_auth"></div>

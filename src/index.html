@@ -18,6 +18,7 @@
 <body>
 <div id="vk_api_transport"></div>
 <div id="fb_api_transport"></div>
+<div id="ok_api_transport"></div>
 <script type="text/javascript">
     window.vkAsyncInit = function() {
         VK.init({
@@ -48,6 +49,18 @@
         el.src = "https://connect.facebook.net/en_US/sdk.js";
         el.async = true;
         document.getElementById("fb_api_transport").appendChild(el);
+    }, 0);
+</script>
+<script type="text/javascript">
+    window.okAsyncInit = function() {
+        OKSDK.init({ app_id: 512000104776, app_key: 'CJEKJGJGDIHBABABA' }, () => { console.log("ok success!")}, (e) => { console.log(e)});
+    };
+    setTimeout(function() {
+        var el = document.createElement("script");
+        el.type = "text/javascript";
+        el.src = "oksdk.js";
+        el.async = true;
+        document.getElementById("ok_api_transport").appendChild(el);
     }, 0);
 </script>
 <app-root></app-root>
