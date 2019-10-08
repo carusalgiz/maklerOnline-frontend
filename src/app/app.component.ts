@@ -653,6 +653,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
       console.log(document.location.href);
       let url = document.location.href;
+      console.log('-');
        if (url.indexOf('access_token') != -1) {
 
             let str = url.split('=');

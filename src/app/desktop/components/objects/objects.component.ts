@@ -258,6 +258,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
 
     ymFunc(target) {
         this.ym.reachGoal.next({target: target});
+        console.log('-');
     }
 
     openLeftPart(name) {

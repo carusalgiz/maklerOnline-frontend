@@ -172,6 +172,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
             OKSDK.init(config, () => {
                 console.log('ok success!');
             }, (e) => {
+                console.log('-');
                 console.log(e);
             });
         }
