@@ -160,6 +160,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     ok_publish() {
+
         let config = {
             app_id: 512000104776,
             app_key: 'CJEKJGJGDIHBABABA',
@@ -181,31 +182,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
             // обрабатываете сообщение от виджета здесь
         }, false);
 
-        OKSDK.Widgets.post(
-            null,
-            {
-                "attachment": {
-                    "media": [
-                        {
-                            "type": "text",
-                            "text": "Играй и получай бонусы!"
-                        },
-                        {
-                            "type": "app-ref",
-                            "appId": 512000104776
-                        }
-                    ]
-                },
-                "silent": true
-            }
-        );
-            OKSDK.REST.call('users.getCurrentUser', null, function(status, data, error) {
-                if (status == 'ok') {
-                    console.log('userdata: ', data);
-                } else {
-                    alert('Unable to retrieve current user ' + OKSDK.Util.toString(error));
-                }
-            });
+
 
             let obj = this.item;
             let apart_type = '', rooms = '', square = '', conveniencesShort = '', floor = '', price = '';
@@ -275,6 +252,31 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                 // "http://dev.makleronline.net/#/d" + "\n" +
                 '#арендаквартирХабаровск#сдамквартирувХабаровске#недвижимостьХабаровск#сдамснимуквартируХабаровск#арендаkhv#аренданедвижимости\n'
             ;
+        OKSDK.Widgets.post(
+            null,
+            {
+                "attachment": {
+                    "media": [
+                        {
+                            "type": "text",
+                            "text": post_text
+                        },
+                        {
+                            "type": "link",
+                            "url": this.cur_href
+                        }
+                    ]
+                },
+                "silent": true
+            }
+        );
+        // OKSDK.REST.call('users.getCurrentUser', null, function(status, data, error) {
+        //     if (status == 'ok') {
+        //         console.log('userdata: ', data);
+        //     } else {
+        //         alert('Unable to retrieve current user ' + OKSDK.Util.toString(error));
+        //     }
+        // });
             // let method = "users.getCurrentUser";
             // let params = {
             //     "fields": "user.id, user.name"
