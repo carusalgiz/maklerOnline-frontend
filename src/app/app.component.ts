@@ -4,6 +4,10 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import {ConfigService} from "./services/config.service";
 import {split} from 'ts-node';
 import {AccountService} from './services/account.service';
+import {map} from 'rxjs/operators';
+import {HttpClient} from '@angular/common/http';
+import {AsyncSubject} from 'rxjs';
+import {log} from 'util';
 
 
 @Component({
@@ -17,7 +21,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     deviceInfo = null;
 
     siteUrl = "";
-    constructor( private route: ActivatedRoute, private deviceService: DeviceDetectorService, private  config: ConfigService,private _account_service: AccountService) {
+    constructor( private _http: HttpClient, private route: ActivatedRoute, private deviceService: DeviceDetectorService, private  config: ConfigService,private _account_service: AccountService) {
         this.siteUrl = this.config.getConfig('siteUrl');
         this.resolveDevice();
     }
@@ -652,35 +656,72 @@ export class AppComponent implements OnInit, AfterViewInit {
        if (url.indexOf('access_token') != -1) {
 
             let str = url.split('=');
-            let params = [];
+            console.log(str);
+            let pars = [];
             for (let i = 1; i < str.length; i++) {
                 let par = str[i].split('&');
-                params.push(par[0]);
+                console.log(par);
+                pars.push(par[0]);
             }
-            let user_data = params[params.length-1].split('_');
-            // http://dev.makleronline.net/#access_token=c31fd5f6d4f59538fb482e92210fb4e39d5073e142bc599d01919d091cb32322c9be887938e4a40682c37&expires_in=86400&user_id=122956555&state=123456
-            let body = {
-                access_token: params[0],
-                user_id_vk: params[2],
-                user_id: user_data[0],
-                obj_id: user_data[1]
-            };
-           this._account_service.save_access_token(body).subscribe(res => {
-               console.log(res);
-               if (res != undefined) {
-                   let data = JSON.parse(JSON.stringify(res));
-                   if (data.obj_id != undefined) {
-                       window.location.href = this.siteUrl + "/#/d/objects/" + data.obj_id;
-                   } else {
-                       alert(data.error)
-                   }
-               }
-           });
+
+            let params = {
+                access_token: pars[0],
+                session_secret_key: pars[1]
+           };
+            sessionStorage.setItem('access', params.access_token);
+           sessionStorage.setItem('session', params.session_secret_key);
+            console.log(sessionStorage.getItem('access'));
+            console.log(params);
+           if (isMobile) {
+               document.location.href = '//' + this.siteUrl + '/#/m';
+           } else if (isDesktopDevice) {
+               document.location.href = '//' + this.siteUrl + '/#/d/objects/list';
+           } else if (isTablet) {
+               document.location.href = '//' + this.siteUrl + '/#/t';
+           } else {
+               document.location.href = '//' + this.siteUrl + '/#/d';
+           }
+           //  let _resourceUrl = "https://api.ok.ru/oauth/token.do?code=" + params.code +"&client_id=512000104776&client_secret=CJEKJGJGDIHBABABA&redirect_uri=" + this.siteUrl + "&grant_type=authorization_code";
+           // let ret_subj = <AsyncSubject<any>>new AsyncSubject();
+           // console.log('отправляем запрос на ', _resourceUrl);
+           //  this._http.post(_resourceUrl, { withCredentials: true }).pipe(
+           //     map((res: Response) => res)).subscribe(
+           //
+           //     data => {
+           //         console.log("result: ");
+           //         console.log(data);
+           //         ret_subj.next(data);
+           //         ret_subj.complete();
+           //     },
+           //     err => console.log(err)
+           // );
+           //  console.log(ret_subj);
+           //  setTimeout(() => { console.log('no answer') }, 3000);
+
+           //  let user_data = params[params.length-1].split('_');
+           //  // http://dev.makleronline.net/#access_token=c31fd5f6d4f59538fb482e92210fb4e39d5073e142bc599d01919d091cb32322c9be887938e4a40682c37&expires_in=86400&user_id=122956555&state=123456
+           //  let body = {
+           //      access_token: params[0],
+           //      user_id_vk: params[2],
+           //      user_id: user_data[0],
+           //      obj_id: user_data[1]
+           //  };
+           // this._account_service.save_access_token(body).subscribe(res => {
+           //     console.log(res);
+           //     if (res != undefined) {
+           //         let data = JSON.parse(JSON.stringify(res));
+           //         if (data.obj_id != undefined) {
+           //             window.location.href = this.siteUrl + "/#/d/objects/" + data.obj_id;
+           //         } else {
+           //             alert(data.error)
+           //         }
+           //     }
+           // });
            // this._account_service.publish(params[0]).subscribe(res => {
            //     console.log(res);
            //     console.log(res);
            // });
-           window.location.href = "https://api.vk.com/method/wall.post?owner_id=-186613956&message=%D0%A2%D0%B5%D1%81%D1%82%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%BF%D0%BE%D1%81%D1%82&access_token=6daefd335a545179be2612f5e332a6c4439af3e7099721ce2593409d3fed901cd39bd90891debfd6776f9&v=5.101";
+          // window.location.href = "https://api.vk.com/method/wall.post?owner_id=-186613956&message=%D0%A2%D0%B5%D1%81%D1%82%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%BF%D0%BE%D1%81%D1%82&access_token=6daefd335a545179be2612f5e332a6c4439af3e7099721ce2593409d3fed901cd39bd90891debfd6776f9&v=5.101";
        }
     setTimeout(e =>{ console.log('done!')}, 5000);
 

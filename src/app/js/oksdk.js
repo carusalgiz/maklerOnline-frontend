@@ -60,6 +60,7 @@
      */
     function init(args, success, failure) {
         args.oauth = args.oauth || {};
+        console.log(args.oauth);
         sdk_success = isFunc(success) ? success : nop;
         sdk_failure = isFunc(failure) ? failure : nop;
 
@@ -89,7 +90,7 @@
                     '?client_id=' + args['app_id'] +
                     '&scope=' + (args.oauth.scope || 'VALUABLE_ACCESS') +
                     '&response_type=' + 'token' +
-                    '&redirect_uri=' + (args.oauth.url || window.location.href) +
+                    '&redirect_uri=' + (args.oauth.url ) + //|| window.location.href) +
                     '&layout=' + (args.oauth.layout || 'a') +
                     '&state=' + (args.oauth.state || '');
                 return;
@@ -572,9 +573,19 @@
             keys.push(arg.toString());
         }
         keys.sort();
+        // ================== my things ==================================
+
+        state.accessToken = sessionStorage.getItem('access');
+        state.sessionSecretKey = sessionStorage.getItem('session');
+        state.app_id = 512000104776;
+        state.app_key = 'CJEKJGJGDIHBABABA';
+        console.log('keys:', keys);
+        console.log('args: ', args);
+        console.log('state: ', state);
+        //===========================================================
 
         var sigSource = '';
-        var query = state.widgetServer + 'dk?st.cmd=' + widget + '&st.app=' + state.app_id;
+        var query = 'https://connect.ok.ru/dk?st.cmd=' + widget + '&st.app=512000104776';
         for (var i = 0; i < keys.length; i++) {
             var key = "st." + keys[i];
             var val = args[keys[i]];
@@ -785,17 +796,19 @@
     function getRequestParameters(source) {
         var res = {};
         var url = source || window.location.search;
-
         if (url) {
             url = url.substr(1);    // Drop the leading '?' / '#'
             var nameValues = url.split("&");
 
             for (var i = 0; i < nameValues.length; i++) {
                 var nameValue = nameValues[i].split("=");
-                var name = nameValue[0];
-                var value = nameValue[1];
-                value = decodeURIComponent(value.replace(/\+/g, " "));
-                res[name] = value;
+                if (nameValue.length > 1) {
+                    var name = nameValue[0];
+                    var value = nameValue[1];
+                    value = decodeURIComponent(value.replace(/\+/g, " "));
+                    res[name] = value;
+                }
+
             }
         }
         return res;

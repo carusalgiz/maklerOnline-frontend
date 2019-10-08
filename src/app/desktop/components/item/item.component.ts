@@ -4,19 +4,21 @@ import {Item} from '../../../item';
 import {ActivatedRoute} from '@angular/router';
 import {AccountService} from '../../../services/account.service';
 import * as moment from 'moment';
-import { Title }     from '@angular/platform-browser';
+import {Title} from '@angular/platform-browser';
 import 'moment/locale/ru.js';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {ConfigService} from '../../../services/config.service';
 import {AsyncSubject} from 'rxjs';
-import {group} from "@angular/animations";
+import {group} from '@angular/animations';
 import {Md5} from 'ts-md5/dist/md5';
-import { IgApiClient } from 'instagram-private-api';
-import { ok } from 'ok.ru';
-declare  var     VK: any;
-declare  var     FB: any;
-declare  var     OKSDK: any;
+import {IgApiClient} from 'instagram-private-api';
+import {ok} from 'ok.ru';
+
+declare var VK: any;
+declare var FB: any;
+declare var OKSDK: any;
+
 @Component({
     selector: 'app-item',
     templateUrl: './item.component.html',
@@ -78,8 +80,8 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     groups_choice = false;
     postInfo: any[] = [];
 
-    constructor(@Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute,private _http: HttpClient, config: ConfigService,
-                private _account_service: AccountService, private titleService: Title ) {
+    constructor(@Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, private _http: HttpClient,private config: ConfigService,
+                private _account_service: AccountService, private titleService: Title) {
         this.servUrl = config.getConfig('servUrl');
     }
 
@@ -89,8 +91,8 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     @Output() favItemMode = new EventEmitter();
 
     ngOnInit() {
-        console.log("log: ", this.loggingMode);
-        console.log("pay: ", this.payingMode);
+        // console.log('log: ', this.loggingMode);
+        // console.log('pay: ', this.payingMode);
 
         // VK.Observer.subscribe('auth.login', function(response){
         //     refreshPage(true);
@@ -99,14 +101,14 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        this.cur_href = document.location.href;
+
         if (this.item != undefined) {
-            this.titleService.setTitle( "" );
+            this.titleService.setTitle('');
             if (changes.item.currentValue != changes.item.previousValue) {
                 this.checkParams();
             }
         }
-        if (window.location.href.indexOf("publish") != -1) {
+        if (window.location.href.indexOf('publish') != -1) {
             this.vk_auth();
 
         }
@@ -124,22 +126,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     ngAfterViewInit() {
-        setTimeout( () => {
-            window.name = 'fXD';
-            VK.init({ apiId: 7138237 }, ()=>{}, 5.101);
-            let config = {
-                app_id: 512000104776,
-                app_key: 'CJEKJGJGDIHBABABA'
-            };
-            FB.init({
-                appId            : 3174677922603350,
-                autoLogAppEvents : true,
-                xfbml            : true,
-                version          : 'v4.0'
-            });
-            OKSDK.init(config, () => { console.log("ok success!")}, (e) => { console.log(e)});
 
-        }, 1000);
         this.checkParams();
         this.cur_href = document.location.href;
     }
@@ -156,12 +143,12 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
             }
         });
         FB.api(
-            "100002163630078/feed",
-            "POST",
+            '100002163630078/feed',
+            'POST',
             {
-                "message": "This is a test message"
+                'message': 'This is a test message'
             },
-             (response)  => {
+            (response) => {
                 if (response && !response.error) {
                     /* handle the result */
                 } else {
@@ -169,83 +156,145 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                 }
             }
         );
+
     }
 
-    ok_publish(){
-        let obj = this.item;
-        let apart_type = '', rooms = '', square = '', conveniencesShort = '', floor = '', price = '';
-        switch (obj.typeCode) {
-            case "room": apart_type = "Комната "; break;
-            case "apartment": apart_type = "Квартира "; break;
-            case "house": apart_type = "Дом "; break;
-            case "dacha": apart_type = "Дача "; break;
-            case "cottage": apart_type = "Коттедж "; break;
-        }
-        if (obj.roomsCount != undefined) { rooms = obj.roomsCount + " комнатная" }
-        if (obj.squareTotal != undefined) { square = "Площадь " + obj.squareTotal + " кв.м \n"}
-
-        if (obj.conditions.bedding && obj.conditions.kitchen_furniture && obj.conditions.living_room_furniture) {
-            conveniencesShort += "Мебель да\n";
-        } else if (obj.conditions.bedding || obj.conditions.kitchen_furniture || obj.conditions.living_room_furniture) {
-            conveniencesShort += "Мебель частично\n";
-        } else {
-            conveniencesShort += "Мебель нет\n";
-        }
-
-        if (obj.conditions.refrigerator && obj.conditions.washer &&
-            obj.conditions.dishwasher && obj.conditions.microwave_oven &&
-            obj.conditions.air_conditioning && obj.conditions.tv) {
-            conveniencesShort += "Бытовая техника да\n";
-        } else if (obj.conditions.refrigerator || obj.conditions.washer ||
-            obj.conditions.dishwasher || obj.conditions.microwave_oven ||
-            obj.conditions.air_conditioning || obj.conditions.tv) {
-            conveniencesShort += "Бытовая техника частично\n";
-        } else {
-            conveniencesShort += "Бытовая техника нет\n";
-        }
-
-        if (obj.floor != undefined && obj.floorsCount == undefined) {
-            floor = "Этаж " + obj.floor + "\n";
-        }
-        if (obj.floor != undefined && obj.floorsCount != undefined) {
-            floor = "Этаж " + obj.floor + "\\" + obj.floorsCount + "\n";
-        }
-        if (obj.price != undefined) {
-            price = obj.price + "/мес ";
-        }
-
-        let post_text = obj.address + " " + obj.house_num + "\n" +
-            obj.city + ", " + obj.admArea + price + "\n" +
-            "ОПИСАНИЕ ПРЕДЛОЖЕНИЯ\n" +
-            apart_type + " " + rooms + "\n" +
-            floor +
-            square +
-            "УСЛОВИЯ ПРОЖИВАНИЯ\n" +
-            conveniencesShort +
-            "\n" +
-            // "http://dev.makleronline.net/#/d" + "\n" +
-            "#арендаквартирХабаровск#сдамквартирувХабаровске#недвижимостьХабаровск#сдамснимуквартируХабаровск#арендаkhv#аренданедвижимости\n"
-        ;
-        let method = "users.getCurrentUser";
-        let params = {
-            "fields": "user.id, user.name"
+    ok_publish() {
+        let config = {
+            app_id: 512000104776,
+            app_key: 'CJEKJGJGDIHBABABA',
+            obj_id: this.item.id,
+            oauth: {
+                url: this.cur_href //+'/d/objects/'+this.item.id
+            }
         };
-        OKSDK.REST.call(method, params, (status,data,error) => {
-            console.log("status: ", status);
-            console.log("data: ", data);
-            console.log("error: ", error);
-        });
-        // let attachment = '{"media":[{"type":"text","text":"hello"}]}';
-        // let md5 = Md5.hashStr("st.attachment=" + attachment + '88FD7C038F62AE4C8038B146');
-        // console.log(md5);
-        // let href = "https://connect.ok.ru/dk" +
-        //     "?st.cmd=WidgetMediatopicPost" +
-        //     "&st.app=512000104776" +
-        //     "&st.attachment=" + attachment +
-        //     "&st.signature=" + md5 +
-        //     "&st.popup=on" +
-        //     "&st.utext=on" ;
-        // window.open(href, "Odnoklassniki");
+        if (sessionStorage.getItem('access') == undefined || sessionStorage.getItem('access') == '') {
+            OKSDK.init(config, () => {
+                console.log('ok success!');
+            }, (e) => {
+                console.log(e);
+            });
+        }
+        window.addEventListener('message', function (widgetMessage) {
+            console.log(JSON.stringify(widgetMessage.data));
+            // обрабатываете сообщение от виджета здесь
+        }, false);
+
+        OKSDK.Widgets.post(
+            null,
+            {
+                "attachment": {
+                    "media": [
+                        {
+                            "type": "text",
+                            "text": "Играй и получай бонусы!"
+                        },
+                        {
+                            "type": "app-ref",
+                            "appId": 512000104776
+                        }
+                    ]
+                },
+                "silent": true
+            }
+        );
+            OKSDK.REST.call('users.getCurrentUser', null, function(status, data, error) {
+                if (status == 'ok') {
+                    console.log('userdata: ', data);
+                } else {
+                    alert('Unable to retrieve current user ' + OKSDK.Util.toString(error));
+                }
+            });
+
+            let obj = this.item;
+            let apart_type = '', rooms = '', square = '', conveniencesShort = '', floor = '', price = '';
+            switch (obj.typeCode) {
+                case 'room':
+                    apart_type = 'Комната ';
+                    break;
+                case 'apartment':
+                    apart_type = 'Квартира ';
+                    break;
+                case 'house':
+                    apart_type = 'Дом ';
+                    break;
+                case 'dacha':
+                    apart_type = 'Дача ';
+                    break;
+                case 'cottage':
+                    apart_type = 'Коттедж ';
+                    break;
+            }
+            if (obj.roomsCount != undefined) {
+                rooms = obj.roomsCount + ' комнатная';
+            }
+            if (obj.squareTotal != undefined) {
+                square = 'Площадь ' + obj.squareTotal + ' кв.м \n';
+            }
+
+            if (obj.conditions.bedding && obj.conditions.kitchen_furniture && obj.conditions.living_room_furniture) {
+                conveniencesShort += 'Мебель да\n';
+            } else if (obj.conditions.bedding || obj.conditions.kitchen_furniture || obj.conditions.living_room_furniture) {
+                conveniencesShort += 'Мебель частично\n';
+            } else {
+                conveniencesShort += 'Мебель нет\n';
+            }
+
+            if (obj.conditions.refrigerator && obj.conditions.washer &&
+                obj.conditions.dishwasher && obj.conditions.microwave_oven &&
+                obj.conditions.air_conditioning && obj.conditions.tv) {
+                conveniencesShort += 'Бытовая техника да\n';
+            } else if (obj.conditions.refrigerator || obj.conditions.washer ||
+                obj.conditions.dishwasher || obj.conditions.microwave_oven ||
+                obj.conditions.air_conditioning || obj.conditions.tv) {
+                conveniencesShort += 'Бытовая техника частично\n';
+            } else {
+                conveniencesShort += 'Бытовая техника нет\n';
+            }
+
+            if (obj.floor != undefined && obj.floorsCount == undefined) {
+                floor = 'Этаж ' + obj.floor + '\n';
+            }
+            if (obj.floor != undefined && obj.floorsCount != undefined) {
+                floor = 'Этаж ' + obj.floor + '\\' + obj.floorsCount + '\n';
+            }
+            if (obj.price != undefined) {
+                price = obj.price + '/мес ';
+            }
+
+            let post_text = obj.address + ' ' + obj.house_num + '\n' +
+                obj.city + ', ' + obj.admArea + price + '\n' +
+                'ОПИСАНИЕ ПРЕДЛОЖЕНИЯ\n' +
+                apart_type + ' ' + rooms + '\n' +
+                floor +
+                square +
+                'УСЛОВИЯ ПРОЖИВАНИЯ\n' +
+                conveniencesShort +
+                '\n' +
+                // "http://dev.makleronline.net/#/d" + "\n" +
+                '#арендаквартирХабаровск#сдамквартирувХабаровске#недвижимостьХабаровск#сдамснимуквартируХабаровск#арендаkhv#аренданедвижимости\n'
+            ;
+            // let method = "users.getCurrentUser";
+            // let params = {
+            //     "fields": "user.id, user.name"
+            // };
+            // OKSDK.REST.call(method, params, (status,data,error) => {
+            //     console.log("status: ", status);
+            //     console.log("data: ", data);
+            //     console.log("error: ", error);
+            // });
+            // let attachment = '{"media":[{"type":"text","text":"hello"}]}';
+            // let md5 = Md5.hashStr("st.attachment=" + attachment + '88FD7C038F62AE4C8038B146');
+            // console.log(md5);
+            // let href = "https://connect.ok.ru/dk" +
+            //     "?st.cmd=WidgetMediatopicPost" +
+            //     "&st.app=512000104776" +
+            //     "&st.attachment=" + attachment +
+            //     "&st.signature=" + md5 +
+            //     "&st.popup=on" +
+            //     "&st.utext=on" ;
+            // window.open(href, "Odnoklassniki");
+
 
     }
 
@@ -256,17 +305,17 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                 console.log(res);
                 if (res != undefined) {
                     let data = JSON.parse(JSON.stringify(res));
-                    if (data.result.indexOf("oauth") != -1) {
-                        let  arr = [];
-                        let newwindow=window.open(data.result,"_blank",'height=300,width=300,scrollbars=1');
+                    if (data.result.indexOf('oauth') != -1) {
+                        let arr = [];
+                        let newwindow = window.open(data.result, '_blank', 'height=300,width=300,scrollbars=1');
                         this.openBlock('save_token');
-                       // newwindow.onmousemove
+                        // newwindow.onmousemove
                         // newwindow.postMessage(newwindow.location.origin, window.location.origin );
                         //
                         // window.addEventListener("message", this.receiveMessage, false);
                     } else {
-                        window.open(data.result, "_blank");
-                        window.location.href = window.location.href.slice(0, window.location.href.indexOf("publish") - 1);
+                        window.open(data.result, '_blank');
+                        window.location.href = window.location.href.slice(0, window.location.href.indexOf('publish') - 1);
                     }
                 }
                 //if (type == 'publish') {window.location.href = window.location.href.slice(0, window.location.href.indexOf("publish") - 1);}
@@ -279,95 +328,97 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
             // //
             // this.vk_href = "https://oauth.vk.com/authorize?client_id=7138237&display=popup&redirect_uri=http://dev.makleronline.net&scope=wall&response_type=token&state="+this.cur_id + "_" + this.item.id;
         }
-       // alert(this.vk_href);
-       //  window.location.href = this.vk_href;
-      //  window.location.href = "https://oauth.vk.com/authorize?client_id=7138237&display=popup&redirect_uri=http://dev.makleronline.net&scope=wall&response_type=token&v=5.101&state=123456";
+        // alert(this.vk_href);
+        //  window.location.href = this.vk_href;
+        //  window.location.href = "https://oauth.vk.com/authorize?client_id=7138237&display=popup&redirect_uri=http://dev.makleronline.net&scope=wall&response_type=token&v=5.101&state=123456";
     }
-    receiveMessage(event)
-    {
+
+    receiveMessage(event) {
         console.log(event.origin);
         // Do we trust the sender of this message?  (might be
         // different from what we originally opened, for example).
-        if (event.origin !== "")
+        if (event.origin !== '') {
             return;
+        }
 
         // event.source is popup
         // event.data is "hi there yourself!  the secret response is: rheeeeet!"
     }
+
     checkParams() {
         this.conveniencesShort = '';
         this.conditions = '';
         this.conveniences = '';
         if (this.item != undefined) {
 
-            if (this.item.address.includes("ул.")) {
-                console.log("ind: ", this.item.address.indexOf("ул."));
-                this.item.address = this.item.address.slice(this.item.address.indexOf("ул.") + 3, this.item.address.length);
+            if (this.item.address.includes('ул.')) {
+                // console.log('ind: ', this.item.address.indexOf('ул.'));
+                this.item.address = this.item.address.slice(this.item.address.indexOf('ул.') + 3, this.item.address.length);
             }
             if (this.item.conditions.bedding && this.item.conditions.kitchen_furniture && this.item.conditions.living_room_furniture) {
-                this.conveniencesShort += "Мебель да\n";
+                this.conveniencesShort += 'Мебель да\n';
             } else if (this.item.conditions.bedding || this.item.conditions.kitchen_furniture || this.item.conditions.living_room_furniture) {
-                this.conveniencesShort += "Мебель частично\n";
+                this.conveniencesShort += 'Мебель частично\n';
             } else {
-                this.conveniencesShort += "Мебель нет\n";
+                this.conveniencesShort += 'Мебель нет\n';
             }
 
             if (this.item.conditions.refrigerator && this.item.conditions.washer &&
                 this.item.conditions.dishwasher && this.item.conditions.microwave_oven &&
                 this.item.conditions.air_conditioning && this.item.conditions.tv) {
-                this.conveniencesShort += "Бытовая техника да\n";
+                this.conveniencesShort += 'Бытовая техника да\n';
             } else if (this.item.conditions.refrigerator || this.item.conditions.washer ||
                 this.item.conditions.dishwasher || this.item.conditions.microwave_oven ||
                 this.item.conditions.air_conditioning || this.item.conditions.tv) {
-                this.conveniencesShort += "Бытовая техника частично\n";
+                this.conveniencesShort += 'Бытовая техника частично\n';
             } else {
-                this.conveniencesShort += "Бытовая техника нет\n";
+                this.conveniencesShort += 'Бытовая техника нет\n';
             }
             if (this.item.conditions.dishes != null && this.item.conditions.dishes) {
-                this.conveniences += "Посуда, ";
+                this.conveniences += 'Посуда, ';
             }
             if (this.item.conditions.bedding != null && this.item.conditions.bedding) {
-                this.conveniences += "Постельные принадлежности, ";
+                this.conveniences += 'Постельные принадлежности, ';
             }
             if (this.item.conditions.couchette != null && this.item.conditions.couchette) {
-                this.conveniences += "Спальная мебель, ";
+                this.conveniences += 'Спальная мебель, ';
             }
             if (this.item.conditions.kitchen_furniture != null && this.item.conditions.kitchen_furniture) {
-                this.conveniences += "Кухонная мебель, ";
+                this.conveniences += 'Кухонная мебель, ';
             }
             if (this.item.conditions.living_room_furniture != null && this.item.conditions.living_room_furniture) {
-                this.conveniences += "Гостиная мебель, ";
+                this.conveniences += 'Гостиная мебель, ';
             }
             if (this.item.conditions.tv != null && this.item.conditions.tv) {
-                this.conveniences += "Телевизор, ";
+                this.conveniences += 'Телевизор, ';
             }
             if (this.item.conditions.refrigerator != null && this.item.conditions.refrigerator) {
-                this.conveniences += "Холодильник, ";
+                this.conveniences += 'Холодильник, ';
             }
             if (this.item.conditions.washer != null && this.item.conditions.washer) {
-                this.conveniences += "Стиральная машина, ";
+                this.conveniences += 'Стиральная машина, ';
             }
             if (this.item.conditions.dishwasher != null && this.item.conditions.dishwasher) {
-                this.conveniences += "Посудомоечная машина, ";
+                this.conveniences += 'Посудомоечная машина, ';
             }
             if (this.item.conditions.microwave_oven != null && this.item.conditions.microwave_oven) {
-                this.conveniences += "СВЧ-печь, ";
+                this.conveniences += 'СВЧ-печь, ';
             }
             if (this.item.conditions.air_conditioning != null && this.item.conditions.air_conditioning) {
-                this.conveniences += "Кондиционер, ";
+                this.conveniences += 'Кондиционер, ';
             }
             if (this.item.conditions.with_animals != null && this.item.conditions.with_animals) {
-                this.conditions += "Можно с животными, ";
+                this.conditions += 'Можно с животными, ';
             }
             if (this.item.conditions.with_children != null && this.item.conditions.with_children) {
-                this.conditions += "Можно с детьми, ";
+                this.conditions += 'Можно с детьми, ';
             }
             if (this.item.prepayment != null && this.item.prepayment) {
-                this.conditions += "Депозит да, ";
-                this.conveniencesShort += "Депозит да\n";
+                this.conditions += 'Депозит да, ';
+                this.conveniencesShort += 'Депозит да\n';
             } else {
-                this.conditions += "Депозит нет, ";
-                this.conveniencesShort += "Депозит нет\n";
+                this.conditions += 'Депозит нет, ';
+                this.conveniencesShort += 'Депозит нет\n';
             }
 
 
@@ -393,10 +444,10 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
 
         if (this.mode == 'full' && this.item != undefined) {
 
-            this.time = this.localStorage.getItem("timeAdd");
-                if (this.item.photos != undefined) {
-                    this.src = this.item.photos[0] != undefined ? this.item.photos[0].href : 'https://makleronline.net/assets/noph.png';
-                }
+            this.time = this.localStorage.getItem('timeAdd');
+            if (this.item.photos != undefined) {
+                this.src = this.item.photos[0] != undefined ? this.item.photos[0].href : 'https://makleronline.net/assets/noph.png';
+            }
 
 
             if (!this.compare && !this.similarOpen) {
@@ -429,7 +480,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
 
             this.getPlaces(this.item.lon, this.item.lat, [this.item.lon, this.item.lat]);
         }
-        setTimeout( () => {
+        setTimeout(() => {
             if (this.item != undefined) {
                 if (this.item.photos != undefined) {
                     if (this.item.photos[0] != undefined) {
@@ -629,7 +680,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     checklogin() {
-        this.time = this.localStorage.getItem("timeAdd");
+        this.time = this.localStorage.getItem('timeAdd');
         this._account_service.checklogin().subscribe(res => {
             // console.log(res);
             if (res != undefined) {
@@ -692,7 +743,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     getPlaces(x, y, coords) {
-        this._account_service.getObjects(x, y, "Остановка", '0.01').subscribe(res => {
+        this._account_service.getObjects(x, y, 'Остановка', '0.01').subscribe(res => {
             this.nearObjects = res;
             let places = [];
             for (let i = 0; i < this.nearObjects.length; i++) {
@@ -717,14 +768,14 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
             if (places.length != 0) {
                 let time1 = places[index].distance / 83;
                 if (Math.round(time1) == 0) {
-                    this.timeToBusStop = "1 мин";
+                    this.timeToBusStop = '1 мин';
                 } else {
-                    this.timeToBusStop = Math.round(time1) + " мин";
+                    this.timeToBusStop = Math.round(time1) + ' мин';
                 }
 
                 this.objStop = places[index].name;
 
-                document.getElementById('busStop').innerHTML = "Остановка " + this.objStop + "   \tВремя в пути: " + this.timeToBusStop;
+                document.getElementById('busStop').innerHTML = 'Остановка ' + this.objStop + '   \tВремя в пути: ' + this.timeToBusStop;
                 //    this.getRouteStopTime(coords, coor1);
 
             }
@@ -787,17 +838,21 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     showAuthData(data) {
         console.log('expire: ' + data.expire);
         console.log('mid: ' + data.mid);
-        console.log('fio: ' + data.user.first_name + ' ' + data.user.last_name );
+        console.log('fio: ' + data.user.first_name + ' ' + data.user.last_name);
         console.log('userDomain: ' + data.user.domain);
     }
+
     downloadFile(url, upload) {
-        return this._http.get(url, { responseType: 'blob', reportProgress: false}).subscribe(
+        return this._http.get(url, {responseType: 'blob', reportProgress: false}).subscribe(
             raw => {
                 // console.log('You received data', raw);
                 this.formdata = new FormData();
-                this.file = new File([raw], "qwerty.txt");
+                this.file = new File([raw], 'qwerty.txt');
                 this.formdata.append('photo', this.file);
-                this._http.post(upload, this.formdata, {withCredentials: true, headers: new HttpHeaders({ "Content-Type": "multipart/form-data" })}).pipe(
+                this._http.post(upload, this.formdata, {
+                    withCredentials: true,
+                    headers: new HttpHeaders({'Content-Type': 'multipart/form-data'})
+                }).pipe(
                     map((res: Response) => res)).subscribe(
                     raw => {
                         let data = JSON.parse(JSON.stringify(raw));
@@ -810,6 +865,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
             err => console.log(err)
         );
     }
+
     publishVk(type) {
         console.log(VK);
         // VK.Auth.login(response => {
@@ -829,13 +885,13 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
         // },  VK.access.FRIENDS | VK.access.PHOTOS | VK.access.WALL | VK.access.ADS | VK.access.GROUPS  );
 
         setTimeout(() => {
-            VK.Auth.getLoginStatus( response => {
-                if (response.status != "connected") {
+            VK.Auth.getLoginStatus(response => {
+                if (response.status != 'connected') {
                     VK.Auth.login(response => {
                         if (response.session) {
                             console.log('expire: ' + response.session.expire);
                             console.log('mid: ' + response.session.mid);
-                            console.log('fio: ' + response.session.user.first_name + ' ' + response.session.user.last_name );
+                            console.log('fio: ' + response.session.user.first_name + ' ' + response.session.user.last_name);
                             console.log('userDomain: ' + response.session.user.domain);
 
                             if (response.settings) {
@@ -845,240 +901,242 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                         } else {
                             // Пользователь нажал кнопку Отмена в окне авторизации
                         }
-                    },  VK.access.FRIENDS | VK.access.PHOTOS | VK.access.WALL | VK.access.ADS | VK.access.GROUPS  );
+                    }, VK.access.FRIENDS | VK.access.PHOTOS | VK.access.WALL | VK.access.ADS | VK.access.GROUPS);
                 } else {
-                console.log(response);
-                if (type == 2) {
-                    this.groups_choice = true;
-                }
-                if (response.session) {
-
-                    let obj = this.item;
-                    let apart_type = '', rooms = '', square = '', conveniencesShort = '', floor = '', price = '';
-                    switch (obj.typeCode) {
-                        case "room":
-                            apart_type = "Комната ";
-                            break;
-                        case "apartment":
-                            apart_type = "Квартира ";
-                            break;
-                        case "house":
-                            apart_type = "Дом ";
-                            break;
-                        case "dacha":
-                            apart_type = "Дача ";
-                            break;
-                        case "cottage":
-                            apart_type = "Коттедж ";
-                            break;
+                    console.log(response);
+                    if (type == 2) {
+                        this.groups_choice = true;
                     }
-                    if (obj.roomsCount != undefined) {
-                        rooms = obj.roomsCount + " комнатная"
-                    }
-                    if (obj.squareTotal != undefined) {
-                        square = "Площадь " + obj.squareTotal + " кв.м \n"
-                    }
+                    if (response.session) {
 
-                    if (obj.conditions.bedding && obj.conditions.kitchen_furniture && obj.conditions.living_room_furniture) {
-                        conveniencesShort += "Мебель да\n";
-                    } else if (obj.conditions.bedding || obj.conditions.kitchen_furniture || obj.conditions.living_room_furniture) {
-                        conveniencesShort += "Мебель частично\n";
-                    } else {
-                        conveniencesShort += "Мебель нет\n";
-                    }
+                        let obj = this.item;
+                        let apart_type = '', rooms = '', square = '', conveniencesShort = '', floor = '', price = '';
+                        switch (obj.typeCode) {
+                            case 'room':
+                                apart_type = 'Комната ';
+                                break;
+                            case 'apartment':
+                                apart_type = 'Квартира ';
+                                break;
+                            case 'house':
+                                apart_type = 'Дом ';
+                                break;
+                            case 'dacha':
+                                apart_type = 'Дача ';
+                                break;
+                            case 'cottage':
+                                apart_type = 'Коттедж ';
+                                break;
+                        }
+                        if (obj.roomsCount != undefined) {
+                            rooms = obj.roomsCount + ' комнатная';
+                        }
+                        if (obj.squareTotal != undefined) {
+                            square = 'Площадь ' + obj.squareTotal + ' кв.м \n';
+                        }
 
-                    if (obj.conditions.refrigerator && obj.conditions.washer &&
-                        obj.conditions.dishwasher && obj.conditions.microwave_oven &&
-                        obj.conditions.air_conditioning && obj.conditions.tv) {
-                        conveniencesShort += "Бытовая техника да\n";
-                    } else if (obj.conditions.refrigerator || obj.conditions.washer ||
-                        obj.conditions.dishwasher || obj.conditions.microwave_oven ||
-                        obj.conditions.air_conditioning || obj.conditions.tv) {
-                        conveniencesShort += "Бытовая техника частично\n";
-                    } else {
-                        conveniencesShort += "Бытовая техника нет\n";
-                    }
+                        if (obj.conditions.bedding && obj.conditions.kitchen_furniture && obj.conditions.living_room_furniture) {
+                            conveniencesShort += 'Мебель да\n';
+                        } else if (obj.conditions.bedding || obj.conditions.kitchen_furniture || obj.conditions.living_room_furniture) {
+                            conveniencesShort += 'Мебель частично\n';
+                        } else {
+                            conveniencesShort += 'Мебель нет\n';
+                        }
 
-                    if (obj.floor != undefined && obj.floorsCount == undefined) {
-                        floor = "Этаж " + obj.floor + "\n";
-                    }
-                    if (obj.floor != undefined && obj.floorsCount != undefined) {
-                        floor = "Этаж " + obj.floor + "\\" + obj.floorsCount + "\n";
-                    }
-                    if (obj.price != undefined) {
-                        price = obj.price + "/мес ";
-                    }
+                        if (obj.conditions.refrigerator && obj.conditions.washer &&
+                            obj.conditions.dishwasher && obj.conditions.microwave_oven &&
+                            obj.conditions.air_conditioning && obj.conditions.tv) {
+                            conveniencesShort += 'Бытовая техника да\n';
+                        } else if (obj.conditions.refrigerator || obj.conditions.washer ||
+                            obj.conditions.dishwasher || obj.conditions.microwave_oven ||
+                            obj.conditions.air_conditioning || obj.conditions.tv) {
+                            conveniencesShort += 'Бытовая техника частично\n';
+                        } else {
+                            conveniencesShort += 'Бытовая техника нет\n';
+                        }
 
-                    let post_text = obj.address + " " + obj.house_num + "\n" +
-                        obj.city + ", " + obj.admArea + price + "\n" +
-                        "ОПИСАНИЕ ПРЕДЛОЖЕНИЯ\n" +
-                        apart_type + " " + rooms + "\n" +
-                        floor +
-                        square +
-                        "УСЛОВИЯ ПРОЖИВАНИЯ\n" +
-                        conveniencesShort +
-                        "\n" +
-                        // "http://dev.makleronline.net/#/d" + "\n" +
-                        "#арендаквартирХабаровск#сдамквартирувХабаровске#недвижимостьХабаровск#сдамснимуквартируХабаровск#арендаkhv#аренданедвижимости\n"
-                    ;
+                        if (obj.floor != undefined && obj.floorsCount == undefined) {
+                            floor = 'Этаж ' + obj.floor + '\n';
+                        }
+                        if (obj.floor != undefined && obj.floorsCount != undefined) {
+                            floor = 'Этаж ' + obj.floor + '\\' + obj.floorsCount + '\n';
+                        }
+                        if (obj.price != undefined) {
+                            price = obj.price + '/мес ';
+                        }
+
+                        let post_text = obj.address + ' ' + obj.house_num + '\n' +
+                            obj.city + ', ' + obj.admArea + price + '\n' +
+                            'ОПИСАНИЕ ПРЕДЛОЖЕНИЯ\n' +
+                            apart_type + ' ' + rooms + '\n' +
+                            floor +
+                            square +
+                            'УСЛОВИЯ ПРОЖИВАНИЯ\n' +
+                            conveniencesShort +
+                            '\n' +
+                            // "http://dev.makleronline.net/#/d" + "\n" +
+                            '#арендаквартирХабаровск#сдамквартирувХабаровске#недвижимостьХабаровск#сдамснимуквартируХабаровск#арендаkhv#аренданедвижимости\n'
+                        ;
 
 
-                    console.log('photos: ', obj.photos);
-                    if (obj.photos != undefined && obj.photos.length != 0) {
-                        VK.Api.call('photos.getWallUploadServer', {uid: response.session.mid, v: "5.101"}, answer => {
-                            console.log("get answer: ", answer);
-                            let attachs = [];
-                            let phlen = 0;
-                            if (obj.photos.length < 6) {
-                                phlen = obj.photos.length;
-                            } else {
-                                phlen = 6
-                            }
-                            for (let i = 0; i < phlen; i++) {
-                                console.log(i, " photo ", obj.photos[i].href);
-                                this._account_service.publish(obj.photos[i].href, answer.response.upload_url, i).pipe(
-                                    map((res: Response) => res)).subscribe(
-                                    raw => {
-                                        let data = JSON.parse(JSON.stringify(raw));
-                                        console.log(data);
-                                        if (data.server != undefined) {
-                                            let server = JSON.parse(JSON.stringify(data.server));
-                                            let photo = JSON.parse(JSON.stringify(data.photo));
-                                            let hash = JSON.parse(JSON.stringify(data.hash));
-                                            VK.Api.call("photos.saveWallPhoto", {
-                                                server: server,
-                                                photo: photo,
-                                                hash: hash,
-                                                v: "5.101"
-                                            }, (d) => {
-                                                console.log(d);
-                                                let data = JSON.parse(JSON.stringify(d));
-                                                attachs.push("photo" + response.session.mid + "_" + data.response[0].id);
-                                                console.log("attachs: ", attachs.length, " objs: ", phlen);
-                                                if (attachs.length == phlen) {
-                                                    let attachsStr = '';
-                                                    for (let i = 0; i < attachs.length; i++) {
-                                                        if (i < 9) {
-                                                            attachsStr += attachs[i] + ',';
-                                                        }
-                                                    }
-                                                    attachsStr += "http://dev.makleronline.net/#/d";
-                                                    console.log(attachsStr);
-                                                    attachsStr = attachsStr.slice(0, attachsStr.length - 1);
-                                                    if (type == 1) {
-                                                        VK.Api.call("wall.post", {
-                                                            owner_id: response.session.mid,
-                                                            message: post_text,
-                                                            v: "5.101",
-                                                            attachments: attachsStr
-                                                        }, () => {
-                                                            // alert("Post ID:" + data.response.post_id);
-                                                        });
-                                                    }
-                                                    if (type == 2) {
-                                                        this.postInfo = [];
-                                                        this.postInfo.push({
-                                                            owner_id: response.session.mid,
-                                                            message: post_text,
-                                                            v: "5.101",
-                                                            attachments: attachsStr
-                                                        });
-                                                        console.log("postinfo: ", this.postInfo);
-                                                        VK.Api.call("groups.get", {
-                                                            user_id: response.session.mid,
-                                                            extended: 1,
-                                                            v: "5.101",
-                                                            fields: "id,name,type,photo_50"
-                                                        }, (ans) => {
-                                                            let its = JSON.parse(JSON.stringify(ans));
-                                                            let dataAns = its.response;
-                                                            console.log(dataAns);
-                                                            console.log(dataAns.items);
-                                                            this.groups = [];
-                                                            for (let q = 0; q < dataAns.items.length; q++) {
-                                                                let type = "", closed = "";
-                                                                switch (dataAns.items[q].type) {
-                                                                    case "group":
-                                                                        type = "группа";
-                                                                        break;
-                                                                    case "page" :
-                                                                        type = "публичная страница";
-                                                                        break;
-                                                                    case "event":
-                                                                        type = "мероприятие";
-                                                                        break;
-                                                                }
-                                                                switch (dataAns.items[q].is_closed) {
-                                                                    case 0:
-                                                                        closed = "oткрытое";
-                                                                        break;
-                                                                    case 1:
-                                                                        closed = "закрытое";
-                                                                        break;
-                                                                    case 2:
-                                                                        closed = "частное";
-                                                                        break;
-                                                                }
-
-                                                                //  if (dataAns.items[q].type == "group") {
-                                                                this.groups.push({
-                                                                    id: -dataAns.items[q].id,
-                                                                    type: type,
-                                                                    name: dataAns.items[q].name,
-                                                                    href: dataAns.items[q].photo_50,
-                                                                    is_closed: closed
-                                                                });
-                                                                //   }
+                        console.log('photos: ', obj.photos);
+                        if (obj.photos != undefined && obj.photos.length != 0) {
+                            VK.Api.call('photos.getWallUploadServer', {uid: response.session.mid, v: '5.101'}, answer => {
+                                console.log('get answer: ', answer);
+                                let attachs = [];
+                                let phlen = 0;
+                                if (obj.photos.length < 6) {
+                                    phlen = obj.photos.length;
+                                } else {
+                                    phlen = 6;
+                                }
+                                for (let i = 0; i < phlen; i++) {
+                                    console.log(i, ' photo ', obj.photos[i].href);
+                                    this._account_service.publish(obj.photos[i].href, answer.response.upload_url, i).pipe(
+                                        map((res: Response) => res)).subscribe(
+                                        raw => {
+                                            let data = JSON.parse(JSON.stringify(raw));
+                                            console.log(data);
+                                            if (data.server != undefined) {
+                                                let server = JSON.parse(JSON.stringify(data.server));
+                                                let photo = JSON.parse(JSON.stringify(data.photo));
+                                                let hash = JSON.parse(JSON.stringify(data.hash));
+                                                VK.Api.call('photos.saveWallPhoto', {
+                                                    server: server,
+                                                    photo: photo,
+                                                    hash: hash,
+                                                    v: '5.101'
+                                                }, (d) => {
+                                                    console.log(d);
+                                                    let data = JSON.parse(JSON.stringify(d));
+                                                    attachs.push('photo' + response.session.mid + '_' + data.response[0].id);
+                                                    console.log('attachs: ', attachs.length, ' objs: ', phlen);
+                                                    if (attachs.length == phlen) {
+                                                        let attachsStr = '';
+                                                        for (let i = 0; i < attachs.length; i++) {
+                                                            if (i < 9) {
+                                                                attachsStr += attachs[i] + ',';
                                                             }
+                                                        }
+                                                        attachsStr += 'http://dev.makleronline.net/#/d';
+                                                        console.log(attachsStr);
+                                                        attachsStr = attachsStr.slice(0, attachsStr.length - 1);
+                                                        if (type == 1) {
+                                                            VK.Api.call('wall.post', {
+                                                                owner_id: response.session.mid,
+                                                                message: post_text,
+                                                                v: '5.101',
+                                                                attachments: attachsStr
+                                                            }, () => {
+                                                                // alert("Post ID:" + data.response.post_id);
+                                                            });
+                                                        }
+                                                        if (type == 2) {
+                                                            this.postInfo = [];
+                                                            this.postInfo.push({
+                                                                owner_id: response.session.mid,
+                                                                message: post_text,
+                                                                v: '5.101',
+                                                                attachments: attachsStr
+                                                            });
+                                                            console.log('postinfo: ', this.postInfo);
+                                                            VK.Api.call('groups.get', {
+                                                                user_id: response.session.mid,
+                                                                extended: 1,
+                                                                v: '5.101',
+                                                                fields: 'id,name,type,photo_50'
+                                                            }, (ans) => {
+                                                                let its = JSON.parse(JSON.stringify(ans));
+                                                                let dataAns = its.response;
+                                                                console.log(dataAns);
+                                                                console.log(dataAns.items);
+                                                                this.groups = [];
+                                                                for (let q = 0; q < dataAns.items.length; q++) {
+                                                                    let type = '', closed = '';
+                                                                    switch (dataAns.items[q].type) {
+                                                                        case 'group':
+                                                                            type = 'группа';
+                                                                            break;
+                                                                        case 'page' :
+                                                                            type = 'публичная страница';
+                                                                            break;
+                                                                        case 'event':
+                                                                            type = 'мероприятие';
+                                                                            break;
+                                                                    }
+                                                                    switch (dataAns.items[q].is_closed) {
+                                                                        case 0:
+                                                                            closed = 'oткрытое';
+                                                                            break;
+                                                                        case 1:
+                                                                            closed = 'закрытое';
+                                                                            break;
+                                                                        case 2:
+                                                                            closed = 'частное';
+                                                                            break;
+                                                                    }
+
+                                                                    //  if (dataAns.items[q].type == "group") {
+                                                                    this.groups.push({
+                                                                        id: -dataAns.items[q].id,
+                                                                        type: type,
+                                                                        name: dataAns.items[q].name,
+                                                                        href: dataAns.items[q].photo_50,
+                                                                        is_closed: closed
+                                                                    });
+                                                                    //   }
+                                                                }
 
 
-                                                            console.log(this.groups);
-                                                        });
+                                                                console.log(this.groups);
+                                                            });
+                                                        }
+
                                                     }
 
-                                                }
-
-                                                // console.log(attach);
-                                                // VK.Api.call("wall.post", {owner_id: response.session.mid, message: post_text, v: "5.101", attachments: attach}, () => {
-                                                //     // alert("Post ID:" + data.response.post_id);
-                                                // });
-                                            });
-                                        }
-                                    },
-                                    err => console.log(err)
-                                );
-                            }
-                        }, onerror);
+                                                    // console.log(attach);
+                                                    // VK.Api.call("wall.post", {owner_id: response.session.mid, message: post_text, v: "5.101", attachments: attach}, () => {
+                                                    //     // alert("Post ID:" + data.response.post_id);
+                                                    // });
+                                                });
+                                            }
+                                        },
+                                        err => console.log(err)
+                                    );
+                                }
+                            }, onerror);
+                        } else {
+                            VK.Api.call('wall.post', {
+                                owner_id: response.session.mid,
+                                message: post_text,
+                                v: '5.101'
+                            }, (data) => {
+                                alert('Post ID:' + data.response.post_id);
+                            });
+                        }
                     } else {
-                        VK.Api.call("wall.post", {
-                            owner_id: response.session.mid,
-                            message: post_text,
-                            v: "5.101"
-                        }, (data) => {
-                            alert("Post ID:" + data.response.post_id);
-                        });
+                        alert('Для публикации записи необходимо авторизоваться через вк');
                     }
-                } else {
-                    alert("Для публикации записи необходимо авторизоваться через вк")
                 }
-            }
             });
         }, 1000);
 
     }
+
     sendInGroup(id) {
-        VK.Api.call("wall.post", {
+        VK.Api.call('wall.post', {
             owner_id: id,
             message: this.postInfo[0].message,
-            v: "5.101",
+            v: '5.101',
             attachments: this.postInfo[0].attachments
         }, () => {
             // alert("Post ID:" + data.response.post_id);
         });
     }
+
     test_vk() {
 
-       console.log(VK);
+        console.log(VK);
         VK.Auth.login(response => {
             if (response.session) {
                 this.showAuthData(response.session);
@@ -1090,19 +1148,16 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
             } else {
                 // Пользователь нажал кнопку Отмена в окне авторизации
             }
-        }, VK.access.WALL ||  VK.access.FRIENDS);
+        }, VK.access.WALL || VK.access.FRIENDS);
 
-        VK.Auth.getLoginStatus(function(response){
+        VK.Auth.getLoginStatus(function(response) {
             console.log(response);
-            if(response.session)
-            {
-                VK.Api.call("wall.post", {owner_id: response.session.mid, message:"Тестовый пост с сайта", v: "5.101"}, (data) => {
-                    alert("Post ID:" + data.response.post_id);
+            if (response.session) {
+                VK.Api.call('wall.post', {owner_id: response.session.mid, message: 'Тестовый пост с сайта', v: '5.101'}, (data) => {
+                    alert('Post ID:' + data.response.post_id);
                 });
-           }
-            else
-            {
-                alert("Для публикации записи необходимо авторизоваться через вк")
+            } else {
+                alert('Для публикации записи необходимо авторизоваться через вк');
             }
         });
 

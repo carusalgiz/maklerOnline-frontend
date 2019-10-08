@@ -8,7 +8,10 @@ import {NgxMetrikaService} from '@kolkov/ngx-metrika';
 import ymaps from 'ymaps';
 import {Router} from "@angular/router";
 import {AccountService} from '../../../services/account.service';
-
+//import {OKSDK} from '../../../js/oksdk';
+declare  var     VK: any;
+declare  var     FB: any;
+declare  var     OKSDK: any;
 @Component({
     selector: 'app-objects',
     templateUrl: './objects.component.html',
@@ -17,7 +20,7 @@ import {AccountService} from '../../../services/account.service';
 export class ObjectsComponent implements OnInit, AfterViewInit {
 
     private subscription: Subscription;
-
+    OKSDK = require("../../../js/oksdk.js");
     activeObjectsButton = 'food';
     entertainmentIco = false;
     foodIco = false;
@@ -123,8 +126,22 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         this.router.routeReuseStrategy.shouldReuseRoute = () => {
             return false;
         };
+        let url = document.location.href;
+        if (url.indexOf('access') != -1) {
+            let str = (url.slice(url.indexOf('access')+6, url.length)).split('&');
+            let p = str[1];
+            let s = str[2];
+            console.log(str);
+        }
         this.subscription = route.params.subscribe((urlParams) => {
-            if (urlParams['mode'] === 'list') {
+            if (urlParams['mode'] === 'access') {
+                this.historyActive = false;
+                this.filtersActive = true;
+                this.itemOpen = false;
+                this.activeButton = 'items';
+                this.itemsActive = true;
+                // this.checkFav();
+            } else if (urlParams['mode'] === 'list') {
                 this.historyActive = false;
                 this.filtersActive = true;
                 this.itemOpen = false;
@@ -145,7 +162,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 let str = '';
                 str = urlParams['mode'];
                 this._offer_service.list(1, 1, '', '', '', '').subscribe(offers => {
-                    console.log("Ищем объект ", str);
+                    // console.log("Ищем объект ", str);
                     for (let offer of offers) {
                         if (Number.parseInt(str.substring(0, 13), 10) == offer.id) {
                             this.item = offer;
@@ -158,7 +175,20 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
+        setTimeout( () => {
+            window.name = 'fXD';
+            VK.init({ apiId: 7138237 }, ()=>{}, 5.101);
 
+            FB.init({
+                appId            : 3174677922603350,
+                autoLogAppEvents : true,
+                xfbml            : true,
+                version          : 'v4.0'
+            });
+
+
+
+        }, 1000);
         if ((this.item === undefined || this.item === null) && this.itemOpen === true) {
             this.filtersActive = true;
         }
