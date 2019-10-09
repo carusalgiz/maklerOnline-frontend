@@ -32,8 +32,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     touchCheck = false;
     timer: any;
     ngOnInit() {
-      // sessionStorage.removeItem('user');
-      // sessionStorage.removeItem('name');
+       sessionStorage.removeItem('access');
+        sessionStorage.removeItem('session');
+        sessionStorage.removeItem('expires');
+      // sessionStorage
       // sessionStorage.removeItem('logged_in');
         localStorage.clear();
         let Visible = function (elem) {
@@ -667,10 +669,12 @@ export class AppComponent implements OnInit, AfterViewInit {
 
             let params = {
                 access_token: pars[0],
-                session_secret_key: pars[1]
+                session_secret_key: pars[1],
+                expires: pars[2]
            };
             sessionStorage.setItem('access', params.access_token);
            sessionStorage.setItem('session', params.session_secret_key);
+           sessionStorage.setItem('expires', (Date.now()/1000 + Number.parseInt(params.expires, 10)).toString())
             console.log(sessionStorage.getItem('access'));
             console.log(params);
            if (isMobile) {

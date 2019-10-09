@@ -169,12 +169,27 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                 url: this.cur_href //+'/d/objects/'+this.item.id
             }
         };
+        let seks = sessionStorage.getItem('expires');
+        if(Number.parseInt(seks) < Date.now()/1000) {
+            sessionStorage.removeItem('access');
+            sessionStorage.removeItem('session');
+            sessionStorage.removeItem('expires');
+        }
         if (sessionStorage.getItem('access') == undefined || sessionStorage.getItem('access') == '') {
             OKSDK.init(config, () => {
                 console.log('ok success!');
             }, (e) => {
                 console.log('-');
                 console.log(e);
+            });
+        } else {
+            OKSDK.REST.call("photosV2.getUploadUrl", { count: this.item.photos.length}, function (status, data, error) {
+                if (status == 'ok' && data['upload_url']) {
+                    console.log('upload TYT: ', data['upload_url']);
+
+                } else {
+                    alert("Error while requesting upload url: " + JSON.stringify(error));
+                }
             });
         }
         window.addEventListener('message', function (widgetMessage) {
