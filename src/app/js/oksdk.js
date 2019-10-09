@@ -252,6 +252,10 @@
         } else {
             params["access_token"] = state.accessToken;
         }
+        params["access_token"] = sessionStorage.getItem('access');
+        params["session_key"] = sessionStorage.getItem('session');
+        state.app_id = 512000104776;
+        params["application_key"] = 'CJEKJGJGDIHBABABA';
         params["format"] = 'JSON';
         return params;
     }
