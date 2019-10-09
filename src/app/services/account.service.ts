@@ -90,6 +90,21 @@ export class AccountService {
       );
       return ret_subj;
   }
+    ok_sendPost(url, photos) {
+        const body = {url: url, photos: photos};
+        let _resourceUrl =  this.servUrl + '/ok_publish';
+        let ret_subj = <AsyncSubject<any>>new AsyncSubject();
+
+        this._http.post(_resourceUrl, JSON.stringify(body)).pipe(
+            map((res: Response) => res)).subscribe(
+            data => {
+                ret_subj.next(data);
+                ret_subj.complete();
+            },
+            err => console.log(err)
+        );
+        return ret_subj;
+    }
     sendPost(item:Item) {
         let query = [];
         query.push('item=' + JSON.stringify(item));

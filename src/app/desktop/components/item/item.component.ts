@@ -144,6 +144,12 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
             map((res: Response) => res)).subscribe(
             data => {
                 console.log(data);
+                let raw = JSON.parse(JSON.stringify(data));
+                this._account_service.ok_sendPost(this.item.photos, raw.upload_url).pipe(
+                    map((res: Response) => res)).subscribe(
+                    raw1 => {
+                        console.log(raw1);
+                    });
             },
             err => console.log(err)
         );

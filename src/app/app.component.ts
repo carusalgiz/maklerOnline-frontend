@@ -729,7 +729,6 @@ export class AppComponent implements OnInit, AfterViewInit {
           // window.location.href = "https://api.vk.com/method/wall.post?owner_id=-186613956&message=%D0%A2%D0%B5%D1%81%D1%82%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%BF%D0%BE%D1%81%D1%82&access_token=6daefd335a545179be2612f5e332a6c4439af3e7099721ce2593409d3fed901cd39bd90891debfd6776f9&v=5.101";
        }
     setTimeout(e =>{ console.log('done!')}, 5000);
-        console.log('ssiteUrl: ', this.siteUrl);
       if (url.indexOf(this.siteUrl + '/#/m') == -1 && url.indexOf(this.siteUrl + '/#/d') == -1 && url.indexOf(this.siteUrl + '/#/sitemap.xml') == -1 &&
           url.indexOf(this.siteUrl + '/#/t') == -1 && url.indexOf(this.siteUrl + ':4000') == -1 && url.indexOf('access_token') == -1) {
         if (isMobile) {
