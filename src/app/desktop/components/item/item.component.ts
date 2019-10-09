@@ -132,14 +132,21 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     inst() {
-        OKSDK.REST.call("photosV2.getUploadUrl", { count: this.item.photos.length }, function (status, data, error) {
-            if (status == 'ok' && data['upload_url']) {
-                console.log('upload TYT: ', data['upload_url']);
+        let sig = Md5.hashStr('application_key=CJEKJGJGDIHBABABAcount=10method=photosV2.getUploadUrl' + sessionStorage.getItem('session'));
+        let _resourceUrl =  "https://api.ok.ru/fb.do" +
+            "?application_key=CJEKJGJGDIHBABABA" +
+            "&count=10" +
+            "&method=photosV2.getUploadUrl" +
+            "&sig=" + sig +
+        "&access_token=" + sessionStorage.getItem('access');
 
-            } else {
-                console.log("Error while requesting upload url: " + JSON.stringify(error));
-            }
-        });
+        this._http.post(_resourceUrl, { withCredentials: true }).pipe(
+            map((res: Response) => res)).subscribe(
+            data => {
+                console.log(data);
+            },
+            err => console.log(err)
+        );
         // FB.login((response) => {
         //     if (response.authResponse) {
         //         console.log('Welcome!  Fetching your information.... ');
@@ -168,6 +175,8 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     ok_publish() {
+
+
 
         let config = {
             app_id: 512000104776,
