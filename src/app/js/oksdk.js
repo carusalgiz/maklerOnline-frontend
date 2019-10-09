@@ -188,7 +188,12 @@
             delete params['session_key'];
             delete params['access_token'];
         }
-
+        state.accessToken = sessionStorage.getItem('access');
+        state.sessionSecretKey = sessionStorage.getItem('session');
+        state.app_id = 512000104776;
+        state.app_key = 'CJEKJGJGDIHBABABA';
+        params['session_key'] = sessionStorage.getItem('session');
+        params['access_token'] = sessionStorage.getItem('access');
         var key;
         for (key in params) {
             if (params.hasOwnProperty(key)) {

@@ -132,12 +132,12 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     inst() {
-        OKSDK.REST.call("photosV2.getUploadUrl", { count: this.item.photos.length}, function (status, data, error) {
+        OKSDK.REST.call("photosV2.getUploadUrl", { count: this.item.photos.length }, function (status, data, error) {
             if (status == 'ok' && data['upload_url']) {
                 console.log('upload TYT: ', data['upload_url']);
 
             } else {
-                alert("Error while requesting upload url: " + JSON.stringify(error));
+                console.log("Error while requesting upload url: " + JSON.stringify(error));
             }
         });
         // FB.login((response) => {
