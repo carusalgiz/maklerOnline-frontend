@@ -132,30 +132,38 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     inst() {
-        FB.login((response) => {
-            if (response.authResponse) {
-                console.log('Welcome!  Fetching your information.... ');
-                FB.api('/me', function(response) {
-                    console.log('Good to see you, ' + response.name + '.');
-                });
+        OKSDK.REST.call("photosV2.getUploadUrl", { count: this.item.photos.length}, function (status, data, error) {
+            if (status == 'ok' && data['upload_url']) {
+                console.log('upload TYT: ', data['upload_url']);
+
             } else {
-                console.log('User cancelled login or did not fully authorize.');
+                alert("Error while requesting upload url: " + JSON.stringify(error));
             }
         });
-        FB.api(
-            '100002163630078/feed',
-            'POST',
-            {
-                'message': 'This is a test message'
-            },
-            (response) => {
-                if (response && !response.error) {
-                    /* handle the result */
-                } else {
-                    console.log(response.error);
-                }
-            }
-        );
+        // FB.login((response) => {
+        //     if (response.authResponse) {
+        //         console.log('Welcome!  Fetching your information.... ');
+        //         FB.api('/me', function(response) {
+        //             console.log('Good to see you, ' + response.name + '.');
+        //         });
+        //     } else {
+        //         console.log('User cancelled login or did not fully authorize.');
+        //     }
+        // });
+        // FB.api(
+        //     '100002163630078/feed',
+        //     'POST',
+        //     {
+        //         'message': 'This is a test message'
+        //     },
+        //     (response) => {
+        //         if (response && !response.error) {
+        //             /* handle the result */
+        //         } else {
+        //             console.log(response.error);
+        //         }
+        //     }
+        // );
 
     }
 
