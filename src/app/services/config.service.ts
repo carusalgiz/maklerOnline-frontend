@@ -8,6 +8,6 @@ export class ConfigService {
     }
 }
 let config: Config = {
-    siteUrl: "//dev.makleronline.net",
-    servUrl: "//dev.maklersoft.ru"
+    siteUrl: "//makleronline.net",
+    servUrl: "//maklersoft.ru"
 };
