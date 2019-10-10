@@ -264,14 +264,15 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                                                 {
                                                     "type": "link",
                                                     "url": this.cur_href
-                                                },
-                                                {
-                                                    "type": "photo",
-                                                    "list": [
-                                                        { "id": photo_id },
-                                                        { "photoId": assigned_photo_id }
-                                                    ]
                                                 }
+                                                // ,
+                                                // {
+                                                //     "type": "photo",
+                                                //     "list": [
+                                                //         { "id": photo_id },
+                                                //         { "photoId": assigned_photo_id }
+                                                //     ]
+                                                // }
                                             ]
                                         },
                                         "silent": true
