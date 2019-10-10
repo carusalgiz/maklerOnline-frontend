@@ -164,7 +164,10 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                             }
                         }
                         console.log(key,sub_val);
-                        let sig1 = Md5.hashStr('application_key=CJEKJGJGDIHBABABAformat=jsonmethod=photosV2.commitphoto_id=' + key + "token=" + sub_val + sessionStorage.getItem('session'));
+                        let strHash = 'application_key=CJEKJGJGDIHBABABAformat=jsonmethod=photosV2.commitphoto_id=' + key + "token=" + sub_val + sessionStorage.getItem('session');
+                        let sig1 = Md5.hashStr(strHash);
+                        console.log(strHash);
+                        console.log(sig1);
                         let upload_url = "https://api.ok.ru/fb.do" +
                             "?application_key=CJEKJGJGDIHBABABA" +
                             "&format=json" +
