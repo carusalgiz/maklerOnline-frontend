@@ -183,6 +183,100 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                                 let raw1 = JSON.parse(JSON.stringify(data1));
                                 let photo_id = raw1.photos[0].photo_id;
                                 let assigned_photo_id = raw1.photos[0].assigned_photo_id;
+
+                                let obj = this.item;
+                                let apart_type = '', rooms = '', square = '', conveniencesShort = '', floor = '', price = '';
+                                switch (obj.typeCode) {
+                                    case 'room':
+                                        apart_type = 'Комната ';
+                                        break;
+                                    case 'apartment':
+                                        apart_type = 'Квартира ';
+                                        break;
+                                    case 'house':
+                                        apart_type = 'Дом ';
+                                        break;
+                                    case 'dacha':
+                                        apart_type = 'Дача ';
+                                        break;
+                                    case 'cottage':
+                                        apart_type = 'Коттедж ';
+                                        break;
+                                }
+                                if (obj.roomsCount != undefined) {
+                                    rooms = obj.roomsCount + ' комнатная';
+                                }
+                                if (obj.squareTotal != undefined) {
+                                    square = 'Площадь ' + obj.squareTotal + ' кв.м \n';
+                                }
+
+                                if (obj.conditions.bedding && obj.conditions.kitchen_furniture && obj.conditions.living_room_furniture) {
+                                    conveniencesShort += 'Мебель да\n';
+                                } else if (obj.conditions.bedding || obj.conditions.kitchen_furniture || obj.conditions.living_room_furniture) {
+                                    conveniencesShort += 'Мебель частично\n';
+                                } else {
+                                    conveniencesShort += 'Мебель нет\n';
+                                }
+
+                                if (obj.conditions.refrigerator && obj.conditions.washer &&
+                                    obj.conditions.dishwasher && obj.conditions.microwave_oven &&
+                                    obj.conditions.air_conditioning && obj.conditions.tv) {
+                                    conveniencesShort += 'Бытовая техника да\n';
+                                } else if (obj.conditions.refrigerator || obj.conditions.washer ||
+                                    obj.conditions.dishwasher || obj.conditions.microwave_oven ||
+                                    obj.conditions.air_conditioning || obj.conditions.tv) {
+                                    conveniencesShort += 'Бытовая техника частично\n';
+                                } else {
+                                    conveniencesShort += 'Бытовая техника нет\n';
+                                }
+
+                                if (obj.floor != undefined && obj.floorsCount == undefined) {
+                                    floor = 'Этаж ' + obj.floor + '\n';
+                                }
+                                if (obj.floor != undefined && obj.floorsCount != undefined) {
+                                    floor = 'Этаж ' + obj.floor + '\\' + obj.floorsCount + '\n';
+                                }
+                                if (obj.price != undefined) {
+                                    price = obj.price + '/мес ';
+                                }
+
+                                let post_text = obj.address + ' ' + obj.house_num + '\n' +
+                                    obj.city + ', ' + obj.admArea + price + '\n' +
+                                    'ОПИСАНИЕ ПРЕДЛОЖЕНИЯ\n' +
+                                    apart_type + ' ' + rooms + '\n' +
+                                    floor +
+                                    square +
+                                    'УСЛОВИЯ ПРОЖИВАНИЯ\n' +
+                                    conveniencesShort +
+                                    '\n' +
+                                    // "http://dev.makleronline.net/#/d" + "\n" +
+                                    '#арендаквартирХабаровск#сдамквартирувХабаровске#недвижимостьХабаровск#сдамснимуквартируХабаровск#арендаkhv#аренданедвижимости\n'
+                                ;
+                                OKSDK.Widgets.post(
+                                    null,
+                                    {
+                                        "attachment": {
+                                            "media": [
+                                                {
+                                                    "type": "text",
+                                                    "text": post_text
+                                                },
+                                                {
+                                                    "type": "link",
+                                                    "url": this.cur_href
+                                                },
+                                                {
+                                                    "type": "photo",
+                                                    "list": [
+                                                        { "id": photo_id },
+                                                        { "photoId": assigned_photo_id }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "silent": true
+                                    }
+                                );
                             },
                             err => console.log('ererere',err)
                         );
@@ -259,92 +353,92 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
 
 
 
-            let obj = this.item;
-            let apart_type = '', rooms = '', square = '', conveniencesShort = '', floor = '', price = '';
-            switch (obj.typeCode) {
-                case 'room':
-                    apart_type = 'Комната ';
-                    break;
-                case 'apartment':
-                    apart_type = 'Квартира ';
-                    break;
-                case 'house':
-                    apart_type = 'Дом ';
-                    break;
-                case 'dacha':
-                    apart_type = 'Дача ';
-                    break;
-                case 'cottage':
-                    apart_type = 'Коттедж ';
-                    break;
-            }
-            if (obj.roomsCount != undefined) {
-                rooms = obj.roomsCount + ' комнатная';
-            }
-            if (obj.squareTotal != undefined) {
-                square = 'Площадь ' + obj.squareTotal + ' кв.м \n';
-            }
-
-            if (obj.conditions.bedding && obj.conditions.kitchen_furniture && obj.conditions.living_room_furniture) {
-                conveniencesShort += 'Мебель да\n';
-            } else if (obj.conditions.bedding || obj.conditions.kitchen_furniture || obj.conditions.living_room_furniture) {
-                conveniencesShort += 'Мебель частично\n';
-            } else {
-                conveniencesShort += 'Мебель нет\n';
-            }
-
-            if (obj.conditions.refrigerator && obj.conditions.washer &&
-                obj.conditions.dishwasher && obj.conditions.microwave_oven &&
-                obj.conditions.air_conditioning && obj.conditions.tv) {
-                conveniencesShort += 'Бытовая техника да\n';
-            } else if (obj.conditions.refrigerator || obj.conditions.washer ||
-                obj.conditions.dishwasher || obj.conditions.microwave_oven ||
-                obj.conditions.air_conditioning || obj.conditions.tv) {
-                conveniencesShort += 'Бытовая техника частично\n';
-            } else {
-                conveniencesShort += 'Бытовая техника нет\n';
-            }
-
-            if (obj.floor != undefined && obj.floorsCount == undefined) {
-                floor = 'Этаж ' + obj.floor + '\n';
-            }
-            if (obj.floor != undefined && obj.floorsCount != undefined) {
-                floor = 'Этаж ' + obj.floor + '\\' + obj.floorsCount + '\n';
-            }
-            if (obj.price != undefined) {
-                price = obj.price + '/мес ';
-            }
-
-            let post_text = obj.address + ' ' + obj.house_num + '\n' +
-                obj.city + ', ' + obj.admArea + price + '\n' +
-                'ОПИСАНИЕ ПРЕДЛОЖЕНИЯ\n' +
-                apart_type + ' ' + rooms + '\n' +
-                floor +
-                square +
-                'УСЛОВИЯ ПРОЖИВАНИЯ\n' +
-                conveniencesShort +
-                '\n' +
-                // "http://dev.makleronline.net/#/d" + "\n" +
-                '#арендаквартирХабаровск#сдамквартирувХабаровске#недвижимостьХабаровск#сдамснимуквартируХабаровск#арендаkhv#аренданедвижимости\n'
-            ;
-        OKSDK.Widgets.post(
-            null,
-            {
-                "attachment": {
-                    "media": [
-                        {
-                            "type": "text",
-                            "text": post_text
-                        },
-                        {
-                            "type": "link",
-                            "url": this.cur_href
-                        }
-                    ]
-                },
-                "silent": true
-            }
-        );
+        //     let obj = this.item;
+        //     let apart_type = '', rooms = '', square = '', conveniencesShort = '', floor = '', price = '';
+        //     switch (obj.typeCode) {
+        //         case 'room':
+        //             apart_type = 'Комната ';
+        //             break;
+        //         case 'apartment':
+        //             apart_type = 'Квартира ';
+        //             break;
+        //         case 'house':
+        //             apart_type = 'Дом ';
+        //             break;
+        //         case 'dacha':
+        //             apart_type = 'Дача ';
+        //             break;
+        //         case 'cottage':
+        //             apart_type = 'Коттедж ';
+        //             break;
+        //     }
+        //     if (obj.roomsCount != undefined) {
+        //         rooms = obj.roomsCount + ' комнатная';
+        //     }
+        //     if (obj.squareTotal != undefined) {
+        //         square = 'Площадь ' + obj.squareTotal + ' кв.м \n';
+        //     }
+        //
+        //     if (obj.conditions.bedding && obj.conditions.kitchen_furniture && obj.conditions.living_room_furniture) {
+        //         conveniencesShort += 'Мебель да\n';
+        //     } else if (obj.conditions.bedding || obj.conditions.kitchen_furniture || obj.conditions.living_room_furniture) {
+        //         conveniencesShort += 'Мебель частично\n';
+        //     } else {
+        //         conveniencesShort += 'Мебель нет\n';
+        //     }
+        //
+        //     if (obj.conditions.refrigerator && obj.conditions.washer &&
+        //         obj.conditions.dishwasher && obj.conditions.microwave_oven &&
+        //         obj.conditions.air_conditioning && obj.conditions.tv) {
+        //         conveniencesShort += 'Бытовая техника да\n';
+        //     } else if (obj.conditions.refrigerator || obj.conditions.washer ||
+        //         obj.conditions.dishwasher || obj.conditions.microwave_oven ||
+        //         obj.conditions.air_conditioning || obj.conditions.tv) {
+        //         conveniencesShort += 'Бытовая техника частично\n';
+        //     } else {
+        //         conveniencesShort += 'Бытовая техника нет\n';
+        //     }
+        //
+        //     if (obj.floor != undefined && obj.floorsCount == undefined) {
+        //         floor = 'Этаж ' + obj.floor + '\n';
+        //     }
+        //     if (obj.floor != undefined && obj.floorsCount != undefined) {
+        //         floor = 'Этаж ' + obj.floor + '\\' + obj.floorsCount + '\n';
+        //     }
+        //     if (obj.price != undefined) {
+        //         price = obj.price + '/мес ';
+        //     }
+        //
+        //     let post_text = obj.address + ' ' + obj.house_num + '\n' +
+        //         obj.city + ', ' + obj.admArea + price + '\n' +
+        //         'ОПИСАНИЕ ПРЕДЛОЖЕНИЯ\n' +
+        //         apart_type + ' ' + rooms + '\n' +
+        //         floor +
+        //         square +
+        //         'УСЛОВИЯ ПРОЖИВАНИЯ\n' +
+        //         conveniencesShort +
+        //         '\n' +
+        //         // "http://dev.makleronline.net/#/d" + "\n" +
+        //         '#арендаквартирХабаровск#сдамквартирувХабаровске#недвижимостьХабаровск#сдамснимуквартируХабаровск#арендаkhv#аренданедвижимости\n'
+        //     ;
+        // OKSDK.Widgets.post(
+        //     null,
+        //     {
+        //         "attachment": {
+        //             "media": [
+        //                 {
+        //                     "type": "text",
+        //                     "text": post_text
+        //                 },
+        //                 {
+        //                     "type": "link",
+        //                     "url": this.cur_href
+        //                 }
+        //             ]
+        //         },
+        //         "silent": true
+        //     }
+        // );
         // OKSDK.REST.call('users.getCurrentUser', null, function(status, data, error) {
         //     if (status == 'ok') {
         //         console.log('userdata: ', data);
