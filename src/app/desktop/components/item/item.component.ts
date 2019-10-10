@@ -149,7 +149,9 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                     map((res: Response) => res)).subscribe(
                     rawr => {
                         console.log(rawr);
-                        let raw1 = JSON.parse(JSON.stringify(rawr));
+                        let rawq = JSON.parse(JSON.stringify(rawr));
+                        let raw1 = JSON.parse(JSON.stringify(rawq.result));
+                        console.log(raw1);
                         let key;
                         let sub_val;
                         for(let i in raw1){
