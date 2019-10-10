@@ -153,13 +153,13 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                         let sub_val;
                         for(let i in raw1){
                             key = i;
-                            let val = jsonData[i];
+                            let val = raw1[i];
                             for(let j in val){
                                 let sub_key = j;
                                 sub_val = val[j];                               
                             }
                         }
-                        console.log(key,sub_key);
+                        console.log(key,sub_val);
                         let sig1 = Md5.hashStr('application_key=CJEKJGJGDIHBABABAformat=jsonmethod=photosV2.commitphoto_id=' + key + "token=" + sub_val + sessionStorage.getItem('session'));
                         let upload_url = "https://api.ok.ru/fb.do" +
                             "?application_key=CJEKJGJGDIHBABABA" +
