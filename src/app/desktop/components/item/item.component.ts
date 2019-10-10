@@ -164,7 +164,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                             }
                         }
                         console.log(key,sub_val);
-                        let strHash = 'application_key=CJEKJGJGDIHBABABAformat=jsonmethod=photosV2.commitphoto_id=' + key + "token=" + sub_val + Md5.hashStr(sessionStorage.getItem('access') + sessionStorage.getItem('session'));
+                        let strHash = 'application_key=CJEKJGJGDIHBABABAformat=jsonmethod=photosV2.commitphoto_id=' + key + "token=" + sub_val + sessionStorage.getItem('session');
                         let sig1 = Md5.hashStr(strHash);
                         console.log(strHash);
                         console.log(sig1);
