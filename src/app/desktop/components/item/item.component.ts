@@ -160,11 +160,11 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                             let val = raw1[i];
                             for(let j in val){
                                 let sub_key = j;
-                                sub_val = val[j];                               
+                                sub_val = val[j];
                             }
                         }
                         console.log(key,sub_val);
-                        let strHash = 'application_key=CJEKJGJGDIHBABABAformat=jsonmethod=photosV2.commitphoto_id=' + encodeURIComponent(key) + "token=" + encodeURIComponent(sub_val) + sessionStorage.getItem('session');              
+                        let strHash = 'application_key=CJEKJGJGDIHBABABAformat=jsonmethod=photosV2.commitphoto_id=' + encodeURIComponent(key) + "token=" + encodeURIComponent(sub_val) + sessionStorage.getItem('session');
                         let sig1 = Md5.hashStr(strHash);
                         console.log(strHash);
                         console.log(sig1);
@@ -172,9 +172,9 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                             "?application_key=CJEKJGJGDIHBABABA" +
                             "&format=json" +
                             "&method=photosV2.commit" +
-                            "&photo_id=" + key +
-                            "&token=" + sub_val +
-                            "&sig=" + sig1
+                            "&photo_id=" + encodeURIComponent(key) +
+                            "&token=" + encodeURIComponent(sub_val) +
+                            "&sig=" + sig1+
                             "&access_token="  + sessionStorage.getItem('access');
                         this._http.post(upload_url, { withCredentials: true }).pipe(
                             map((res1: Response) => res1)).subscribe(
