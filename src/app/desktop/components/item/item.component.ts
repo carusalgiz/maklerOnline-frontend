@@ -170,7 +170,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                             "&format=json" +
                             "&method=photosV2.commit" +
                             "&photo_id=" + key +
-                            "&token=9pzTNtrwObIfOE1h9g8xw%2F68XpuvighS7wJpEV89LCbDToMTSMMWv10Nd102QwwRv7VwNgyU2Ps225xzQhwPgGD0lgFXdBQqAa%2FqfNqp%2BTRxduGfOztG0%2BP1unB8eCCv" + sub_val +
+                            "&token=" + sub_val +
                             "&sig=" + sig1
                             "&access_token="  + sessionStorage.getItem('access');
                         this._http.post(upload_url, { withCredentials: true }).pipe(
@@ -181,7 +181,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                                 let photo_id = raw1.photos[0].photo_id;
                                 let assigned_photo_id = raw1.photos[0].assigned_photo_id;
                             },
-                            err => console.log(err)
+                            err => console.log('ererere',err)
                         );
                     });
             },
