@@ -149,6 +149,36 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                     map((res: Response) => res)).subscribe(
                     raw1 => {
                         console.log(raw1);
+                        let key;
+                        let sub_val;
+                        for(let i in raw1){
+                            key = i;
+                            let val = jsonData[i];
+                            for(let j in val){
+                                let sub_key = j;
+                                sub_val = val[j];                               
+                            }
+                        }
+                        console.log(key,sub_key);
+                        let sig1 = Md5.hashStr('application_key=CJEKJGJGDIHBABABAformat=jsonmethod=photosV2.commitphoto_id=' + key + "token=" + sub_val + sessionStorage.getItem('session'));
+                        let upload_url = "https://api.ok.ru/fb.do" +
+                            "?application_key=CJEKJGJGDIHBABABA" +
+                            "&format=json" +
+                            "&method=photosV2.commit" +
+                            "&photo_id=" + key +
+                            "&token=9pzTNtrwObIfOE1h9g8xw%2F68XpuvighS7wJpEV89LCbDToMTSMMWv10Nd102QwwRv7VwNgyU2Ps225xzQhwPgGD0lgFXdBQqAa%2FqfNqp%2BTRxduGfOztG0%2BP1unB8eCCv" + sub_val +
+                            "&sig=" + sig1
+                            "&access_token="  + sessionStorage.getItem('access');
+                        this._http.post(upload_url, { withCredentials: true }).pipe(
+                            map((res1: Response) => res1)).subscribe(
+                            data1 => {
+                                console.log(data1);
+                                let raw1 = JSON.parse(JSON.stringify(data1));
+                                let photo_id = raw1.photos[0].photo_id;
+                                let assigned_photo_id = raw1.photos[0].assigned_photo_id;
+                            },
+                            err => console.log(err)
+                        );
                     });
             },
             err => console.log(err)
