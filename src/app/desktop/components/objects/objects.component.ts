@@ -165,6 +165,10 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                     // console.log("Ищем объект ", str);
                     for (let offer of offers) {
                         if (Number.parseInt(str.substring(0, 13), 10) == offer.id) {
+                            if (sessionStorage.getItem('con_data') == 'true') {
+                                this.payed = true;
+                                this.logged_in = true;
+                            }
                             this.item = offer;
                         }
                     }

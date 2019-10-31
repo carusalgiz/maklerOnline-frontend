@@ -32,6 +32,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     touchCheck = false;
     timer: any;
     ngOnInit() {
+        sessionStorage.clear();
        // sessionStorage.removeItem('access');
        //  sessionStorage.removeItem('session');
        //  sessionStorage.removeItem('expires');

@@ -256,67 +256,25 @@
         <div class="nearby-block add">
             <span>ДАННЫЕ АРЕНДОДАТЕЛЯ</span>
         </div>
-
-        <!--<div style="display: flex;    margin-bottom: 30px;">-->
-        <!--<div class="similar-button add" [class.active]="contact" [class.disable]="!contact"-->
-        <!--(click)="contact = true">-->
-        <!--<div style="display: flex; flex-direction: column">-->
-        <!--<span>КОНТАКТЫ</span>-->
-        <!--<div class="wordLine" [class.active]="contact"></div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<div class="similar-button add" [class.active]="!contact" [class.disable]="contact"-->
-        <!--(click)="contact = false">-->
-        <!--<div style="display: flex; flex-direction: column">-->
-        <!--<span>РЕЙТИНГ</span>-->
-        <!--<div class="wordLine" [class.active]="!contact"></div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
         <div class="descriptionFullBlock add">
             <div style="display: flex">
-                <div class="contactBlock topRightInner">
-                    <!--<div class="contactNameBlock">-->
-                    <!--<img id="userPhoto" width="30px" height="30px">-->
-                    <!--<div class="topRightInner" style="margin-left: 25px">-->
-                    <!--<span class="one">{{item?.name}}</span>-->
-                    <!--<span class="two">ЧАСТНОЕ ЛИЦО</span>-->
-                    <!--</div>-->
-                    <!--</div>-->
-                    <div class="contactLineBlock" *ngIf="payingMode && loggingMode">
+                <div class="contactBlock topRightInner" *ngIf="payingMode && loggingMode">
+                    <div class="contactLineBlock">
                         <div class="one">Телефон рабочий</div>
                         <div class="two"><span>+7 {{item?.phone | mask: '(000) 000-0000'}}</span></div>
                     </div>
-                    <div class="contactLineBlock" *ngIf="payingMode && loggingMode">
+                    <div class="contactLineBlock">
                         <div class="one">Электронный адрес</div>
                         <div class="two"><span>{{item?.email}}</span></div>
                     </div>
-                    <div class="contactLineBlock" *ngIf="payingMode && loggingMode" style="padding-bottom: 10px">
+                    <div class="contactLineBlock" style="padding-bottom: 10px">
                         <div class="one">Сайт</div>
                         <div class="two"></div>
                     </div>
-                    <div style="width: 100%; display: flex; justify-content: center"
-                         *ngIf="!payingMode || !loggingMode">
+                </div>
+                <div class="contactBlock topRightInner" *ngIf="!payingMode || !loggingMode">
+                    <div style="width: 100%; display: flex; justify-content: center" >
                         <div class="button-contacts" (click)="checklogin(); checkblock()">КОНТАКТЫ</div>
-                        <!--<div class="button-contacts" *ngIf="logged_in && time == 'false'" (click)="openBlock('pay')">КОНТАКТЫ</div>-->
-                        <!--<div class="button-contacts" *ngIf="!logged_in" (click)="openBlock('login')">КОНТАКТЫ</div>-->
-                        <!--<div class="button-contacts" *ngIf="logged_in && time == 'true'">КОНТАКТЫ</div>-->
-                    </div>
-<!--                    -lll f-->
-<!--                    href="https://connect.ok.ru/oauth/authorize?client_id=512000104776&response_type=token&scope=VALUABLE_ACCESS;GROUP_CONTENT&redirect_uri={{cur_href}}" -->
-                    <a title="Одноклассники" (click)="ok_publish()" class="button-contacts " style="background-color: coral; color: white" ></a>
-                    <a class="button-contacts" style="background-color: hotpink; color: white" (click)="inst()"></a>
-                    <div style="width: 100%; display: flex; justify-content: center">
-                        <div id="vk_auth"></div>
-                        <a class="button-contacts" (click)="publishVk(1)">Опубликовать у себя</a>
-                        <a class="button-contacts" (click)="publishVk(2)">Опубликовать в группах</a>
-
-<!--                        <a  class="button-contacts" href="https://vk.com/share.php?url={{cur_href}}" target="_blank">Опубликовать</a>-->
-<!--                        <div (click)="vk_auth()" class="button-contacts">PUBLISH</div>-->
-
-                        <!--<div class="button-contacts" *ngIf="logged_in && time == 'false'" (click)="openBlock('pay')">КОНТАКТЫ</div>-->
-                        <!--<div class="button-contacts" *ngIf="!logged_in" (click)="openBlock('login')">КОНТАКТЫ</div>-->
-                        <!--<div class="button-contacts" *ngIf="logged_in && time == 'true'">КОНТАКТЫ</div>-->
                     </div>
                 </div>
 

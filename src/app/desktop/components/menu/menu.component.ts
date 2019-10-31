@@ -22,6 +22,11 @@ export class MenuComponent implements OnInit {
     subscription: any;
     siteUrl: any;
     token: any;
+    timer: any;
+    mode = '';
+    timeT: any;
+    resTime: any;
+    resDay: any;
   @Output() updateItems = new EventEmitter();
     @Output() Logging = new EventEmitter();
     @Output() Paying = new EventEmitter();
@@ -30,110 +35,19 @@ export class MenuComponent implements OnInit {
               private _offer_service: OfferService,
               private _account_service: AccountService) {
       this.siteUrl = config.getConfig('siteUrl');
+      if (sessionStorage.getItem('useremail') != undefined) {
+          this.userEmail = sessionStorage.getItem('useremail');
+          if (sessionStorage.getItem('days') != undefined && sessionStorage.getItem('time') != undefined) {
+              this.days = sessionStorage.getItem('days');
+              this.time = sessionStorage.getItem('time');
+          }
+      }
   }
 
   ngOnInit() {
-    this.checklogin();
-    if (this.localStorage.getItem("days") != null && this.localStorage.getItem("time") != null) {
-      this.days = this.localStorage.getItem("days");
-      this.time = this.localStorage.getItem("time");
-    }
+      clearInterval(this.timer);
+      this.checklogin();
     this.redirect = false;
-
-    // document.addEventListener('mousewheel', function (event: WheelEvent) {
-    //   let mapbuttons =  document.getElementsByClassName('map-buttons') as HTMLCollectionOf<HTMLElement>;
-    //   let addobject =  document.getElementsByClassName('add-obj-ext') as HTMLCollectionOf<HTMLElement>;
-    //   let history =  document.getElementsByClassName('history') as HTMLCollectionOf<HTMLElement>;
-    //   let addr = document.getElementsByClassName('address-block') as HTMLCollectionOf<HTMLElement>;
-    //   let mapbuttonstab =  document.getElementsByClassName('map-buttons-tablet') as HTMLCollectionOf<HTMLElement>;
-    //   let items = document.getElementsByClassName('header')   as HTMLCollectionOf<HTMLElement>;
-    //   let uselessLine = document.getElementsByClassName('uselessLine')   as HTMLCollectionOf<HTMLElement>;
-    //   let filters = document.getElementsByClassName('filters-menu-desktop')   as HTMLCollectionOf<HTMLElement>;
-    //   let filter = document.getElementsByClassName('filters')   as HTMLCollectionOf<HTMLElement>;
-    //   let scrollItems = document.getElementsByClassName('scroll-items open')   as HTMLCollectionOf<HTMLElement>;
-    //   let filtersbox = document.getElementsByClassName('filters-box open')   as HTMLCollectionOf<HTMLElement>;
-    //   let mainHome =  document.getElementsByClassName('mainHome')   as HTMLCollectionOf<HTMLElement>;
-    //   let main = document.getElementsByClassName('main-objects') as HTMLCollectionOf<HTMLElement>;
-    //   let desk = document.getElementsByClassName('desk') as HTMLCollectionOf<HTMLElement>;
-    //
-    //   if ((event.deltaY  < 0)) {
-    //     items.item(0).style.setProperty('top', '-130px');
-    //     if (mainHome.length !== 0) {
-    //       mainHome.item(0).style.setProperty('margin-top', '0');
-    //     }
-    //     uselessLine.item(0).style.setProperty('top', '0');
-    //     uselessLine.item(0).style.setProperty('margin-bottom', '0');
-    //     if (filters.length !== 0) {
-    //       filters.item(0).style.setProperty('top', '0');
-    //     }
-    //     if (mapbuttons.length !== 0) {
-    //       mapbuttons.item(0).style.setProperty('top', '0');
-    //     }
-    //     if (addobject.length !== 0) {
-    //       addobject.item(0).style.setProperty('top', '0');
-    //     }
-    //     if (history.length !== 0) {
-    //       history.item(0).style.setProperty('top', '0');
-    //     }
-    //     if (addr.length !== 0) {
-    //       addr.item(0).style.setProperty('top', '0');
-    //     }
-    //     if (mapbuttonstab.length !== 0) {
-    //       mapbuttonstab.item(0).style.setProperty('top', '0');
-    //     }
-    //     if (desk.length === 0 && filter.length !== 0) {
-    //       filter.item(0).style.setProperty('height', 'calc(100vh - 65px)');
-    //     }
-    //     if (scrollItems.length !== 0) {
-    //       scrollItems.item(0).style.setProperty('height', '100%');
-    //     }
-    //     if (filtersbox.length !== 0) {
-    //       filtersbox.item(0).style.setProperty('height', 'calc(100% - 65px)');
-    //     }
-    //     if (main.length !== 0) {
-    //       main.item(0).style.setProperty('height', 'calc(100vh - 65px)');
-    //     }
-    //   } else {
-    //     items.item(0).style.setProperty('top', '0');
-    //     if (uselessLine.length !== 0) {
-    //       uselessLine.item(0).style.setProperty('top', '130px');
-    //       uselessLine.item(0).style.setProperty('margin-bottom', '130px');
-    //     }
-    //     if (mainHome.length !== 0) {
-    //       mainHome.item(0).style.setProperty('margin-top', '130px');
-    //     }
-    //     if (filters.length !== 0) {
-    //       filters.item(0).style.setProperty('top', '130px');
-    //     }
-    //     if (mapbuttons.length !== 0) {
-    //       mapbuttons.item(0).style.setProperty('top', '130px');
-    //     }
-    //     if (addobject.length !== 0) {
-    //       addobject.item(0).style.setProperty('top', '130px');
-    //     }
-    //     if (history.length !== 0) {
-    //       history.item(0).style.setProperty('top', '195px');
-    //     }
-    //     if (addr.length !== 0) {
-    //       addr.item(0).style.setProperty('top', '130px');
-    //     }
-    //     if (mapbuttonstab.length !== 0) {
-    //       mapbuttonstab.item(0).style.setProperty('top', '130px');
-    //     }
-    //     if (desk.length === 0 && filter.length !== 0) {
-    //       filter.item(0).style.setProperty('height', 'calc(100vh - 195px)');
-    //     }
-    //     if (scrollItems.length !== 0) {
-    //       scrollItems.item(0).style.setProperty('height', 'calc(100% - 130px)');
-    //     }
-    //     if (filtersbox.length !== 0) {
-    //       filtersbox.item(0).style.setProperty('height', 'calc(100% - 130px)');
-    //     }
-    //     if (main.length !== 0) {
-    //       main.item(0).style.setProperty('height', 'calc(100vh - 195px)');
-    //     }
-    //   }
-    // });
   }
   update() {
     if (document.getElementById('filters-map-map1') != undefined) {
@@ -144,15 +58,35 @@ export class MenuComponent implements OnInit {
         this.ym.reachGoal.next({target: target});
     }
   checklogin() {
+      console.log("checkloginmenu");
+      this.loggedIn = false;
     this._account_service.checklogin().subscribe(res => {
       console.log(res);
       if (res != undefined) {
         let data = JSON.parse(JSON.stringify(res));
         if (data.result == 'success' ) {
-          this.userEmail = data.email;
+            if (data.email != "") {
+                this.userEmail = data.email;
+            } else {
+                this.userEmail = "email";
+            }
+          sessionStorage.setItem('useremail', this.userEmail);
+          this.days = sessionStorage.getItem('days');
+          this.time = sessionStorage.getItem('time');
+          this.resDay = sessionStorage.getItem('resDay');
+          this.resTime = sessionStorage.getItem('resTime');
           localStorage.setItem('cur_id', data.user_id);
           this.loggedIn = true;
           this.Logging.emit("true");
+
+            this._account_service.checkBalance().subscribe(res => {
+                console.log("checkbalance");
+                let result = JSON.parse(JSON.stringify(res));
+                console.log(result);
+                this.timeT = parseInt(result.time, 10);
+                clearInterval(this.timer);
+                this.timer = setInterval(e => this.updateTime(), 1000);
+            });
         } else {
           this.log_out();
             this.Logging.emit("false");
@@ -165,6 +99,64 @@ export class MenuComponent implements OnInit {
       }
     });
   }
+    updateTime() {
+        if (this.redirect) {
+            clearInterval(this.timer);
+        }
+        if (this.loggedIn == true) {
+            if (this.timeT > 0) {
+                this.timeT = this.timeT - 1;
+                let min = this.timeT / 60;
+                let hour = min / 60;
+                let resDay = Math.floor(hour / 24);
+                this.days = resDay + "дн.";
+                this.time = Math.floor(hour % 24) + "ч." + Math.floor(min % 60) + "мин.";
+                this.resDay = Math.floor(hour / 24);
+                this.resTime = Math.floor(hour % 24) + ":" + Math.floor(min % 60) + ":" + Math.floor(this.timeT % 60);
+                sessionStorage.setItem('days',this.days);
+                sessionStorage.setItem('time', this.time);
+                sessionStorage.setItem('resDay', this.resDay);
+                sessionStorage.setItem('resTime', this.resTime);
+                sessionStorage.setItem('con_data', 'true');
+                this.Paying.emit('true');
+            } else {
+                clearInterval(this.timer);
+                this.days = "00дн.";
+                this.time = "00ч.00мин.";
+                this.resDay = 0;
+                this.resTime = "00:00:00";
+                sessionStorage.setItem('days',this.days);
+                sessionStorage.setItem('time', this.time);
+                sessionStorage.setItem('resDay', this.resDay);
+                sessionStorage.setItem('resTime', this.resTime);
+                sessionStorage.setItem('con_data', 'false');
+                this.Paying.emit('false');
+                clearInterval(this.timer);
+            }
+        } else {
+            this.days = "00дн.";
+            this.time = "00ч.00мин.";
+            this.resDay = 0;
+            this.resTime = "00:00:00";
+            sessionStorage.setItem('days',this.days);
+            sessionStorage.setItem('time', this.time);
+            sessionStorage.setItem('resDay', this.resDay);
+            sessionStorage.setItem('resTime', this.resTime);
+            sessionStorage.setItem('con_data', 'false');
+            this.Paying.emit('false');
+            this.log_out();
+            clearInterval(this.timer);
+        }
+        if (this.timeT > 0) {
+            if (this.localStorage.getItem('timeAdd') != 'true') {
+                this.localStorage.setItem("timeAdd", 'true');
+            }
+        } else {
+            if (this.localStorage.getItem('timeAdd') != 'false') {
+                this.localStorage.setItem("timeAdd", 'false');
+            }
+        }
+    }
     save_token() {
        // alert(this.token);
         let body = {
@@ -189,11 +181,18 @@ export class MenuComponent implements OnInit {
     this.loggedIn = false;
     this.days = "0дн.";
     this.time = "00ч.00мин.";
+      sessionStorage.setItem('days',this.days);
+      sessionStorage.setItem('time', this.time);
+      sessionStorage.setItem('resDay', this.resDay);
+      sessionStorage.setItem('resTime', this.resTime);
+      sessionStorage.setItem('con_data', 'false');
     this._account_service.logout();
   }
   timeUpdate() {
-    this.localStorage.setItem("days", this.days);
-    this.localStorage.setItem("time", this.time);
+    // this.localStorage.setItem("days", this.days);
+    // this.localStorage.setItem("time", this.time);
+    //   sessionStorage.setItem('days',this.days);
+    //   sessionStorage.setItem('time', this.time);
     this.redirect = true;
   }
   openBlock(page) {
@@ -229,6 +228,7 @@ export class MenuComponent implements OnInit {
         }
         break;
       case 'pay':
+          this.mode = 'pay';
         items.item(2).style.setProperty('border-top', '5px solid #821529');
         items.item(2).style.setProperty('font-weight', 'bold');
         slide.item(1).classList.add('open');

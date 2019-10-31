@@ -284,13 +284,13 @@ a.social-link:hover{
   text-decoration: none;
   font-family: Cadillac, sans-serif;
   letter-spacing: 0.05em;
-  color: #B8B8B8;
+  color: white;
   font-size: 14px;
   width: auto;
   margin: 0 15px;
 }
 .uselessLineMenuObj:hover{
-  font-weight: bold;
+  text-decoration: underline;
 }
 .lastMenuObj{
   margin-right: 245px;

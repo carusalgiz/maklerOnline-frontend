@@ -203,24 +203,29 @@ export class AccountService {
   }
   // ????????????????????????????????????????
   checkBalance() {
-    let _resourceUrl =  this.servUrl + '/person/balance?';
-    // console.log(_resourceUrl);
+      let query = [];
+      query.push('rand=' + Math.random().toFixed(20).replace('.', ''));
+    let _resourceUrl =  this.servUrl + '/person/balance?' + query.join('&');
+     console.log(_resourceUrl);
     let ret_subj = <AsyncSubject<any>>new AsyncSubject();
 
     //, responseType: 'text'
     this._http.get(_resourceUrl, { withCredentials: true }).pipe(
-      map((res: Response) => res)).subscribe(
-      data => {
-        ret_subj.next(data);
-        ret_subj.complete();
-      },
-      err => console.log(err)
-    );
+          map((res: Response) => res)).subscribe(
+          data => {
+              ret_subj.next(data);
+              ret_subj.complete();
+          },
+          err => console.log(err)
+      );
+    console.log("----" + _resourceUrl);
     return ret_subj;
   }
   checklogin() {
+      let query = [];
+      query.push('rand=' + Math.random().toFixed(20).replace('.', ''));
     let ret_subj = <AsyncSubject<any>>new AsyncSubject();
-    let _resourceUrl =  this.servUrl + '/person/checklogin';
+    let _resourceUrl =  this.servUrl + '/person/checklogin?' + query.join('&');
     this._http.get(_resourceUrl, {withCredentials: true}).pipe(
       map((res: Response) => res)).subscribe(
       raw => {

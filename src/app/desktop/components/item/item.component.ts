@@ -79,6 +79,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     groups: any[] = [];
     groups_choice = false;
     postInfo: any[] = [];
+    con_mode: any;
 
     constructor(@Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, private _http: HttpClient,private config: ConfigService,
                 private _account_service: AccountService, private titleService: Title) {
@@ -91,22 +92,15 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     @Output() favItemMode = new EventEmitter();
 
     ngOnInit() {
-        // console.log('log: ', this.loggingMode);
-        // console.log('pay: ', this.payingMode);
-
-        // VK.Observer.subscribe('auth.login', function(response){
-        //     refreshPage(true);
-        // });
-
     }
 
     ngOnChanges(changes: SimpleChanges): void {
 
         if (this.item != undefined) {
             this.titleService.setTitle('');
-            if (changes.item.currentValue != changes.item.previousValue) {
+         //   if (changes.item.currentValue != changes.item.previousValue) {
                 this.checkParams();
-            }
+         //   }
         }
         if (window.location.href.indexOf('publish') != -1) {
             this.vk_auth();
@@ -130,7 +124,48 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
         this.checkParams();
         this.cur_href = document.location.href;
     }
+    ok_groups() {
+        this.groups = [];
+        this.groups_choice = true;
+        let sig = Md5.hashStr("application_key=CJEKJGJGDIHBABABAformat=jsonmethod=group.getUserGroupsV2"+sessionStorage.getItem('session'));
+        let _resourceUrl = "https://api.ok.ru/fb.do" +
+            "?application_key=CJEKJGJGDIHBABABA" +
+            "&format=json" +
+            "&method=group.getUserGroupsV2" +
+            "&sig=" + sig +
+            "&access_token=" + sessionStorage.getItem('access');
+        this._http.post(_resourceUrl, { withCredentials: true }).pipe(
+            map((res: Response) => res)).subscribe(
+            data => {
+                console.log(data);
+                let raw = JSON.parse(JSON.stringify(data));
+                let groups = raw.groups;
+                let groups_str = "";
+                for (let i = 0; i < groups; i++) {
+                    groups_str += groups[i].groupId + ',';
+                }
+                let gr_sig = Md5.hashStr("application_key=CJEKJGJGDIHBABABAfields=abbreviation,name,main_photo,photo_idformat=jsonmethod=group.getInfouids="+groups_str+sessionStorage.getItem('session'));
+                let info_gr_url = "https://api.ok.ru/fb.do" +
+                    "?application_key=CJEKJGJGDIHBABABA" +
+                    "&fields=abbreviation%2Cname%2Cmain_photo%2Cphoto_id" +
+                    "&format=json" +
+                    "&method=group.getInfo" +
+                    "&uids=" + encodeURIComponent(groups_str) +
+                    "&sig=" + gr_sig +
+                    "&access_token=" + sessionStorage.getItem('access');
+                this._http.post(info_gr_url, { withCredentials: true }).pipe(
+                    map((res1: Response) => res1)).subscribe(
+                    data1 => {
+                        let raw1 = JSON.parse(JSON.stringify(data1));
+                        for (let j = 0; j < raw1.length;j++) {
+                            this.groups.push({
+                                name: raw1[j].name
+                            });
+                        }
 
+                    });
+            });
+    }
     inst() {
         let sig = Md5.hashStr('application_key=CJEKJGJGDIHBABABAcount=10method=photosV2.getUploadUrl' + sessionStorage.getItem('session'));
         let _resourceUrl =  "https://api.ok.ru/fb.do" +
@@ -335,15 +370,6 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
             }, (e) => {
                 console.log('-');
                 console.log(e);
-            });
-        } else {
-            OKSDK.REST.call("photosV2.getUploadUrl", { count: this.item.photos.length}, function (status, data, error) {
-                if (status == 'ok' && data['upload_url']) {
-                    console.log('upload TYT: ', data['upload_url']);
-
-                } else {
-                    alert("Error while requesting upload url: " + JSON.stringify(error));
-                }
             });
         }
         window.addEventListener('message', function (widgetMessage) {
@@ -617,9 +643,9 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
         if (this.mode == 'full' && this.item != undefined) {
 
             this.time = this.localStorage.getItem('timeAdd');
-            if (this.item.photos != undefined) {
-                this.src = this.item.photos[0] != undefined ? this.item.photos[0].href : 'https://makleronline.net/assets/noph.png';
-            }
+            // if (this.item.photos != undefined) {
+            //     this.src = this.item.photos[0] != undefined ? this.item.photos[0].href : 'https://makleronline.net/assets/noph.png';
+            // }
 
 
             if (!this.compare && !this.similarOpen) {
@@ -1039,23 +1065,6 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     publishVk(type) {
-        console.log(VK);
-        // VK.Auth.login(response => {
-        //     if (response.session) {
-        //         console.log('expire: ' + response.session.expire);
-        //         console.log('mid: ' + response.session.mid);
-        //         console.log('fio: ' + response.session.user.first_name + ' ' + response.session.user.last_name );
-        //         console.log('userDomain: ' + response.session.user.domain);
-        //
-        //         if (response.settings) {
-        //             console.log(response.settings);
-        //             // Выбранные настройки доступа пользователя если они были запрошены
-        //         }
-        //     } else {
-        //         // Пользователь нажал кнопку Отмена в окне авторизации
-        //     }
-        // },  VK.access.FRIENDS | VK.access.PHOTOS | VK.access.WALL | VK.access.ADS | VK.access.GROUPS  );
-
         setTimeout(() => {
             VK.Auth.getLoginStatus(response => {
                 if (response.status != 'connected') {

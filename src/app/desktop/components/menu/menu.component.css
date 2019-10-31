@@ -117,6 +117,9 @@ div:hover, span:hover, p:hover {
   justify-content: center;
   font-family: Helvetica, sans-serif;
 }
+.logo:hover, .logo div:hover, .logo span:hover, .lineh:hover{
+    cursor: pointer;
+}
 .menu ul{
   display: flex;
   list-style: none;

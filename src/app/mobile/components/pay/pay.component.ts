@@ -39,6 +39,12 @@ export class PayComponent implements OnInit, OnChanges {
   timer: any;
     selectedButton: any[] = [{block: ''}];
   ngOnInit() {
+      if (sessionStorage.getItem('useremail') != undefined) {
+          if (sessionStorage.getItem('days') != undefined && sessionStorage.getItem('time') != undefined) {
+              this.resDay = Number.parseInt(sessionStorage.getItem('resDay'));
+              this.resTime = sessionStorage.getItem('resTime');
+          }
+      }
     this.width = document.documentElement.clientWidth;
       this.checklogin();
       this.checkBalance();
@@ -58,6 +64,7 @@ export class PayComponent implements OnInit, OnChanges {
                 let data = JSON.parse(JSON.stringify(res));
                 if (data.result == 'success') {
                     this.user = data.user_id;
+                    sessionStorage.setItem('useremail', data.email);
                     this.logged_in = true;
                 } else {
                     this.log_out();
@@ -126,6 +133,9 @@ export class PayComponent implements OnInit, OnChanges {
                 let hour = min / 60;
                 this.resDay = Math.floor(hour / 24);
                 this.resTime = Math.floor(hour % 24) + ":" + Math.floor(min % 60) + ":" + Math.floor(this.timeT % 60);
+                sessionStorage.setItem('resDay', this.resDay.toString());
+                sessionStorage.setItem('resTime', this.resTime);
+                sessionStorage.setItem('con_data', 'true');
                 this.days.emit(this.resDay + "дн.");
                 this.time.emit(Math.floor(hour % 24) + "ч." + Math.floor(min % 60) + "мин.");
             } else {
@@ -135,6 +145,9 @@ export class PayComponent implements OnInit, OnChanges {
                 this.balance = 0.0;
                 this.days.emit("00дн.");
                 this.time.emit("00ч.00мин.");
+                sessionStorage.setItem('resDay', this.resDay.toString());
+                sessionStorage.setItem('resTime', this.resTime);
+                sessionStorage.setItem('con_data', 'false');
             }
         } else {
             this.resDay = 0;
@@ -142,6 +155,9 @@ export class PayComponent implements OnInit, OnChanges {
             this.resTime = "00:00:00";
             this.days.emit("00дн.");
             this.time.emit("00ч.00мин.");
+            sessionStorage.setItem('resDay', this.resDay.toString());
+            sessionStorage.setItem('resTime', this.resTime);
+            sessionStorage.setItem('con_data', 'false');
             this.log_out();
             this.logoutFunc();
         }
