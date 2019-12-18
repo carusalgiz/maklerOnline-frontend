@@ -51,7 +51,7 @@
         <div class="input-block font" [class.email-login]="log_in" *ngIf="log_in">
             <span>Телефон</span>
             <input type="text" title="email" [(ngModel)]="phone1" [patterns]="customPatterns"
-                   placeholder="Введите номер вашего телефона" mask="10 (000) 000-00-00" value="+7"
+                   placeholder="Введите номер вашего телефона" mask="10 (000) 000-00-00"
                    (keypress)="checkKey('phone1')"
                    style="margin: 0">
         </div>

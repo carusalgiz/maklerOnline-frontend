@@ -3,6 +3,7 @@ import { Component, OnInit, AfterViewInit , Inject} from '@angular/core';
 import {OfferService} from '../../../services/offer.service';
 import {AccountService} from '../../../services/account.service';
 import { NgxMetrikaService } from '@kolkov/ngx-metrika';
+import {ConfigService} from '../../../services/config.service';
 
 @Component({
   selector: 'app-home',
@@ -11,8 +12,10 @@ import { NgxMetrikaService } from '@kolkov/ngx-metrika';
 })
 export class HomeComponent implements OnInit, AfterViewInit {
 
-  constructor(private ym: NgxMetrikaService, @Inject(LOCAL_STORAGE) private localStorage: any, private _offer_service: OfferService,
-              private _account_service: AccountService) { }
+  constructor(private ym: NgxMetrikaService, @Inject(LOCAL_STORAGE) private localStorage: any, private _offer_service: OfferService,config: ConfigService,
+              private _account_service: AccountService) {
+      this.siteUrl = config.getConfig('siteUrl');
+  }
   loggedIn = false;
   widthReview = 585; // ширина отзыва
   count = 1; // количество отзывов
@@ -21,6 +24,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   countObjects = 0;
   countTodayObjects = 0;
   agreement: any;
+    siteUrl: any;
   facebook = false; vk = false; odnokl = false;
   reviews = [{
     photo: "../../../../assets/Parfenova.jpg",
@@ -158,15 +162,19 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
   get_list() {
     this.countObjects = 0;
-    this._offer_service.list(1, 1, '', '', '', '').subscribe(offers => {
-      this.countObjects = offers.length;
-      let data = Math.floor((new Date()).getTime() / 1000);
-      for (let offer of offers) {
-          let time = offer.addDate;
-          // console.log('time: ' + time + ' cur: ' + mil);
-          if (data - time < 86400) {
-            this.countTodayObjects++;
+    this._offer_service.list(0, 10000, '', '', '', '').subscribe(dataOffers => {
+      this.countObjects = dataOffers.hitsCount;
+      let data = new Date();
+      for (let offer of dataOffers.list) {
+          let time = new Date(offer.addDate * 1000);
+          if ( Math.floor((new Date()).getTime() / 1000) - offer.addDate < 84600) {
+            console.log('time: ' + time + ' cur: ' + data);
+              if (data.getDay() == time.getDay()) {
+                  this.countTodayObjects++;
+              }
           }
+
+
       }
     });
   }

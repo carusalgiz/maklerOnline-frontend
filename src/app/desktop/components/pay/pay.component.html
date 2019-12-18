@@ -16,7 +16,7 @@
     </div>
   </div>
   <!--<span class="font" style="font-size: 16px;">ВЫБЕРИТЕ КАТЕГОРИЮ</span>-->
-  <div class="add-button" [class.open]="sam" (click)="ymFunc('ya-sam-pay');sam = !sam" style="margin-top: 30px;">
+  <div class="add-button" [class.open]="sam" (click)="sam = !sam" style="margin-top: 30px;">
     <span>Я САМ</span>
     <div class="bottomWordInButton">
       <span class="button-bottom">ПРОВЕРЕННЫЕ ОБЪЯВЛЕНИЯ</span>
@@ -31,7 +31,7 @@
       <div [class.selected]="selectedButton[0]?.block == '0-3'" (click)="payment('0-3', 'type_four', '150000')"><p>МЕСЯЦ</p><span>1500 Р</span></div>
     </div>
   </div>
-  <div class="add-button" (click)="ymFunc('special-pay');" [class.open]="special">
+  <div class="add-button"  [class.open]="special">
     <span>ОСОБОЕ ВНИМАНИЕ</span>
     <div class="bottomWordInButton">
       <span class="button-bottom">ТОЛЬКО АКТУАЛЬНЫЕ ОБЪЯВЛЕНИЯ</span>
@@ -46,7 +46,7 @@
       <div [class.selected]="selectedButton[0]?.block == '1-3'" (click)="payment('1-3', 'type_four', '1500.00')"><p>МЕСЯЦ</p><span>1500 Р</span></div>
     </div>
   </div>
-  <div class="add-button"  (click)="ymFunc('premium-pay');" [class.open]="premium">
+  <div class="add-button"  [class.open]="premium">
     <span>ПРЕМИУМ</span>
     <div class="bottomWordInButton">
       <SPAN class="button-bottom">ПЕРСОНАЛЬНЫЙ ПОДХОД</SPAN>

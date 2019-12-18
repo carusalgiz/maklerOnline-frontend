@@ -1,4 +1,4 @@
-<app-menu [headerPos]="headerPos" (openMenu)="menuMode($event)" [blockOpenInput]="blockInputOpen" *ngIf="(blockInputOpen != 'open_item' && blockMode != 'item') || (blockInputOpen != 'open_menu' && blockMode == 'item') "></app-menu>
+<app-menu  (Logging)="changeLog($event)" (Paying)="changePay($event)" [headerPos]="headerPos" (openMenu)="menuMode($event)" [blockOpenInput]="blockInputOpen" *ngIf="(blockInputOpen != 'open_item' && blockMode != 'item') || (blockInputOpen != 'open_menu' && blockMode == 'item') "></app-menu>
 <div [class.openMain]="!menuOpen && blockInputOpen != 'open_login' && blockInputOpen != 'open_pay'" [class.closeMain]="menuOpen || blockInputOpen == 'open_login' || blockInputOpen == 'open_pay'">
   <!--<a class="show-items" *ngIf="blockMode == 'filters'" (click)="get_list();this.blockMode = 'items'">-->
     <!--<div class="show-items-button">-->
@@ -16,17 +16,17 @@
       <span>КОНТАКТЫ</span>
     </a>
   </div>
-  <div class="bottom-buttons1" *ngIf="blockMode == 'item' && logged_in && timeAdd != 'true'" (click)="blockInputOpen = 'open_pay'">
+  <div class="bottom-buttons1" *ngIf="blockMode == 'item' && logged_in && !payed" (click)="blockInputOpen = 'open_pay'">
     <a class="show-contact-button" style=" text-decoration: none">
       <!--<img src="../../../../assets/phone-white.png" width="30px" height="30px">-->
       <!--<span style="margin-left: 20px">+ 7 (924) 403-00-01</span>-->
       <span>КОНТАКТЫ</span>
     </a>
   </div>
-  <div class="bottom-buttons1" *ngIf="blockMode == 'item' && logged_in && timeAdd == 'true'">
-    <a class="show-contact-button" style=" text-decoration: none;background-color: #00695C">
+  <div class="bottom-buttons1" *ngIf="blockMode == 'item' && logged_in && payed">
+    <a class="show-contact-button" style=" text-decoration: none;color: white;background-color: #00695C" [href]="'tel:7' + item?.phone">
       <img src="../../../../assets/phone-white.png" width="30px" height="30px">
-      <span style="margin-left: 20px">+ 7 (924) 403-00-01</span>
+      <span style="margin-left: 20px;">+7 {{item?.phone | mask: '(000) 000-0000'}}</span>
     </a>
   </div>
   <!--(click)="openBlock('app')"-->
@@ -59,7 +59,7 @@
         </agm-map>
       </div>
       <app-item  (closeItem)="blockInputOpen = 'open_menu'; blockMode = 'items'" [class.open]="blockMode == 'item' && (blockInputOpen =='open_menu' || blockInputOpen == 'close_menu')" *ngIf="blockMode == 'item' && (blockInputOpen =='open_menu' || blockInputOpen == 'close_menu')" [id]="item.id" [currentPage]="currentPage"
-                (similarItem)="similarObj($event)" (showInfoEvent)="info($event)"
+                (similarItem)="similarObj($event)" (showInfoEvent)="info($event)" [loggingMode]="logged_in" [payingMode]="payed"
                 (favouriteItemEvent)="addFav($event)" (contactPos)="setContactPos($event)" [item]="item" [mode]="'full'"
                 [similarOpen]="false">
       </app-item>
@@ -67,7 +67,7 @@
       <div class="filters open" *ngIf="this.blockMode != 'map'" (touchstart)="touchstart($event)" (touchend)="touchend($event)">
         <div class="scroll-items open"
              *ngIf="blockMode == 'items'">
-          <app-item *ngFor="let obj of items, let i = index" [item]="obj" [id]="i" [mode]="'middle'"
+          <app-item *ngFor="let obj of items, let i = index" [item]="obj" [id]="i" [mode]="'middle'" [loggingMode]="logged_in" [payingMode]="payed"
                     [watched]="watchedItems.indexOf(i) != -1"
                     (click)="checkClick(i,obj, $event)">
           </app-item>
@@ -103,7 +103,7 @@
                 </div>
               </div>
               <div style="border-bottom:1px solid #9d8c6c;width: calc(100% - 50px);margin: 10px 25px;"></div>
-              <app-item *ngFor="let it of historyItems, let i = index" style="border-bottom: 1px solid #d3d5d6" [historyOpen]="true" [historyId]="i" [id]="it.id" [routerLink]="['../../objects', 'item']" [item]="it" [mode]="'middle'">
+              <app-item *ngFor="let it of historyItems, let i = index" style="border-bottom: 1px solid #d3d5d6" [historyOpen]="true" [loggingMode]="logged_in" [payingMode]="payed" [historyId]="i" [id]="it.id" [routerLink]="['../../objects', 'item']" [item]="it" [mode]="'middle'">
               </app-item>
               <div class="button-history">ЗА ВСЕ ВРЕМЯ</div>
             </div>

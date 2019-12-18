@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output, AfterViewInit} from '@angular/core';
 import {AccountService} from '../../../services/account.service';
-import {NgxMetrikaService} from '@kolkov/ngx-metrika';
 
 @Component({
     selector: 'app-login',
@@ -9,7 +8,8 @@ import {NgxMetrikaService} from '@kolkov/ngx-metrika';
 })
 export class LoginComponent implements OnInit, AfterViewInit {
 
-    constructor(private ym: NgxMetrikaService, private _account_service: AccountService) {
+    constructor(
+        private _account_service: AccountService) {
     }
 
     public customPatterns = {
@@ -45,11 +45,9 @@ export class LoginComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.width = document.documentElement.clientWidth;
         this.openBlock = this.otherComponent !== false;
-        // console.log(this.openBlock);
     }
 
     ngAfterViewInit() {
-        // this.onResize();
     }
 
     blockCloseFunc(name) {
@@ -312,7 +310,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
                 this.phone = "+7";
             }
         } else if (key == "phone1") {
-            console.log(this.phone1.charAt(0) + " " + this.phone1[0]);
+            // console.log(this.phone1.charAt(0) + " " + this.phone1[0]);
             if ((this.phone1.charAt(0) == '7' || this.phone1[0] == '7') && this.phone1.length < 2) {
                 this.phone1 = "+7";
             } else if (this.phone1.charAt(0) != '7' && this.phone1[0] != '7' && this.phone1.charAt(0) != '8' && this.phone1[0] != '8'

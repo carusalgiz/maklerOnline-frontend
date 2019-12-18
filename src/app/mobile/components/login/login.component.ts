@@ -21,6 +21,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() itemOpen: boolean;
   @Output() blockClose = new EventEmitter();
   @Output() userLoggedIn = new EventEmitter();
+  @Output() loggingMode = new EventEmitter();
   logged_in = false;
   user: any;
   mode: any;
@@ -236,6 +237,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnChanges {
                 this.pass = "";
                 this.register = false;
                 this.log_in = true;
+              this.loggingMode.emit(true);
             }
           }  else if ( i == 3) {
             this.userLoggedIn.emit(this.result);

@@ -245,8 +245,10 @@ div:hover, span:hover, p:hover {
   font-size: 12px;
   outline: none;
   height: 38px;
-  width: calc(100% - 60px);
+  width: 100%;
   border: 1px solid #252f32;
+    background-color: #202b2f;
+    color: white;
 }
 
 .news-button.map{
@@ -255,10 +257,6 @@ border-left: none;
 .news-button.active{
   background-color: #202b2f;
   color: white;
-}
-.news-button.disable{
-  background-color: white;
-  color: #202b2f;
 }
 .news-button span{
   width: 230px;

@@ -8,10 +8,6 @@ import {NgxMetrikaService} from '@kolkov/ngx-metrika';
 import ymaps from 'ymaps';
 import {Router} from "@angular/router";
 import {AccountService} from '../../../services/account.service';
-//import {OKSDK} from '../../../js/oksdk';
-declare  var     VK: any;
-declare  var     FB: any;
-declare  var     OKSDK: any;
 @Component({
     selector: 'app-objects',
     templateUrl: './objects.component.html',
@@ -20,13 +16,8 @@ declare  var     OKSDK: any;
 export class ObjectsComponent implements OnInit, AfterViewInit {
 
     private subscription: Subscription;
-    OKSDK = require("../../../js/oksdk.js");
-    activeObjectsButton = 'food';
-    entertainmentIco = false;
-    foodIco = false;
-    medicineIco = false;
-    educationIco = false;
-    sportIco = false;
+    listscroll = 0;
+    scrollArr = [];
     panoramaActive = false;
     maps: any;
     public map: any;
@@ -52,19 +43,14 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     checkFilt = false;
     width: number;
     activeButton: string;
-    similars = false;
     widthPhoto = 610; // ширина изображения
     count = 1; // количество изображений
     position = 0;
     number = 1;
-    compareTopButton = false;
-    objects: any;
-    grayCol: any;
-    stopsCol: any;
     coords = [0, 0];
     nearObjects: any[] = [];
     nrObjs: any[] = [];
-    drawActive: boolean;
+    drawActive = false;
     paintProcess: any;
     polygons: any[] = [];
     clearActive = false;
@@ -72,53 +58,17 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     equipment: any;
     coordsPolygon: any[] = [];
     logged_in: boolean = false;
-    places: any[] = [];
-    // check obj onclick
-    food: any[] = [];
-    education: any[] = [];
-    fitness: any[] = [];
-    medicine: any[] = [];
-    entertainment: any[] = [];
-    parking: any[] = [];
     activeBalloon: any;
     public selectedMarker: any;
-// type == 'Кафе' || type == 'Магазины продуктов' || type == 'Супермаркеты'
-    cafe: any;
-    procukty: any;
-    supermarket: any;
-    market: any;
-    restaurant: any;
-    canteen: any;
-    // type == 'Детские сады' || type == 'Школы' || type == 'Гимназии' || type == 'Техникумы' || type == 'Институты' || type == 'Университеты'
-    kindergarten: any;
-    school: any;
-    gymnasy: any;
-    technikum: any;
-    institute: any;
-    univer: any;
-    // type == 'Тренажерные залы' || type == 'Фитнес клубы'
-    trenazher: any;
-    fitnessClubs: any;
-    //type == 'Аптеки' || type == 'Поликлиники' || type == 'Больницы' || type == 'Ветеринарные аптеки' || type == 'Ветеринарные клиники'
-    apteka: any;
-    poliklinika: any;
-    hospital: any;
-    vetapteka: any;
-    vetklinika: any;
-    //  type == 'Кинотеатры' || type == 'Театры' || type == 'Ночной клубы'
-    kino: any;
-    theater: any;
-    nightclub: any;
-    circus: any;
-    park: any;
-    // парковки
-    free_parking: any;
-    paid_parking: any;
-    all_parking: any;
-
+    obj_to_find: any;
+    find_obj_check = false;
     objClickIterator = 0;
     curItem: Item;
     payed: boolean = false;
+    pagecounter = 0;
+    polygonActive = false;
+    hitsCount: number = 0;
+    canLoad: number = 0;
 
     constructor(private ym: NgxMetrikaService, @Inject(WINDOW) private window: Window, @Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, private router: Router,
                 private _offer_service: OfferService,
@@ -140,68 +90,52 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 this.itemOpen = false;
                 this.activeButton = 'items';
                 this.itemsActive = true;
-                // this.checkFav();
             } else if (urlParams['mode'] === 'list') {
                 this.historyActive = false;
                 this.filtersActive = true;
                 this.itemOpen = false;
                 this.activeButton = 'items';
-
                 this.itemsActive = true;
-                // this.checkFav();
+                this.get_list(100, 'constructor')
             } else if (urlParams['mode'] === 'favorite') {
-
                 this.activeButton = 'fav';
                 this.itemsActive = false;
             } else {
                 this.historyActive = false;
                 this.itemOpen = true;
-                this.similars = false;
                 this.activeButton = 'obj';
-
+                if (sessionStorage.getItem('con_data') == 'true') {
+                    this.payed = true;
+                    this.logged_in = true;
+                } else {
+                    this.payed = false;
+                    this.logged_in = false;
+                }
                 let str = '';
                 str = urlParams['mode'];
-                this._offer_service.list(1, 1, '', '', '', '').subscribe(offers => {
-                    // console.log("Ищем объект ", str);
-                    for (let offer of offers) {
+                this.find_obj_check = true;
+                this.obj_to_find = Number.parseInt(str.substring(0, 13), 10);
+                this._offer_service.list(0, 10000, '', '', '', '').subscribe(data => {
+                    for (let offer of data.list) {
                         if (Number.parseInt(str.substring(0, 13), 10) == offer.id) {
-                            if (sessionStorage.getItem('con_data') == 'true') {
-                                this.payed = true;
-                                this.logged_in = true;
-                            }
+
                             this.item = offer;
+                            this.redrawObjectsOnMap([this.item], 'item');
                         }
                     }
                 });
             }
-
         });
     }
 
     ngOnInit() {
-        setTimeout( () => {
-            window.name = 'fXD';
-            VK.init({ apiId: 7138237 }, ()=>{}, 5.101);
-
-            FB.init({
-                appId            : 3174677922603350,
-                autoLogAppEvents : true,
-                xfbml            : true,
-                version          : 'v4.0'
-            });
-
-
-
-        }, 1000);
         if ((this.item === undefined || this.item === null) && this.itemOpen === true) {
             this.filtersActive = true;
         }
-        this.drawActive = false;
         this.width = document.documentElement.clientWidth;
     }
 
     ngAfterViewInit() {
-        // this.checklogin();
         let items = document.getElementsByClassName('menuBlock') as HTMLCollectionOf<HTMLElement>;
         items.item(1).style.setProperty('border-top', '5px solid #821529');
         items.item(1).style.setProperty('font-weight', 'bold');
@@ -210,14 +144,13 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         if (objects.length != 0) {
             this.widthPhoto = objects.item(0).offsetWidth;
         }
-        ymaps.load('https://api-maps.yandex.ru/2.1/?apikey=ADRpG1wBAAAAtIMIVgMAmOY9C0gOo4fhnAstjIg7y39Ls-0AAAAAAAAAAAAbBvdv4mK' +
-            'Dz9rc97s4oi4IuoAq6g==&lang=ru_RU&amp;load=package.full').then(maps => {
+        ymaps.load('https://api-maps.yandex.ru/2.1/?apikey=c9d5cf84-277c-4432-a839-2e371a6f2e21&lang=ru_RU&amp;load=package.full').then(maps => {
             this.initMap(maps);
             setTimeout(() => {
                 if (this.item != undefined) {
                     this.openMarker(this.item);
                 }
-                let mapContainer = document.getElementsByClassName('ymaps-2-1-74-map') as HTMLCollectionOf<HTMLElement>;
+                let mapContainer = document.getElementsByClassName('ymaps-2-1-75-map') as HTMLCollectionOf<HTMLElement>;
                 for (let i = 0; i < mapContainer.length; i++) {
                     mapContainer.item(i).style.setProperty('width', '100% !important');
                     mapContainer.item(i).style.setProperty('height', '100% !important');
@@ -231,7 +164,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             for (let i = 0; i < this.localStorage.length; i++) {
                 this.watchedItems.push(this.localStorage.key(i));
             }
-            // console.log(this.watchedItems);
             for (let i = 0; i < this.localStorage.length; i++) {
                 this.historyItems.push(this.items[Number(this.localStorage.key(i))]);
             }
@@ -248,8 +180,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 }
             }
         }
-        this.openLeftPart('map');
-
     }
 
     changeLog(ev: any) {
@@ -260,32 +190,9 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         this.payed = ev;
     }
 
-    ymFunc(target) {
-        this.ym.reachGoal.next({target: target});
-        console.log('-');
-    }
-
-    openLeftPart(name) {
-        let inner = document.getElementsByClassName('inner-left') as HTMLCollectionOf<HTMLElement>;
-        let topLayerForRightMenu = document.getElementsByClassName('topLayerForRightMenu') as HTMLCollectionOf<HTMLElement>;
-        // topLayerForRightMenu.item(0).classList.add('open');
-        if (name == 'bulletin') {
-            for (let i = 0; i < inner.length; i++) {
-                inner.item(i).style.setProperty('filter', 'blur(5px)');
-            }
-            topLayerForRightMenu.item(0).classList.add('open');
-        }
-        if (name == 'map') {
-            for (let i = 0; i < inner.length; i++) {
-                inner.item(i).style.removeProperty('filter');
-            }
-            topLayerForRightMenu.item(0).classList.remove('open');
-        }
-    }
-
     listActive() {
         setTimeout(() => {
-            let mapContainer = document.getElementsByClassName('ymaps-2-1-74-map') as HTMLCollectionOf<HTMLElement>;
+            let mapContainer = document.getElementsByClassName('ymaps-2-1-75-map') as HTMLCollectionOf<HTMLElement>;
             for (let i = 0; i < mapContainer.length; i++) {
                 mapContainer.item(i).style.setProperty('width', '100% !important');
                 mapContainer.item(i).style.setProperty('height', '100% !important');
@@ -298,7 +205,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     panorama(typePan) {
         if (typePan == 'open') {
             this.map.getPanoramaManager().then(manager => {
-                // Включаем режим поиска панорам на карте.
                 manager.enableLookup();
             });
         }
@@ -346,8 +252,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         let bounds = this.map.getBounds();
         let latDiff = bounds[1][0] - bounds[0][0];
         let lonDiff = bounds[1][1] - bounds[0][1];
-        // console.log('lat: ' + latDiff);
-        // console.log('lon: ' + lonDiff);
 
         canvas.onmousemove = function (e) {
             coordinates.push([e.offsetX, e.offsetY]);
@@ -388,243 +292,25 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 controls: ['geolocationControl']
             }, {suppressMapOpenBlock: true}
         );
-        this.free_parking = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#0A145B',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.paid_parking = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#0A145B',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.all_parking = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#0A145B',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.cafe = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#FB8C00',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.market = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#FB8C00',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.restaurant = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#FB8C00',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.canteen = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#FB8C00',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.procukty = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#FB8C00',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.supermarket = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#FB8C00',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.kindergarten = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#3F51B5',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.school = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#3F51B5',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.gymnasy = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#3F51B5',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.institute = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#3F51B5',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.technikum = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#3F51B5',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.univer = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#3F51B5',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.fitnessClubs = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#1E88E5',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.trenazher = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#1E88E5',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.apteka = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#00897B',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.poliklinika = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#00897B',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.hospital = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#00897B',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.vetapteka = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#00897B',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.vetklinika = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#00897B',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.kino = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#8E24AA',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.circus = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#8E24AA',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.park = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#8E24AA',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.theater = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#8E24AA',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        this.nightclub = new this.maps.Clusterer({
-            preset: 'islands#invertedRedClusterIcons',
-            clusterIconColor: '#8E24AA',
-            groupByCoordinates: false,
-            clusterDisableClickZoom: true,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false
-        });
-        let mapStyle = document.getElementsByClassName('ymaps-2-1-74-ground-pane') as HTMLCollectionOf<HTMLElement>;
+        let mapStyle = document.getElementsByClassName('ymaps-2-1-75-ground-pane') as HTMLCollectionOf<HTMLElement>;
         if (mapStyle.length != 0) {
             mapStyle.item(0).style.setProperty('filter', 'grayscale(.9)');
         }
 
-        // Подпишемся на событие нажатия кнопки мыши.
         this.map.events.add('mousedown', () => {
             if (this.drawActive) {
                 this.coordsPolygon = [];
                 if (this.geoObject != undefined) {
                     this.map.geoObjects.remove(this.geoObject);
                 }
-                //   this.map.geoObjects.add(this.yellowCol).add(this.grayCol);
                 this.paintProcess = this.paintOnMap();
             }
         });
 
         // Подпишемся на событие отпускания кнопки мыши.
         this.map.events.add('mouseup', () => {
-
             if (this.paintProcess) {
+                this.pagecounter = 0;
                 let coordinates = this.paintProcess.finishPaintingAt();
                 for (let i = 0; i < coordinates.length; i++) {
                     this.coordsPolygon.push({lat: coordinates[i][0], lon: coordinates[i][1]});
@@ -640,10 +326,24 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 if (this.drawActive) {
                     this.geoObject = new this.maps.Polygon([coordinates], {}, style);
                 }
+                this.map.geoObjects.add(this.geoObject);
                 if (coordinates.length != 0) {
                     this.polygons.push(this.geoObject);
-                    this.get_list();
-                    this.map.geoObjects.add(this.geoObject);
+                    this.items = [];
+                    this._offer_service.list(0, 10000, this.filters, this.sort, this.equipment, this.coordsPolygon).subscribe(offers => {
+                        for (let offer of offers.list) {
+                            if (this.items.indexOf(offer) == -1) {
+                                this.items.push(offer);
+                            }
+                        }
+                        for (let i = 0; i < this.items.length; i++) {
+                            if (this.watchedItems.indexOf(this.items[i].id) != -1) {
+                                this.items[i].watched = true;
+                            }
+                        }
+                        this.polygonActive = true;
+                        this.redrawObjectsOnMap(this.items, 'paint');
+                    });
                 } else {
                     this.panorama('close');
                     this.coordsPolygon = [];
@@ -655,17 +355,61 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }
             this.drawActive = false;
         });
-        this.get_list();
+        this.get_list(100, 'initmap');
     }
 
     clearMap() {
-        this.map.geoObjects.remove(this.geoObject);
+        this.polygonActive = false;
+        this.geoObject = null;
+        this.map.geoObjects.removeAll();
         this.coordsPolygon = [];
-        this.get_list();
+        this.pagecounter = 0;
+        this.items = [];
+        this.get_favObjects();
+        if (this.localStorage.length != 0) {
+            this.watchedItems = [];
+            for (let i = 0; i < this.localStorage.length; i++) {
+                this.watchedItems.push(Number(this.localStorage.getItem(i)));
+            }
+        }
+        this.canLoad = 1;
+        this._offer_service.list(this.pagecounter, 100, this.filters, this.sort, this.equipment, this.coordsPolygon).subscribe(data => {
+            console.log(data);
+            this.countOfObjects = data.hitsCount;
+            this.hitsCount = data.hitsCount || (this.hitsCount > 0 ? this.hitsCount : 0);
+            if (this.pagecounter == 0) {
+                this.items = data.list;
+            } else {
+                data.list.forEach(i => {
+                    this.items.push(i);
+                });
+                if(~~(this.hitsCount/20) != this.pagecounter+1 && data.list.length < 20){
+                    this.hitsCount -= (20 - data.list.length);
+                }
+            }
+            for (let i = 0; i < this.items.length; i++) {
+                if (this.watchedItems.indexOf(this.items[i].id) != -1) {
+                    this.items[i].watched = true;
+                }
+            }
+            for (let i = 0; i < this.favItems.length; i++) {
+                for (let j = 0; j < this.items.length; j++) {
+                    if (this.favItems[i].id == this.items[j].id) {
+                        console.log(this.items[j]);
+                        this.items[j].is_fav = true;
+                        this.items[j].watched = true;
+                    }
+                }
+            }
+            this.canLoad = 0;
+        }),err => {
+            console.log(err);
+            this.canLoad = 0;
+        };
+        this.find_obj_check = false;
     }
 
     markerFocus(id) {
-        // console.log('id: ' + id);
         if (!this.itemOpen) {
             let catalog = document.getElementsByClassName('catalog-item') as HTMLCollectionOf<HTMLElement>;
             let objects = document.getElementsByClassName('objects') as HTMLCollectionOf<HTMLElement>;
@@ -691,7 +435,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 el.scrollIntoView(true);
             }
         }
-
     }
 
     openMarker(item: Item) {
@@ -705,14 +448,15 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             clusterHideIconOnBalloonOpen: false,
             geoObjectHideIconOnBalloonOpen: false
         });
-        this.defineobj(item);
+       // this.defineobj(item);
+        this.markerFocus(item.id);
 
         this.selectedMarker.events.add('balloonopen', () => {
-            let custertab = document.getElementsByClassName('ymaps-2-1-74-b-cluster-tabs__section') as HTMLCollectionOf<HTMLElement>;
-            let baloon_content = document.getElementsByClassName('ymaps-2-1-74-balloon__content') as HTMLCollectionOf<HTMLElement>;
-            let baloonlayout = document.getElementsByClassName('ymaps-2-1-74-balloon__layout') as HTMLCollectionOf<HTMLElement>;
-            let baloonmenu = document.getElementsByClassName('ymaps-2-1-74-b-cluster-tabs__menu') as HTMLCollectionOf<HTMLElement>;
-            let mainBaloon = document.getElementsByClassName('ymaps-2-1-74-balloon') as HTMLCollectionOf<HTMLElement>;
+            let custertab = document.getElementsByClassName('ymaps-2-1-75-b-cluster-tabs__section') as HTMLCollectionOf<HTMLElement>;
+            let baloon_content = document.getElementsByClassName('ymaps-2-1-75-balloon__content') as HTMLCollectionOf<HTMLElement>;
+            let baloonlayout = document.getElementsByClassName('ymaps-2-1-75-balloon__layout') as HTMLCollectionOf<HTMLElement>;
+            let baloonmenu = document.getElementsByClassName('ymaps-2-1-75-b-cluster-tabs__menu') as HTMLCollectionOf<HTMLElement>;
+            let mainBaloon = document.getElementsByClassName('ymaps-2-1-75-balloon') as HTMLCollectionOf<HTMLElement>;
             for (let k = 0; k < mainBaloon.length; k++) {
                 mainBaloon.item(k).style.setProperty('top', '-150px');
                 mainBaloon.item(k).style.setProperty('max-width', '465px');
@@ -733,53 +477,59 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         });
         let selectedBallon: any;
         let index = 0;
-        for (let i = 0; i < this.items.length; i++) {
+       // for (let i = 0; i < this.items.length; i++) {
 
-            if (item.lat == this.items[i].lat && item.lon == this.items[i].lon) {
-                // this.map.geoObjects.remove(this.selectedMarker);
-                // console.log(item.lat, this.items[i].lat, item.lon, this.items[i].lon);
+      //      if (item.lat == this.items[i].lat && item.lon == this.items[i].lon) {
                 countOfSelected++;
                 let photo, rooms, floor, floorsCount, square: any;
-                if (this.items[i].roomsCount != undefined) {
-                    rooms = this.items[i].roomsCount;
+                if (item.roomsCount != undefined) {
+                    rooms = item.roomsCount;
                 } else {
                     rooms = '';
                 }
-                if (this.items[i].floor != undefined) {
-                    floor = this.items[i].floor;
+                if (item.floor != undefined) {
+                    floor = item.floor;
                 } else {
                     floor = '';
                 }
-                if (this.items[i].floorsCount != undefined) {
-                    floorsCount = this.items[i].floorsCount;
+                if (item.floorsCount != undefined) {
+                    floorsCount = item.floorsCount;
                 } else {
                     floorsCount = '';
                 }
-                if (this.items[i].squareTotal != undefined) {
-                    square = this.items[i].squareTotal;
+                if (item.squareTotal != undefined) {
+                    square = item.squareTotal;
                 } else {
                     square = '';
                 }
-                if (this.items[i].photos == undefined) {
+                if (item.photos == undefined) {
                     photo = 'url(https://makleronline.net/assets/noph.png)';
                 } else {
 
-                    if (this.items[i].photos[0] != undefined) {
-                        photo = 'url(' + this.items[i].photos[0].href + ')';
+                    if (item.photos[0] != undefined) {
+                        photo = 'url(' + item.photos[0].href + ')';
                     } else {
                         photo = 'url(https://makleronline.net/assets/noph.png)';
                     }
                 }
-                let formattedPrice = this.items[i].price.toString();
+                let formattedPrice = item.price.toString();
                 formattedPrice = formattedPrice.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
-                let baloon = new this.maps.Placemark([this.items[i].lat, this.items[i].lon], {
-                    name: this.items[i].id,
-                    balloonContentHeader: '<span style="font-family: OpenSansBold, sans-serif;margin-top: 13px; font-size: 12px">' + this.items[i].address + ' ' + this.items[i].house_num + '</span>',
+        let obj_type = '';
+        switch (item.typeCode) {
+            case 'apartment': obj_type = 'Квартира'; break;
+            case 'house': obj_type = 'Дом'; break;
+            case 'dacha': obj_type = 'Дача'; break;
+            case 'cottage': obj_type = 'Коттедж'; break;
+            case 'room': obj_type = 'Комната'; break;
+        }
+        let baloon = new this.maps.Placemark([item.lat, item.lon], {
+                    name: item.id,
+                    balloonContentHeader: '<span style="font-family: OpenSansBold, sans-serif;margin-top: 13px; font-size: 12px">' + item.address + ' ' + item.house_num + '</span>',
                     balloonContentBody: '<div style="display: flex;height: 100%;width: fit-content">' +
                         ' <div style="margin-right: 15px; height: 80px; width: 110px;    background-position-x: center;background-position-y: center;background-repeat: no-repeat; background-size: 140% auto; background-image:' + photo + '"></div> <div style="display: flex; flex-direction: column;font-family: Cadillac, sans-serif;' +
                         'font-size: 14px;">' +
-                        // '<span style="font-family: OpenSansBold;margin-top: 7px; font-size: 12px">' + this.items[i].address + ' ' + this.items[i].house_num + '</span>' +
-                        '<div style="display: flex;font-family: OpenSans; font-size: 12px;padding: 0 30px 0 0 ;height: 15px"><div style="width: 75px">Квартира</div><div style="min-width: 85px;">' + rooms + ' комнатная</div></div>' +
+                        // '<span style="font-family: OpenSansBold;margin-top: 7px; font-size: 12px">' + item.address + ' ' + item.house_num + '</span>' +
+                        '<div style="display: flex;font-family: OpenSans; font-size: 12px;padding: 0 30px 0 0 ;height: 15px"><div style="width: 75px">' + obj_type +'</div><div style="min-width: 85px;">' + rooms + ' комнатная</div></div>' +
                         '<div style="display: flex;font-family: OpenSans; font-size: 12px;padding: 0;height: 15px"><div style="width: 75px">Этаж</div><div>' + floor + '/' + floorsCount + '</div></div>' +
                         '<div style="display: flex;font-family: OpenSans; font-size: 12px; padding-bottom: 5px;height: 15px"><div style="width: 75px">Площадь</div><div>' + square + ' кв. м</div></div>' +
                         '<div style="display: flex;font-family: OpenSans; font-size: 12px"><div style="width: 75px">Стоимость</div><span style="font-family: OpenSansBold">' + formattedPrice + ' Р/МЕС</span></div></div>'
@@ -789,9 +539,10 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 });
                 baloon.events.add("balloonopen", () => {
                     this.activeBalloon = baloon;
-                    let baloonlayout = document.getElementsByClassName('ymaps-2-1-74-balloon__layout') as HTMLCollectionOf<HTMLElement>;
-                    let baloon_content = document.getElementsByClassName('ymaps-2-1-74-balloon__content') as HTMLCollectionOf<HTMLElement>;
-                    let mainBaloon = document.getElementsByClassName('ymaps-2-1-74-balloon') as HTMLCollectionOf<HTMLElement>;
+                    let baloonlayout = document.getElementsByClassName('ymaps-2-1-75-balloon__layout') as HTMLCollectionOf<HTMLElement>;
+                    let baloon_content = document.getElementsByClassName('ymaps-2-1-75-balloon__content') as HTMLCollectionOf<HTMLElement>;
+                    let mainBaloon = document.getElementsByClassName('ymaps-2-1-75-balloon') as HTMLCollectionOf<HTMLElement>;
+
                     for (let k = 0; k < mainBaloon.length; k++) {
                         mainBaloon.item(k).style.setProperty('top', '-150px');
                     }
@@ -804,7 +555,14 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                     for (let k = 0; k < baloonlayout.length; k++) {
                         baloonlayout.item(k).style.setProperty('height', '120px');
                     }
-                    this.markerFocus(this.items[i].id);
+                    let cross =  document.getElementsByClassName('ymaps-2-1-75-balloon__close-button') as HTMLCollectionOf<HTMLElement>;
+                    for (let k = 0; k < cross.length; k++) {
+                        cross.item(k).style.setProperty('width', '16px');
+                        cross.item(k).style.setProperty('height', '16px');
+                        cross.item(k).style.setProperty('margin-right', '12px');
+                        cross.item(k).style.setProperty('margin-top', '12px');
+                    }
+                    this.markerFocus(item.id);
                 });
                 baloon.events.add("balloonclose", () => {
                     let catalog = document.getElementsByClassName('catalog-item') as HTMLCollectionOf<HTMLElement>;
@@ -821,29 +579,26 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                     }
                 });
                 baloon.events.add("mouseup", () => {
-                    this.map.setCenter([this.items[i].lat, this.items[i].lon], 15, {
+                    this.map.setCenter([item.lat, item.lon], 15, {
                         duration: 500
                     });
-                    // this.defineobj(this.items[i]);
                 });
                 this.selectedMarker.add(baloon);
-                if (this.items[i].id == item.id) {
+                if (item.id == item.id) {
                     selectedBallon = baloon;
-                    index = i;
+                  //  index = i;
                 }
                 let objectState1 = this.selectedMarker.getObjectState(baloon);
-                // console.log(this.selectedMarker);
-                // console.log(objectState1);
-                if (i != index) {
+               // if (i != index) {
                     if (objectState1.isClustered) {
                         objectState1.cluster.events.add("click", () => {
                             // console.log("index: ", i);
-                            this.markerFocus(this.items[i].id);
+                            this.markerFocus(item.id);
                         });
                     }
-                }
-            }
-        }
+              //  }
+        //    }
+      // }
         this.selectedMarker.events.add("balloonclose", () => {
             let catalog = document.getElementsByClassName('catalog-item') as HTMLCollectionOf<HTMLElement>;
             let objects = document.getElementsByClassName('objects') as HTMLCollectionOf<HTMLElement>;
@@ -860,10 +615,9 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         });
         this.map.geoObjects.add(this.selectedMarker);
         let objectState = this.selectedMarker.getObjectState(selectedBallon);
-        // console.log(objectState);
         if (objectState.isClustered) {
             objectState.cluster.events.add("click", () => {
-                this.markerFocus(this.items[index].id);
+                this.markerFocus(item.id);
             });
             objectState.cluster.events.add("balloonclose", () => {
                 let catalog = document.getElementsByClassName('catalog-item') as HTMLCollectionOf<HTMLElement>;
@@ -879,19 +633,13 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                     objects.item(k).style.removeProperty('background-color');
                 }
             });
-            // this.map.setCenter([this.items[i].lat, this.items[i].lon], 15);
             objectState.cluster.state.set('activeObject', selectedBallon);
             this.selectedMarker.balloon.open(objectState.cluster);
         } else {
-            // Если метка не попала в кластер и видна на карте, откроем ее балун.
             this.map.setCenter([item.lat, item.lon]);
             selectedBallon.balloon.open();
-            this.defineobj(this.items[index]);
+            this.defineobj(item);
         }
-        // if (countOfSelected > 1) {
-        //   this.map.geoObjects.add(this.selectedMarker);
-        // }
-
     }
 
     selectbj() {
@@ -922,8 +670,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }
             if (el.classList != undefined && el.classList.contains('objects') && el.classList.contains('hovered')) {
                 el.scrollTop = el.scrollHeight;
-                // el.style.setProperty('background-color', '#d3d5d6');
-                // break;
             }
         }
     }
@@ -932,7 +678,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         this.objClickIterator++;
         let targ = event.target as HTMLElement;
         if (this.objClickIterator == 1 && !targ.classList.contains('starFav') && !targ.classList.contains('starImg') //&& targ.tagName != 'IMG'
-            && !targ.classList.contains('arrow') && !targ.classList.contains('arrowFull')) {
+            && !targ.classList.contains('arrow') && !targ.classList.contains('arrowFull') && !targ.classList.contains('button-contact')) {
             this.curItem = item;
             this.map.setZoom(17);
             this.map.setCenter([item.lat, item.lon]);
@@ -941,17 +687,18 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }, 200);
             this.selectbj();
         } else if (this.objClickIterator == 2 && !targ.classList.contains('starFav') && !targ.classList.contains('starImg') // && targ.tagName != 'IMG'
-            && item != this.curItem && !targ.classList.contains('arrow') && !targ.classList.contains('arrowFull')) {
+            && item != this.curItem && !targ.classList.contains('arrow') && !targ.classList.contains('arrowFull') && !targ.classList.contains('button-contact')) {
             // console.log('second');
             this.objClickIterator = 0;
             this.map.setZoom(17);
+            this.curItem = item;
             this.map.setCenter([item.lat, item.lon]);
             setTimeout(() => {
                 this.openMarker(item);
             }, 200);
             this.selectbj();
         } else if (this.objClickIterator == 2 && item == this.curItem && !targ.classList.contains('starFav') && !targ.classList.contains('starImg') // && targ.tagName != 'IMG'
-            && !targ.classList.contains('arrow') && !targ.classList.contains('arrowFull')) {
+            && !targ.classList.contains('arrow') && !targ.classList.contains('arrowFull') && !targ.classList.contains('button-contact')) {
             let itemWatchCheck = false;
             for (let i = 0; i < this.localStorage.length; i++) {
                 if (this.localStorage.getItem(i) == item.id) {
@@ -964,11 +711,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                     this.watchedItems.push(item.id);
                 }
             }
-
-            let komn = '';
-            if (this.curItem.roomsCount != undefined) {
-                komn = '-' + this.curItem.roomsCount + '-komnaty';
-            }
             let el = document.getElementById(item.id.toString()) as HTMLElement;
             // el.scrollIntoView(true);
             if (el != undefined) {
@@ -978,93 +720,24 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 el.style.removeProperty('padding-top');
                 el.style.removeProperty('border-bottom');
             }
-            switch (this.curItem.typeCode) {
-                case 'room':
-                    this.router.navigate(['./d/objects', this.curItem.id + '-arenda-komnaty-bez-posrednikov']).then(() => {
-                        // console.log('redirect to ' + this.curItem.id);
-                    });
-                    break;
-                case 'apartment':
-                    this.router.navigate(['./d/objects', this.curItem.id + '-arenda' + komn + '-kvartiry-bez-posrednikov']).then(() => {
-                        // console.log('redirect to ' + this.curItem.id);
-                    });
-                    break;
-                case 'house':
-                    this.router.navigate(['./d/objects', this.curItem.id + '-arenda' + komn + '-doma-bez-posrednikov']).then(() => {
-                        // console.log('redirect to ' + this.curItem.id);
-                    });
-                    break;
-                case 'dacha':
-                    this.router.navigate(['./d/objects', this.curItem.id + '-arenda' + komn + '-dachi-bez-posrednikov']).then(() => {
-                        // console.log('redirect to ' + this.curItem.id);
-                    });
-                    break;
-                case 'cottage':
-                    this.router.navigate(['./d/objects', this.curItem.id + '-arenda' + komn + '-kottedzha-bez-posrednikov']).then(() => {
-                        // console.log('redirect to ' + this.curItem.id);
-                    });
-                    break;
+            if (sessionStorage.getItem('con_data') == 'true') {
+                this.payed = true;
+                this.logged_in = true;
+            } else {
+                this.payed = false;
+                this.logged_in = false;
             }
-
+            this.item = item;
+            this.historyActive = false;
+            this.itemOpen = true;
             this.activeButton = 'obj';
             this.objClickIterator = 0;
-            if (this.grayCol != undefined) {
-                this.map.geoObjects.remove(this.grayCol);
-            }
-            this.getPlaces(this.coords[1], this.coords[0], item.address, item.house_num);
             this.getObj(index);
             this.openBlock('item');
         } else {
             this.objClickIterator = 0;
         }
 
-    }
-
-    getPlaces(x, y, address, house) {
-        this._account_service.getObjects(x, y, "Магазин", '0.005').subscribe(res => {
-            this.grayCol = new this.maps.GeoObjectCollection(null, {
-                preset: 'islands#yellowIcon',
-                iconColor: '#677578'
-            });
-            this.nearObjects = res;
-            for (let i = 0; i < this.nearObjects.length; i++) {
-                let obj = JSON.parse(JSON.stringify(this.nearObjects[i]));
-                let coord = JSON.parse(JSON.stringify(obj.geometry));
-                let properties = JSON.parse(JSON.stringify(obj.properties));
-                this.nrObjs.push({
-                    coordinates: coord.coordinates,
-                    description: properties.description,
-                    name: properties.name
-                });
-                let coor = [coord.coordinates[1], coord.coordinates[0]];
-                this.grayCol.add(new this.maps.Placemark(coor, {
-                    balloonContent: properties.name
-                }));
-            }
-
-        });
-        this._account_service.getObjects(x, y, "Остановка", '0.001').subscribe(res => {
-            this.stopsCol = new this.maps.GeoObjectCollection(null, {
-                preset: 'islands#yellowIcon',
-                iconColor: '#821529'
-            });
-            this.nearObjects = res;
-            for (let i = 0; i < this.nearObjects.length; i++) {
-                let obj = JSON.parse(JSON.stringify(this.nearObjects[i]));
-                let coord = JSON.parse(JSON.stringify(obj.geometry));
-                let properties = JSON.parse(JSON.stringify(obj.properties));
-                this.nrObjs.push({
-                    coordinates: coord.coordinates,
-                    description: properties.description,
-                    name: properties.name
-                });
-                let coor = [coord.coordinates[1], coord.coordinates[0]];
-                this.stopsCol.add(new this.maps.Placemark(coor, {
-                    balloonContent: properties.name
-                }));
-            }
-            //  this.map.geoObjects.add(this.stopsCol);
-        });
     }
 
     historyOpen() {
@@ -1094,8 +767,8 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     }
 
     getObj(index) {
-        this.item = this.items[index];
-        this.items[index].watched = true;
+        // this.item = this.items[index];
+        this.item.watched = true;
         this.id = index;
         if (this.historyItems.indexOf(this.item) === -1) {
             this.historyItems.push(this.item);
@@ -1112,7 +785,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         } else {
             minute = data.getMinutes();
         }
-        let time = hour + ':' + minute;
         this.time.unshift(hour + ':' + minute);
         this.localStorage.setItem(JSON.stringify(this.localStorage.length + 1), JSON.stringify(this.item.id));
         if (this.watchedItems.indexOf(this.item.id) == -1) {
@@ -1131,14 +803,15 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     }
 
     setEquipment(equipment) {
+        console.log(equipment);
         this.equipment = equipment;
-        this.get_list();
+        this.items = [];
+        this.pagecounter = 0;
+        this.get_list(10000, 'filters');
     }
 
     setCityObjects(cityAndObject) {
-        // console.warn(cityAndObject);
         let arrayOfStrings = cityAndObject.split(',');
-        // console.log(arrayOfStrings);
         let x, y;
         switch (arrayOfStrings[0]) {
             case 'Хабаровск':
@@ -1154,752 +827,10 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 x = 137.007948;
                 break;
         }
-        if (x != undefined && y != undefined) {
-            this.requestMaps(x, y, arrayOfStrings[1], arrayOfStrings[2]);
-        }
     }
-
-    requestMaps(x, y, type, mode) {
-        this._account_service.getObjects(x, y, type, '0.3').subscribe(res => {
-            this.nearObjects = res;
-            // console.log(res);
-            // console.log(this.nearObjects);
-            if (mode == 'delete') {
-                // 0A145B
-                if (type == 'Бесплатные парковки' || type == 'Платные парковки' || type == 'Автостоянки') {
-                    this.parking = [];
-                    if (type == 'Бесплатные парковки') {
-                        this.map.geoObjects.remove(this.free_parking);
-                        this.free_parking = [];
-                        this.free_parking = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#0A145B',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                    if (type == 'Платные парковки') {
-                        this.map.geoObjects.remove(this.paid_parking);
-                        this.paid_parking = [];
-                        this.paid_parking = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#0A145B',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                    if (type == 'Автостоянки') {
-                        this.map.geoObjects.remove(this.all_parking);
-                        this.all_parking = [];
-                        this.all_parking = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#0A145B',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                }
-                if (type == 'Кафе' || type == 'Магазины продуктов' || type == 'Супермаркеты' || type == 'Рынки' || type == 'Рестораны' || type == 'Столовые') {
-                    this.food = [];
-                    if (type == 'Кафе') {
-                        this.map.geoObjects.remove(this.cafe);
-                        this.cafe = [];
-                        this.cafe = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#FB8C00',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                    if (type == 'Рынки') {
-                        this.map.geoObjects.remove(this.market);
-                        this.market = [];
-                        this.market = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#FB8C00',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                    if (type == 'Рестораны') {
-                        this.map.geoObjects.remove(this.restaurant);
-                        this.restaurant = [];
-                        this.restaurant = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#FB8C00',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                    if (type == 'Столовые') {
-                        this.map.geoObjects.remove(this.canteen);
-                        this.canteen = [];
-                        this.canteen = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#FB8C00',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                    if (type == 'Магазины продуктов') {
-                        this.map.geoObjects.remove(this.procukty);
-                        this.procukty = [];
-                        this.procukty = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#FB8C00',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                    if (type == 'Супермаркеты') {
-                        this.map.geoObjects.remove(this.supermarket);
-                        this.supermarket = [];
-                        this.supermarket = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#FB8C00',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                }
-                if (type == 'Детские сады' || type == 'Школы' || type == 'Гимназии' || type == 'Техникумы' || type == 'Институты' || type == 'Университеты') {
-                    this.education = [];
-                    if (type == 'Детские сады') {
-                        this.map.geoObjects.remove(this.kindergarten);
-                        this.kindergarten = [];
-                        this.kindergarten = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#3F51B5',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                    if (type == 'Школы') {
-                        this.map.geoObjects.remove(this.school);
-                        this.school = [];
-                        this.school = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#3F51B5',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                    if (type == 'Гимназии') {
-                        this.map.geoObjects.remove(this.gymnasy);
-                        this.gymnasy = [];
-                        this.gymnasy = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#3F51B5',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                    if (type == 'Институты') {
-                        this.map.geoObjects.remove(this.institute);
-                        this.institute = [];
-                        this.institute = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#3F51B5',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                    if (type == 'Техникумы') {
-                        this.map.geoObjects.remove(this.technikum);
-                        this.technikum = [];
-                        this.technikum = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#3F51B5',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                    if (type == 'Университеты') {
-                        this.map.geoObjects.remove(this.univer);
-                        this.univer = [];
-                        this.univer = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#3F51B5',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                }
-                if (type == 'Тренажерные залы' || type == 'Фитнес клубы') {
-                    this.fitness = [];
-                    if (type == 'Тренажерные залы') {
-                        this.map.geoObjects.remove(this.trenazher);
-                        this.trenazher = [];
-                        this.trenazher = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#1E88E5',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                    if (type == 'Фитнес клубы') {
-                        this.map.geoObjects.remove(this.fitnessClubs);
-                        this.fitnessClubs = [];
-                        this.fitnessClubs = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#1E88E5',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                }
-                if (type == 'Аптеки' || type == 'Поликлиники' || type == 'Больницы' || type == 'Ветеринарные аптеки' || type == 'Ветеринарные клиники') {
-                    this.medicine = [];
-                    if (type == 'Аптеки') {
-                        this.map.geoObjects.remove(this.apteka);
-                        this.apteka = [];
-                        this.apteka = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#00897B',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                    if (type == 'Поликлиники') {
-                        this.map.geoObjects.remove(this.poliklinika);
-                        this.poliklinika = [];
-                        this.poliklinika = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#00897B',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                    if (type == 'Больницы') {
-                        this.map.geoObjects.remove(this.hospital);
-                        this.hospital = [];
-                        this.hospital = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#00897B',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                    if (type == 'Ветеринарные аптеки') {
-                        this.map.geoObjects.remove(this.vetapteka);
-                        this.vetapteka = [];
-                        this.vetapteka = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#00897B',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                    if (type == 'Ветеринарные клиники') {
-                        this.map.geoObjects.remove(this.vetklinika);
-                        this.vetklinika = [];
-                        this.vetklinika = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#00897B',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                }
-                if (type == 'Кинотеатры' || type == 'Театры' || type == 'Ночные клубы' || type == 'Цирки' || type == 'Парки') {
-                    this.entertainment = [];
-                    if (type == 'Кинотеатры') {
-                        this.map.geoObjects.remove(this.kino);
-                        this.kino = [];
-                        this.kino = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#8E24AA',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                    if (type == 'Цирки') {
-                        this.map.geoObjects.remove(this.circus);
-                        this.circus = [];
-                        this.circus = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#8E24AA',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                    if (type == 'Парки') {
-                        this.map.geoObjects.remove(this.park);
-                        this.park = [];
-                        this.park = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#8E24AA',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                    if (type == 'Театры') {
-                        this.map.geoObjects.remove(this.theater);
-                        this.theater = [];
-                        this.theater = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#8E24AA',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                    if (type == 'Ночные клубы') {
-                        this.map.geoObjects.remove(this.nightclub);
-                        this.nightclub = [];
-                        this.nightclub = new this.maps.Clusterer({
-                            preset: 'islands#invertedRedClusterIcons',
-                            clusterIconColor: '#8E24AA',
-                            groupByCoordinates: false,
-                            clusterDisableClickZoom: true,
-                            clusterHideIconOnBalloonOpen: false,
-                            geoObjectHideIconOnBalloonOpen: false
-                        });
-                    }
-                }
-            }
-            if (mode == 'add') {
-                for (let i = 0; i < this.nearObjects.length; i++) {
-                    let obj = JSON.parse(JSON.stringify(this.nearObjects[i]));
-                    //   console.log(obj);
-                    let properties = JSON.parse(JSON.stringify(obj.properties));
-                    let comp = JSON.parse(JSON.stringify(properties.CompanyMetaData.Categories));
-                    let comp1 = JSON.parse(JSON.stringify(comp[0]));
-                    let cat = JSON.parse(JSON.stringify(comp1.name));
-                    let coord = JSON.parse(JSON.stringify(obj.geometry));
-
-                    //    0A145B
-
-                    if (type == 'Бесплатные парковки' || type == 'Платные парковки' || type == 'Автостоянки') {
-                        this.parking.push({
-                            coordinates: coord.coordinates,
-                            type: cat,
-                            description: properties.description,
-                            name: properties.name
-                        });
-                        let coor = [coord.coordinates[1], coord.coordinates[0]];
-                        if (type == 'Бесплатные парковки') {
-                            this.free_parking.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#0A145B'
-                            }));
-                        }
-                        if (type == 'Платные парковки') {
-                            this.paid_parking.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#0A145B'
-                            }));
-                        }
-                        if (type == 'Автостоянки') {
-                            this.all_parking.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#0A145B'
-                            }));
-                        }
-                    }
-                    if (type == 'Кафе' || type == 'Магазины продуктов' || type == 'Супермаркеты' || type == 'Рынки' || type == 'Рестораны' || type == 'Столовые') {
-                        this.food.push({
-                            coordinates: coord.coordinates,
-                            type: cat,
-                            description: properties.description,
-                            name: properties.name
-                        });
-                        let coor = [coord.coordinates[1], coord.coordinates[0]];
-                        if (type == 'Кафе') {
-                            this.cafe.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#FB8C00'
-                            }));
-                        }
-                        if (type == 'Рынки') {
-                            this.market.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#FB8C00'
-                            }));
-                        }
-                        if (type == 'Рестораны') {
-                            this.restaurant.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#FB8C00'
-                            }));
-                        }
-                        if (type == 'Столовые') {
-                            this.canteen.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#FB8C00'
-                            }));
-                        }
-                        if (type == 'Магазины продуктов') {
-                            this.procukty.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#FB8C00'
-                            }));
-                        }
-                        if (type == 'Супермаркеты') {
-                            this.supermarket.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#FB8C00'
-                            }));
-                        }
-                    }
-                    if (type == 'Детские сады' || type == 'Школы' || type == 'Гимназии' || type == 'Техникумы' || type == 'Институты' || type == 'Университеты') {
-                        this.education.push({
-                            coordinates: coord.coordinates,
-                            type: cat,
-                            description: properties.description,
-                            name: properties.name
-                        });
-                        let coor = [coord.coordinates[1], coord.coordinates[0]];
-                        if (type == 'Детские сады') {
-                            this.kindergarten.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#3F51B5'
-                            }));
-                        }
-                        if (type == 'Школы') {
-                            this.school.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#3F51B5'
-                            }));
-                        }
-                        if (type == 'Гимназии') {
-                            this.gymnasy.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#3F51B5'
-                            }));
-                        }
-                        if (type == 'Институты') {
-                            this.institute.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#3F51B5'
-                            }));
-                        }
-                        if (type == 'Техникумы') {
-                            this.technikum.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#3F51B5'
-                            }));
-                        }
-                        if (type == 'Университеты') {
-                            this.univer.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#3F51B5'
-                            }));
-                        }
-                    }
-                    if (type == 'Тренажерные залы' || type == 'Фитнес клубы') {
-                        this.fitness.push({
-                            coordinates: coord.coordinates,
-                            type: cat,
-                            description: properties.description,
-                            name: properties.name
-                        });
-                        let coor = [coord.coordinates[1], coord.coordinates[0]];
-                        if (type == 'Тренажерные залы') {
-                            this.trenazher.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#1E88E5'
-                            }));
-                        }
-                        if (type == 'Фитнес клубы') {
-                            this.fitnessClubs.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#1E88E5'
-                            }));
-                        }
-                    }
-                    if (type == 'Аптеки' || type == 'Поликлиники' || type == 'Больницы' || type == 'Ветеринарные аптеки' || type == 'Ветеринарные клиники') {
-                        this.medicine.push({
-                            coordinates: coord.coordinates,
-                            type: cat,
-                            description: properties.description,
-                            name: properties.name
-                        });
-                        let coor = [coord.coordinates[1], coord.coordinates[0]];
-                        if (type == 'Аптеки') {
-                            this.apteka.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#00897B'
-                            }));
-                        }
-                        if (type == 'Поликлиники') {
-                            this.poliklinika.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#00897B'
-                            }));
-                        }
-                        if (type == 'Больницы') {
-                            this.hospital.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#00897B'
-                            }));
-                        }
-                        if (type == 'Ветеринарные аптеки') {
-                            this.vetapteka.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#00897B'
-                            }));
-                        }
-                        if (type == 'Ветеринарные клиники') {
-                            this.vetklinika.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#00897B'
-                            }));
-                        }
-                    }
-                    if (type == 'Кинотеатры' || type == 'Театры' || type == 'Ночные клубы' || type == 'Цирки' || type == 'Парки') {
-                        this.entertainment.push({
-                            coordinates: coord.coordinates,
-                            type: cat,
-                            description: properties.description,
-                            name: properties.name
-                        });
-                        let coor = [coord.coordinates[1], coord.coordinates[0]];
-                        if (type == 'Кинотеатры') {
-                            this.kino.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#8E24AA'
-                            }));
-                        }
-                        if (type == 'Цирки') {
-                            this.circus.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#8E24AA'
-                            }));
-                        }
-                        if (type == 'Парки') {
-                            this.park.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#8E24AA'
-                            }));
-                        }
-                        if (type == 'Театры') {
-                            this.theater.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#8E24AA'
-                            }));
-                        }
-                        if (type == 'Ночные клубы') {
-                            this.nightclub.add(new this.maps.Placemark(coor, {
-                                balloonContent: properties.name
-                            }, {
-                                preset: 'islands#yellowIcon',
-                                iconColor: '#8E24AA'
-                            }));
-                        }
-                    }
-                }
-                if (type == 'Бесплатные парковки' || type == 'Платные парковки' || type == 'Автостоянки') {
-                    if (type == 'Бесплатные парковки') {
-                        this.map.geoObjects.add(this.free_parking);
-                    }
-                    if (type == 'Платные парковки') {
-                        this.map.geoObjects.add(this.paid_parking);
-                    }
-                    if (type == 'Автостоянки') {
-                        this.map.geoObjects.add(this.all_parking);
-                    }
-                }
-                if (type == 'Кафе' || type == 'Магазины продуктов' || type == 'Супермаркеты' || type == 'Рынки' || type == 'Рестораны' || type == 'Столовые') {
-                    if (type == 'Кафе') {
-                        this.map.geoObjects.add(this.cafe);
-                    }
-                    if (type == 'Магазины продуктов') {
-                        this.map.geoObjects.add(this.procukty);
-                    }
-                    if (type == 'Супермаркеты') {
-                        this.map.geoObjects.add(this.supermarket);
-                    }
-                    if (type == 'Рынки') {
-                        this.map.geoObjects.add(this.market);
-                    }
-                    if (type == 'Рестораны') {
-                        this.map.geoObjects.add(this.restaurant);
-                    }
-                    if (type == 'Столовые') {
-                        this.map.geoObjects.add(this.canteen);
-                    }
-                }
-                if (type == 'Детские сады' || type == 'Школы' || type == 'Гимназии' || type == 'Техникумы' || type == 'Институты' || type == 'Университеты') {
-                    if (type == 'Детские сады') {
-                        this.map.geoObjects.add(this.kindergarten);
-                    }
-                    if (type == 'Школы') {
-                        this.map.geoObjects.add(this.school);
-                    }
-                    if (type == 'Гимназии') {
-                        this.map.geoObjects.add(this.gymnasy);
-                    }
-                    if (type == 'Институты') {
-                        this.map.geoObjects.add(this.institute);
-                    }
-                    if (type == 'Техникумы') {
-                        this.map.geoObjects.add(this.technikum);
-                    }
-                    if (type == 'Университеты') {
-                        this.map.geoObjects.add(this.univer);
-                    }
-                }
-                if (type == 'Тренажерные залы' || type == 'Фитнес клубы') {
-                    if (type == 'Тренажерные залы') {
-                        this.map.geoObjects.add(this.trenazher);
-                    }
-                    if (type == 'Фитнес клубы') {
-                        this.map.geoObjects.add(this.fitnessClubs);
-                    }
-                }
-                if (type == 'Аптеки' || type == 'Поликлиники' || type == 'Больницы' || type == 'Ветеринарные аптеки' || type == 'Ветеринарные клиники') {
-                    if (type == 'Аптеки') {
-                        this.map.geoObjects.add(this.apteka);
-                    }
-                    if (type == 'Поликлиники') {
-                        this.map.geoObjects.add(this.poliklinika);
-                    }
-                    if (type == 'Больницы') {
-                        this.map.geoObjects.add(this.hospital);
-                    }
-                    if (type == 'Ветеринарные аптеки') {
-                        this.map.geoObjects.add(this.vetapteka);
-                    }
-                    if (type == 'Ветеринарные клиники') {
-                        this.map.geoObjects.add(this.vetklinika);
-                    }
-                }
-                if (type == 'Кинотеатры' || type == 'Театры' || type == 'Ночные клубы' || type == 'Цирки' || type == 'Парки') {
-                    if (type == 'Кинотеатры') {
-                        this.map.geoObjects.add(this.kino);
-                    }
-                    if (type == 'Театры') {
-                        this.map.geoObjects.add(this.theater);
-                    }
-                    if (type == 'Ночные клубы') {
-                        this.map.geoObjects.add(this.nightclub);
-                    }
-                    if (type == 'Цирки') {
-                        this.map.geoObjects.add(this.circus);
-                    }
-                    if (type == 'Парки') {
-                        this.map.geoObjects.add(this.park);
-                    }
-                }
-            }
-        });
-    }
-
-    openPlace(coordinates) {
-        this.closeBlock('filters');
-        this.map.setCenter([coordinates[1], coordinates[0]], 17, {
-            duration: 500
-        });
-    }
-
     changeFav(mode, item) {
         this.get_favObjects();
     }
-
     get_favObjects() {
         this.favItems = [];
         this._account_service.getFavObjects().subscribe(offers => {
@@ -1911,9 +842,8 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             for (let i = 0; i < this.favItems.length; i++) {
                 this.favItems[i].is_fav = true;
             }
-            this.redrawObjectsOnMap(this.favItems);
+            this.redrawObjectsOnMap(this.favItems, 'fav');
         });
-
     }
 
     defineobj(item: Item) {
@@ -1923,51 +853,12 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }
         }
     }
-
-    // log_out() {
-    //     this.logged_in = false;
-    //     this._account_service.logout();
-    // }
-
-    // checklogin() {
-    //     this._account_service.checklogin().subscribe(res => {
-    //         // console.log(res);
-    //         if (res != undefined) {
-    //             let data = JSON.parse(JSON.stringify(res));
-    //             if (data.result == 'success') {
-    //                 this.logged_in = true;
-    //             } else {
-    //                 this.logged_in = false;
-    //                 this.log_out();
-    //             }
-    //         } else {
-    //             this.logged_in = false;
-    //             this.log_out();
-    //         }
-    //     });
-    // }
-
-    //
-    // checkFav() {
-    //     for (let j = 0; j < this.items.length; j++) {
-    //         this.items[j].is_fav = false;
-    //     }
-    //     if (this.favItems != undefined && this.favItems.length != 0 && this.logged_in == true) {
-    //         // console.log(this.favItems);
-    //         for (let i = 0; i < this.favItems.length; i++) {
-    //             for (let j = 0; j < this.items.length; j++) {
-    //                 if (this.favItems[i].id == this.items[j].id) {
-    //                     this.items[j].is_fav = true;
-    //                     this.items[j].watched = true;
-    //                 }
-    //             }
-    //         }
-    //     }
-    //
-    // }
-
-    redrawObjectsOnMap(items: Item[]) {
-        this.map.geoObjects.remove(this.clusterer);
+    redrawObjectsOnMap(items: Item[], flag) {
+        if (items.length == 0 && flag != 'clearmap') { this.map.geoObjects.removeAll();this.map.geoObjects.add(this.geoObject); }
+        if (flag == 'clearmap') { this.geoObject = null; this.map.geoObjects.removeAll();}
+        this.countOfObjects = this.items.length;
+       // if (this.polygonActive) this.map.geoObjects.add(this.geoObject);
+         this.map.geoObjects.remove(this.clusterer);
         this.clusterer = new this.maps.Clusterer({
             preset: 'islands#invertedRedClusterIcons',
             clusterIconColor: '#c50101',
@@ -1979,11 +870,11 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
 
 
         this.clusterer.events.add('balloonopen', () => {
-            let custertab = document.getElementsByClassName('ymaps-2-1-74-b-cluster-tabs__section') as HTMLCollectionOf<HTMLElement>;
-            let baloon_content = document.getElementsByClassName('ymaps-2-1-74-balloon__content') as HTMLCollectionOf<HTMLElement>;
-            let baloonlayout = document.getElementsByClassName('ymaps-2-1-74-balloon__layout') as HTMLCollectionOf<HTMLElement>;
-            let baloonmenu = document.getElementsByClassName('ymaps-2-1-74-b-cluster-tabs__menu') as HTMLCollectionOf<HTMLElement>;
-            let mainBaloon = document.getElementsByClassName('ymaps-2-1-74-balloon') as HTMLCollectionOf<HTMLElement>;
+            let custertab = document.getElementsByClassName('ymaps-2-1-75-b-cluster-tabs__section') as HTMLCollectionOf<HTMLElement>;
+            let baloon_content = document.getElementsByClassName('ymaps-2-1-75-balloon__content') as HTMLCollectionOf<HTMLElement>;
+            let baloonlayout = document.getElementsByClassName('ymaps-2-1-75-balloon__layout') as HTMLCollectionOf<HTMLElement>;
+            let baloonmenu = document.getElementsByClassName('ymaps-2-1-75-b-cluster-tabs__menu') as HTMLCollectionOf<HTMLElement>;
+            let mainBaloon = document.getElementsByClassName('ymaps-2-1-75-balloon') as HTMLCollectionOf<HTMLElement>;
             for (let k = 0; k < mainBaloon.length; k++) {
                 mainBaloon.item(k).style.setProperty('top', '-150px');
                 mainBaloon.item(k).style.setProperty('max-width', '465px');
@@ -1991,6 +882,13 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }
             for (let i = 0; i < custertab.length; i++) {
                 custertab.item(i).style.setProperty('max-height', '135px');
+            }
+            let cross =  document.getElementsByClassName('ymaps-2-1-75-balloon__close-button') as HTMLCollectionOf<HTMLElement>;
+            for (let k = 0; k < cross.length; k++) {
+                cross.item(k).style.setProperty('width', '16px');
+                cross.item(k).style.setProperty('height', '16px');
+                cross.item(k).style.setProperty('margin-right', '12px');
+                cross.item(k).style.setProperty('margin-top', '12px');
             }
             for (let i = 0; i < baloon_content.length; i++) {
                 baloon_content.item(i).style.setProperty('max-height', '135px');
@@ -2002,6 +900,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 baloonmenu.item(i).style.setProperty('max-height', '110px');
             }
         });
+         console.log("redraw items: " , items);
         for (let i = 0; i < items.length; i++) {
 
             let photo, rooms, floor, floorsCount, square: any;
@@ -2034,20 +933,27 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                     photo = 'url(https://makleronline.net/assets/noph.png)';
                 }
             }
-            let formattedPrice = '';
-            if (this.item != undefined) {
-                formattedPrice = this.item.price != undefined ? this.item.price.toString() : '';
-                formattedPrice = formattedPrice.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
-            }
 
+             let formattedPrice = '';
+            if (this.items[i].price != undefined) {
+                formattedPrice = this.items[i].price.toString();
+            }
+             formattedPrice = formattedPrice.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
+            let obj_type = '';
+            switch (items[i].typeCode) {
+                case 'apartment': obj_type = 'Квартира'; break;
+                case 'house': obj_type = 'Дом'; break;
+                case 'dacha': obj_type = 'Дача'; break;
+                case 'cottage': obj_type = 'Коттедж'; break;
+                case 'room': obj_type = 'Комната'; break;
+            };
             let baloon = new this.maps.Placemark([items[i].lat, items[i].lon], {
                 name: items[i].id,
                 balloonContentHeader: '<span style="font-family: OpenSansBold, sans-serif; margin-top: 13px; font-size: 12px">' + items[i].address + ' ' + items[i].house_num + '</span>',
                 balloonContentBody: '<div style="display: flex;width: fit-content;height: 100%">' +
                     ' <div style="margin-right: 15px;height: 80px; width: 110px;    background-position-x: center;background-position-y: center;background-repeat: no-repeat; background-size: 140% auto; background-image:' + photo + '"></div> <div style="display: flex; flex-direction: column;font-family: Cadillac, sans-serif;' +
                     'font-size: 14px;">' +
-                    // '<span style="font-family: OpenSansBold;margin-top: 7px; font-size: 12px">' + items[i].address + ' ' + items[i].house_num + '</span>' +
-                    '<div style="display: flex;font-family: OpenSans; font-size: 12px;padding: 0 30px 0 0;height: 15px;"><div style="width: 75px">Квартира</div><div style="min-width: 85px;">' + rooms + ' комнатная</div></div>' +
+                    '<div style="display: flex;font-family: OpenSans; font-size: 12px;padding: 0 30px 0 0;height: 15px;"><div style="width: 75px">' + obj_type + '</div><div style="min-width: 85px;">' + rooms + ' комнатная</div></div>' +
                     '<div style="display: flex;font-family: OpenSans; font-size: 12px;padding: 0;height: 15px"><div style="width: 75px">Этаж</div><div>' + floor + '/' + floorsCount + '</div></div>' +
                     '<div style="display: flex;font-family: OpenSans; font-size: 12px; padding-bottom: 5px;height: 15px"><div style="width: 75px">Площадь</div><div>' + square + ' кв. м</div></div>' +
                     '<div style="display: flex;font-family: OpenSans; font-size: 12px"><div style="width: 75px">Стоимость</div><span style="font-family: OpenSansBold;">' + formattedPrice + ' Р/МЕС</span></div></div>',
@@ -2058,9 +964,9 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             });
             baloon.events.add("balloonopen", () => {
                 this.activeBalloon = baloon;
-                let baloonlayout = document.getElementsByClassName('ymaps-2-1-74-balloon__layout') as HTMLCollectionOf<HTMLElement>;
-                let baloon_content = document.getElementsByClassName('ymaps-2-1-74-balloon__content') as HTMLCollectionOf<HTMLElement>;
-                let mainBaloon = document.getElementsByClassName('ymaps-2-1-74-balloon') as HTMLCollectionOf<HTMLElement>;
+                let baloonlayout = document.getElementsByClassName('ymaps-2-1-75-balloon__layout') as HTMLCollectionOf<HTMLElement>;
+                let baloon_content = document.getElementsByClassName('ymaps-2-1-75-balloon__content') as HTMLCollectionOf<HTMLElement>;
+                let mainBaloon = document.getElementsByClassName('ymaps-2-1-75-balloon') as HTMLCollectionOf<HTMLElement>;
                 for (let k = 0; k < mainBaloon.length; k++) {
                     mainBaloon.item(k).style.setProperty('top', '-150px');
                 }
@@ -2069,6 +975,13 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                     baloon_content.item(k).style.setProperty('height', '100%');
                     let inner = baloon_content[k].children[0] as HTMLElement;
                     inner.style.setProperty('height', '100%');
+                }
+                let cross =  document.getElementsByClassName('ymaps-2-1-75-balloon__close-button') as HTMLCollectionOf<HTMLElement>;
+                for (let k = 0; k < cross.length; k++) {
+                    cross.item(k).style.setProperty('width', '16px');
+                    cross.item(k).style.setProperty('height', '16px');
+                    cross.item(k).style.setProperty('margin-right', '12px');
+                    cross.item(k).style.setProperty('margin-top', '12px');
                 }
                 for (let k = 0; k < baloonlayout.length; k++) {
                     baloonlayout.item(k).style.setProperty('height', '120px');
@@ -2103,20 +1016,9 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 });
             }
         }
-        this.clusterer.events.add("balloonclose", () => {
-            let catalog = document.getElementsByClassName('catalog-item') as HTMLCollectionOf<HTMLElement>;
-            let objects = document.getElementsByClassName('objects') as HTMLCollectionOf<HTMLElement>;
-            for (let k = 0; k < catalog.length; k++) {
-                catalog.item(k).style.removeProperty('background-color');
-                catalog.item(k).style.removeProperty('position');
-                catalog.item(k).style.removeProperty('top');
-                catalog.item(k).style.removeProperty('padding-top');
-                catalog.item(k).style.removeProperty('border-bottom');
-            }
-            for (let k = 0; k < objects.length; k++) {
-                objects.item(k).style.removeProperty('background-color');
-            }
-        });
+        this.map.geoObjects.add(this.clusterer);
+        this.paintProcess = null;
+        console.log('кластер добавлен');
         document.documentElement.addEventListener('mouseup', event => {
             let elem = event.target as HTMLElement;
             if ((elem.tagName == 'SPAN' && elem.id.indexOf('listitem') != -1)) {
@@ -2127,6 +1029,10 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }
 
             let slide = document.getElementsByClassName('right-slide-box') as HTMLCollectionOf<HTMLElement>;
+            let filters = document.getElementsByClassName('filters-box') as HTMLCollectionOf<HTMLElement>;
+            if (filters.item(0).classList.contains('open') && event.pageX < document.documentElement.offsetWidth - filters.item(0).offsetWidth) {
+                this.closeBlock('filters');
+            }
             // console.log( event.offsetX + " " + (document.documentElement.offsetWidth - slide.item(1).offsetWidth));
             if (slide.item(0).classList.contains('open') && event.pageX < document.documentElement.offsetWidth - slide.item(0).offsetWidth) {
                 slide.item(0).classList.remove('open');
@@ -2141,11 +1047,10 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 slide.item(3).classList.remove('open');
             }
         });
-
-        this.map.geoObjects.add(this.clusterer);
     }
 
-    update_list() {
+    update_list(objsOnPage, flag) {
+        this.get_favObjects();
         if (this.localStorage.length != 0) {
             this.watchedItems = [];
             for (let i = 0; i < this.localStorage.length; i++) {
@@ -2153,48 +1058,75 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }
         }
 
-        this.items = [];
-        this._offer_service.list(1, 1, this.filters, this.sort, this.equipment, this.coordsPolygon).subscribe(offers => {
-            this.items = [];
-            this.countOfObjects = offers.length;
-            for (let offer of offers) {
-                this.items.push(offer);
-            }
-            // console.log("items ", this.items);
-            for (let i = 0; i < this.items.length; i++) {
-                if (this.watchedItems.indexOf(this.items[i].id) != -1) {
-                    this.items[i].watched = true;
-                }
-            }
-            if (this.favItems != undefined && this.favItems.length != 0 && this.logged_in == true) {
-                // console.log(this.favItems);
-                for (let i = 0; i < this.favItems.length; i++) {
-                    for (let j = 0; j < this.items.length; j++) {
-                        if (this.favItems[i].id == this.items[j].id) {
-                            this.items[j].is_fav = true;
-                            this.items[j].watched = true;
+        this.canLoad = 1;
+        this._offer_service.list(this.pagecounter, objsOnPage, this.filters, this.sort, this.equipment, this.coordsPolygon).subscribe(
+            data => setTimeout(() =>{
+            console.log(data);
+                    if (flag != 'listscroll') {this.items = []}
+            // this.countOfObjects = data.hitsCount;
+            this.hitsCount = data.hitsCount || (this.hitsCount > 0 ? this.hitsCount : 0);
+            if (this.pagecounter == 0) {
+                for (let i = 0; i < data.hitsCount; i++) {
+                    if (this.items.indexOf(data.list[i]) == -1) {
+                        this.items.push(data.list[i]);
+                        if (this.watchedItems.indexOf(data.list[i].id) != -1) {
+                            this.items[this.items.length-1].watched = true;
                         }
                     }
-                }
-            }
-            for (let j = 0; j < this.items.length; j++) {
-                if (this.items[j].is_fav == undefined && this.items[j].is_fav != true) {
-                    this.items[j].is_fav = false;
-                }
-            }
-            // this.map.geoObjects.removeAll();
-            this.redrawObjectsOnMap(this.items);
-        });
-    }
 
-    get_list() {
-        // this.checklogin();
+
+                }
+            } else {
+                for (let i = 0; i < data.hitsCount; i++) {
+                    if (this.items.indexOf(data.list[i]) == -1) {
+                        this.items.push(data.list[i]);
+                    }
+                }
+                    if(~~(this.hitsCount/20) != this.pagecounter+1 && data.list.length < 20){
+                        this.hitsCount -= (20 - data.list.length);
+                    }
+            }
+            if (flag == 'filters') { this.countOfObjects = this.items.length; } else {this.countOfObjects = data.hitsCount;}
+            // for (let i = 0; i < this.items.length; i++) {
+            //     if (this.watchedItems.indexOf(this.items[i].id) != -1) {
+            //         this.items[i].watched = true;
+            //     }
+            // }
+                    for (let i = 0; i < this.favItems.length; i++) {
+                        for (let j = 0; j < this.items.length; j++) {
+                            if (this.favItems[i].id == this.items[j].id) {
+                                console.log(this.items[j]);
+                                this.items[j].is_fav = true;
+                                this.items[j].watched = true;
+                            }
+                        }
+                    }
+            this.canLoad = 0;
+            console.log("items: ", this.items);
+            if (this.polygonActive && flag != 'listscroll') { this.redrawObjectsOnMap(this.items, flag); }
+        }),err => {
+                console.log(err);
+                this.canLoad = 0;
+            }
+        );
+        this.find_obj_check = false;
+
+    }
+    listScroll(event) {
+        if (this.canLoad == 0 && ~~(this.hitsCount/20)+1 != this.pagecounter){
+             if (event.currentTarget.scrollTop + event.currentTarget.clientHeight >= event.currentTarget.scrollHeight ) {
+                console.log(this.scrollArr);
+                this.pagecounter += 1;
+                this.update_list(100,'listscroll');
+            }
+        }
+    }
+    get_list(objsOnPage, flag) {
         if (this.activeButton == 'fav') {
             this.get_favObjects();
         } else {
-            this.update_list();
+            this.update_list(objsOnPage, flag);
         }
-
     }
 
     checkFilters() {
@@ -2218,9 +1150,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         let scroll = document.getElementsByClassName('scroll-items') as HTMLCollectionOf<HTMLElement>;
         let inner = document.getElementsByClassName('inner-left') as HTMLCollectionOf<HTMLElement>;
         let useless = document.getElementsByClassName('uselessLine') as HTMLCollectionOf<HTMLElement>;
-        if (name == 'filters') {
-            this.openLeftPart('map');
-        }
         switch (name) {
             case 'filters':
                 this.filtersInnerActive = true;
@@ -2244,21 +1173,31 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                     filters.item(1).style.setProperty('top', '130px');
                     filters.item(1).style.setProperty('height', 'calc(100vh - 195px)');
                 }
-                // filters.item(1).style.setProperty('box-shadow', '#677578 0 2px 10px 0');
                 break;
             case 'login':
-                filters.item(2).classList.add('open'); // login
-                if (useless.item(0).classList.contains('scroll')) {
-                    filters.item(2).style.setProperty('top', '0');
-                    filters.item(2).style.setProperty('height', 'calc(100vh - 65px)');
+                slide.item(0).classList.add('open');
+                slide.item(0).style.setProperty('z-index', '1500');
+                if (useless.item(0).classList.contains('homePage')) {
+                    if (header.item(0).classList.contains('scroll')) {
+                        slide.item(0).style.setProperty('top', '0');
+                        slide.item(0).style.setProperty('height', '100vh');
+                    } else {
+                        slide.item(0).style.setProperty('top', '130px');
+                        slide.item(0).style.setProperty('height', 'calc(100vh - 130px)');
+                    }
                 } else {
-                    filters.item(2).style.setProperty('top', '130px');
-                    filters.item(2).style.setProperty('height', 'calc(100vh - 195px)');
+                    if (useless.item(0).classList.contains('scroll')) {
+                        slide.item(0).style.setProperty('top', '65px');
+                        slide.item(0).style.setProperty('height', 'calc(100vh - 65px)');
+                    } else {
+                        slide.item(0).style.setProperty('top', '195px');
+                        slide.item(0).style.setProperty('height', 'calc(100vh - 195px)');
+                    }
                 }
-                // filters.item(2).style.setProperty('box-shadow', '#677578 0 2px 10px 0');
                 break;
             case 'pay':
                 slide.item(1).classList.add('open');
+                slide.item(1).style.setProperty('z-index', '1500');
                 if (useless.item(0).classList.contains('homePage')) {
                     if (header.item(0).classList.contains('scroll')) {
                         slide.item(1).style.setProperty('top', '0');
@@ -2286,7 +1225,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                     filters.item(3).style.setProperty('top', '130px');
                     filters.item(3).style.setProperty('height', 'calc(100vh - 195px)');
                 }
-                // filters.item(3).style.setProperty('box-shadow', '#677578 0 2px 10px 0');
                 break;
             case 'premium':
                 filters.item(4).classList.add('open'); // premium
@@ -2297,11 +1235,9 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                     filters.item(4).style.setProperty('top', '130px');
                     filters.item(4).style.setProperty('height', 'calc(100vh - 195px)');
                 }
-                // filters.item(4).style.setProperty('box-shadow', '#677578 0 2px 10px 0');
                 break;
             case 'item':
                 this.itemOpen = true;
-                // scroll.item(0).classList.remove('open');
                 break;
             case 'objects':
                 item.item(0).classList.remove('open');
@@ -2310,7 +1246,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             case 'compare':
                 useless.item(0).style.setProperty('box-shadow', 'none');
                 inner.item(0).classList.add('close');
-                this.similars = true;
                 setTimeout(this.onResize, 500);
                 if (useless.item(0).classList.contains('scroll')) {
                     let objs = document.getElementsByClassName('filters objs') as HTMLCollectionOf<HTMLElement>;
@@ -2383,17 +1318,15 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                     objects.item(k).style.removeProperty('background-color');
                 }
                 this.map.balloon.close();
-                // scroll.item(0).classList.add('open');
+                if (!this.polygonActive) { this.map.geoObjects.removeAll()}
                 break;
             case 'objects':
                 item.item(0).classList.add('open');
                 scroll.item(0).classList.remove('open');
                 break;
             case 'compare':
-                this.similars = false;
                 inner.item(0).classList.remove('close');
                 useless.item(0).style.setProperty('box-shadow', '#677578 0 2px 10px 0');
-                //    inner.item(1).classList.add('close');
                 break;
         }
     }
@@ -2408,29 +1341,11 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         const listElems = document.getElementsByClassName('carousel-li1') as HTMLCollectionOf<HTMLElement>;
         const list = document.getElementById('carousel-ul1') as HTMLElement;
         this.position = Math.max(this.position - this.widthPhoto * this.count, -this.widthPhoto * (listElems.length - this.count - 1));
-        // console.log(this.position);
         list.style.setProperty('margin-left', this.position + 'px');
     }
 
     onResize() {
-        // console.log("ресайз");
-        // this.map.container.fitToViewport(true);
-        let filters = document.getElementsByClassName('filters open') as HTMLCollectionOf<HTMLElement>;
-        // let arrowList = document.getElementsByClassName('listButton') as HTMLCollectionOf<HTMLElement>;
-
-        let map = document.getElementsByClassName('map filters-map') as HTMLCollectionOf<HTMLElement>;
-        if (!this.listMode) {
-            map.item(0).style.setProperty('width', '100vw');
-            map.item(0).style.setProperty('max-width', 'unset');
-            // arrowList.item(0).style.setProperty('right', '0');
-        } else {
-            map.item(0).style.setProperty('width', '69vw');
-            map.item(0).style.setProperty('max-width', 'calc(100vw - 400px)');
-            // arrowList.item(0).style.setProperty('right', filters.item(0).clientWidth + 'px');
-
-        }
-        // ymaps-2-1-74-map
-        let mapContainer = document.getElementsByClassName('ymaps-2-1-74-map') as HTMLCollectionOf<HTMLElement>;
+      let mapContainer = document.getElementsByClassName('ymaps-2-1-75-map') as HTMLCollectionOf<HTMLElement>;
         for (let i = 0; i < mapContainer.length; i++) {
             mapContainer.item(i).style.setProperty('width', '100%');
             mapContainer.item(i).style.setProperty('height', '100%');
@@ -2457,26 +1372,4 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }
         }
     }
-
-    // checklogin() {
-    //   this._account_service.checklogin().subscribe(res => {
-    //     console.log(res);
-    //     if (res != undefined) {
-    //       let data = JSON.parse(JSON.stringify(res));
-    //       // console.log(data.result);
-    //       // console.log(data.user_id);
-    //       // console.log(data.email);
-    //       if (data.result == 'success' ) {
-    //         this.userEmail = data.email;
-    //         this.loggedIn = true;
-    //       } else {
-    //         this.log_out();
-    //       }
-    //     } else {
-    //       this.log_out();
-    //       console.log('not athorized!');
-    //       return false;
-    //     }
-    //   });
-    // }
 }

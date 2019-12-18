@@ -40,6 +40,9 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     @Input() id: number;
     @Input() historyId: number;
     @Input() currentPage: string;
+    @Input() loggingMode: boolean;
+    @Input() payingMode: boolean;
+
     siteUrl: any;
     loggedIn = false;
     objStop: any;
@@ -308,10 +311,13 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                 if (data.result == 'success') {
                     // this.userEmail = data.email;
                     this.loggedIn = true;
+                    this.loggingMode = true;
                 } else {
+                    this.loggingMode = false;
                     this.log_out();
                 }
             } else {
+                this.loggingMode = false;
                 this.log_out();
                 console.log('not athorized!');
             }

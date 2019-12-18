@@ -4,6 +4,7 @@ import {AsyncSubject} from "rxjs/AsyncSubject";
 import {map} from 'rxjs/operators';
 import {Item} from "../item";
 import {ConfigService} from "./config.service";
+import {ListResult} from '../class/listResult';
 
 
 @Injectable()
@@ -36,21 +37,22 @@ export class OfferService {
     }
     let _resourceUrl =  this.servUrl + '/offer/list?' + query.join("&");
 
-    let ret_subj = <AsyncSubject<Item[]>>new AsyncSubject();
+    let ret_subj = <AsyncSubject<ListResult>>new AsyncSubject();
 
     this._http.get(_resourceUrl, { withCredentials: true }).pipe(
       map((res: Response) => res)).subscribe(
       raw => {
         // console.log(raw);
-        let obj: Item[];
+        // let obj: Item[];
         let data = JSON.parse(JSON.stringify(raw));
-        if (data.result) {
-        //   // obj.hitsCount = data.result.hitsCount;
-           obj = data.result;
-        //
-          ret_subj.next(obj);
-           ret_subj.complete();
-         }
+          let obj: ListResult = new ListResult();
+          if (data.result) {
+              obj.hitsCount = data.hitsCount;
+              obj.list = data.result;
+
+              ret_subj.next(obj);
+              ret_subj.complete();
+          }
        // console.log(Object.values(data));
       //  console.log(obj);
       },

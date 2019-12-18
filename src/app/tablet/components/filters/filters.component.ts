@@ -67,7 +67,7 @@ export class FiltersComponent implements OnInit {
     this._offer_service.list(1, 1, this.filters, this.sort, '', '').subscribe(offers => {
       //  console.log(typeof offers);
       //  console.log(offers);
-      for (let offer of offers) {
+      for (let offer of offers.list) {
         //  console.log(offer);
         this.items.push(offer);
       }

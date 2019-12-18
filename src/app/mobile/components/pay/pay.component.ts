@@ -23,6 +23,9 @@ export class PayComponent implements OnInit, OnChanges {
   @Output() logout = new EventEmitter();
   @Input() itemOpen: boolean;
   @Output() blockClose = new EventEmitter();
+    @Output() payingMode = new EventEmitter();
+    @Input() inpDay: any;
+    @Input() inpTime: any;
   logged_in = false;
   user: any;
   height: number;
@@ -39,43 +42,43 @@ export class PayComponent implements OnInit, OnChanges {
   timer: any;
     selectedButton: any[] = [{block: ''}];
   ngOnInit() {
-      if (sessionStorage.getItem('useremail') != undefined) {
-          if (sessionStorage.getItem('days') != undefined && sessionStorage.getItem('time') != undefined) {
-              this.resDay = Number.parseInt(sessionStorage.getItem('resDay'));
-              this.resTime = sessionStorage.getItem('resTime');
-          }
-      }
+    //   if (sessionStorage.getItem('useremail') != undefined) {
+    //       if (sessionStorage.getItem('days') != undefined && sessionStorage.getItem('time') != undefined) {
+    //           this.resDay = Number.parseInt(sessionStorage.getItem('resDay'));
+    //           this.resTime = sessionStorage.getItem('resTime');
+    //       }
+    //   }
     this.width = document.documentElement.clientWidth;
-      this.checklogin();
-      this.checkBalance();
-      clearInterval(this.timer);
-      this.timer = false;
-    this.openBlock = this.otherComponent !== false;
+    //   this.checklogin();
+    //   this.checkBalance();
+    //   clearInterval(this.timer);
+    //   this.timer = false;
+    // this.openBlock = this.otherComponent !== false;
 
   }
   ngOnChanges() {
-      this.checklogin();
-      this.checkBalance();
+      // this.checklogin();
+      // this.checkBalance();
 
   }
-    checklogin() {
-        this._account_service.checklogin().subscribe(res => {
-            if (res != undefined) {
-                let data = JSON.parse(JSON.stringify(res));
-                if (data.result == 'success') {
-                    this.user = data.user_id;
-                    sessionStorage.setItem('useremail', data.email);
-                    this.logged_in = true;
-                } else {
-                    this.log_out();
-                }
-            } else {
-                this.log_out();
-                console.log('not athorized!');
-                return false;
-            }
-        });
-    }
+    // checklogin() {
+    //     this._account_service.checklogin().subscribe(res => {
+    //         if (res != undefined) {
+    //             let data = JSON.parse(JSON.stringify(res));
+    //             if (data.result == 'success') {
+    //                 this.user = data.user_id;
+    //                 sessionStorage.setItem('useremail', data.email);
+    //                 this.logged_in = true;
+    //             } else {
+    //                 this.log_out();
+    //             }
+    //         } else {
+    //             this.log_out();
+    //             console.log('not athorized!');
+    //             return false;
+    //         }
+    //     });
+    // }
   log_out() {
     clearInterval(this.timer);
     this.localStorage.removeItem('time');
@@ -93,7 +96,7 @@ export class PayComponent implements OnInit, OnChanges {
         this.selectedButton = [];
         this.selectedButton.push({block: block});
 
-        this.checklogin();
+        // this.checklogin();
         if (this.user != null) {
             this._account_service.payment(type, cost).subscribe((res) => {
                 console.log(res);
@@ -109,66 +112,66 @@ export class PayComponent implements OnInit, OnChanges {
             alert("Вход не был произведен, войдите пожалуйста в систему перед совершение оплаты");
         }
     }
-    checkBalance() {
-        this._account_service.checkBalance().subscribe(res => {
-            let result = JSON.parse(JSON.stringify(res));
-            this.balance = result.balance;
-            if (this.balance == 0) {
-                this.balance = 0.0;
-            }
-            this.timeT = parseInt(result.time, 10);
-            clearInterval(this.timer);
-            this.timer = 0;
-            this.timer = setInterval(e => this.updateTime(), 1000);
-        });
-    }
-    updateTime() {
-        if (this.redirect) {
-            clearInterval(this.timer);
-        }
-        if (this.logged_in == true) {
-            if (this.timeT > 0) {
-                this.timeT = this.timeT - 1;
-                let min = this.timeT / 60;
-                let hour = min / 60;
-                this.resDay = Math.floor(hour / 24);
-                this.resTime = Math.floor(hour % 24) + ":" + Math.floor(min % 60) + ":" + Math.floor(this.timeT % 60);
-                sessionStorage.setItem('resDay', this.resDay.toString());
-                sessionStorage.setItem('resTime', this.resTime);
-                sessionStorage.setItem('con_data', 'true');
-                this.days.emit(this.resDay + "дн.");
-                this.time.emit(Math.floor(hour % 24) + "ч." + Math.floor(min % 60) + "мин.");
-            } else {
-                clearInterval(this.timer);
-                this.resDay = 0;
-                this.resTime = "00:00:00";
-                this.balance = 0.0;
-                this.days.emit("00дн.");
-                this.time.emit("00ч.00мин.");
-                sessionStorage.setItem('resDay', this.resDay.toString());
-                sessionStorage.setItem('resTime', this.resTime);
-                sessionStorage.setItem('con_data', 'false');
-            }
-        } else {
-            this.resDay = 0;
-            this.balance = 0.0;
-            this.resTime = "00:00:00";
-            this.days.emit("00дн.");
-            this.time.emit("00ч.00мин.");
-            sessionStorage.setItem('resDay', this.resDay.toString());
-            sessionStorage.setItem('resTime', this.resTime);
-            sessionStorage.setItem('con_data', 'false');
-            this.log_out();
-            this.logoutFunc();
-        }
-        if (this.timeT > 0) {
-            if (this.localStorage.getItem('timeAdd') != 'true') {
-                this.localStorage.setItem("timeAdd", 'true');
-            }
-        } else {
-            if (this.localStorage.getItem('timeAdd') != 'false') {
-                this.localStorage.setItem("timeAdd", 'false');
-            }
-        }
-    }
+    // checkBalance() {
+    //     this._account_service.checkBalance().subscribe(res => {
+    //         let result = JSON.parse(JSON.stringify(res));
+    //         this.balance = result.balance;
+    //         if (this.balance == 0) {
+    //             this.balance = 0.0;
+    //         }
+    //         this.timeT = parseInt(result.time, 10);
+    //         clearInterval(this.timer);
+    //         this.timer = 0;
+    //         this.timer = setInterval(e => this.updateTime(), 1000);
+    //     });
+    // }
+    // updateTime() {
+    //     if (this.redirect) {
+    //         clearInterval(this.timer);
+    //     }
+    //     if (this.logged_in == true) {
+    //         if (this.timeT > 0) {
+    //             this.timeT = this.timeT - 1;
+    //             let min = this.timeT / 60;
+    //             let hour = min / 60;
+    //             this.resDay = Math.floor(hour / 24);
+    //             this.resTime = Math.floor(hour % 24) + ":" + Math.floor(min % 60) + ":" + Math.floor(this.timeT % 60);
+    //             sessionStorage.setItem('resDay', this.resDay.toString());
+    //             sessionStorage.setItem('resTime', this.resTime);
+    //             sessionStorage.setItem('con_data', 'true');
+    //             this.days.emit(this.resDay + "дн.");
+    //             this.time.emit(Math.floor(hour % 24) + "ч." + Math.floor(min % 60) + "мин.");
+    //         } else {
+    //             clearInterval(this.timer);
+    //             this.resDay = 0;
+    //             this.resTime = "00:00:00";
+    //             this.balance = 0.0;
+    //             this.days.emit("00дн.");
+    //             this.time.emit("00ч.00мин.");
+    //             sessionStorage.setItem('resDay', this.resDay.toString());
+    //             sessionStorage.setItem('resTime', this.resTime);
+    //             sessionStorage.setItem('con_data', 'false');
+    //         }
+    //     } else {
+    //         this.resDay = 0;
+    //         this.balance = 0.0;
+    //         this.resTime = "00:00:00";
+    //         this.days.emit("00дн.");
+    //         this.time.emit("00ч.00мин.");
+    //         sessionStorage.setItem('resDay', this.resDay.toString());
+    //         sessionStorage.setItem('resTime', this.resTime);
+    //         sessionStorage.setItem('con_data', 'false');
+    //         this.log_out();
+    //         this.logoutFunc();
+    //     }
+    //     if (this.timeT > 0) {
+    //         if (this.localStorage.getItem('timeAdd') != 'true') {
+    //             this.localStorage.setItem("timeAdd", 'true');
+    //         }
+    //     } else {
+    //         if (this.localStorage.getItem('timeAdd') != 'false') {
+    //             this.localStorage.setItem("timeAdd", 'false');
+    //         }
+    //     }
+    // }
 }

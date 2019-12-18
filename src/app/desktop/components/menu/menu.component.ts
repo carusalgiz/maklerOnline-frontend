@@ -3,7 +3,6 @@ import {Component, EventEmitter, OnInit, Output, Inject, Input} from '@angular/c
 import {ActivatedRoute, Router} from '@angular/router';
 import {OfferService} from '../../../services/offer.service';
 import {AccountService} from '../../../services/account.service';
-import { NgxMetrikaService } from '@kolkov/ngx-metrika';
 import {ConfigService} from "../../../services/config.service";
 
 @Component({
@@ -31,7 +30,7 @@ export class MenuComponent implements OnInit {
     @Output() Logging = new EventEmitter();
     @Output() Paying = new EventEmitter();
 
-  constructor(private ym: NgxMetrikaService, @Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, config: ConfigService,
+  constructor( @Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, config: ConfigService,
               private _offer_service: OfferService,
               private _account_service: AccountService) {
       this.siteUrl = config.getConfig('siteUrl');
@@ -54,9 +53,7 @@ export class MenuComponent implements OnInit {
       this.updateItems.emit();
     }
   }
-    ymFunc(target) {
-        this.ym.reachGoal.next({target: target});
-    }
+
   checklogin() {
       console.log("checkloginmenu");
       this.loggedIn = false;
@@ -157,42 +154,33 @@ export class MenuComponent implements OnInit {
             }
         }
     }
-    save_token() {
-       // alert(this.token);
-        let body = {
-            access_token: this.token,
-            user_id: localStorage.getItem('cur_id'),
-            obj_id: localStorage.getItem('obj_id')
-        };
-        this._account_service.save_access_token(body).subscribe(res => {
-            console.log(res);
-            if (res != undefined) {
-                let data = JSON.parse(JSON.stringify(res));
-                if (data.obj_id != undefined) {
-                    window.location.href = this.siteUrl + "/#/d/objects/" + data.obj_id;
-                } else {
-                    alert(data.error)
-                }
-            }
-        });
-    }
   log_out() {
+      console.log( "logout")
+      clearInterval(this.timer);
     this.userEmail = "email";
     this.loggedIn = false;
-    this.days = "0дн.";
+    this.days = "00дн.";
     this.time = "00ч.00мин.";
-      sessionStorage.setItem('days',this.days);
-      sessionStorage.setItem('time', this.time);
+      this.resDay = 0;
+      this.resTime = "00:00:00";
+      sessionStorage.removeItem('days');
+      sessionStorage.removeItem('time');
+      sessionStorage.removeItem('resDay');
+      sessionStorage.removeItem('resTime');
+      sessionStorage.removeItem('useremail');
+      sessionStorage.removeItem('con_data');
+
+      sessionStorage.setItem('days',"00дн.");
+      sessionStorage.setItem('time', "00ч.00мин.");
       sessionStorage.setItem('resDay', this.resDay);
       sessionStorage.setItem('resTime', this.resTime);
+      sessionStorage.setItem('useremail','email');
       sessionStorage.setItem('con_data', 'false');
+      this.Paying.emit('false');
+      this.Logging.emit('false');
     this._account_service.logout();
   }
   timeUpdate() {
-    // this.localStorage.setItem("days", this.days);
-    // this.localStorage.setItem("time", this.time);
-    //   sessionStorage.setItem('days',this.days);
-    //   sessionStorage.setItem('time', this.time);
     this.redirect = true;
   }
   openBlock(page) {

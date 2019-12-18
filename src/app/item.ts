@@ -1,5 +1,6 @@
 import {UploadFile} from "./class/UploadFile";
 import {ConditionsBlock} from "./class/conditionsBlock";
+import {PhoneBlock} from './class/phoneBlock';
 
 export class Item {
     watched: boolean;
@@ -16,6 +17,7 @@ export class Item {
     roomsCount: number;
     floor: number;
     floorsCount: number;
+    phoneBlock: PhoneBlock;
     squareTotal: number;
     photos: UploadFile[];
     documents: UploadFile[];
@@ -26,15 +28,21 @@ export class Item {
     email: string;
     conditions: ConditionsBlock;
     prepayment: boolean;
-    electrific_pay: boolean;
-    water_pay: boolean;
-    gas_pay: boolean;
+    electrificPay: boolean;        //плата за электричество
+    waterPay: boolean;             //плата за воду
+    gasPay: boolean;               //плата за газ
+    heatingPay: boolean;           //плата за отопление
+    utilityBills: boolean;         // коммунальные платежи
+    paymentType: string;          //Тип расчета
     balcony: boolean;
     loggia: boolean;
     condition: string;
     bathroom: string;
     typeCode: string;
     is_fav: boolean;
+    description: string;
+    deposit: boolean;
+    IsMiddleman: boolean;
 
     constructor(id?: number,
                 admArea?: string,
@@ -64,7 +72,14 @@ export class Item {
                 loggia?: boolean,
                 condition?: string,
                 bathroom?: string,
-                typeCode?: string
+                typeCode?: string,
+                heatingPay?: boolean,           //плата за отопление
+                utilityBills?: boolean,         // коммунальные платежи
+                paymentType?: string,           //Тип расчета
+                description?: string,
+                deposit?: boolean,
+                IsMiddleman?: boolean,
+                phoneBlock?: PhoneBlock
     ) {
         this.id = id;
         this.admArea = admArea;
@@ -89,14 +104,33 @@ export class Item {
         this.conditions = conditions;
         this.email = email;
         this.prepayment = prepayment;
-        this.electrific_pay = electrificPay;
-        this.water_pay = waterPay;
-        this.gas_pay = gasPay;
+        this.electrificPay = electrificPay;
+        this.waterPay = waterPay;
+        this.gasPay = gasPay;
         this.balcony = balcony;
         this.loggia = loggia;
         this.condition = condition;
         this.bathroom = bathroom;
         this.typeCode = typeCode;
-
+        this.heatingPay = heatingPay;
+        this.utilityBills = utilityBills;
+        this.paymentType = paymentType;
+        this.description = description;
+        this.deposit = deposit;
+        this.IsMiddleman = IsMiddleman;
+        this.phoneBlock = phoneBlock;
     }
+
+
+    public paymentTypeOption = {
+        all:  {label: 'Все'},
+        cashless:  {label: 'Безналичный'},
+        cash: {label: 'Наличный'}
+    };
+    public static bathroomOptions = {
+        no: {label: 'Нет'},
+        splited: {label: 'Раздельный'},
+        combined: {label: 'Совмещенный'},
+        other: {label: 'Другое'}
+    };
 }

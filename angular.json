@@ -24,8 +24,7 @@
                 ],
                 "styles": [
                     "src/styles.css"
-                ],
-                "scripts": ["src/app/js/vk.js", "src/app/js/oksdk.js"]
+                ]
             },
             "configurations": {
                 "production": {

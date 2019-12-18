@@ -1,6 +1,6 @@
 import { NgtUniversalModule } from '@ng-toolkit/universal';
 import { TransferHttpCacheModule } from '@nguniversal/common';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {  NgModule} from '@angular/core';
 import {CommonModule, HashLocationStrategy, PathLocationStrategy} from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -15,7 +15,7 @@ import { DeviceDetectorModule } from 'ngx-device-detector';
 import { NgxMaskModule } from 'ngx-mask';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxMetrikaModule } from '@kolkov/ngx-metrika';
-import { NgxMetrikaService } from '@kolkov/ngx-metrika';
+// import { NgxMetrikaService } from '@kolkov/ngx-metrika';
 import { ConfigService} from "./services/config.service";
 
 const appRoutes: Routes = [
@@ -30,11 +30,11 @@ const appRoutes: Routes = [
   ],
   imports:[
     NgxMetrikaModule.forRoot({
-        id: 52712101,
-        clickmap:true,
-        trackLinks:true,
-        accurateTrackBounce:true,
-        webvisor:true
+        id: 52712101
+        // clickmap:true,
+        // trackLinks:true,
+        // accurateTrackBounce:true,
+        // webvisor:true
     }),
     CommonModule,
     NgtUniversalModule,
@@ -42,7 +42,8 @@ const appRoutes: Routes = [
     TransferHttpCacheModule,
     HttpClientModule,
       NgxMaskModule.forRoot({}),
-      BrowserModule.withServerTransition({appId: 'maklerOnline-fe'}),
+    BrowserAnimationsModule,
+      // BrowserModule.withServerTransition({appId: 'maklerOnline-fe'}),
       HttpModule,
       HttpClientModule,
       RouterModule.forRoot(appRoutes),
@@ -56,7 +57,7 @@ const appRoutes: Routes = [
   ],
   exports: [RouterModule],
     bootstrap: [AppComponent],
-  providers: [ {provide: LocationStrategy, useClass: HashLocationStrategy}, OfferService, AccountService, NgxMetrikaService, ConfigService],
+  providers: [ {provide: LocationStrategy, useClass: HashLocationStrategy}, OfferService, AccountService,  ConfigService],
 })
 
 export class AppModule {

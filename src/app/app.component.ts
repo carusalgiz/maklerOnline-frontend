@@ -236,12 +236,12 @@ export class AppComponent implements OnInit, AfterViewInit {
           let slide = document.getElementsByClassName('right-slide-box')   as HTMLCollectionOf<HTMLElement>;
           let mainHome =  document.getElementsByClassName('mainHome')   as HTMLCollectionOf<HTMLElement>;
           let show = document.getElementsByClassName('show-items') as HTMLCollectionOf<HTMLElement>;
-          let arrows = document.getElementsByClassName('arrow comparisonArrow')   as HTMLCollectionOf<HTMLElement>;
-          let day = document.getElementsByClassName('dayExt') as HTMLCollectionOf<HTMLElement>;
+          // let arrows = document.getElementsByClassName('arrow comparisonArrow')   as HTMLCollectionOf<HTMLElement>;
+          // let day = document.getElementsByClassName('dayExt') as HTMLCollectionOf<HTMLElement>;
           let catalog = document.getElementsByClassName('catalog-item') as HTMLCollectionOf<HTMLElement>;
           let photofull = document.getElementsByClassName('photoFull') as HTMLCollectionOf<HTMLElement>;
           let objs = document.getElementsByClassName('filters objs') as HTMLCollectionOf<HTMLElement>;
-          let dark = document.getElementsByClassName('darkBlueLine') as HTMLCollectionOf<HTMLElement>;
+          // let dark = document.getElementsByClassName('darkBlueLine') as HTMLCollectionOf<HTMLElement>;
           let ymaps = document.documentElement.getElementsByTagName('ymaps');
           let hide = document.documentElement.getElementsByClassName('hideMenu');
 
@@ -286,14 +286,14 @@ export class AppComponent implements OnInit, AfterViewInit {
                 if (objs.length != 0) {
                   objs.item(0).style.setProperty('top', '0');
                 }
-                if ( dark.length != 0) {
-                  dark.item(0).style.setProperty('top', '0');
-                }
+                // if ( dark.length != 0) {
+                //   dark.item(0).style.setProperty('top', '0');
+                // }
               }
-              if (arrows.length != 0) {
-                arrows.item(0).style.setProperty('top', '35vh');
-                arrows.item(1).style.setProperty('top', '35vh');
-              }
+              // if (arrows.length != 0) {
+              //   arrows.item(0).style.setProperty('top', '35vh');
+              //   arrows.item(1).style.setProperty('top', '35vh');
+              // }
             }
             if (filtersbox.length != 0 && filtersbox.item(0).classList.contains('open') && (addButton.item(0).getBoundingClientRect().top < 100 || hide.item(0).getBoundingClientRect().top < 100
               || hide.item(1).getBoundingClientRect().top < 100 || hide.item(2).getBoundingClientRect().top < 100  || hide.item(3).getBoundingClientRect().top < 100)) {
@@ -338,9 +338,9 @@ export class AppComponent implements OnInit, AfterViewInit {
               if (filters.length != 0) {
                 filters.item(0).style.setProperty('top', '0');
               }
-              if (day.length != 0) {
-                day.item(0).style.setProperty('top', '65px');
-              }
+              // if (day.length != 0) {
+              //   day.item(0).style.setProperty('top', '65px');
+              // }
               uselessLine.item(0).classList.add('scroll');
               items.item(0).classList.add('scroll');
             }
@@ -367,7 +367,8 @@ export class AppComponent implements OnInit, AfterViewInit {
               mapbuttonstab.item(0).style.setProperty('top', '0');
             }
             if (filter.length != 0) {
-              filter.item(0).style.setProperty('top', '0');
+              filter.item(0).style.setProperty('top', '65px');
+                filter.item(0).style.setProperty('height', 'calc(100vh - 65px)');
             }
 
             // if (filtersbox.length != 0) {
@@ -417,22 +418,23 @@ export class AppComponent implements OnInit, AfterViewInit {
               }
               items.item(0).style.setProperty('top', '0');
               if (filter.length != 0) {
-                filter.item(0).style.setProperty('top', '130px');
+                filter.item(0).style.setProperty('top', '195px');
+                  filter.item(0).style.setProperty('height', 'calc(100vh - 195px)');
               }
-              if (day.length != 0) {
-                day.item(0).style.setProperty('top', '195px');
-              }
-              if ( dark.length != 0) {
-                dark.item(0).style.setProperty('top', '130px');
-              }
-              for (let i = 0; i < photofull.length; i++) {
-                if (photofull.item(i).getBoundingClientRect().top < 0) {
-                  if (arrows.length != 0) {
-                    arrows.item(0).style.setProperty('top', 'calc(35vh - 130px)');
-                    arrows.item(1).style.setProperty('top', 'calc(35vh - 130px)');
-                  }
-                }
-              }
+              // if (day.length != 0) {
+              //   day.item(0).style.setProperty('top', '195px');
+              // }
+              // if ( dark.length != 0) {
+              //   dark.item(0).style.setProperty('top', '130px');
+              // }
+              // for (let i = 0; i < photofull.length; i++) {
+              //   if (photofull.item(i).getBoundingClientRect().top < 0) {
+              //     if (arrows.length != 0) {
+              //       arrows.item(0).style.setProperty('top', 'calc(35vh - 130px)');
+              //       arrows.item(1).style.setProperty('top', 'calc(35vh - 130px)');
+              //     }
+              //   }
+              // }
             } else if (scrollItems.length == 0 && uselessLine.length != 0 && !uselessLine.item(0).classList.contains('homePage')) {
               for (let i = 0; i < slide.length; i++) {
                 slide.item(i).style.setProperty('top', '195px');
@@ -448,17 +450,17 @@ export class AppComponent implements OnInit, AfterViewInit {
               if (objs.length != 0) {
                 objs.item(0).style.setProperty('top', '130px');
               }
-              for (let i = 0; i < photofull.length; i++) {
-                if (photofull.item(i).getBoundingClientRect().top < 0) {
-                  if (arrows.length != 0) {
-                    arrows.item(0).style.setProperty('top', 'calc(35vh - 130px)');
-                    arrows.item(1).style.setProperty('top', 'calc(35vh - 130px)');
-                  }
-                }
-              }
-              if ( dark.length != 0) {
-                dark.item(0).style.setProperty('top', '130px');
-              }
+              // for (let i = 0; i < photofull.length; i++) {
+              //   if (photofull.item(i).getBoundingClientRect().top < 0) {
+              //     if (arrows.length != 0) {
+              //       arrows.item(0).style.setProperty('top', 'calc(35vh - 130px)');
+              //       arrows.item(1).style.setProperty('top', 'calc(35vh - 130px)');
+              //     }
+              //   }
+              // }
+              // if ( dark.length != 0) {
+              //   dark.item(0).style.setProperty('top', '130px');
+              // }
               items.item(0).style.setProperty('top', '0');
               uselessLine.item(0).classList.remove('scroll');
               items.item(0).classList.remove('scroll');
@@ -467,12 +469,13 @@ export class AppComponent implements OnInit, AfterViewInit {
               if (filters.length != 0) {
                 filters.item(0).style.setProperty('top', '130px');
               }
-              if (filter.length != 0) {
-                filter.item(0).style.setProperty('top', '130px');
-              }
-              if (day.length != 0) {
-                day.item(0).style.setProperty('top', '195px');
-              }
+                if (filter.length != 0) {
+                    filter.item(0).style.setProperty('top', '195px');
+                    filter.item(0).style.setProperty('height', 'calc(100vh - 195px)');
+                }
+              // if (day.length != 0) {
+              //   day.item(0).style.setProperty('top', '195px');
+              // }
             }
 
             if (mainHome.length != 0 && document.documentElement.clientWidth > 1050) {

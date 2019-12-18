@@ -840,7 +840,7 @@ export class FiltersComponent implements OnInit, AfterViewInit {
       this.map.geoObjects.removeAll();
     this.items = [];
     this._offer_service.list(1, 1, this.filters, this.sort, this.equipmentFilters, this.coordsPolygon).subscribe(offers => {
-      for (let offer of offers) {
+      for (let offer of offers.list) {
         //  console.log(offer);
         this.items.push(offer);
       }
@@ -1178,7 +1178,7 @@ export class FiltersComponent implements OnInit, AfterViewInit {
       clusterHideIconOnBalloonOpen: false,
       geoObjectHideIconOnBalloonOpen: false
     });
-      let mapStyle = document.getElementsByClassName('ymaps-2-1-74-ground-pane') as HTMLCollectionOf<HTMLElement>;
+      let mapStyle = document.getElementsByClassName('ymaps-2-1-75-ground-pane') as HTMLCollectionOf<HTMLElement>;
       if (mapStyle.length != 0) {
           mapStyle.item(0).style.setProperty('filter', 'grayscale(.9)');
       }
@@ -1507,7 +1507,7 @@ export class FiltersComponent implements OnInit, AfterViewInit {
       'city': city
     };
     this._offer_service.list(1, 1,  filter, '', '', '').subscribe(offers => {
-      city_var = offers.length;
+      city_var = offers.hitsCount;
     });
   }
   changeNameButton(id, name, varToChange, param) {

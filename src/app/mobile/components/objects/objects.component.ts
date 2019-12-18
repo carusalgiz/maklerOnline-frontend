@@ -65,7 +65,8 @@ export class ObjectsComponent implements OnInit, AfterViewInit  {
   lng = 135.0826369;
   activeButton: string;
   menuOpen = false;
-  logged_in = false;
+  logged_in: boolean = false;
+  payed: boolean = false;
   bottomPxButton: any;
   headerPos:any;
   touchStartPos: any; mainObjectsPadding: any;
@@ -126,7 +127,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit  {
           this.activeButton = 'obj';
           let str = ''; str = urlParams['mode'];
           this._offer_service.list(1, 1, '', '', '', '').subscribe(offers => {
-              for (let offer of offers) {
+              for (let offer of offers.list) {
                   if (Number.parseInt(str.substring(0, 13)) == offer.id) {
                       this.item = offer;
                   }
@@ -191,7 +192,15 @@ export class ObjectsComponent implements OnInit, AfterViewInit  {
       // let line = document.documentElement.getElementsByClassName('uselessLine') as HTMLCollectionOf<HTMLElement>;
       // line.item(0).classList.remove('homePage');
   }
-    touchstart(event:TouchEvent) {
+  changeLog(ev: any) {
+    this.logged_in = ev;
+  }
+
+  changePay(ev: any) {
+    this.payed = ev;
+  }
+
+  touchstart(event:TouchEvent) {
       this.touchStartPos = event.changedTouches[0].clientY;
     }
     touchend(event:TouchEvent) {
@@ -780,7 +789,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit  {
     this.items = [];
     console.log(this.filters);
     this._offer_service.list(1, 1, this.filters, this.sort, this.equipment, this.coordsPolygon).subscribe(offers => {
-      for (let offer of offers) {
+      for (let offer of offers.list) {
         this.items.push(offer);
       }
       this.countOfItems = this.items.length;

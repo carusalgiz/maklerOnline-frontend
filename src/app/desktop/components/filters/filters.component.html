@@ -1,9 +1,5 @@
 
-<div class="filters-inner">
-  <!--<div class="hideMenu exit-close" (click)="closeFunc('filters');">-->
-    <!--<div class="barExit1"></div>-->
-    <!--<div class="barExit2"></div>-->
-  <!--</div>-->
+<div class="filters-inner" (offClick)="closeFunc('filters');">
   <div>
     <span class="title" style="margin-bottom: 15px">Найдено <span class="objectsNum">{{count}}</span> предложений</span>
     <div class="filtersBoxes">
@@ -240,7 +236,9 @@
     </div>
 
     <div class="show" (click)="reset()">Сбросить фильтры</div>
-
+      <div class="filter-bttns">
+      <div class="news-button" (click)="showlist.emit('update')">ПОКАЗАТЬ</div>
+      </div>
     <!--<div class="filter-bttns">-->
       <!--<div class="news-button left" (click)="activeButtn = 'bulletin'; openLeftFunc('bulletin')" [class.active]="activeButtn == 'bulletin'"-->
            <!--[class.disable]="activeButtn != 'bulletin'">СВОДКА</div>-->

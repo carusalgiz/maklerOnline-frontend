@@ -15,12 +15,31 @@ body{
   height: 160px;
   display: flex;
   align-items: center;
-    position: relative;
+    position: fixed;
     margin-left: -40px;
   z-index: 1;
   background-color: white;
-    top: calc(50vh - 160px);
+    top: calc(50vh - 100px);
+    box-shadow: inset #677578a6 -5px 0px 5px -3px;
   /*transition: 0.3s;*/
+}
+.listButton:hover, .arrowFull:hover,.barArrow1-left:hover, .barArrow2-left:hover{
+    cursor: pointer;
+}
+.listButton1{
+    width: 40px;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-left: -40px;
+    z-index: 1;
+    background-color: white;
+    top: calc(50vh - 160px);
+    /*transition: 0.3s;*/
+}
+.listButton1:hover{
+    cursor: pointer;
 }
 .arrowFull{
   height: 64px;
@@ -515,9 +534,10 @@ body{
 }
 .map.open {
   display: block;
-  width: 69vw;
-  min-width: calc(100vw - 585px);
-  max-width: calc(100vw - 400px);
+    width: 100vw;
+  /*width: 69vw;*/
+  /*min-width: calc(100vw - 585px);*/
+  /*max-width: calc(100vw - 400px);*/
   height: calc(100vh - 65px);
 }
 .map.full{
@@ -553,8 +573,14 @@ body{
   transition: 0.3s;
   z-index: 5;
   box-shadow: #677578 0 2px 10px 0;
-  position: relative;
-  top: 130px;
+  /*position: relative;*/
+    position: fixed;
+    right: 0;
+    background-color: white;
+    top: 195px;
+    height: calc(100vh - 195px);
+  /*  */
+  /*top: 130px;*/
 }
 .filters:hover{
   overflow-y: auto;

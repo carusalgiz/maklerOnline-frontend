@@ -122,14 +122,14 @@
       <div class="additional">
         <div class="lineFull"></div>
         <span class="titleFull">Данные арендодателя</span>
-        <div class="contactBlock topRightInner">
+        <div class="contactBlock topRightInner"  *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
           <div class="contactLineBlock">
             <div class="one">Телефон рабочий</div>
-            <div class="two"><span *ngIf="time == 'true' && loggedIn" style="font-size: 16px">{{item?.phone}}</span></div>
+            <div class="two"><span style="font-size: 16px"><span>+7 {{item?.phone | mask: '(000) 000-0000'}}</span></span></div>
           </div>
           <div class="contactLineBlock">
             <div class="one">Электронный адрес</div>
-            <div class="two"><span *ngIf="time == 'true' && loggedIn">{{item?.email}}</span></div>
+            <div class="two"><span>{{item?.email}}</span></div>
           </div>
           <div class="contactLineBlock" style="padding-bottom: 10px">
             <div class="one">Сайт</div>

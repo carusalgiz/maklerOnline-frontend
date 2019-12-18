@@ -43,8 +43,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     mainHome.item(0).style.setProperty('display', 'none');
   }
   openBlock(name) {
-    let add_block = document.documentElement.getElementsByClassName('add-block-menu') as HTMLCollectionOf<HTMLElement>;
-    let mainHome = document.getElementsByClassName('mainHome')   as HTMLCollectionOf<HTMLElement>;
     switch (name) {
       case 'agreement':
         this.blockOpen = 'open_agreement';
@@ -73,20 +71,21 @@ export class HomeComponent implements OnInit, AfterViewInit {
         } else {
             this.headerPos = 0;
         }
-        // console.log(event.changedTouches);
     }
   get_list() {
     this.countObjects = 0;
-    this._offer_service.list(1, 1, '', '', '', '').subscribe(offers => {
-      this.countObjects = offers.length;
-      let data = Math.floor((new Date()).getTime() / 1000);
-      for (let offer of offers) {
-        let time = offer.addDate;
-        // console.log('time: ' + time + ' cur: ' + mil);
-        if (data - time < 86400) {
-          this.countTodayObjects++;
+    this._offer_service.list(0, 10000, '', '', '', '').subscribe(dataOffers => {
+        this.countObjects = dataOffers.hitsCount;
+        let data = new Date();
+        for (let offer of dataOffers.list) {
+            let time = new Date(offer.addDate * 1000);
+            if ( Math.floor((new Date()).getTime() / 1000) - offer.addDate < 84600) {
+                console.log('time: ' + time + ' cur: ' + data);
+                if (data.getDay() == time.getDay()) {
+                    this.countTodayObjects++;
+                }
+            }
         }
-      }
     });
   }
 }

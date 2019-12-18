@@ -329,7 +329,7 @@ a.social-link{
     display: block;
 }
 .closeMain{
-    display: none;
+    display: none !important;
 }
 #num1, #num2, #num3{
   display: flex;

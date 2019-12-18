@@ -26,6 +26,13 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
   agreement: any;
     siteUrl: any;
   innerBlockOpen = 'menu';
+  timer: any;
+  mode = '';
+  timeT: any;
+  resTime: any;
+  resDay: any;
+  @Output() Logging = new EventEmitter();
+  @Output() Paying = new EventEmitter();
   @Input() blockOpenInput: String;
     @Input() headerPos: number;
   @Output() openMenu = new EventEmitter();
@@ -37,6 +44,7 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnInit() {
+    clearInterval(this.timer);
     this.checklogin();
     if (this.localStorage.getItem("days") != null && this.localStorage.getItem("time") != null) {
       this.days = this.localStorage.getItem("days");
@@ -102,92 +110,12 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
         this.openMenu.emit( "close_login");
         this.blockClosed.emit('close');
         this.menuOpen('close');
-        // this.menuOpen('close');
-        // mainHome.item(0).style.setProperty('display', 'block');
-        // if (localStorage.getItem("logged_in") == null || localStorage.getItem("logged_in") != "true") {
-        //   console.log('1');
-        //   this.logged_in = false;
-        //   this.upd = false;
-        // } else {
-        //   console.log('2');
-        //   this.upd = true;
-        // }
-        //
-        //   this.loginActive = false;
-        // add_block.item(0).classList.add('close');
-        // if (home.length != 0) {
-        //   home.item(0).style.setProperty('display', 'flex');
-        //   if (!header.item(0).classList.contains('output')) {
-        //     // menuMobile.item(0).classList.add('open');
-        //   } else {
-        //     header.item(0).classList.remove('output');
-        //   }
-        //
-        //   header.item(0).style.setProperty('display', 'flex');
-        // } else if (objects.length != 0) {
-        //   let mobileTopMenu = document.documentElement.getElementsByClassName('mobileTopMenu') as HTMLCollectionOf<HTMLElement>;
-        //   if (mobileTopMenu.length != 0) {
-        //     mobileTopMenu.item(0).style.setProperty('display', 'flex');
-        //   }
-        //   if (showItems.length != 0) {
-        //     showItems.item(0).style.setProperty('display', 'flex');
-        //   }
-        //   if (bottomButtons.length != 0) {
-        //     for (let i = 0; i < bottomButtons.length; i++) {
-        //       bottomButtons.item(i).style.removeProperty('display');
-        //     }
-        //   }
-        //   objects.item(0).style.setProperty('display', 'flex');
-        //   objects.item(0).style.setProperty('padding-top', '97px');
-        //   if (!header.item(0).classList.contains('output') && !closeLogin.item(0).classList.contains('output')) {
-        //     // menuMobile.item(0).classList.add('open');
-        //   } else {
-        //     header.item(0).classList.remove('output');
-        //     closeLogin.item(0).classList.remove('output');
-        //   }
-        //   header.item(0).style.setProperty('display', 'flex');
-        // }
-        // this.check();
         break;
       }
       case 'pay': {
         this.blockOpenInput = 'open_menu';
         this.innerBlockOpen = 'menu';
         this.openMenu.emit( "close_pay");
-        // closePay.item(0).classList.remove('output');
-        // this.payActive = false;
-        // add_block.item(1).classList.add('close');
-        // if (home.length != 0) {
-        //   home.item(0).style.setProperty('display', 'flex');
-        //   if (!header.item(0).classList.contains('output')) {
-        //     menuMobile.item(0).classList.add('open');
-        //   } else {
-        //     header.item(0).classList.remove('output');
-        //   }
-        //   header.item(0).style.setProperty('display', 'flex');
-        // } else if (objects.length != 0) {
-        //   let mobileTopMenu = document.documentElement.getElementsByClassName('mobileTopMenu') as HTMLCollectionOf<HTMLElement>;
-        //   if (mobileTopMenu.length != 0) {
-        //     mobileTopMenu.item(0).style.setProperty('display', 'flex');
-        //   }
-        //   if (showItems.length != 0) {
-        //     showItems.item(0).style.setProperty('display', 'flex');
-        //   }
-        //   if (bottomButtons.length != 0) {
-        //     for (let i = 0; i < bottomButtons.length; i++) {
-        //       bottomButtons.item(i).style.removeProperty('display');
-        //     }
-        //   }
-        //   objects.item(0).style.setProperty('display', 'flex');
-        //   objects.item(0).style.setProperty('padding-top', '97px');
-        //   if (!header.item(0).classList.contains('output') && !closePay.item(0).classList.contains('output')) {
-        //     menuMobile.item(0).classList.add('open');
-        //   } else {
-        //     header.item(0).classList.remove('output');
-        //     closeLogin.item(0).classList.remove('output');
-        //   }
-        //   header.item(0).style.setProperty('display', 'flex');
-        // }
         break;
       }
       case 'app': {
@@ -258,85 +186,112 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
   }
-  // selectedMapButtonTab(el: MouseEvent, param) {
-  //   let items =  document.getElementsByClassName('map-button-mobile') as HTMLCollectionOf<HTMLElement>;
-  //   let items1 =  document.getElementsByClassName('map-button-word-mobile') as HTMLCollectionOf<HTMLElement>;
-  //   for (let i = 0; i < items.length; i++) {
-  //     items.item(i).style.removeProperty('background-color');
-  //     items1.item(i).style.removeProperty('border-bottom');
-  //   }
-  //   (<HTMLElement>el.currentTarget).style.setProperty('background-color', 'rgba(38,47,50,1)');
-  //   (<HTMLElement>(<HTMLElement>el.currentTarget).firstChild).style.setProperty('border-bottom', '1px solid white');
-  //   let map1 = document.getElementsByClassName('filters-map') as HTMLCollectionOf<HTMLElement>;
-  //
-  //   switch (param) {
-  //     case "map":
-  //       if (map1.length != 0) {
-  //         map1.item(0).classList.add('open');
-  //         map1.item(1).classList.remove('open');
-  //       }
-  //       break;
-  //     case 'panorama':
-  //       if (map1.length != 0) {
-  //         map1.item(0).classList.remove('open');
-  //         map1.item(1).classList.add('open');
-  //       }
-  //       break;
-  //   }
-  // }
-  //
-  // exit() {
-  //   this.upd = false;
-  //   localStorage.removeItem('user');
-  //   localStorage.removeItem('name');
-  //   localStorage.removeItem('logged_in');
-  //   this.logged_in = false;
-  //   let exit = document.documentElement.getElementsByClassName('exit') as HTMLCollectionOf<HTMLElement>;
-  //   exit.item(0).classList.remove('close');
-  //   exit.item(1).classList.add('close');
-  //   let contact = document.documentElement.getElementsByClassName('contact-menu-info') as HTMLCollectionOf<HTMLElement>;
-  //   contact.item(0).classList.remove('close');
-  //   contact.item(1).classList.add('close');
-  // }
   log_out() {
     this.userEmail = "email";
     this.logged_in = false;
     this.days = "0дн.";
     this.time = "00ч.00мин.";
+    this.localStorage.removeItem("logged_in")
     this._account_service.logout();
   }
   checklogin() {
+    console.log("checkloginmenu");
+    this.logged_in = false;
     this._account_service.checklogin().subscribe(res => {
       console.log(res);
       if (res != undefined) {
         let data = JSON.parse(JSON.stringify(res));
-        // console.log(data.result);
-        // console.log(data.user_id);
-        // console.log(data.email);
         if (data.result == 'success' ) {
-          this.userEmail = data.email;
+          if (data.email != "") {
+            this.userEmail = data.email;
+          } else {
+            this.userEmail = "email";
+          }
+          sessionStorage.setItem('useremail', this.userEmail);
+          this.days = sessionStorage.getItem('days');
+          this.time = sessionStorage.getItem('time');
+          this.resDay = sessionStorage.getItem('resDay');
+          this.resTime = sessionStorage.getItem('resTime');
+          localStorage.setItem('cur_id', data.user_id);
           this.logged_in = true;
+          this.Logging.emit("true");
+
+          this._account_service.checkBalance().subscribe(res => {
+            console.log("checkbalance");
+            let result = JSON.parse(JSON.stringify(res));
+            console.log(result);
+            this.timeT = parseInt(result.time, 10);
+            clearInterval(this.timer);
+            this.timer = setInterval(e => this.updateTime(), 1000);
+          });
         } else {
           this.log_out();
+          this.Logging.emit("false");
         }
       } else {
         this.log_out();
+        this.Logging.emit("false");
         console.log('not athorized!');
         return false;
       }
     });
   }
+  updateTime() {
+    if (this.logged_in == true) {
+      if (this.timeT > 0) {
+        this.timeT = this.timeT - 1;
+        let min = this.timeT / 60;
+        let hour = min / 60;
+        let resDay = Math.floor(hour / 24);
+        this.days = resDay + "дн.";
+        this.time = Math.floor(hour % 24) + "ч." + Math.floor(min % 60) + "мин.";
+        this.resDay = Math.floor(hour / 24);
+        this.resTime = Math.floor(hour % 24) + ":" + Math.floor(min % 60) + ":" + Math.floor(this.timeT % 60);
+        sessionStorage.setItem('days',this.days);
+        sessionStorage.setItem('time', this.time);
+        sessionStorage.setItem('resDay', this.resDay);
+        sessionStorage.setItem('resTime', this.resTime);
+        sessionStorage.setItem('con_data', 'true');
+        this.Paying.emit('true');
+      } else {
+        clearInterval(this.timer);
+        this.days = "00дн.";
+        this.time = "00ч.00мин.";
+        this.resDay = 0;
+        this.resTime = "00:00:00";
+        sessionStorage.setItem('days',this.days);
+        sessionStorage.setItem('time', this.time);
+        sessionStorage.setItem('resDay', this.resDay);
+        sessionStorage.setItem('resTime', this.resTime);
+        sessionStorage.setItem('con_data', 'false');
+        this.Paying.emit('false');
+        clearInterval(this.timer);
+      }
+    } else {
+      this.days = "00дн.";
+      this.time = "00ч.00мин.";
+      this.resDay = 0;
+      this.resTime = "00:00:00";
+      sessionStorage.setItem('days',this.days);
+      sessionStorage.setItem('time', this.time);
+      sessionStorage.setItem('resDay', this.resDay);
+      sessionStorage.setItem('resTime', this.resTime);
+      sessionStorage.setItem('con_data', 'false');
+      this.Paying.emit('false');
+      this.log_out();
+      clearInterval(this.timer);
+    }
+    if (this.timeT > 0) {
+      if (this.localStorage.getItem('timeAdd') != 'true') {
+        this.localStorage.setItem("timeAdd", 'true');
+      }
+    } else {
+      if (this.localStorage.getItem('timeAdd') != 'false') {
+        this.localStorage.setItem("timeAdd", 'false');
+      }
+    }
+  }
   openBlock(pay: string) {
-    // let add_block = document.documentElement.getElementsByClassName('add-block-menu') as HTMLCollectionOf<HTMLElement>;
-    // let home = document.documentElement.getElementsByClassName('mainHome') as HTMLCollectionOf<HTMLElement>;
-    // let objects = document.documentElement.getElementsByClassName('main-objects') as HTMLCollectionOf<HTMLElement>;
-    // let menuMobile = document.documentElement.getElementsByClassName('menuMobile') as HTMLCollectionOf<HTMLElement>;
-    // let header = document.documentElement.getElementsByClassName('header') as HTMLCollectionOf<HTMLElement>;
-    // let bottomButtons = document.documentElement.getElementsByClassName('bottom-buttons1') as HTMLCollectionOf<HTMLElement>;
-    //
-    // let closeLogin = document.documentElement.getElementsByClassName('close-login') as HTMLCollectionOf<HTMLElement>;
-    // let closePay = document.documentElement.getElementsByClassName('close-pay') as HTMLCollectionOf<HTMLElement>;
-
     let hideMenu = document.documentElement.getElementsByClassName('hideMenu') as HTMLCollectionOf<HTMLElement>;
     if (hideMenu.length > 1) {
       hideMenu.item(1).classList.remove('exit-close');
@@ -348,78 +303,12 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
         this.blockOpenInput = 'open_login';
         this.innerBlockOpen = 'login';
         this.menuOpen('open');
-      //   let continueButton = document.documentElement.getElementsByClassName('loginButton') as HTMLCollectionOf<HTMLElement>;
-      //   if (localStorage.getItem("logged_in") != null && localStorage.getItem("logged_in") == "true") {
-      //       continueButton.item(0).classList.add('close');
-      //     continueButton.item(1).classList.remove('close');
-      //   } else {
-      //     continueButton.item(1).classList.add('close');
-      //     continueButton.item(0).classList.remove('close');
-      //   }
-      // //  closeLogin.item(0).classList.add('output');
-      //   this.smth = 'login';
-      //   this.loginActive = true;
-      //   this.payActive = false;
-      //  add_block.item(0).classList.remove('close');
-      //   add_block.item(1).classList.add('close');
-      //   add_block.item(2).classList.add('close');
-      //   header.item(0).style.setProperty('display', 'flex');
-      //   header.item(0).style.setProperty('top', '0');
-      //   if (home.length != 0 && menuMobile.length != 0) {
-      //     home.item(0).style.setProperty('display', 'none');
-      //     menuMobile.item(0).classList.remove('open');
-      //   } else if (objects.length != 0 && menuMobile.length != 0) {
-      //     objects.item(0).style.setProperty('display', 'none');
-      //     menuMobile.item(0).classList.remove('open');
-      //     let mobileTopMenu = document.documentElement.getElementsByClassName('mobileTopMenu') as HTMLCollectionOf<HTMLElement>;
-      //     if (mobileTopMenu.length != 0) {
-      //       mobileTopMenu.item(0).style.setProperty('display', 'none');
-      //     }
-      //     let showItems =  document.documentElement.getElementsByClassName('show-items') as HTMLCollectionOf<HTMLElement>;
-      //     if (showItems.length != 0) {
-      //       showItems.item(0).style.setProperty('display', 'none');
-      //     }
-      //   }
-      //   if (bottomButtons.length != 0) {
-      //     for (let i = 0; i < bottomButtons.length; i++) {
-      //       bottomButtons.item(i).style.setProperty('display', 'none');
-      //     }
-      //   }
         break;
       case 'pay':
       //  closePay.item(0).classList.add('output');
         this.blockOpenInput = 'open_pay';
         this.innerBlockOpen = 'pay';
         this.menuOpen('open');
-       //  this.smth = 'pay';
-       //  this.payActive = true;
-       //  this.loginActive = false;
-       // add_block.item(1).classList.remove('close');
-       //  add_block.item(0).classList.add('close');
-       //  add_block.item(2).classList.add('close');
-       //  header.item(0).style.setProperty('display', 'flex');
-       //  header.item(0).style.setProperty('top', '0');
-       //  if (home.length != 0 && menuMobile.length != 0) {
-       //    home.item(0).style.setProperty('display', 'none');
-       //
-       //    menuMobile.item(0).classList.remove('open');
-       //  } else if (objects.length != 0 && menuMobile.length != 0) {
-       //    objects.item(0).style.setProperty('display', 'none');
-       //    menuMobile.item(0).classList.remove('open');
-       //    let mobileTopMenu = document.documentElement.getElementsByClassName('mobileTopMenu') as HTMLCollectionOf<HTMLElement>;
-       //    if (mobileTopMenu.length != 0) {
-       //      mobileTopMenu.item(0).style.setProperty('display', 'none');
-       //    }
-       //    let showItems =  document.documentElement.getElementsByClassName('show-items') as HTMLCollectionOf<HTMLElement>;
-       //    if (showItems.length != 0) {
-       //      showItems.item(0).style.setProperty('display', 'none');
-       //    }
-       //  }
-       //  if (bottomButtons.length != 0) {
-       //    for (let i = 0; i < bottomButtons.length; i++) {
-       //      bottomButtons.item(i).style.setProperty('display', 'none');
-       //    }
-       //  }
         break;
     }
   }

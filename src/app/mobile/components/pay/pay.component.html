@@ -39,8 +39,8 @@
       </div>
       <div>
         <span style="margin-right: 30px">ОСТАЛОСЬ:</span>
-        <span style="font-size: 26px">{{resDay}}</span><span style="margin-left: 5px;margin-right: 15px">ДНЕЙ</span>
-        <span style="font-size: 26px">{{resTime}}</span>
+        <span style="font-size: 26px">{{inpDay}}</span><span style="margin-left: 5px;margin-right: 15px">ДНЕЙ</span>
+        <span style="font-size: 26px">{{inpTime}}</span>
       </div>
     </div>
     <!--<span class="font" style="font-size: 16px;">ВЫБЕРИТЕ КАТЕГОРИЮ</span>-->
@@ -59,7 +59,7 @@
             <div [class.selected]="selectedButton[0]?.block == '0-3'" (click)="payment('0-3', 'type_four', '150000')"><p>МЕСЯЦ</p><span>1500 Р</span></div>
         </div>
     </div>
-    <div class="add-button" [class.open]="publish" (click)="publish = !publish">
+    <div class="add-button" [class.open]="publish">
       <span>НАНЯТЬ МЕНЕДЖЕРА</span>
       <div class="bottomWordInButton">
         <span class="button-bottom">ВКЛЮЧИТЬ ПОЛНЫЙ ПАКЕТ УСЛУГ</span>
@@ -74,7 +74,7 @@
         <div><p>МЕСЯЦ</p><span>1500 Р</span></div>
       </div>
     </div>
-    <div class="add-button"  [class.open]="makler" (click)="makler = !makler">
+    <div class="add-button"  [class.open]="makler">
       <span>ОПУБЛИКОВАТЬ ОБЪЯВЛЕНИЕ</span>
       <div class="bottomWordInButton">
         <SPAN class="button-bottom">БЫСТРО СДАТЬ НЕДВИЖИМОСТЬ</SPAN>
@@ -89,7 +89,7 @@
         <div><p>МЕСЯЦ</p><span>1500 Р</span></div>
       </div>
     </div>
-    <div class="add-button" [class.open]="manager" style="border-bottom: 1px solid #a2a0a0" (click)="manager = !manager">
+    <div class="add-button" [class.open]="manager" style="border-bottom: 1px solid #a2a0a0">
       <span>СЕРВИС УМНЫЙ МАКЛЕР</span>
       <div class="bottomWordInButton">
         <span class="button-bottom">ИНСТРУМЕНТ ДЛЯ РАБОТЫ МАКЛЕРА</span>

@@ -1,153 +1,14 @@
-<div class="catalog-item" [class.hovered]="mode == 'middle'" id="{{item?.id}}"
+<div class="catalog-item" id="{{item?.id}}"
      [class.small-display]="widthDocument < 1540 && (compare || similarOpen)" (window:resize)="changeSize()">
-    <div *ngIf="mode == 'middle'" [class.mobile-blocks]="mode == 'middle'">
-        <div class="itemBlock">
-            <!--href="https://makleronline.net/#/d/objects/{{item?.id}}-arenda-{{item?.roomsCount}}-komnatnya-{{item?.squareTotal}}-m" проверить что лучше роутерлинк или хреф-->
-            <div class="top-card">
-                <div class="top-block" style="flex-grow: 1">
-                    <div class="street special">
-                        <span *ngIf="!item.address.includes('ул.')">ул.</span>
-                        <span class="special">
-                             {{item?.address}}
-                            <span style="font-weight: bold; margin-left: 5px"> {{item?.house_num}}</span>
-                        </span>
-                    </div>
-                    <div class="commission">{{item?.city}}, {{item?.admArea}}</div>
-                </div>
-                <div class="topRightBlock">
-                    <div class="topRightInner">
-                        <div class="price"><span style="margin-right: 8px">₽</span><span>{{formattedPrice}}/ <span
-                            style="font-size:12px;    position: relative;
-        left: -3px;">мес.</span></span></div>
-                        <div class="commission">Без комиссии</div>
-                    </div>
-                </div>
-            </div>
-            <div class="photoBlock" *ngIf="imgLen == 0" [class.watched]="item?.watched && mode == 'middle'"
-                 [class.historyOpen]="historyOpen == true">
-                <img class="img"
-                     [title]="'makleronline снять ' + item?.roomsCount + ' комнатную квартиру в хабаровске без посредников'"
-                     [alt]="'makleronline аренда ' + item?.roomsCount + ' комнатной квартиры в хабаровске без посредников'"
-                     [src]="src">
-                <div class="no-photo">{{photo_no_title}}</div>
-            </div>
-            <div class="carousel open" *ngIf="imgLen > 0">
-                <div class="arrow left img" (click)="prevImg(1)">
-                    <div class="arrowFull">
-                        <div class="barArrow1-left"></div>
-                        <div class="barArrow2-left"></div>
-                    </div>
-                </div>
-                <div class="objects" [class.hovered]="mode == 'middle'"
-                     [class.watched]="item?.watched && mode == 'middle'">
-                    <ul id="carousel-ul-img1{{item?.id}}">
-                        <li class="carousel-li-img1{{item?.id}}" *ngFor="let img of item?.photos">
-                            <div class="photoBlock" [class.watched]="item?.watched && mode == 'middle'">
-                                <img class="img"
-                                     [title]="'makleronline снять ' + item?.roomsCount + ' комнатную квартиру в хабаровске без посредников'"
-                                     [alt]="'makleronline аренда ' + item?.roomsCount + ' комнатной квартиры в хабаровске по адресу ' + item?.address + ' ' + item?.house_num"
-                                     [src]="img.href">
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="arrow right img" (click)="nextImg(1)">
-                    <div class="arrowFull">
-                        <div class="barArrow1-right"></div>
-                        <div class="barArrow2-right"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="bottom-block">
-                <div class="topPart">
-
-                    <div style="padding-left: 17px;    width: 100%; display: flex">
-                        <div style="flex: 0 0 45%;min-width: 165px">
-                            <div class="rightBlockText title">
-                                <span>ОПИСАНИЕ ПРЕДЛОЖЕНИЯ</span>
-                            </div>
-                            <div class="rightBlockText add-margin">
-                                <div class="info">
-                                    <div class="rooms" *ngIf="item?.typeCode == 'room'"><span class="one">Комната</span><span
-                                        *ngIf="roomC">{{item?.roomsCount}} комнатная</span><span *ngIf="!roomC">комнатная</span>
-                                    </div>
-                                    <div class="rooms" *ngIf="item?.typeCode == 'apartment'"><span
-                                        class="one">Квартира</span><span *ngIf="roomC">{{item?.roomsCount}}
-                                        комнатная</span><span *ngIf="!roomC">комнатная</span></div>
-                                    <div class="rooms" *ngIf="item?.typeCode == 'house'"><span
-                                        class="one">Дом</span><span *ngIf="roomC">{{item?.roomsCount}}
-                                        комнатный</span><span *ngIf="!roomC">комнатная</span></div>
-                                    <div class="rooms" *ngIf="item?.typeCode == 'dacha'"><span
-                                        class="one">Дача</span><span *ngIf="roomC">{{item?.roomsCount}} комнатная</span><span
-                                        *ngIf="!roomC">комнатная</span></div>
-                                    <div class="rooms" *ngIf="item?.typeCode == 'cottage'"><span
-                                        class="one">Коттедж</span><span *ngIf="roomC">{{item?.roomsCount}}
-                                        комнатный</span><span *ngIf="!roomC">комнатная</span></div>
-
-                                    <div class="rooms"
-                                         *ngIf="item?.typeCode == 'room' || item?.typeCode == 'apartment'">
-                                        <span class="one">Этаж</span><span>{{item?.floor}}/{{item?.floorsCount}}</span>
-                                    </div>
-                                    <div class="rooms"
-                                         *ngIf="item?.typeCode == 'house' || item?.typeCode == 'dacha' || item?.typeCode == 'cottage'">
-                                        <span class="one">Этажей</span><span>{{item?.floorsCount}}</span>
-                                    </div>
-                                    <div class="rooms"><span class="one">Площадь</span><span
-                                        *ngIf="squareC">{{item?.squareTotal}} кв.м</span><span
-                                        *ngIf="!squareC">кв.м</span></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div style="flex: 0 0 35%;min-width: 165px">
-                            <div class="rightBlockText title">
-                                <span>УСЛОВИЯ ПРОЖИВАНИЯ</span>
-                            </div>
-                            <div class="rightBlockText add-margin"
-                                 style="white-space: pre-line">{{conveniencesShort}}</div>
-                        </div>
-                        <div style="    width: inherit;">
-                            <div style="display: flex;justify-content: flex-end;">
-                                <div class="starFav" (mouseenter)="favHovered = true" (mouseleave)="favHovered = false">
-                                    <img class="starImg" [class.open]="!favHovered && !item?.is_fav"
-                                         src="../../../../assets/4-4.png" width="22px">
-                                    <img class="starImg" (click)="delFavObject()"
-                                         [class.open]="favHovered && item?.is_fav" src="../../../../assets/4-4.png"
-                                         width="22px">
-                                    <img (click)="addFavObject()" class="starImg"
-                                         [class.open]="favHovered  && !item?.is_fav"
-                                         src="../../../../assets/4-4%20watched.png" width="22px">
-                                    <img (click)="delFavObject()" class="starImg"
-                                         [class.open]="item?.is_fav && !favHovered"
-                                         src="../../../../assets/4-4%20watched.png" width="22px">
-                                </div>
-                                <!--<div class="two" (mouseenter)="favHovered = true" (mouseleave)="favHovered = false" [class.hovered]="favHovered">Добавить в избранное</div>-->
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <!--<div class="itemBlock" style="padding-right: 30px;">-->
-
-        <!--</div>-->
-    </div>
     <div *ngIf="mode == 'full'">
         <div class="top-block compare" *ngIf="compare || compareItem">
-            <div class="returnBack" *ngIf="compareItem" (click)="close('item');close('compare')"
-                 [routerLink]="'../../../d/objects/list'">
+            <a class="returnBack" *ngIf="compareItem" (click)="close('item')">
                 <div class="return">
                     <div class="barReturn1"></div>
                     <div class="barReturn2"></div>
                 </div>
-                <a (click)="close('item')">Назад</a>
-            </div>
-            <!--<div class="topRightInner">-->
-            <!--<div class="street special"><span class="special">{{item?.address}}</span><span-->
-            <!--style="font-weight: bold; margin-left: 5px"> {{item?.house_num}}</span></div>-->
-            <!--<div class="commission add-margin">{{item?.city}}{{item?.region}}</div>-->
-            <!--</div>-->
+                <a>Назад</a>
+            </a>
         </div>
         <div class="carousel open" id="carousel1" *ngIf="imgLen > 0">
             <div class="arrow left img" (click)="prevImg(2)">
@@ -161,8 +22,6 @@
                     <li class="carousel-li-img2{{item?.id}}" *ngFor="let img of item?.photos">
                         <div class="photoBlock">
                             <img class="img"
-                                 [title]="'makleronline снять ' + item?.roomsCount + ' комнатную квартиру в хабаровске без посредников'"
-                                 [alt]="'makleronline аренда ' + item?.roomsCount + ' комнатной квартиры в хабаровске по адресу ' + item?.address + ' ' + item?.house_num"
                                  [src]="img.href">
                         </div>
                     </li>
@@ -178,23 +37,34 @@
         <div class="photoBlock" *ngIf="imgLen == 0"
              [class.historyOpen]="historyOpen == true">
             <img class="img"
-                 [title]="'makleronline снять ' + item?.roomsCount + ' комнатную квартиру в хабаровске без посредников'"
-                 [alt]="'makleronline аренда ' + item?.roomsCount + ' комнатной квартиры в хабаровске по адресу ' + item?.address + ' ' + item?.house_num"
-                 [src]="src">
+                  [src]="src">
             <div class="no-photo">{{photo_no_title}}</div>
+        </div>
+        <div class="bottom-block">
+            <div class="street-block">
+
+            </div>
+            <div class="info">
+
+            </div>
+            <div class="info">
+            </div>
+            <div class="phone-block">
+
+            </div>
         </div>
         <div class="descriptionFullBlock">
 
             <div class="top-card inner">
                 <div class="top-block inner">
                     <div class="street special"><span class="special">{{item?.address}}<span
-                        style="font-weight: bold; margin-left: 5px"> {{item?.house_num}}</span></span></div>
+                            style="font-weight: bold; margin-left: 5px"> {{item?.house_num}}</span></span></div>
                     <div class="commission">{{item?.city}}, {{item?.admArea}}</div>
                 </div>
                 <div class="topRightBlock">
                     <div class="topRightInner">
                         <div class="price"><span style="margin-right: 8px">₽</span><span>{{formattedPrice}}/ <span
-                            style="font-size:12px;position: relative;left: -3px;">мес.</span></span></div>
+                                style="font-size:12px;position: relative;left: -3px;">мес.</span></span></div>
                         <div class="commission">Без комиссии</div>
 
                     </div>
@@ -251,6 +121,21 @@
             <div class="rightBlockText full">
                 {{conditions}}
             </div>
+            <div class="rightBlockText title">
+                <span>ЦЕНА</span>
+            </div>
+            <div class="rightBlockText full">
+                {{pricefields}}
+            </div>
+            <div class="rightBlockText full">
+                Форма расчета: {{paymentType}}
+            </div>
+            <div class="rightBlockText title">
+                <span>ДОПОЛНИТЕЛЬНОЕ ОПИСАНИЕ</span>
+            </div>
+            <div class="rightBlockText full">
+                {{item?.description}}
+            </div>
         </div>
         <div class="lineFull add"></div>
         <div class="nearby-block add">
@@ -258,7 +143,7 @@
         </div>
         <div class="descriptionFullBlock add">
             <div style="display: flex">
-                <div class="contactBlock topRightInner" *ngIf="payingMode && loggingMode">
+                <div class="contactBlock topRightInner" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
                     <div class="contactLineBlock">
                         <div class="one">Телефон рабочий</div>
                         <div class="two"><span>+7 {{item?.phone | mask: '(000) 000-0000'}}</span></div>
@@ -272,11 +157,11 @@
                         <div class="two"></div>
                     </div>
                 </div>
-                <div class="contactBlock topRightInner" *ngIf="!payingMode || !loggingMode">
-                    <div style="width: 100%; display: flex; justify-content: center" >
-                        <div class="button-contacts" (click)="checklogin(); checkblock()">КОНТАКТЫ</div>
-                    </div>
-                </div>
+<!--                <div class="contactBlock topRightInner" *ngIf="(payingMode != true && payingMode != 'true') || (loggingMode != true && loggingMode != 'true')">-->
+<!--                    <div style="width: 100%; display: flex; justify-content: center" >-->
+<!--                        <div class="button-contacts" (click)="checklogin(); checkblock()">КОНТАКТЫ</div>-->
+<!--                    </div>-->
+<!--                </div>-->
 
             </div>
         </div>
@@ -308,7 +193,7 @@
             </div>
         </div>
         <div class="lineFull add"></div>
-        <div class="descriptionFullBlock" style="padding: 0 15px 40px 15px;">
+        <div class="descriptionFullBlock" style="padding: 0 30px 40px;">
             <div class="nearby-block">
                 <span>РЕЙТИНГ ПРЕДЛОЖЕНИЯ</span>
             </div>
@@ -316,55 +201,38 @@
             <app-rating></app-rating>
         </div>
     </div>
-    <div *ngIf="mode == 'similar'">
-        <div class="photoFull">
-            <img src="{{src}}">
-        </div>
-        <div style="display: flex;    margin: 15px 0;">
-            <div class="descriptionFullBlock" style="flex-grow: 1;">
-                <div class="street special"><span class="special">{{item?.address}}</span><span
-                    style="font-weight: bold; margin-left: 5px"> {{item?.house_num}}</span></div>
-                <div class="commission add-margin">{{item?.city}}{{item?.region}}</div>
-                <div class="info">
-                    <div class="rooms"><span class="one">Квартира</span><span>{{item?.roomsCount}} комнатная</span>
-                    </div>
-                    <div class="rooms"><span class="one">Этаж</span><span>{{item?.floor}}/{{item?.floorsCount}}</span>
-                    </div>
-                    <div class="rooms"><span class="one">Площадь </span><span> {{item?.squareTotal}}кв.м</span></div>
-                </div>
-            </div>
-            <div class="descriptionFullBlock" style="align-items: flex-end">
-                <div class="topRightInner">
-                    <div class="price"><span style="margin-right: 8px">₽</span><span>{{formattedPrice}}/ <span style="font-size:12px;    position: relative;
-          left: -3px;">мес.</span></span></div>
-                    <div class="commission">Без комиссии</div>
-                </div>
-                <div class="topRightBlock" style="margin: 0">
-                    <div class="starFav">
-                        <img class="starImg" *ngIf="watched !== true" src="../../../../assets/4-4.png" width="22px">
-                        <img class="starImg" *ngIf="item?.watched == true" src="../../../../assets/4-4%20watched.png"
-                             width="22px">
-                    </div>
-                    <div class="two">Добавить в избранное</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="popup-groups" *ngIf="groups_choice">
-    <div class="group-title">Для публикации нажмите на плитку группы</div>
-    <div style="width: 100%; height: 100%; display: flex;align-items: center;justify-content: center" *ngIf="groups.length == 0">
-        <img src="../../../../assets/spinner.gif" height="200px" width="400px"/>
-    </div>
-    <ng-container  *ngIf="groups.length != 0">
-        <div *ngFor="let group of groups; let i = index" class="group-box" (click)="sendInGroup(group.id)">
-            <img class="group-pic" src="{{group.href}}"/>
-            <div style="display: flex; flex-direction: column; align-items: center; flex-grow: 1">
-                <span>{{group.type}}</span>
-                <span>{{group.closed}}</span>
-                <span>{{group.name}}</span>
-            </div>
-        </div>
-    </ng-container>
-
+<!--    <div *ngIf="mode == 'similar'">-->
+<!--        <div class="photoFull">-->
+<!--            <img src="{{src}}">-->
+<!--        </div>-->
+<!--        <div style="display: flex;    margin: 15px 0;">-->
+<!--            <div class="descriptionFullBlock" style="flex-grow: 1;">-->
+<!--                <div class="street special"><span class="special">{{item?.address}}</span><span-->
+<!--                        style="font-weight: bold; margin-left: 5px"> {{item?.house_num}}</span></div>-->
+<!--                <div class="commission add-margin">{{item?.city}}{{item?.region}}</div>-->
+<!--                <div class="info">-->
+<!--                    <div class="rooms"><span class="one">Квартира</span><span>{{item?.roomsCount}} комнатная</span>-->
+<!--                    </div>-->
+<!--                    <div class="rooms"><span class="one">Этаж</span><span>{{item?.floor}}/{{item?.floorsCount}}</span>-->
+<!--                    </div>-->
+<!--                    <div class="rooms"><span class="one">Площадь </span><span> {{item?.squareTotal}}кв.м</span></div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="descriptionFullBlock" style="align-items: flex-end">-->
+<!--                <div class="topRightInner">-->
+<!--                    <div class="price"><span style="margin-right: 8px">₽</span><span>{{formattedPrice}}/ <span style="font-size:12px;    position: relative;-->
+<!--          left: -3px;">мес.</span></span></div>-->
+<!--                    <div class="commission">Без комиссии</div>-->
+<!--                </div>-->
+<!--                <div class="topRightBlock" style="margin: 0">-->
+<!--                    <div class="starFav">-->
+<!--                        <img class="starImg" *ngIf="watched !== true" src="../../../../assets/4-4.png" width="22px">-->
+<!--                        <img class="starImg" *ngIf="item?.watched == true" src="../../../../assets/4-4%20watched.png"-->
+<!--                             width="22px">-->
+<!--                    </div>-->
+<!--                    <div class="two">Добавить в избранное</div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 </div>

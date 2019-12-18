@@ -1,14 +1,13 @@
-
 <app-menu
-    (updateItems)="activeButton = 'items';listMode = true; filtersInnerActive = false; listActive();get_list()" (Logging)="changeLog($event)" (Paying)="changePay($event)"></app-menu>
+    (updateItems)="activeButton = 'items';itemOpen = false;listMode = true; filtersInnerActive = false; listActive();get_list(100, 'menu')" (Logging)="changeLog($event)" (Paying)="changePay($event)"></app-menu>
 <div class="filters-menu-desktop" (window:resize)="onResize()">
     <div class="mapTopButtons" *ngIf="activeButton != 'obj'">
         <div class="mapTopButton" style="border-right: none;" [class.disable]="drawActive == false"
-             *ngIf="!drawActive && !clearActive && !similars "
-             (click)="ymFunc('paint');panorama('close'); drawActive = true; clearActive = true; panoramaActive = false">
+             *ngIf="!drawActive && !clearActive  "
+             (click)="panorama('close'); drawActive = true; clearActive = true; panoramaActive = false">
             НАРИСОВАТЬ
         </div>
-        <div class="mapTopButton active" style="border-right: 1px solid white;" *ngIf="clearActive && !similars"
+        <div class="mapTopButton active" style="border-right: 1px solid white;" *ngIf="clearActive"
              (click)="panorama('close');clearMap();drawActive = false;
     clearActive = false;panoramaActive = false;">ОЧИСТИТЬ
         </div>
@@ -16,21 +15,21 @@
         <div class="mapTopButton" [class.disable]="panoramaActive == false"
              [class.active]="drawActive == false && panoramaActive == true"
              *ngIf="!panoramaActive"
-             (click)="clearMap();panorama('open');panoramaActive = true;drawActive = false;clearActive = false;">
+             (click)="panorama('open');panoramaActive = true;drawActive = false;clearActive = false;">
             ПАНОРАМА
         </div>
         <div class="mapTopButton active" *ngIf="panoramaActive"
-             (click)="clearMap();panorama('close');panoramaActive = false;drawActive = false;clearActive = false;">КАРТА
+             (click)="panorama('close');panoramaActive = false;drawActive = false;clearActive = false;">КАРТА
         </div>
     </div>
     <div class="filter-right-buttons">
         <div class="mapTopButton left active" style="border-right: 1px solid white "
-             [class.open]=" !itemsActive" [routerLink]="['../list']"
+             [class.open]=" !itemsActive"
              (click)="activeButton = 'items';itemsActive = true;historyClose();listMode = true;listActive()">
             ВСЕ ПРЕДЛОЖЕНИЯ
         </div>
         <div class="mapTopButton left disable" style="border-right: 1px solid white"
-             [class.open]=" itemsActive" [routerLink]="['../favorite']"
+             [class.open]=" itemsActive"
              (click)="get_favObjects(); activeButton = 'fav';itemsActive = false;listMode = true; listActive()">
             ИЗБРАННОЕ
         </div>
@@ -45,13 +44,19 @@
 <div class="main-objects">
     <div class="inner-left">
         <div class="map filters-map open" id="filters-map-map1" [class.full]="!listMode"></div>
-        <div class="listButton" (click)="listMode=!listMode; listActive()">
+        <div class="listButton1" (click)="listMode=!listMode; listActive()" *ngIf="!listMode">
             <div class="arrowFull">
                 <div class="barArrow1-left"></div>
                 <div class="barArrow2-left"></div>
             </div>
         </div>
         <div class="filters open blur" [class.close]="!listMode">
+            <div class="listButton" (click)="listMode=!listMode; listActive()">
+                <div class="arrowFull">
+                    <div class="barArrow1-left"></div>
+                    <div class="barArrow2-left"></div>
+                </div>
+            </div>
             <div class="scroll-items open blur fav-list"
                  *ngIf="!historyActive && (activeButton == 'fav' || activeButton == 'obj') && !itemOpen">
                 <app-item *ngFor="let obj of favItems, let i = index" [item]="obj" [mode]="'middle'" [loggingMode]="logged_in" [payingMode]="payed"
@@ -60,178 +65,40 @@
                           (favItemMode)="changeFav($event, obj)" (click)="focusOnObject($event, obj, i, 'fav')">
                 </app-item>
             </div>
-            <div class="scroll-items open blur common-list"
+            <div class="scroll-items open blur common-list" (mousewheel)="listScroll($event)"
                  *ngIf="!historyActive && (activeButton == 'items' || activeButton == 'obj') && !itemOpen">
-                <div class="todayList">
-                    <app-item *ngFor="let obj of items, let i = index" [item]="obj" [mode]="'middle'" [loggingMode]="logged_in" [payingMode]="payed"
-                              [similarOpen]="false"
-                              [watched]="watchedItems.indexOf(obj.id) != -1" (favItemMode)="changeFav($event, obj)"
-                              [compareItem]="false" (click)="focusOnObject($event, obj, i, 'item')">
-                    </app-item>
-                </div>
+<!--                <div class="todayList">-->
+<!--                <cdk-virtual-scroll-viewport itemSize="90" class="example-viewport">-->
+<!--                    <ng-container *cdkVirtualFor="let obj of items, let i = index">-->
+<!--                        <item-middle  [item]="obj" [loggingMode]="logged_in" [payingMode]="payed"-->
+<!--                                      (favItemMode)="changeFav($event, obj)" (click)="focusOnObject($event, obj, i, 'item')"></item-middle>-->
+<!--                    </ng-container>-->
+<!--                </cdk-virtual-scroll-viewport>-->
+
+                <virtual-scroller #scroll [items]="items" [enableUnequalChildrenSizes]="true" style="height: 100%">
+                    <ng-container *ngFor="let obj of scroll.viewPortItems, let i = index">
+                        <item-middle *ngIf="obj.id != null" [item]="obj" [loggingMode]="logged_in" [payingMode]="payed" (showBlock)="openBlock($event)"
+                                     (favItemMode)="changeFav($event, obj)" (click)="focusOnObject($event, obj, i, 'item')"></item-middle>
+                    </ng-container>
+
+<!--                    <app-item *ngFor="let obj of items, let i = index" [item]="obj" [mode]="'middle'" [loggingMode]="logged_in" [payingMode]="payed"-->
+<!--                              [similarOpen]="false"-->
+<!--                              [watched]="watchedItems.indexOf(obj.id) != -1" (favItemMode)="changeFav($event, obj)"-->
+<!--                              [compareItem]="false" (click)="focusOnObject($event, obj, i, 'item')">-->
+<!--                    </app-item>-->
+<!--                </div>-->
+                </virtual-scroller>
             </div>
-            <app-item class="item-blur" *ngIf="itemOpen && !similars && activeButton == 'obj'" [compareItem]="true" [loggingMode]="logged_in" [payingMode]="payed"
+            <app-item class="item-blur" *ngIf="itemOpen && activeButton == 'obj'" [compareItem]="true" [loggingMode]="logged_in" [payingMode]="payed"
                       [similarOpen]="false"
                       [compare]="false" [item]="item" [mode]="'full'" (favItemMode)="changeFav($event, '')"
                       (closeItem)="closeBlock($event)"
                       (similarItem)="item = $event" (comparison)="openBlock('compare')">
             </app-item>
-            <div class="scroll-items open" *ngIf="historyActive">
-                <div class="dayExt">
-                    <div class="day">
-                        <div class="history-obj"
-                             style="font-size: 15px;margin-top: 15px;margin-bottom: 10px;text-align: center;padding: 0;">
-                            <span>CЕГОДНЯ</span>
-                        </div>
-                    </div>
-                    <div class="dayLine"></div>
-                </div>
-                <app-item *ngFor="let obj of historyItems, let i = index" [id]="i" [item]="obj" [mode]="'middle'" [loggingMode]="logged_in" [payingMode]="payed"
-                          [similarOpen]="false" [compareItem]="false"
-                          (click)="getObj(i); openBlock('item') ">
-                </app-item>
-                <div class="button-history">ЗА ВСЕ ВРЕМЯ</div>
-            </div>
         </div>
 
     </div>
-    <div class="topLayerForRightMenu">
-        <div class="left">
-            <div class="left-top-block">
-                <div class="block">
-                    <div class="block-number">490</div>
-                    <div class="block-title">ПРЕДЛОЖЕНИЙ ПОХОЖИХ ПО РАЙОНУ</div>
-                </div>
-                <div class="block">
-                    <div class="block-number">490</div>
-                    <div class="block-title">ПРЕДЛОЖЕНИЙ ПОХОЖИХ ПО ЦЕНЕ</div>
-                </div>
-                <div class="block">
-                    <div class="block-number">490</div>
-                    <div class="block-title">ВСЕГО НАЙДЕНО ПРЕДЛОЖЕНИЙ</div>
-                </div>
-            </div>
-            <div class="objects-info">
-                <div class="obj" (mouseenter)="entertainmentIco = true" (mouseleave)="entertainmentIco = false"
-                     (click)="activeObjectsButton = 'entertainment'">
-                    <img [class.open]="entertainmentIco" src="../../../../assets/entertainment.png" alt="Развлечения">
-                    <img [class.open]="!entertainmentIco" src="../../../../assets/entertainment-no.png"
-                         alt="Развлечения">
-                    <div class="obj-title" [class.active]="entertainmentIco">Развлечения</div>
-                </div>
-                <div class="obj" (mouseenter)="educationIco = true" (mouseleave)="educationIco = false"
-                     (click)="activeObjectsButton = 'education'">
-                    <img [class.open]="educationIco" src="../../../../assets/education.png" alt="Образование">
-                    <img [class.open]="!educationIco" src="../../../../assets/education-no.png" alt="Образование">
-                    <div class="obj-title" [class.active]="educationIco">Образование</div>
-                </div>
-                <div class="obj" (mouseenter)="foodIco = true" (mouseleave)="foodIco = false"
-                     (click)="activeObjectsButton = 'food'">
-                    <img [class.open]="foodIco" src="../../../../assets/food.png" alt="Питание">
-                    <img [class.open]="!foodIco" src="../../../../assets/food-no.png" alt="Питание">
-                    <div class="obj-title" [class.active]="foodIco">Питание</div>
-                </div>
-                <div class="obj" (mouseenter)="sportIco = true" (mouseleave)="sportIco = false"
-                     (click)="activeObjectsButton = 'fitness'">
-                    <img [class.open]="sportIco" src="../../../../assets/activities.png" alt="Фитнес">
-                    <img [class.open]="!sportIco" src="../../../../assets/activities-no.png" alt="Фитнес">
-                    <div class="obj-title" [class.active]="sportIco">Фитнес</div>
-                </div>
-                <div class="obj" (mouseenter)="medicineIco = true" (mouseleave)="medicineIco = false"
-                     (click)="activeObjectsButton = 'medicine'">
-                    <img [class.open]="medicineIco" src="../../../../assets/medicine.png" alt="Медицина">
-                    <img [class.open]="!medicineIco" src="../../../../assets/medicine-no.png" alt="Медицина">
-                    <div class="obj-title" [class.active]="medicineIco">Медицина</div>
-                </div>
-            </div>
-            <div class="filters-objects-info" *ngIf="activeObjectsButton == 'food'">
-                <div class="filter-obj-title">
-                    <div class="title">Супермаркеты</div>
-                    <div class="title">Рынки</div>
-                    <div class="title">Магазины продуктов</div>
-                    <div class="title">Рестораны</div>
-                    <div class="title">Кафе</div>
-                    <div class="title">Столовые</div>
-                </div>
-                <div class="filter-obj-line"></div>
-                <div class="filter-obj-info" *ngFor="let place of food">
-                    <div class="obj">
-                        <div class="place-name" (click)="openPlace(place.coordinates)">{{place.name}}</div>
-                        <div>{{place.type}}</div>
-                        <div>{{place.description}}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="filters-objects-info" *ngIf="activeObjectsButton == 'education'">
-                <div class="filter-obj-title">
-                    <div class="title">Детские сады</div>
-                    <div class="title">Школы</div>
-                    <div class="title">Гимназии</div>
-                    <div class="title">Техникумы</div>
-                    <div class="title">Институты</div>
-                    <div class="title">Университеты</div>
-                </div>
-                <div class="filter-obj-line"></div>
-                <div class="filter-obj-info" *ngFor="let place of education">
-                    <div class="obj">
-                        <div class="place-name" (click)="openPlace(place.coordinates)">{{place.name}}</div>
-                        <div>{{place.type}}</div>
-                        <div>{{place.description}}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="filters-objects-info" *ngIf="activeObjectsButton == 'fitness'">
-                <div class="filter-obj-title">
-                    <div class="title">Тренажерные залы</div>
-                    <div class="title">Фитнес клубы</div>
-                </div>
-                <div class="filter-obj-line"></div>
-                <div class="filter-obj-info" *ngFor="let place of fitness">
-                    <div class="obj">
-                        <div class="place-name" (click)="openPlace(place.coordinates)">{{place.name}}</div>
-                        <div>{{place.type}}</div>
-                        <div>{{place.description}}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="filters-objects-info" *ngIf="activeObjectsButton == 'medicine'">
-                <div class="filter-obj-title">
-                    <div class="title">Аптеки</div>
-                    <div class="title">Поликлиники</div>
-                    <div class="title">Больницы</div>
-                    <div class="title">Ветеринарные клиники</div>
-                    <div class="title">Ветеринарные аптеки</div>
-                </div>
-                <div class="filter-obj-line"></div>
-                <div class="filter-obj-info" *ngFor="let place of medicine">
-                    <div class="obj">
-                        <div class="place-name" (click)="openPlace(place.coordinates)">{{place.name}}</div>
-                        <div>{{place.type}}</div>
-                        <div>{{place.description}}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="filters-objects-info" *ngIf="activeObjectsButton == 'entertainment'">
-                <div class="filter-obj-title">
-                    <div class="title">Кинотеатры</div>
-                    <div class="title">Театры</div>
-                    <div class="title">Цирки</div>
-                    <div class="title">Парки</div>
-                    <div class="title">Ночные клубы</div>
-                </div>
-                <div class="filter-obj-line"></div>
-                <div class="filter-obj-info" *ngFor="let place of entertainment">
-                    <div class="obj">
-                        <div class="place-name" (click)="openPlace(place.coordinates)">{{place.name}}</div>
-                        <div>{{place.type}}</div>
-                        <div>{{place.description}}</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--<div class="filters-left-part">-->
-    <app-filters class="filters-box" [count]="countOfObjects" (openLeft)="openLeftPart($event)"
+    <app-filters class="filters-box" [count]="countOfObjects" (showlist)="checkFilters();listMode=true; listActive()"
                  (searchInCity)="setCityObjects($event)" (closeFilters)="closeBlock($event)"
                  (openBlock)="openBlock($event)" (sendEquipment)="setEquipment($event)"
                  (sendFilters)="setFilters($event)" (sendSort)="setSort($event)"></app-filters>
@@ -260,12 +127,11 @@
                 <div class="planText title-add">
                     <span>Только проверенные  объявления</span>
                 </div>
-                <a class="planButton" (click)="ymFunc('ya-sam-offer');openBlock('checklogin')">ПРОДОЛЖИТЬ</a>
+                <a class="planButton" (click)="openBlock('checklogin')">ПРОДОЛЖИТЬ</a>
             </div>
         </div>
     </div>
     <app-login class="filters-box" [itemOpen]="true" (blockClose)="closeBlock($event)"></app-login>
-    <!--<app-pay class="filters-box" [itemOpen]="true" (blockClose)="closeBlock($event)"></app-pay>-->
     <div class="filters-box">
         <div class="filters-inner">
             <div class="hideMenu" (click)="closeBlock('special')">
@@ -292,7 +158,7 @@
                 <div class="planText title-add">
                     <span>​Только актуальные объявления</span>
                 </div>
-                <a class="planButton" (click)="ymFunc('special-offer');openBlock('checklogin')">ПРОДОЛЖИТЬ</a>
+                <a class="planButton" (click)="openBlock('checklogin')">ПРОДОЛЖИТЬ</a>
             </div>
         </div>
     </div>
@@ -321,65 +187,7 @@
                     <div class="add-text"><span style="margin-right: 3px">5.</span><span>Отчет о проделанной работе будет выслан на 
                 Вашу почту, а также он будет сохранен в Сообщениях. (пункт раздела меню сайта)</span></div>
                 </div>
-                <a class="planButton" (click)="ymFunc('premium-offer');openBlock('checklogin')">ПРОДОЛЖИТЬ</a>
-            </div>
-        </div>
-    </div>
-    <!--</div>-->
-    <div class="inner-left" style="flex-direction: column;" *ngIf="similars">
-        <div class="darkBlueLine">
-            <div class="blueButtons">
-                <div class="darkButton" (click)="compareTopButton = false" [class.disable]="compareTopButton"
-                     [class.active]="!compareTopButton">ПО ЦЕНЕ
-                </div>
-                <div class="darkButton" (click)="compareTopButton = true" [class.disable]="!compareTopButton"
-                     [class.active]="compareTopButton">РЯДОМ
-                </div>
-            </div>
-            <div class="offers">НАЙДЕНО {{items.length}} ПРЕДЛОЖЕНИЙ</div>
-            <div class="exit" (click)="closeBlock('compare')">
-                <div class="barExitWhite1"></div>
-                <div class="barExitWhite2"></div>
-            </div>
-        </div>
-        <div class="filters open objs" *ngIf="similars">
-            <!--<div class="scroll-items open objs">-->
-            <div class="objs inner">
-                <div class="carousel1 open" id="carousel1">
-                    <div class="arrow left comparisonArrow" (click)="prev()">
-                        <div class="arrowFull">
-                            <div class="barArrow1-left"></div>
-                            <div class="barArrow2-left"></div>
-                        </div>
-                    </div>
-                    <div class="objects" [class.items_empty]="items.length == 0">
-                        <ul id="carousel-ul1">
-                            <li class="carousel-li1" *ngFor="let obj of items, let i = index">
-                                <div class="filters open objs add">
-                                    <div class="scroll-items open objs">
-                                        <app-item class="item-compare" [id]="i" [item]="obj" [mode]="'full'"  [loggingMode]="logged_in"
-                                                  [compare]="true" [compareItem]="false">
-                                        </app-item>
-                                    </div>
-                                </div>
-
-                                <!-- (click)="getObj(i);obj.id = i; contact(); openBlock('item'); closeBlock('compare')"-->
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="arrow right comparisonArrow" (click)="next()">
-                        <div class="arrowFull">
-                            <div class="barArrow1-right"></div>
-                            <div class="barArrow2-right"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--</div>-->
-            <div class="scroll-items open objs" style="    box-shadow: #677578 0 2px 10px 0;">
-                <app-item class="item-compare" [compareItem]="true" [similarOpen]="true" [compare]="false" [item]="item"  [loggingMode]="logged_in"
-                          [id]="id" [mode]="'full'" (closeItem)="closeBlock($event)"
-                          (similarItem)="item = $event"></app-item>
+                <a class="planButton" (click)="openBlock('checklogin')">ПРОДОЛЖИТЬ</a>
             </div>
         </div>
     </div>
