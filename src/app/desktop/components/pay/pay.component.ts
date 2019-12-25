@@ -69,6 +69,11 @@ export class PayComponent implements OnInit, AfterViewInit, OnChanges {
     blockCloseFunc(name) {
         this.blockClose.emit(name);
     }
+    sendMsg(){
+        this._account_service.test('some message from front').subscribe((res) => {
+            console.log(res);
+        });
+    }
     payment(block, type, cost) {
         this.selectedButton = [];
         this.selectedButton.push({block: block});

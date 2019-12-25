@@ -41,15 +41,12 @@ import {AccountService} from '../../services/account.service';
                     </div>
                     <div class="commission">{{item?.city}}, {{item?.admArea}}</div>
                 </div>
-                <div class="topRightBlock">
-                    <div class="topRightInner">
-                        <div class="price">
-                            <span style="margin-right: 8px">₽</span>
-                            <span>{{formattedPrice}}/ <span style="font-size:12px;    position: relative; left: -3px;">мес.</span></span>
-                        </div>
-                        <div class="commission">Без комиссии</div>
-                    </div>
-                </div>
+<!--                <div class="topRightBlock">-->
+<!--                    <div class="flex-col">-->
+<!--                        -->
+<!--                        <div class="commission">Без комиссии</div>-->
+<!--                    </div>-->
+<!--                </div>-->
             </div>
             <div class="photoBlock" *ngIf="imgLen == 0" [class.watched]="item?.watched">
                 <img class="img"
@@ -83,20 +80,22 @@ import {AccountService} from '../../services/account.service';
             </div>
             <div class="bottom-block">  
                     <div class="info">
-                        <div class="rooms" *ngIf="item?.typeCode == 'room'"><span class="one">Комната</span></div>
-                        <div class="rooms" *ngIf="item?.typeCode == 'apartment'"><span class="one">Квартира</span></div>
-                        <div class="rooms" *ngIf="item?.typeCode == 'house'"><span class="one">Дом</span></div>
-                        <div class="rooms" *ngIf="item?.typeCode == 'dacha'"><span class="one">Дача</span></div>
-                        <div class="rooms" *ngIf="item?.typeCode == 'cottage'"><span class="one">Коттедж</span></div>
+                        <div class="apart-type" *ngIf="item?.typeCode == 'room'"><span class="one">КОМНАТА</span></div>
+                        <div class="apart-type" *ngIf="item?.typeCode == 'apartment'"><span class="one">КВАРТИРА</span></div>
+                        <div class="apart-type" *ngIf="item?.typeCode == 'house'"><span class="one">ДОМ</span></div>
+                        <div class="apart-type" *ngIf="item?.typeCode == 'dacha'"><span class="one">ДАЧА</span></div>
+                        <div class="apart-type" *ngIf="item?.typeCode == 'cottage'"><span class="one">КОТТЕДЖ</span></div>
+                        <div class="price">{{formattedPrice}}<span style="margin-left: 8px">₽</span></div>
+                        <div class="rooms">Комнат</div>
                         <div class="rooms">
                             <span class="one">Этаж/Этажность</span>
                         </div>
                         <div class="rooms"><span class="one">Площадь</span></div>
-                        <div class="rooms"><span class="one">Санузел</span></div>
-                        <div class="rooms"><span class="one">Балкон/лоджия</span></div>
                     </div>
                     <div class="info">
-                        <div class="rooms" *ngIf="roomC">{{item?.roomsCount}} комнатная</div>
+                        <div class="rooms" style="margin-bottom: 10px;"></div>
+                        <div class="rooms" style="margin-bottom: 7px;"></div>
+                        <div class="rooms" *ngIf="roomC">{{item?.roomsCount}}</div>
                         <div class="rooms" *ngIf="item?.typeCode == 'room' || item?.typeCode == 'apartment'">
                             <span>{{item?.floor}}/{{item?.floorsCount}}</span>
                         </div>
@@ -105,33 +104,33 @@ import {AccountService} from '../../services/account.service';
                             <span>{{item?.floorsCount}}</span>
                         </div>
                         <div class="rooms"><span *ngIf="squareC">{{item?.squareTotal}} кв.м</span><span *ngIf="!squareC">кв.м</span></div>
-                        <div class="rooms">{{ offItem.bathroomOptions[item?.bathroom]?.label}}</div>
-                        <div class="rooms">{{ item.loggia || item.balcony ? 'Да' : 'Нет'}}</div>
                     </div>
                     <div class="starFav" *ngIf="item != undefined" (mouseenter)="favHovered = true"
                          (mouseleave)="favHovered = false">
                         <img class="starImg" [class.open]="!favHovered && !item?.is_fav"
-                             src="../../../../assets/4-4.png" width="22px">
+                             src="../../../../assets/4-4.png" width="24px">
                         <img class="starImg" (click)="delFavObject()"
                              [class.open]="favHovered && item.is_fav" src="../../../../assets/4-4.png"
-                             width="22px">
+                             width="24px">
                         <img (click)="addFavObject()" class="starImg"
                              [class.open]="favHovered  && !item.is_fav"
-                             src="../../../../assets/4-4%20watched.png" width="22px">
+                             src="../../../../assets/4-4%20watched.png" width="24px">
                         <img (click)="delFavObject()" class="starImg"
                              [class.open]="item.is_fav && !favHovered"
-                             src="../../../../assets/4-4%20watched.png" width="22px">
+                             src="../../../../assets/4-4%20watched.png" width="24px">
                     </div>
                     <div class="phone-block">
-                        <div class="contact-photo" [ngStyle]="{'background-image': (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true') ? 'url('+item?.photo+')' : 'url(../../../../assets/user-icon.png)'}"></div>
+                        <div class="contact-photo full" [ngStyle]="{'background-image': (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true') ? 'url('+item?.photo+')' : 'url(../../../../assets/user-icon.png)', 'background-size': (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true') ? 'cover':'125% 125%' }"></div>
 
                         <div class="flex-col contact-info">
-                            <div class="name" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">{{item.name}}</div>
-                            <div class="middleman" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">{{item.IsMiddleman ? 'Посредник' : 'Частное лицо'}}</div>
+                            <div class="name">{{item.name}}</div>
+                            <div class="middleman">{{item.IsMiddleman ? 'Посредник' : 'Частное лицо'}}</div>
                         </div>
+                        <div class="lineFull contact"></div>
                         <div style="display: flex">
-                            <div class="phone-photo" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')"></div>
-                            <div class="flex-col" style="justify-content: center;" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
+<!--                            *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')"-->
+                            <div class="phone-photo" ></div>
+                            <div class="flex-col" style="justify-content: center;">
                                 <div class="phone" *ngIf="item?.phoneBlock?.main != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.main | mask: ' (000) 000-0000'}}</div>
                                 <div class="phone" *ngIf="item?.phoneBlock?.other != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.other | mask: ' (000) 000-0000'}}</div>
                                 <div class="phone" *ngIf="item?.phoneBlock?.home != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.home | mask: ' (000) 000-0000'}}</div>
@@ -139,12 +138,10 @@ import {AccountService} from '../../services/account.service';
                                 <div class="phone" *ngIf="item?.phoneBlock?.fax != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.fax | mask: ' (000) 000-0000'}}</div>
                                 <div class="phone" *ngIf="item?.phoneBlock?.ip != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.ip | mask: ' (000) 000-0000'}}</div>
                             </div>
-                            <ng-container *ngIf="(payingMode != true && payingMode != 'true') || (loggingMode != true && loggingMode != 'true')">
-                                <div class="button-contact" (click)="checklogin();">Позвонить</div>
-                            </ng-container>
+<!--                            <ng-container *ngIf="(payingMode != true && payingMode != 'true') || (loggingMode != true && loggingMode != 'true')">-->
+<!--                                <div class="button-contact" (click)="checklogin();">Позвонить</div>-->
+<!--                            </ng-container>-->
                         </div>
-                            
-          
                     </div>
             </div>
         </div>

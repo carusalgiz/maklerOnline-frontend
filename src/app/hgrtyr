@@ -1,0 +1,1466 @@
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["main"],{
+
+/***/ "./$$_lazy_route_resource lazy recursive":
+/*!******************************************************!*\
+  !*** ./$$_lazy_route_resource lazy namespace object ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var map = {
+	"./desktop/desktop.module": [
+		"./src/app/desktop/desktop.module.ts",
+		"default~desktop-desktop-module~mobile-mobile-module",
+		"desktop-desktop-module"
+	],
+	"./mobile/mobile.module": [
+		"./src/app/mobile/mobile.module.ts",
+		"default~desktop-desktop-module~mobile-mobile-module",
+		"mobile-mobile-module"
+	],
+	"./tablet/tablet.module": [
+		"./src/app/tablet/tablet.module.ts",
+		"tablet-tablet-module"
+	]
+};
+function webpackAsyncContext(req) {
+	if(!__webpack_require__.o(map, req)) {
+		return Promise.resolve().then(function() {
+			var e = new Error("Cannot find module '" + req + "'");
+			e.code = 'MODULE_NOT_FOUND';
+			throw e;
+		});
+	}
+
+	var ids = map[req], id = ids[0];
+	return Promise.all(ids.slice(1).map(__webpack_require__.e)).then(function() {
+		return __webpack_require__.t(id, 7);
+	});
+}
+webpackAsyncContext.keys = function webpackAsyncContextKeys() {
+	return Object.keys(map);
+};
+webpackAsyncContext.id = "./$$_lazy_route_resource lazy recursive";
+module.exports = webpackAsyncContext;
+
+/***/ }),
+
+/***/ "./node_modules/raw-loader/index.js!./src/app/app.component.html":
+/*!**************************************************************!*\
+  !*** ./node_modules/raw-loader!./src/app/app.component.html ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<router-outlet ></router-outlet>\n"
+
+/***/ }),
+
+/***/ "./src/app/app.browser.module.ts":
+/*!***************************************!*\
+  !*** ./src/app/app.browser.module.ts ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var app_component_1 = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
+var app_module_1 = __webpack_require__(/*! ./app.module */ "./src/app/app.module.ts");
+var core_1 = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+var platform_browser_1 = __webpack_require__(/*! @angular/platform-browser */ "./node_modules/@angular/platform-browser/fesm5/platform-browser.js");
+var AppBrowserModule = /** @class */ (function () {
+    function AppBrowserModule() {
+    }
+    AppBrowserModule = __decorate([
+        core_1.NgModule({
+            bootstrap: [app_component_1.AppComponent],
+            imports: [
+                platform_browser_1.BrowserModule.withServerTransition({ appId: 'app-root' }),
+                platform_browser_1.BrowserTransferStateModule,
+                app_module_1.AppModule,
+            ]
+        })
+    ], AppBrowserModule);
+    return AppBrowserModule;
+}());
+exports.AppBrowserModule = AppBrowserModule;
+
+
+/***/ }),
+
+/***/ "./src/app/app.component.css":
+/*!***********************************!*\
+  !*** ./src/app/app.component.css ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2FwcC5jb21wb25lbnQuY3NzIn0= */"
+
+/***/ }),
+
+/***/ "./src/app/app.component.ts":
+/*!**********************************!*\
+  !*** ./src/app/app.component.ts ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+var router_1 = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+var ngx_device_detector_1 = __webpack_require__(/*! ngx-device-detector */ "./node_modules/ngx-device-detector/fesm5/ngx-device-detector.js");
+var config_service_1 = __webpack_require__(/*! ./services/config.service */ "./src/app/services/config.service.ts");
+var account_service_1 = __webpack_require__(/*! ./services/account.service */ "./src/app/services/account.service.ts");
+var http_1 = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+var AppComponent = /** @class */ (function () {
+    function AppComponent(_http, route, deviceService, config, _account_service) {
+        this._http = _http;
+        this.route = route;
+        this.deviceService = deviceService;
+        this.config = config;
+        this._account_service = _account_service;
+        this.deviceInfo = null;
+        this.siteUrl = "";
+        this.title = 'app';
+        this.delta = 0;
+        this.width = document.documentElement.clientWidth;
+        this.touchCheck = false;
+        this.siteUrl = this.config.getConfig('siteUrl');
+        this.resolveDevice();
+    }
+    AppComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        sessionStorage.clear();
+        // sessionStorage.removeItem('access');
+        //  sessionStorage.removeItem('session');
+        //  sessionStorage.removeItem('expires');
+        // sessionStorage
+        // sessionStorage.removeItem('logged_in');
+        localStorage.clear();
+        var Visible = function (elem) {
+            var mapbuttons = document.getElementsByClassName('map-buttons-tablet');
+            var mapbuttonsMobile = document.getElementsByClassName('map-buttons-mobile');
+            var mapbuttonsdesk = document.getElementsByClassName('map-buttons');
+            var mobileMenu = document.getElementsByClassName('mobileTopMenu');
+            var filters = document.getElementsByClassName('filters-menu-desktop');
+            var arrowsmobile = document.getElementsByClassName('arrows-mobile');
+            // let targetPosition = {
+            //         top: window.pageYOffset + elem.getBoundingClientRect().top,
+            //         left: window.pageXOffset + elem.getBoundingClientRect().left,
+            //         right: window.pageXOffset + elem.getBoundingClientRect().right,
+            //         bottom: window.pageYOffset + elem.getBoundingClientRect().bottom
+            //     },
+            //     // Получаем позиции окна
+            //     windowPosition = {
+            //         top: window.pageYOffset,
+            //         left: window.pageXOffset,
+            //         right: window.pageXOffset + document.documentElement.clientWidth,
+            //         bottom: window.pageYOffset + document.documentElement.clientHeight
+            //     };
+            var desk = document.getElementsByClassName('desk');
+            var addRight = document.getElementsByClassName('output');
+            var catalog = document.getElementsByClassName('catalog-item');
+            var mapTest = document.getElementsByClassName('mapTest');
+            var map = document.getElementsByClassName('filters-map');
+            if (elem.getBoundingClientRect().top < 0 && elem.getBoundingClientRect().bottom > -150 && document.documentElement.clientWidth <= 1050 && desk.length != 0) {
+                console.log('Вы видите элемент :)');
+                // console.log('buttons' + mapbuttonsMobile.length);
+                if ((mobileMenu.length != 0 && (desk.length != 0 || catalog.length != 0) || (map.length != 0 && map.item(0).getBoundingClientRect().top < document.documentElement.clientHeight - 80))) {
+                    console.log(mapbuttonsMobile);
+                    mobileMenu.item(0).style.setProperty('display', 'flex');
+                }
+                if (arrowsmobile.length != 0 && (desk.length != 0 || catalog.length != 0) && mapTest.length == 0) {
+                    arrowsmobile.item(0).style.setProperty('display', 'flex');
+                }
+                if (filters.length != 0) {
+                    filters.item(0).style.setProperty('display', 'none');
+                }
+                if (mapbuttonsdesk.length != 0) {
+                    mapbuttonsdesk.item(0).style.setProperty('display', ' none');
+                }
+            }
+            else if (elem.getBoundingClientRect().top < 500 && elem.getBoundingClientRect().bottom > 150 && document.documentElement.clientWidth > 1520 && desk.length != 0) {
+                if (mapbuttonsdesk.length != 0) {
+                    mapbuttonsdesk.item(0).style.setProperty('display', ' flex');
+                }
+            }
+            else if (elem.getBoundingClientRect().top > -500 && elem.getBoundingClientRect().bottom > 150 && document.documentElement.clientWidth > 1050 && document.documentElement.clientWidth < 1520 && desk.length != 0) {
+                if (mapbuttonsdesk.length != 0) {
+                    mapbuttonsdesk.item(0).style.setProperty('display', ' flex');
+                }
+            }
+            else {
+                // console.log('Вы не видите элемент');
+                if (filters.length != 0 && desk.length != 0 && document.documentElement.clientWidth > 1000) {
+                    filters.item(0).style.setProperty('display', 'flex');
+                }
+                if (mobileMenu.length != 0 && addRight.length == 0) {
+                    mobileMenu.item(0).style.setProperty('display', 'flex');
+                }
+                if (mapbuttonsdesk.length != 0) {
+                    mapbuttonsdesk.item(0).style.setProperty('display', ' none');
+                }
+                if (arrowsmobile.length != 0 && (desk.length != 0 || catalog.length != 0)) {
+                    arrowsmobile.item(0).style.setProperty('display', ' flex');
+                }
+            }
+        };
+        var touchstart, touchend;
+        // document.addEventListener('mouseup', event =>  {
+        //
+        //   let slide = document.getElementsByClassName('right-slide-box')   as HTMLCollectionOf<HTMLElement>;
+        //   // console.log( event.offsetX + " " + (document.documentElement.offsetWidth - slide.item(1).offsetWidth));
+        //   if (slide.item(0).classList.contains('open') && event.pageX < document.documentElement.offsetWidth - slide.item(0).offsetWidth) {
+        //     slide.item(0).classList.remove('open');
+        //   }
+        //   if (slide.item(1).classList.contains('open') && event.pageX < document.documentElement.offsetWidth - slide.item(1).offsetWidth) {
+        //     slide.item(1).classList.remove('open');
+        //   }
+        //   if (slide.item(2).classList.contains('open') && event.pageX < document.documentElement.offsetWidth - slide.item(2).offsetWidth) {
+        //     slide.item(2).classList.remove('open');
+        //   }
+        //   if (slide.item(3).classList.contains('open') && event.pageX < document.documentElement.offsetWidth - slide.item(3).offsetWidth) {
+        //     slide.item(3).classList.remove('open');
+        //   }
+        // });
+        //         document.addEventListener('touchstart', event => {
+        //             touchstart = event.changedTouches[0].clientY;
+        //            // console.log('touchstart: ' + event.changedTouches[0].pageY);
+        //         });
+        //         document.addEventListener('touchend', event =>  {
+        //           //   console.log('touchend: ' + event.changedTouches[0].pageY);
+        //           //   let header = document.getElementsByClassName('header')   as HTMLCollectionOf<HTMLElement>;
+        //           //   let main = document.getElementsByClassName('main-objects') as HTMLCollectionOf<HTMLElement>;
+        //             let mainHome = document.getElementsByClassName('mainHome') as HTMLCollectionOf<HTMLElement>;
+        //             // let bigGalleryBlock = document.getElementsByClassName('bigGalleryBlock') as HTMLCollectionOf<HTMLElement>;
+        //             let showItemsButton = document.getElementsByClassName('show-items') as HTMLCollectionOf<HTMLElement>;
+        //             // let add_block = document.getElementsByClassName('add-block-menu')   as HTMLCollectionOf<HTMLElement>;
+        //             // let hideFilterButton = document.getElementsByClassName('hideFilterButton')   as HTMLCollectionOf<HTMLElement>;
+        //             touchend = event.changedTouches[0].clientY;
+        //             let num = touchstart - touchend;
+        //             // let val = num > 0 ? '-80px' :  '30px';
+        //             // if (hideFilterButton.length != 0) {
+        //             //     hideFilterButton.item(0).style.setProperty('bottom', val);
+        //             // }
+        //             // console.log(num + " start:" + touchstart + " end:" + touchend);
+        //             let wth = document.documentElement.clientWidth;
+        //
+        //             if (num > 0) {
+        //               if ( document.documentElement.clientWidth <= 1200) {
+        //                 if (showItemsButton.length != 0) {
+        //                   showItemsButton.item(0).style.setProperty('top', '0');
+        //                 }
+        //                 // if (main.length != 0) {
+        //                 //   main.item(0).style.setProperty('padding-top', '55px');
+        //                 // }
+        //                 if (mainHome.length != 0) {
+        //                   if (wth < 1050) {
+        //                     mainHome.item(0).style.setProperty('margin-top', '0');
+        //                   }
+        //                 }
+        //               }
+        // // -220 .getBoundingClientRect().top < 0
+        //             } else if (num < 0) {
+        //             //  console.log(map);
+        //            //   console.log(map.item(0).getBoundingClientRect().top);map.length == 0 ||
+        // //|| map.item(0).getBoundingClientRect().top > document.documentElement.clientHeight - 80
+        // //                 if (header.length != 0 && (!add_block.item(0).classList.contains('close') || !add_block.item(1).classList.contains('close')
+        // //                   || !add_block.item(2).classList.contains('close') )) {
+        // //                   header.item(0).style.setProperty('top', '0');
+        // //                   header.item(0).style.setProperty('z-index', '8');
+        // //                 }
+        //
+        //
+        //               if (showItemsButton.length != 0) {
+        //                 showItemsButton.item(0).style.setProperty('top', '90px');
+        //               }
+        //
+        //               if (mainHome.length != 0) {
+        //                 if (wth < 650) {
+        //                   mainHome.item(0).style.setProperty('margin-top', '90px');
+        //                 }
+        //                 if (wth > 650 && wth < 1050) {
+        //                       mainHome.item(0).style.setProperty('margin-top', '130px');
+        //                 }
+        //               }
+        //
+        //                 // if (main.length != 0) {
+        //                 //     if (bigGalleryBlock.length == 0) {
+        //                 //             if (wth < 650) {
+        //                 //               main.item(0).style.setProperty('padding-top', '95px');
+        //                 //             } else {
+        //                 //                 main.item(0).style.setProperty('padding-top', '137px');
+        //                 //             }
+        //                 //     } else {
+        //                 //         main.item(0).style.setProperty('padding-top', '0');
+        //                 //     }
+        //                 // }
+        //             }
+        //         });
+        //  document.addEventListener('touchmove', function () {
+        //   //   console.log(event.changedTouches[0].pageY);
+        //      let map =  document.getElementsByClassName('map open') as HTMLCollectionOf<HTMLElement>;
+        // //   console.log(map);
+        //    if (document.documentElement.clientWidth < 650) {
+        //      if (map.length != 0) {
+        //        Visible(map.item(0));
+        //      }
+        //    }
+        //  });
+        document.addEventListener('wheel', function (event) {
+            var map = document.getElementsByClassName('map open');
+            //     console.log(map);
+            if (document.documentElement.clientWidth < 650) {
+                if (map.length != 0) {
+                    Visible(map.item(0));
+                    if (map.length > 1) {
+                        Visible(map.item(1));
+                    }
+                }
+            }
+            else {
+                if (map.length != 0 && map.item(1) != undefined && map.item(1) != null) {
+                    Visible(map.item(1));
+                }
+            }
+            var addobject = document.getElementsByClassName('add-obj-ext');
+            var history = document.getElementsByClassName('history');
+            var addButton = document.getElementsByClassName('add-button');
+            var addr = document.getElementsByClassName('address-block');
+            var mapbuttonstab = document.getElementsByClassName('map-buttons-tablet');
+            var items = document.getElementsByClassName('header');
+            var uselessLine = document.getElementsByClassName('uselessLine');
+            var mobileMenu = document.getElementsByClassName('mobileTopMenu');
+            var filters = document.getElementsByClassName('filters-menu-desktop');
+            var filter = document.getElementsByClassName('filters');
+            var scrollItems = document.getElementsByClassName('scroll-items open');
+            var filtersbox = document.getElementsByClassName('filters-box');
+            var slide = document.getElementsByClassName('right-slide-box');
+            var mainHome = document.getElementsByClassName('mainHome');
+            var show = document.getElementsByClassName('show-items');
+            // let arrows = document.getElementsByClassName('arrow comparisonArrow')   as HTMLCollectionOf<HTMLElement>;
+            // let day = document.getElementsByClassName('dayExt') as HTMLCollectionOf<HTMLElement>;
+            var catalog = document.getElementsByClassName('catalog-item');
+            var photofull = document.getElementsByClassName('photoFull');
+            var objs = document.getElementsByClassName('filters objs');
+            // let dark = document.getElementsByClassName('darkBlueLine') as HTMLCollectionOf<HTMLElement>;
+            var ymaps = document.documentElement.getElementsByTagName('ymaps');
+            var hide = document.documentElement.getElementsByClassName('hideMenu');
+            // console.log(document.documentElement.offsetHeight);
+            // console.log('hi ' + desk.item(0).scrollTop);
+            if (event.target != ymaps.item(3)) {
+                if ((event.deltaY > 0)) {
+                    if (uselessLine.item(0).classList.contains('homePage')) {
+                        items.item(0).style.setProperty('top', '-130px');
+                        for (var i = 0; i < slide.length; i++) {
+                            slide.item(i).style.setProperty('top', '0');
+                            slide.item(i).style.setProperty('height', '100vh');
+                        }
+                    }
+                    _this.delta = 0;
+                    for (var i = 0; i < photofull.length; i++) {
+                        if (photofull.item(i).getBoundingClientRect().top < 0) {
+                            for (var q = 0; q < slide.length; q++) {
+                                slide.item(q).style.setProperty('top', '65px');
+                                slide.item(q).style.setProperty('height', 'calc(100vh - 65px)');
+                            }
+                            if (show.length != 0) {
+                                show.item(0).style.setProperty('top', '65px');
+                            }
+                            items.item(0).style.setProperty('top', '-130px');
+                            uselessLine.item(0).style.setProperty('top', '0');
+                            uselessLine.item(0).style.setProperty('margin-bottom', '0');
+                            for (var q = 0; q < filtersbox.length; q++) {
+                                filtersbox.item(q).style.setProperty('height', 'calc(100vh - 65px)');
+                                filtersbox.item(q).style.setProperty('top', '0');
+                            }
+                            if (filters.length != 0) {
+                                filters.item(0).style.setProperty('top', '0');
+                            }
+                            uselessLine.item(0).classList.add('scroll');
+                            items.item(0).classList.add('scroll');
+                            if (objs.length != 0) {
+                                objs.item(0).style.setProperty('top', '0');
+                            }
+                            // if ( dark.length != 0) {
+                            //   dark.item(0).style.setProperty('top', '0');
+                            // }
+                        }
+                        // if (arrows.length != 0) {
+                        //   arrows.item(0).style.setProperty('top', '35vh');
+                        //   arrows.item(1).style.setProperty('top', '35vh');
+                        // }
+                    }
+                    if (filtersbox.length != 0 && filtersbox.item(0).classList.contains('open') && (addButton.item(0).getBoundingClientRect().top < 100 || hide.item(0).getBoundingClientRect().top < 100
+                        || hide.item(1).getBoundingClientRect().top < 100 || hide.item(2).getBoundingClientRect().top < 100 || hide.item(3).getBoundingClientRect().top < 100)) {
+                        items.item(0).style.setProperty('top', '-130px');
+                        for (var i = 0; i < slide.length; i++) {
+                            slide.item(i).style.setProperty('top', '65px');
+                            slide.item(i).style.setProperty('height', 'calc(100vh - 65px)');
+                        }
+                        uselessLine.item(0).classList.add('scroll');
+                        items.item(0).classList.add('scroll');
+                        uselessLine.item(0).style.setProperty('top', '0');
+                        uselessLine.item(0).style.setProperty('margin-bottom', '0');
+                        if (show.length != 0) {
+                            show.item(0).style.setProperty('top', '65px');
+                        }
+                        if (filters.length != 0) {
+                            filters.item(0).style.setProperty('top', '0');
+                        }
+                        for (var i = 0; i < filtersbox.length; i++) {
+                            filtersbox.item(i).style.setProperty('height', 'calc(100vh - 65px)');
+                            filtersbox.item(i).style.setProperty('top', '0');
+                        }
+                    }
+                    if ((catalog.length != 0 && catalog.item(0).getBoundingClientRect().top < 0) ||
+                        (photofull.length != 0 && photofull.item(0).getBoundingClientRect().top < 0)) {
+                        if (show.length != 0) {
+                            show.item(0).style.setProperty('top', '65px');
+                        }
+                        for (var i = 0; i < filtersbox.length; i++) {
+                            filtersbox.item(i).style.setProperty('height', 'calc(100vh - 65px)');
+                            filtersbox.item(i).style.setProperty('top', '0');
+                        }
+                        for (var i = 0; i < slide.length; i++) {
+                            slide.item(i).style.setProperty('top', '65px');
+                            slide.item(i).style.setProperty('height', 'calc(100vh - 65px)');
+                        }
+                        items.item(0).style.setProperty('top', '-130px');
+                        uselessLine.item(0).style.setProperty('top', '0');
+                        uselessLine.item(0).style.setProperty('margin-bottom', '0');
+                        if (filters.length != 0) {
+                            filters.item(0).style.setProperty('top', '0');
+                        }
+                        // if (day.length != 0) {
+                        //   day.item(0).style.setProperty('top', '65px');
+                        // }
+                        uselessLine.item(0).classList.add('scroll');
+                        items.item(0).classList.add('scroll');
+                    }
+                    if (mainHome.length != 0 && document.documentElement.clientWidth > 1050) {
+                        mainHome.item(0).style.setProperty('margin-top', '0');
+                        items.item(0).classList.add('scroll');
+                    }
+                    if (mobileMenu.length != 0) {
+                        mobileMenu.item(0).style.setProperty('top', '0');
+                    }
+                    if (addobject.length != 0) {
+                        addobject.item(0).style.setProperty('top', '0');
+                    }
+                    if (history.length != 0) {
+                        history.item(0).style.setProperty('top', '0');
+                    }
+                    if (addr.length != 0) {
+                        addr.item(0).style.setProperty('top', '0');
+                    }
+                    if (mapbuttonstab.length != 0) {
+                        mapbuttonstab.item(0).style.setProperty('top', '0');
+                    }
+                    if (filter.length != 0) {
+                        filter.item(0).style.setProperty('top', '65px');
+                        filter.item(0).style.setProperty('height', 'calc(100vh - 65px)');
+                    }
+                    // if (filtersbox.length != 0) {
+                    //   for (let i = 0; i < filtersbox.length; i++) {
+                    //     filtersbox.item(i).style.setProperty('top', '65px');
+                    //   }
+                    // }
+                    // if (main.length != 0) {
+                    //   main.item(0).style.setProperty('height', 'calc(100vh - 65px)');
+                    //  main.item(0).style.setProperty('top', '65px');
+                    // }
+                }
+                else {
+                    _this.delta += event.deltaY;
+                    if (uselessLine.item(0).classList.contains('homePage')) {
+                        items.item(0).style.setProperty('top', '0');
+                        for (var i = 0; i < slide.length; i++) {
+                            slide.item(i).style.setProperty('top', '130px');
+                            slide.item(i).style.setProperty('height', 'calc(100vh - 130px)');
+                        }
+                    }
+                    if (scrollItems.length != 0 && uselessLine.length != 0 && _this.delta < -300) {
+                        for (var i = 0; i < slide.length; i++) {
+                            slide.item(i).style.setProperty('top', '195px');
+                            slide.item(i).style.setProperty('height', 'calc(100vh - 195px)');
+                        }
+                        for (var i = 0; i < filtersbox.length; i++) {
+                            filtersbox.item(i).style.setProperty('top', '130px');
+                            filtersbox.item(i).style.setProperty('height', 'calc(100vh - 195px)');
+                        }
+                        if (show.length != 0) {
+                            show.item(0).style.setProperty('top', '195px');
+                        }
+                        if (objs.length != 0) {
+                            objs.item(0).style.setProperty('top', '130px');
+                        }
+                        uselessLine.item(0).classList.remove('scroll');
+                        items.item(0).classList.remove('scroll');
+                        uselessLine.item(0).style.setProperty('top', '130px');
+                        uselessLine.item(0).style.setProperty('margin-bottom', '130px');
+                        if (filters.length != 0) {
+                            filters.item(0).style.setProperty('top', '130px');
+                        }
+                        items.item(0).style.setProperty('top', '0');
+                        if (filter.length != 0) {
+                            filter.item(0).style.setProperty('top', '195px');
+                            filter.item(0).style.setProperty('height', 'calc(100vh - 195px)');
+                        }
+                        // if (day.length != 0) {
+                        //   day.item(0).style.setProperty('top', '195px');
+                        // }
+                        // if ( dark.length != 0) {
+                        //   dark.item(0).style.setProperty('top', '130px');
+                        // }
+                        // for (let i = 0; i < photofull.length; i++) {
+                        //   if (photofull.item(i).getBoundingClientRect().top < 0) {
+                        //     if (arrows.length != 0) {
+                        //       arrows.item(0).style.setProperty('top', 'calc(35vh - 130px)');
+                        //       arrows.item(1).style.setProperty('top', 'calc(35vh - 130px)');
+                        //     }
+                        //   }
+                        // }
+                    }
+                    else if (scrollItems.length == 0 && uselessLine.length != 0 && !uselessLine.item(0).classList.contains('homePage')) {
+                        for (var i = 0; i < slide.length; i++) {
+                            slide.item(i).style.setProperty('top', '195px');
+                            slide.item(i).style.setProperty('height', 'calc(100vh - 195px)');
+                        }
+                        for (var i = 0; i < filtersbox.length; i++) {
+                            filtersbox.item(i).style.setProperty('top', '130px');
+                            filtersbox.item(i).style.setProperty('height', 'calc(100vh - 195px)');
+                        }
+                        if (show.length != 0) {
+                            show.item(0).style.setProperty('top', '195px');
+                        }
+                        if (objs.length != 0) {
+                            objs.item(0).style.setProperty('top', '130px');
+                        }
+                        // for (let i = 0; i < photofull.length; i++) {
+                        //   if (photofull.item(i).getBoundingClientRect().top < 0) {
+                        //     if (arrows.length != 0) {
+                        //       arrows.item(0).style.setProperty('top', 'calc(35vh - 130px)');
+                        //       arrows.item(1).style.setProperty('top', 'calc(35vh - 130px)');
+                        //     }
+                        //   }
+                        // }
+                        // if ( dark.length != 0) {
+                        //   dark.item(0).style.setProperty('top', '130px');
+                        // }
+                        items.item(0).style.setProperty('top', '0');
+                        uselessLine.item(0).classList.remove('scroll');
+                        items.item(0).classList.remove('scroll');
+                        uselessLine.item(0).style.setProperty('top', '130px');
+                        uselessLine.item(0).style.setProperty('margin-bottom', '130px');
+                        if (filters.length != 0) {
+                            filters.item(0).style.setProperty('top', '130px');
+                        }
+                        if (filter.length != 0) {
+                            filter.item(0).style.setProperty('top', '195px');
+                            filter.item(0).style.setProperty('height', 'calc(100vh - 195px)');
+                        }
+                        // if (day.length != 0) {
+                        //   day.item(0).style.setProperty('top', '195px');
+                        // }
+                    }
+                    if (mainHome.length != 0 && document.documentElement.clientWidth > 1050) {
+                        mainHome.item(0).style.setProperty('margin-top', '130px');
+                        items.item(0).classList.remove('scroll');
+                    }
+                    if (mobileMenu.length != 0) {
+                        mobileMenu.item(0).style.setProperty('top', '130px');
+                    }
+                    if (addobject.length != 0) {
+                        addobject.item(0).style.setProperty('top', '130px');
+                    }
+                    if (history.length != 0) {
+                        history.item(0).style.setProperty('top', '195px');
+                    }
+                    if (addr.length != 0) {
+                        addr.item(0).style.setProperty('top', '130px');
+                    }
+                    if (mapbuttonstab.length != 0) {
+                        mapbuttonstab.item(0).style.setProperty('top', '130px');
+                    }
+                    // if (desk.length == 0 && filter.length != 0) {
+                    //   filter.item(0).style.setProperty('height', 'calc(100vh - 195px)');
+                    // }
+                    // if (scrollItems.length != 0) {
+                    //   scrollItems.item(0).style.setProperty('height', 'calc(100% - 130px)');
+                    // }
+                    // for (let i = 0; i < filtersbox.length; i++) {
+                    //   filtersbox.item(i).style.setProperty('top', '195px');
+                    // }
+                    // if (main.length != 0) {
+                    //   main.item(0).style.setProperty('height', 'calc(100vh - 195px)');
+                    //  main.item(0).style.setProperty('top', '195px');
+                    // }
+                }
+            }
+        });
+    };
+    AppComponent.prototype.ngAfterViewInit = function () { };
+    AppComponent.prototype.scrollActive = function (name) {
+        var mapbuttons = document.getElementsByClassName('map-buttons');
+        var addobject = document.getElementsByClassName('add-obj-ext');
+        var history = document.getElementsByClassName('history');
+        var addr = document.getElementsByClassName('address-block');
+        var mapbuttonstab = document.getElementsByClassName('map-buttons-tablet');
+        var items = document.getElementsByClassName('header');
+        var uselessLine = document.getElementsByClassName('uselessLine');
+        var mobileMenu = document.getElementsByClassName('mobileTopMenu');
+        var filters = document.getElementsByClassName('filters-menu-desktop');
+        var filter = document.getElementsByClassName('filters');
+        var scrollItems = document.getElementsByClassName('scroll-items open');
+        var filtersbox = document.getElementsByClassName('filters-box open');
+        var mainHome = document.getElementsByClassName('mainHome');
+        var main = document.getElementsByClassName('main-objects');
+        var desk = document.getElementsByClassName('desk');
+        var arrowsmobile = document.getElementsByClassName('arrows-mobile');
+        // console.log('wheel: ' + name.deltaY);
+        this.delta += name.deltaY;
+        if (this.delta < 0) {
+            this.delta = 0;
+        }
+        // console.log(document.documentElement.offsetHeight);
+        // console.log('hi ' + desk.item(0).scrollTop);
+        if ((name.deltaY > 0)) {
+            items.item(0).style.setProperty('top', '-130px');
+            if (mainHome.length != 0 && document.documentElement.clientWidth > 1050) {
+                mainHome.item(0).style.setProperty('margin-top', '0');
+            }
+            uselessLine.item(0).style.setProperty('top', '0');
+            uselessLine.item(0).style.setProperty('margin-bottom', '0');
+            if (mobileMenu.length != 0) {
+                mobileMenu.item(0).style.setProperty('top', '0');
+            }
+            if (filters.length != 0) {
+                filters.item(0).style.setProperty('top', '0');
+            }
+            if (mapbuttons.length != 0) {
+                mapbuttons.item(0).style.setProperty('top', '0');
+            }
+            if (addobject.length != 0) {
+                addobject.item(0).style.setProperty('top', '0');
+            }
+            if (document.documentElement.clientWidth < 650) {
+                if (arrowsmobile.length != 0) {
+                    arrowsmobile.item(0).style.setProperty('top', '0');
+                }
+            }
+            if (history.length != 0) {
+                history.item(0).style.setProperty('top', '0');
+            }
+            if (addr.length != 0) {
+                addr.item(0).style.setProperty('top', '0');
+            }
+            if (mapbuttonstab.length != 0) {
+                mapbuttonstab.item(0).style.setProperty('top', '0');
+            }
+            if (desk.length == 0 && filter.length != 0) {
+                filter.item(0).style.setProperty('height', 'calc(100vh - 65px)');
+            }
+            if (scrollItems.length != 0) {
+                scrollItems.item(0).style.setProperty('height', '100%');
+            }
+            if (filtersbox.length != 0) {
+                filtersbox.item(0).style.setProperty('height', 'calc(100% - 65px)');
+            }
+            if (main.length != 0) {
+                main.item(0).style.setProperty('height', 'calc(100vh - 65px)');
+            }
+        }
+        else {
+            items.item(0).style.setProperty('top', '0');
+            if (uselessLine.length != 0) {
+                if (document.documentElement.clientWidth < 350) {
+                    uselessLine.item(0).style.setProperty('top', '100px');
+                    uselessLine.item(0).style.setProperty('margin-bottom', '100px');
+                }
+                else {
+                    uselessLine.item(0).style.setProperty('top', '130px');
+                    uselessLine.item(0).style.setProperty('margin-bottom', '130px');
+                }
+            }
+            if (mainHome.length != 0 && document.documentElement.clientWidth > 1050) {
+                mainHome.item(0).style.setProperty('margin-top', '130px');
+            }
+            if (mobileMenu.length != 0) {
+                if (document.documentElement.clientWidth < 350) {
+                    mobileMenu.item(0).style.setProperty('top', '100px');
+                }
+                else {
+                    mobileMenu.item(0).style.setProperty('top', '130px');
+                }
+            }
+            if (filters.length != 0) {
+                filters.item(0).style.setProperty('top', '130px');
+            }
+            if (mapbuttons.length != 0) {
+                mapbuttons.item(0).style.setProperty('top', '130px');
+            }
+            if (arrowsmobile.length != 0) {
+                if (document.documentElement.clientWidth < 350) {
+                    arrowsmobile.item(0).style.setProperty('top', '100px');
+                }
+                else {
+                    arrowsmobile.item(0).style.setProperty('top', '130px');
+                }
+            }
+            if (addobject.length != 0) {
+                addobject.item(0).style.setProperty('top', '130px');
+            }
+            if (history.length != 0) {
+                history.item(0).style.setProperty('top', '195px');
+            }
+            if (addr.length != 0) {
+                addr.item(0).style.setProperty('top', '130px');
+            }
+            if (mapbuttonstab.length != 0) {
+                mapbuttonstab.item(0).style.setProperty('top', '130px');
+            }
+            if (desk.length == 0 && filter.length != 0) {
+                filter.item(0).style.setProperty('height', 'calc(100vh - 195px)');
+            }
+            if (scrollItems.length != 0) {
+                scrollItems.item(0).style.setProperty('height', 'calc(100% - 130px)');
+            }
+            if (filtersbox.length != 0) {
+                filtersbox.item(0).style.setProperty('height', 'calc(100% - 130px)');
+            }
+            if (main.length != 0) {
+                main.item(0).style.setProperty('height', 'calc(100vh - 195px)');
+            }
+        }
+    };
+    AppComponent.prototype.resolveDevice = function () {
+        this.deviceInfo = this.deviceService.getDeviceInfo();
+        var isMobile = this.deviceService.isMobile();
+        var isTablet = this.deviceService.isTablet();
+        var isDesktopDevice = this.deviceService.isDesktop();
+        console.log(document.location.href);
+        var url = document.location.href;
+        console.log('-');
+        if (url.indexOf('access_token') != -1) {
+            var str = url.split('=');
+            console.log(str);
+            var pars = [];
+            for (var i = 1; i < str.length; i++) {
+                var par = str[i].split('&');
+                console.log(par);
+                pars.push(par[0]);
+            }
+            var params = {
+                access_token: pars[0],
+                session_secret_key: pars[1],
+                expires: pars[2]
+            };
+            sessionStorage.setItem('access', params.access_token);
+            sessionStorage.setItem('session', params.session_secret_key);
+            sessionStorage.setItem('expires', (Date.now() / 1000 + Number.parseInt(params.expires, 10)).toString());
+            console.log(sessionStorage.getItem('access'));
+            console.log(params);
+            if (isMobile) {
+                document.location.href = '//' + this.siteUrl + '/#/m';
+            }
+            else if (isDesktopDevice) {
+                document.location.href = '//' + this.siteUrl + '/#/d/objects/list';
+            }
+            else if (isTablet) {
+                document.location.href = '//' + this.siteUrl + '/#/t';
+            }
+            else {
+                document.location.href = '//' + this.siteUrl + '/#/d';
+            }
+            //  let _resourceUrl = "https://api.ok.ru/oauth/token.do?code=" + params.code +"&client_id=512000104776&client_secret=CJEKJGJGDIHBABABA&redirect_uri=" + this.siteUrl + "&grant_type=authorization_code";
+            // let ret_subj = <AsyncSubject<any>>new AsyncSubject();
+            // console.log('отправляем запрос на ', _resourceUrl);
+            //  this._http.post(_resourceUrl, { withCredentials: true }).pipe(
+            //     map((res: Response) => res)).subscribe(
+            //
+            //     data => {
+            //         console.log("result: ");
+            //         console.log(data);
+            //         ret_subj.next(data);
+            //         ret_subj.complete();
+            //     },
+            //     err => console.log(err)
+            // );
+            //  console.log(ret_subj);
+            //  setTimeout(() => { console.log('no answer') }, 3000);
+            //  let user_data = params[params.length-1].split('_');
+            //  // http://dev.makleronline.net/#access_token=c31fd5f6d4f59538fb482e92210fb4e39d5073e142bc599d01919d091cb32322c9be887938e4a40682c37&expires_in=86400&user_id=122956555&state=123456
+            //  let body = {
+            //      access_token: params[0],
+            //      user_id_vk: params[2],
+            //      user_id: user_data[0],
+            //      obj_id: user_data[1]
+            //  };
+            // this._account_service.save_access_token(body).subscribe(res => {
+            //     console.log(res);
+            //     if (res != undefined) {
+            //         let data = JSON.parse(JSON.stringify(res));
+            //         if (data.obj_id != undefined) {
+            //             window.location.href = this.siteUrl + "/#/d/objects/" + data.obj_id;
+            //         } else {
+            //             alert(data.error)
+            //         }
+            //     }
+            // });
+            // this._account_service.publish(params[0]).subscribe(res => {
+            //     console.log(res);
+            //     console.log(res);
+            // });
+            // window.location.href = "https://api.vk.com/method/wall.post?owner_id=-186613956&message=%D0%A2%D0%B5%D1%81%D1%82%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%BF%D0%BE%D1%81%D1%82&access_token=6daefd335a545179be2612f5e332a6c4439af3e7099721ce2593409d3fed901cd39bd90891debfd6776f9&v=5.101";
+        }
+        setTimeout(function (e) { console.log('done!'); }, 5000);
+        if (url.indexOf(this.siteUrl + '/#/m') == -1 && url.indexOf(this.siteUrl + '/#/d') == -1 && url.indexOf(this.siteUrl + '/#/sitemap.xml') == -1 &&
+            url.indexOf(this.siteUrl + '/#/t') == -1 && url.indexOf(this.siteUrl + ':4000') == -1 && url.indexOf('access_token') == -1) {
+            if (isMobile) {
+                console.log('ща буду переходить в мобилку', this.siteUrl);
+                document.location.href = '//' + this.siteUrl + '/#/m';
+            }
+            else if (isDesktopDevice) {
+                console.log('ща буду переходить в декстоп', this.siteUrl);
+                document.location.href = '//' + this.siteUrl + '/#/d';
+            }
+            else if (isTablet) {
+                console.log('ща буду переходить в планшет', this.siteUrl);
+                document.location.href = '//' + this.siteUrl + '/#/t';
+            }
+            else {
+                console.log('ща буду переходить в куда-то', this.siteUrl);
+                document.location.href = '//' + this.siteUrl + '/#/d';
+            }
+        }
+        // if (url.indexOf(this.siteUrl + ':4000') != -1) {
+        //     if (isMobile) {
+        //         document.location.href = '//' + this.siteUrl + ':4000/m';
+        //     } else if (isDesktopDevice) {
+        //         document.location.href = '//' + this.siteUrl + ':4000/d';
+        //     } else if (isTablet) {
+        //         document.location.href = '//' + this.siteUrl + ':4000/t';
+        //     }
+        // }
+    };
+    AppComponent = __decorate([
+        core_1.Component({
+            selector: 'app-root',
+            template: __webpack_require__(/*! raw-loader!./app.component.html */ "./node_modules/raw-loader/index.js!./src/app/app.component.html"),
+            styles: [__webpack_require__(/*! ./app.component.css */ "./src/app/app.component.css")]
+        }),
+        __metadata("design:paramtypes", [http_1.HttpClient, router_1.ActivatedRoute, ngx_device_detector_1.DeviceDetectorService, config_service_1.ConfigService, account_service_1.AccountService])
+    ], AppComponent);
+    return AppComponent;
+}());
+exports.AppComponent = AppComponent;
+
+
+/***/ }),
+
+/***/ "./src/app/app.module.ts":
+/*!*******************************!*\
+  !*** ./src/app/app.module.ts ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var universal_1 = __webpack_require__(/*! @ng-toolkit/universal */ "./node_modules/@ng-toolkit/universal/fesm5/ng-toolkit-universal.js");
+var common_1 = __webpack_require__(/*! @nguniversal/common */ "./node_modules/@nguniversal/common/fesm5/common.js");
+var animations_1 = __webpack_require__(/*! @angular/platform-browser/animations */ "./node_modules/@angular/platform-browser/fesm5/animations.js");
+var core_1 = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+var common_2 = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+var forms_1 = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+var core_2 = __webpack_require__(/*! @agm/core */ "./node_modules/@agm/core/fesm5/agm-core.js");
+var router_1 = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+var app_component_1 = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
+var common_3 = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+var http_1 = __webpack_require__(/*! @angular/http */ "./node_modules/@angular/http/fesm5/http.js");
+var offer_service_1 = __webpack_require__(/*! ./services/offer.service */ "./src/app/services/offer.service.ts");
+var account_service_1 = __webpack_require__(/*! ./services/account.service */ "./src/app/services/account.service.ts");
+var ngx_device_detector_1 = __webpack_require__(/*! ngx-device-detector */ "./node_modules/ngx-device-detector/fesm5/ngx-device-detector.js");
+var ngx_mask_1 = __webpack_require__(/*! ngx-mask */ "./node_modules/ngx-mask/fesm5/ngx-mask.js");
+var http_2 = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+var ngx_metrika_1 = __webpack_require__(/*! @kolkov/ngx-metrika */ "./node_modules/@kolkov/ngx-metrika/fesm5/kolkov-ngx-metrika.js");
+// import { NgxMetrikaService } from '@kolkov/ngx-metrika';
+var config_service_1 = __webpack_require__(/*! ./services/config.service */ "./src/app/services/config.service.ts");
+var appRoutes = [
+    { path: 'm', loadChildren: './mobile/mobile.module#MobileModule' },
+    { path: 'd', loadChildren: './desktop/desktop.module#DesktopModule' },
+    { path: 't', loadChildren: './tablet/tablet.module#TabletModule' },
+];
+var AppModule = /** @class */ (function () {
+    function AppModule() {
+    }
+    AppModule = __decorate([
+        core_1.NgModule({
+            declarations: [
+                app_component_1.AppComponent
+            ],
+            imports: [
+                ngx_metrika_1.NgxMetrikaModule.forRoot({
+                    id: 52712101
+                    // clickmap:true,
+                    // trackLinks:true,
+                    // accurateTrackBounce:true,
+                    // webvisor:true
+                }),
+                common_2.CommonModule,
+                universal_1.NgtUniversalModule,
+                common_1.TransferHttpCacheModule,
+                http_2.HttpClientModule,
+                ngx_mask_1.NgxMaskModule.forRoot({}),
+                animations_1.BrowserAnimationsModule,
+                // BrowserModule.withServerTransition({appId: 'maklerOnline-fe'}),
+                http_1.HttpModule,
+                http_2.HttpClientModule,
+                router_1.RouterModule.forRoot(appRoutes),
+                common_2.CommonModule,
+                forms_1.FormsModule,
+                forms_1.ReactiveFormsModule,
+                ngx_device_detector_1.DeviceDetectorModule.forRoot(),
+                core_2.AgmCoreModule.forRoot({
+                    apiKey: 'AIzaSyAi9zTbzWtEhLVZ8syBV6l7d3QMNLRokVY'
+                })
+            ],
+            exports: [router_1.RouterModule],
+            bootstrap: [app_component_1.AppComponent],
+            providers: [{ provide: common_3.LocationStrategy, useClass: common_2.HashLocationStrategy }, offer_service_1.OfferService, account_service_1.AccountService, config_service_1.ConfigService],
+        })
+    ], AppModule);
+    return AppModule;
+}());
+exports.AppModule = AppModule;
+
+
+/***/ }),
+
+/***/ "./src/app/class/listResult.ts":
+/*!*************************************!*\
+  !*** ./src/app/class/listResult.ts ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var ListResult = /** @class */ (function () {
+    function ListResult() {
+    }
+    return ListResult;
+}());
+exports.ListResult = ListResult;
+
+
+/***/ }),
+
+/***/ "./src/app/services/account.service.ts":
+/*!*********************************************!*\
+  !*** ./src/app/services/account.service.ts ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+var http_1 = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+var AsyncSubject_1 = __webpack_require__(/*! rxjs/AsyncSubject */ "./node_modules/rxjs-compat/_esm5/AsyncSubject.js");
+var operators_1 = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+var config_service_1 = __webpack_require__(/*! ./config.service */ "./src/app/services/config.service.ts");
+var AccountService = /** @class */ (function () {
+    function AccountService(_http, config) {
+        this._http = _http;
+        this.servUrl = config.getConfig('servUrl');
+    }
+    // , filter: any, sort: any
+    AccountService.prototype.getObjects = function (x, y, type, radius) {
+        var query = [];
+        query.push('apikey=e444f2d4-ae9a-4bef-a1c6-9550235e74bc');
+        query.push('text=' + type);
+        query.push('lang=ru_RU');
+        query.push('ll=' + x + ',' + y);
+        query.push('spn=' + radius + ',' + radius);
+        query.push('rspn=1');
+        query.push('results=500');
+        var _resourceUrl = 'https://search-maps.yandex.ru/v1/?' + query.join('&');
+        // console.log(_resourceUrl);
+        var ret_subj = new AsyncSubject_1.AsyncSubject();
+        this._http.get(_resourceUrl).pipe(operators_1.map(function (res) { return res; })).subscribe(function (raw) {
+            var obj;
+            var data = JSON.parse(JSON.stringify(raw));
+            if (data.features) {
+                //   // obj.hitsCount = data.result.hitsCount;
+                obj = data.features;
+                //
+                ret_subj.next(obj);
+                ret_subj.complete();
+            }
+            ret_subj.next(data);
+            ret_subj.complete();
+        }, function (err) { return console.log(err); });
+        return ret_subj;
+    };
+    AccountService.prototype.data = function (user, pass, phone, mode, recoverMethod) {
+        var query = [];
+        query.push('login=' + user);
+        query.push('pass=' + pass);
+        query.push('phone=' + phone);
+        query.push('mode=' + mode);
+        query.push('recoverMethod=' + recoverMethod);
+        var _resourceUrl = this.servUrl + '/login/account?' + query.join('&');
+        console.log(_resourceUrl);
+        var ret_subj = new AsyncSubject_1.AsyncSubject();
+        this._http.get(_resourceUrl, { withCredentials: true }).pipe(operators_1.map(function (res) { return res; })).subscribe(function (data) {
+            ret_subj.next(data);
+            ret_subj.complete();
+        }, function (err) { return console.log(err); });
+        return ret_subj;
+    };
+    AccountService.prototype.save_access_token = function (body) {
+        var query = [];
+        query.push('access_token=' + body.access_token);
+        query.push('user_id=' + body.user_id);
+        query.push('obj_id=' + body.obj_id);
+        var _resourceUrl = this.servUrl + '/saveAccessToken?' + query.join('&');
+        var ret_subj = new AsyncSubject_1.AsyncSubject();
+        this._http.get(_resourceUrl, { withCredentials: true }).pipe(operators_1.map(function (res) { return res; })).subscribe(function (data) {
+            ret_subj.next(data);
+            ret_subj.complete();
+        }, function (err) { return console.log(err); });
+        return ret_subj;
+    };
+    AccountService.prototype.ok_sendPost = function (url, photos) {
+        var body = { url: url, photos: photos };
+        var _resourceUrl = this.servUrl + '/ok_publish';
+        var ret_subj = new AsyncSubject_1.AsyncSubject();
+        this._http.post(_resourceUrl, JSON.stringify(body)).pipe(operators_1.map(function (res) { return res; })).subscribe(function (data) {
+            ret_subj.next(data);
+            ret_subj.complete();
+        }, function (err) { return console.log(err); });
+        return ret_subj;
+    };
+    AccountService.prototype.sendPost = function (item) {
+        var query = [];
+        query.push('item=' + JSON.stringify(item));
+        var _resourceUrl = this.servUrl + '/publish?' + query.join('&');
+        var ret_subj = new AsyncSubject_1.AsyncSubject();
+        this._http.post(_resourceUrl, { withCredentials: true }).pipe(operators_1.map(function (res) { return res; })).subscribe(function (data) {
+            ret_subj.next(data);
+            ret_subj.complete();
+        }, function (err) { return console.log(err); });
+        return ret_subj;
+    };
+    AccountService.prototype.publish = function (photo, url, index) {
+        var body = { url: url, photo: photo, index: index };
+        var _resourceUrl = this.servUrl + '/publish';
+        var ret_subj = new AsyncSubject_1.AsyncSubject();
+        this._http.post(_resourceUrl, JSON.stringify(body)).pipe(operators_1.map(function (res) { return res; })).subscribe(function (data) {
+            // let obj: any;
+            // if (data.result) {
+            //   // obj.hitsCount = data.result.hitsCount;
+            //   obj = data.result;
+            //  // console.log(obj);
+            //   ret_subj.next(obj);
+            //   ret_subj.complete();
+            // }
+            ret_subj.next(data);
+            ret_subj.complete();
+        }, function (err) { return console.log(err); });
+        console.log(ret_subj);
+        return ret_subj;
+    };
+    AccountService.prototype.saveUser = function (accountId, email_block, phone_block) {
+        var body = { accountId: accountId, emailBlock: email_block, phoneBlock: phone_block, sourceCode: "internet" };
+        var _resourceUrl = this.servUrl + '/person/save';
+        console.log(_resourceUrl + JSON.stringify(body));
+        var ret_subj = new AsyncSubject_1.AsyncSubject();
+        this._http.post(_resourceUrl, JSON.stringify(body)).pipe(operators_1.map(function (res) { return res; })).subscribe(function (data) {
+            // let obj: any;
+            // if (data.result) {
+            //   // obj.hitsCount = data.result.hitsCount;
+            //   obj = data.result;
+            //  // console.log(obj);
+            //   ret_subj.next(obj);
+            //   ret_subj.complete();
+            // }
+            ret_subj.next(data);
+            ret_subj.complete();
+        }, function (err) { return console.log(err); });
+        console.log(ret_subj);
+        return ret_subj;
+    };
+    // ????????????????????????????????????????
+    AccountService.prototype.payment = function (payment_type, payment_price) {
+        var query = [];
+        query.push('payment_type=' + payment_type);
+        query.push('payment_price=' + payment_price);
+        query.push('return_url=' + document.location.href.replace('#', 'ю'));
+        console.log(query.toString());
+        var _resourceUrl = this.servUrl + '/person/payment?' + query.join('&');
+        console.log(_resourceUrl);
+        // console.log(_resourceUrl + JSON.stringify(body));
+        var ret_subj = new AsyncSubject_1.AsyncSubject();
+        this._http.get(_resourceUrl, { withCredentials: true }).subscribe(function (raw) {
+            console.log(raw);
+            // let data = JSON.parse(JSON.stringify(raw));
+            ret_subj.next(raw.result);
+            ret_subj.complete();
+        }, function (err) { return console.log(err); });
+        return ret_subj;
+    };
+    // ????????????????????????????????????????
+    AccountService.prototype.checkBalance = function () {
+        var query = [];
+        query.push('rand=' + Math.random().toFixed(20).replace('.', ''));
+        var _resourceUrl = this.servUrl + '/person/balance?' + query.join('&');
+        console.log(_resourceUrl);
+        var ret_subj = new AsyncSubject_1.AsyncSubject();
+        //, responseType: 'text'
+        this._http.get(_resourceUrl, { withCredentials: true }).pipe(operators_1.map(function (res) { return res; })).subscribe(function (data) {
+            ret_subj.next(data);
+            ret_subj.complete();
+        }, function (err) { return console.log(err); });
+        console.log("----" + _resourceUrl);
+        return ret_subj;
+    };
+    AccountService.prototype.checklogin = function () {
+        var query = [];
+        query.push('rand=' + Math.random().toFixed(20).replace('.', ''));
+        var ret_subj = new AsyncSubject_1.AsyncSubject();
+        var _resourceUrl = this.servUrl + '/person/checklogin?' + query.join('&');
+        this._http.get(_resourceUrl, { withCredentials: true }).pipe(operators_1.map(function (res) { return res; })).subscribe(function (raw) {
+            var data = JSON.parse(JSON.stringify(raw));
+            var struct = {
+                'result': data.result,
+                'user_id': data.user_id,
+                'email': data.email
+            };
+            // console.log(data);
+            // console.log("res: ", data.result, " user: ", data.user_id, " email: ", data.email);
+            if (data.result) {
+                ret_subj.next(struct);
+            }
+            ret_subj.complete();
+        }, function (err) { return console.log(err); });
+        return ret_subj;
+    };
+    AccountService.prototype.logout = function () {
+        var _resourceUrl = this.servUrl + '/person/logout';
+        // , responseType: 'text'
+        this._http.post(_resourceUrl, '', { withCredentials: true }).pipe(operators_1.map(function (res) { return res; })).subscribe(function (data) {
+            // console.log(data);
+        }, function (err) { });
+    };
+    AccountService.prototype.getFavObjects = function () {
+        var _resourceUrl = this.servUrl + '/person/getFavObjects';
+        var ret_subj = new AsyncSubject_1.AsyncSubject();
+        // console.log(_resourceUrl);
+        this._http.get(_resourceUrl, { withCredentials: true }).pipe(operators_1.map(function (res) { return res; })).subscribe(function (raw) {
+            console.log(raw);
+            console.log(JSON.stringify(raw));
+            if (raw != undefined) {
+                var obj = void 0;
+                var data = JSON.parse(JSON.stringify(raw));
+                if (data.result) {
+                    //   // obj.hitsCount = data.result.hitsCount;
+                    obj = data.result;
+                    //
+                    ret_subj.next(obj);
+                    ret_subj.complete();
+                }
+            }
+            else {
+                ret_subj.complete();
+            }
+        }, function (err) {
+            console.log(err.error);
+            console.log("error: ", err);
+        });
+        // console.log(ret_subj);
+        return ret_subj;
+    };
+    AccountService.prototype.delFavObject = function (object_id) {
+        var body = { object_id: object_id };
+        var _resourceUrl = this.servUrl + '/person/delFavObject';
+        // console.log(_resourceUrl + JSON.stringify(body));
+        var ret_subj = new AsyncSubject_1.AsyncSubject();
+        // , responseType: 'text'
+        this._http.post(_resourceUrl, JSON.stringify(body), { withCredentials: true }).pipe(operators_1.map(function (res) { return res; })).subscribe(function (data) {
+            console.log(data);
+            ret_subj.next(data);
+            ret_subj.complete();
+        }, function (err) { return console.log(err); });
+        return ret_subj;
+    };
+    AccountService.prototype.addFavObject = function (object_id) {
+        var body = { object_id: object_id };
+        var _resourceUrl = this.servUrl + '/person/addFavObject';
+        // console.log(_resourceUrl + JSON.stringify(body));
+        var ret_subj = new AsyncSubject_1.AsyncSubject();
+        //, responseType: 'text'
+        this._http.post(_resourceUrl, JSON.stringify(body), { withCredentials: true }).pipe(operators_1.map(function (res) { return res; })).subscribe(function (data) {
+            // console.log(data);
+            ret_subj.next(data);
+            ret_subj.complete();
+        }, function (err) { return console.log(err); });
+        return ret_subj;
+    };
+    AccountService.prototype.login = function (email, pass) {
+        var query = [];
+        query.push('login=' + email);
+        query.push('pass=' + pass);
+        var _resourceUrl = this.servUrl + '/person/get?' + query.join('&');
+        var ret_subj = new AsyncSubject_1.AsyncSubject();
+        // console.log(_resourceUrl);
+        this._http.get(_resourceUrl, { withCredentials: true }).pipe(operators_1.map(function (res) { return res; })).subscribe(function (data) {
+            // console.log(typeof data);
+            //  console.log(data);
+            // let obj: any;
+            // if (data.result) {
+            //   // obj.hitsCount = data.result.hitsCount;
+            //   obj = data.result;
+            //   alert(data.result);
+            //   ret_subj.next(obj);
+            //   ret_subj.complete();
+            // }
+            ret_subj.next(data);
+            ret_subj.complete();
+        }, function (err) { return console.log(err); });
+        // console.log(ret_subj);
+        return ret_subj;
+    };
+    AccountService = __decorate([
+        core_1.Injectable(),
+        __metadata("design:paramtypes", [http_1.HttpClient, config_service_1.ConfigService])
+    ], AccountService);
+    return AccountService;
+}());
+exports.AccountService = AccountService;
+
+
+/***/ }),
+
+/***/ "./src/app/services/config.service.ts":
+/*!********************************************!*\
+  !*** ./src/app/services/config.service.ts ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+var ConfigService = /** @class */ (function () {
+    function ConfigService() {
+    }
+    ConfigService.prototype.getConfig = function (field) {
+        return config[field];
+    };
+    ConfigService = __decorate([
+        core_1.Injectable()
+    ], ConfigService);
+    return ConfigService;
+}());
+exports.ConfigService = ConfigService;
+var config = {
+    siteUrl: "//makleronline.net",
+    servUrl: "//makleronline.net/bknd"
+};
+
+
+/***/ }),
+
+/***/ "./src/app/services/offer.service.ts":
+/*!*******************************************!*\
+  !*** ./src/app/services/offer.service.ts ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+var http_1 = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+var AsyncSubject_1 = __webpack_require__(/*! rxjs/AsyncSubject */ "./node_modules/rxjs-compat/_esm5/AsyncSubject.js");
+var operators_1 = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+var config_service_1 = __webpack_require__(/*! ./config.service */ "./src/app/services/config.service.ts");
+var listResult_1 = __webpack_require__(/*! ../class/listResult */ "./src/app/class/listResult.ts");
+var OfferService = /** @class */ (function () {
+    function OfferService(_http, config) {
+        this._http = _http;
+        this.servUrl = config.getConfig('servUrl');
+    }
+    OfferService.prototype.list = function (page, perPage, filter, sort, equipment, coords) {
+        // console.log('offers list');
+        var query = [];
+        query.push('page=' + page);
+        query.push('per_page=' + perPage);
+        if (filter) {
+            query.push('filter=' + JSON.stringify(filter));
+        }
+        if (sort) {
+            // addDate finalRaiting
+            query.push('sort=' + JSON.stringify(sort));
+        }
+        if (equipment) {
+            query.push('equipment=' + JSON.stringify(equipment));
+        }
+        if (coords) {
+            // addDate finalRaiting
+            query.push('search_area=' + JSON.stringify(coords));
+        }
+        var _resourceUrl = this.servUrl + '/offer/list?' + query.join("&");
+        var ret_subj = new AsyncSubject_1.AsyncSubject();
+        this._http.get(_resourceUrl, { withCredentials: true }).pipe(operators_1.map(function (res) { return res; })).subscribe(function (raw) {
+            // console.log(raw);
+            // let obj: Item[];
+            var data = JSON.parse(JSON.stringify(raw));
+            var obj = new listResult_1.ListResult();
+            if (data.result) {
+                obj.hitsCount = data.hitsCount;
+                obj.list = data.result;
+                ret_subj.next(obj);
+                ret_subj.complete();
+            }
+            // console.log(Object.values(data));
+            //  console.log(obj);
+        }, function (err) { return console.log(err); });
+        return ret_subj;
+    };
+    OfferService = __decorate([
+        core_1.Injectable(),
+        __metadata("design:paramtypes", [http_1.HttpClient, config_service_1.ConfigService])
+    ], OfferService);
+    return OfferService;
+}());
+exports.OfferService = OfferService;
+
+
+/***/ }),
+
+/***/ "./src/environments/environment.ts":
+/*!*****************************************!*\
+  !*** ./src/environments/environment.ts ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+// This file can be replaced during build by using the `fileReplacements` array.
+// `ng build ---prod` replaces `environment.ts` with `environment.prod.ts`.
+// The list of file replacements can be found in `angular.json`.
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.environment = {
+    production: false
+};
+/*
+ * In development mode, to ignore zone related error stack frames such as
+ * `zone.run`, `zoneDelegate.invokeTask` for easier debugging, you can
+ * import the following file, but please comment it out in production mode
+ * because it will have performance impact when throw error
+ */
+// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+
+
+/***/ }),
+
+/***/ "./src/main.ts":
+/*!*********************!*\
+  !*** ./src/main.ts ***!
+  \*********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var app_browser_module_1 = __webpack_require__(/*! .././src/app/app.browser.module */ "./src/app/app.browser.module.ts");
+var core_1 = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+var platform_browser_dynamic_1 = __webpack_require__(/*! @angular/platform-browser-dynamic */ "./node_modules/@angular/platform-browser-dynamic/fesm5/platform-browser-dynamic.js");
+var environment_1 = __webpack_require__(/*! ./environments/environment */ "./src/environments/environment.ts");
+if (environment_1.environment.production) {
+    core_1.enableProdMode();
+}
+document.addEventListener('DOMContentLoaded', function () {
+    platform_browser_dynamic_1.platformBrowserDynamic()
+        .bootstrapModule(app_browser_module_1.AppBrowserModule)
+        .catch(function (err) { return console.log(err); });
+});
+
+
+/***/ }),
+
+/***/ 0:
+/*!***************************!*\
+  !*** multi ./src/main.ts ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! /home/drago/projects/maklerOnline-fe/src/main.ts */"./src/main.ts");
+
+
+/***/ })
+
+},[[0,"runtime","vendor"]]]);
+//# sourceMappingURL=main.js.map

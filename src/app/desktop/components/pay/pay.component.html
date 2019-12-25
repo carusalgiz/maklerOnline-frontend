@@ -76,7 +76,7 @@
       <div [class.selected]="selectedButton[0]?.block == '3-3'" (click)="payment('3-3', 'type_one', '150.00')"><p>МЕСЯЦ</p><span>1500 Р</span></div>
     </div>
   </div>
-  <div class="add-button" [class.open]="makler" style="border-bottom: 1px solid #a2a0a0">
+  <div class="add-button" [class.open]="makler" style="border-bottom: 1px solid #a2a0a0" (click)="sendMsg()">
     <span>СЕРВИС УМНЫЙ МАКЛЕР</span>
     <div class="bottomWordInButton">
       <span class="button-bottom">ИНСТРУМЕНТ ДЛЯ РАБОТЫ МАКЛЕРА</span>

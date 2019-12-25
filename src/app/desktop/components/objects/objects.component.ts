@@ -8,6 +8,9 @@ import {NgxMetrikaService} from '@kolkov/ngx-metrika';
 import ymaps from 'ymaps';
 import {Router} from "@angular/router";
 import {AccountService} from '../../../services/account.service';
+import {UploadFile} from '../../../class/UploadFile';
+import {ConditionsBlock} from '../../../class/conditionsBlock';
+import {PhoneBlock} from '../../../class/phoneBlock';
 @Component({
     selector: 'app-objects',
     templateUrl: './objects.component.html',
@@ -1125,7 +1128,14 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         if (this.activeButton == 'fav') {
             this.get_favObjects();
         } else {
-            this.update_list(objsOnPage, flag);
+            let newitem = new Item(1, 'Центральный район','Хабаровский край','Ленина','51','Хабаровск',15000,3,3,5,73.6, 'Дмитрий', 'https://sun9-64.userapi.com/c626322/v626322965/645d2/SYugy9naJVw.jpg',
+                1576754927, new UploadFile('https://avatars.mds.yandex.net/get-pdb/988157/cb39263b-cc68-46a0-a72d-7b12818edf8e/s1200'), undefined,'https://sun9-64.userapi.com/c626322/v626322965/645d2/SYugy9naJVw.jpg', new ConditionsBlock(true, true,true,true,true,true,true,true,true,true,true,true,true,true),
+                'email@yandex.ru', '79244030001', true, true, true, true, true,true, undefined, 'combined','apartment', true, true, 'all', 'Данная квартира находится  в удобной доступности от объектов инфраструктуры. Рядом есть крупный торговый центр, детский сад.', true, true, new PhoneBlock(undefined, undefined, undefined, '79245057898', '79997929333'));
+            newitem.lat = '48.4770865';
+            newitem.lon = '135.0805373';
+            this.items = [];
+            this.items.push(newitem);
+            //this.update_list(objsOnPage, flag);
         }
     }
 
@@ -1272,7 +1282,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         let scroll = document.getElementsByClassName('scroll-items') as HTMLCollectionOf<HTMLElement>;
         let inner = document.getElementsByClassName('inner-left') as HTMLCollectionOf<HTMLElement>;
         let useless = document.getElementsByClassName('uselessLine') as HTMLCollectionOf<HTMLElement>;
-        let topLayerForRightMenu = document.getElementsByClassName('topLayerForRightMenu') as HTMLCollectionOf<HTMLElement>;
         let slide = document.getElementsByClassName('right-slide-box') as HTMLCollectionOf<HTMLElement>;
 
         switch (name) {
@@ -1284,7 +1293,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 for (let i = 0; i < inner.length; i++) {
                     inner.item(i).style.setProperty('filter', 'none');
                 }
-                topLayerForRightMenu.item(0).classList.remove('open');
                 break;
             case 'proposal':
                 filters.item(1).classList.remove('open');

@@ -57,7 +57,7 @@ export class ItemComponent implements OnInit, OnChanges, AfterViewInit {
     @Input() payingMode: boolean;
     @ViewChild('carousel', {static: false}) private carousel: ElementRef;
 
-
+    offItem = Item;
     private player: AnimationPlayer;
     private currentSlide = 0;
     carouselWrapperStyle = {};
@@ -139,9 +139,6 @@ export class ItemComponent implements OnInit, OnChanges, AfterViewInit {
         this.carouselWrapperStyle = {
             width: `${this.itemWidth}px`,
         };
-
-        // trigger a fresh transition to the current slide to reset the position of the children
-        this.transitionCarousel(null);
     }
     private buildAnimation(offset, time: any) {
         return this.builder.build([
@@ -517,6 +514,7 @@ export class ItemComponent implements OnInit, OnChanges, AfterViewInit {
     getPlaces(x, y) {
         this._account_service.getObjects(x, y, 'Остановка', '0.01').subscribe(res => {
             this.nearObjects = res;
+            console.log(res);
             let places = [];
             for (let i = 0; i < this.nearObjects.length; i++) {
                 let obj = JSON.parse(JSON.stringify(this.nearObjects[i]));
@@ -530,6 +528,7 @@ export class ItemComponent implements OnInit, OnChanges, AfterViewInit {
                     distance: Math.floor(dist)
                 });
             }
+            console.log(places);
             let index = 0;
             for (let i = 1; i < places.length; i++) {
                 if (places[index].distance > places[i].distance) {
@@ -546,7 +545,8 @@ export class ItemComponent implements OnInit, OnChanges, AfterViewInit {
 
                 this.objStop = places[index].name;
 
-                document.getElementById('busStop').innerHTML = 'Остановка ' + this.objStop + '   \tВремя в пути: ' + this.timeToBusStop;
+                document.getElementById('busStop').innerHTML = this.objStop;
+                document.getElementById('timeToBus').innerHTML = this.timeToBusStop;
                 //    this.getRouteStopTime(coords, coor1);
 
             }
@@ -562,7 +562,7 @@ export class ItemComponent implements OnInit, OnChanges, AfterViewInit {
     close(name) {
         this.closeItem.emit(name);
     }
-    
+
     prevImg(block) {
         let photo = document.getElementsByClassName('carousel-li-img' + block + '' + this.item.id) as HTMLCollectionOf<HTMLElement>;
         let widthImg = photo.item(0).clientWidth;

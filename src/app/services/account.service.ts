@@ -356,4 +356,22 @@ export class AccountService {
    // console.log(ret_subj);
     return ret_subj;
   }
+    test( message: any) {
+        const body = {message: message};
+        let _resourceUrl =  this.servUrl + '/testFunc';
+        // console.log(_resourceUrl + JSON.stringify(body));
+        let ret_subj = <AsyncSubject<any>>new AsyncSubject();
+
+        //, responseType: 'text'
+        this._http.post(_resourceUrl, JSON.stringify(body), {withCredentials: true}).pipe(
+            map((res: Response) => res)).subscribe(
+            data => {
+                 console.log(data);
+                ret_subj.next(data);
+                ret_subj.complete();
+            },
+            err => console.log(err)
+        );
+        return ret_subj;
+    }
 }

@@ -2,12 +2,8 @@ import { Component, OnInit, AfterViewInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import {ConfigService} from "./services/config.service";
-import {split} from 'ts-node';
 import {AccountService} from './services/account.service';
-import {map} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
-import {AsyncSubject} from 'rxjs';
-import {log} from 'util';
 
 
 @Component({
@@ -733,27 +729,32 @@ export class AppComponent implements OnInit, AfterViewInit {
           // window.location.href = "https://api.vk.com/method/wall.post?owner_id=-186613956&message=%D0%A2%D0%B5%D1%81%D1%82%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%BF%D0%BE%D1%81%D1%82&access_token=6daefd335a545179be2612f5e332a6c4439af3e7099721ce2593409d3fed901cd39bd90891debfd6776f9&v=5.101";
        }
     setTimeout(e =>{ console.log('done!')}, 5000);
+
       if (url.indexOf(this.siteUrl + '/#/m') == -1 && url.indexOf(this.siteUrl + '/#/d') == -1 && url.indexOf(this.siteUrl + '/#/sitemap.xml') == -1 &&
           url.indexOf(this.siteUrl + '/#/t') == -1 && url.indexOf(this.siteUrl + ':4000') == -1 && url.indexOf('access_token') == -1) {
         if (isMobile) {
+            console.log('ща буду переходить в мобилку',this.siteUrl);
           document.location.href = '//' + this.siteUrl + '/#/m';
         } else if (isDesktopDevice) {
+            console.log('ща буду переходить в декстоп',this.siteUrl);
           document.location.href = '//' + this.siteUrl + '/#/d';
         } else if (isTablet) {
+            console.log('ща буду переходить в планшет',this.siteUrl);
           document.location.href = '//' + this.siteUrl + '/#/t';
         } else {
+            console.log('ща буду переходить в куда-то',this.siteUrl);
             document.location.href = '//' + this.siteUrl + '/#/d';
         }
       }
 
-        if (url.indexOf(this.siteUrl + ':4000') != -1) {
-            if (isMobile) {
-                document.location.href = '//' + this.siteUrl + ':4000/m';
-            } else if (isDesktopDevice) {
-                document.location.href = '//' + this.siteUrl + ':4000/d';
-            } else if (isTablet) {
-                document.location.href = '//' + this.siteUrl + ':4000/t';
-            }
-        }
+        // if (url.indexOf(this.siteUrl + ':4000') != -1) {
+        //     if (isMobile) {
+        //         document.location.href = '//' + this.siteUrl + ':4000/m';
+        //     } else if (isDesktopDevice) {
+        //         document.location.href = '//' + this.siteUrl + ':4000/d';
+        //     } else if (isTablet) {
+        //         document.location.href = '//' + this.siteUrl + ':4000/t';
+        //     }
+        // }
     }
 }

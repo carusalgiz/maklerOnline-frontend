@@ -7,4 +7,10 @@ export class UploadFile {
     type: number;
     isTemp: boolean;
     userId: number;
+
+    constructor(
+        href? : string
+    ) {
+        this.href = href;
+    }
 }

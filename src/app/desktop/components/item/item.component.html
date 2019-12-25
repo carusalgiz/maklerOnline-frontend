@@ -41,198 +41,119 @@
             <div class="no-photo">{{photo_no_title}}</div>
         </div>
         <div class="bottom-block">
-            <div class="street-block">
+            <div class="flex-col bottom-info">
+                <div class="street-block">
+                    <div style="font-weight: bold;color:#252F32">{{item?.address}} {{item?.house_num}}</div>
+                    <div style="color: #72727D">{{item?.city}}</div>
+                    <div style="color: #72727D">{{item?.admArea}}</div>
+                </div>
+                <div class="add-info">
+                    <div class="info left">
+                        <div>Остановка</div>
+                        <div>Время в пути:</div>
+                        <div>Добавлено</div>
+                    </div>
+                    <div class="info">
+                        <div id="busStop">{{objStop}}</div>
+                        <div id="timeToBus">{{timeToBusStop}}</div>
+                        <div>{{addDate}}</div>
+                    </div>
+                </div>
 
             </div>
-            <div class="info">
 
-            </div>
-            <div class="info">
-            </div>
             <div class="phone-block">
+                <div class="contact-photo full" [ngStyle]="{'background-image': (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true') ? 'url('+item?.photo+')' : 'url(../../../../assets/user-icon.png)', 'background-size': (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true') ? 'cover':'125% 125%' }"></div>
 
-            </div>
-        </div>
-        <div class="descriptionFullBlock">
-
-            <div class="top-card inner">
-                <div class="top-block inner">
-                    <div class="street special"><span class="special">{{item?.address}}<span
-                            style="font-weight: bold; margin-left: 5px"> {{item?.house_num}}</span></span></div>
-                    <div class="commission">{{item?.city}}, {{item?.admArea}}</div>
-                </div>
-                <div class="topRightBlock">
-                    <div class="topRightInner">
-                        <div class="price"><span style="margin-right: 8px">₽</span><span>{{formattedPrice}}/ <span
-                                style="font-size:12px;position: relative;left: -3px;">мес.</span></span></div>
-                        <div class="commission">Без комиссии</div>
-
-                    </div>
-                </div>
-            </div>
-            <div class="lineFull"></div>
-            <span class="titleFull">Дополнительная информация</span>
-            <div style="display: flex">
-                <div class="leftTopFullBlock">
-
-                    <!--<div class="street special"><span class="special">{{item?.address}}</span><span-->
-                    <!--style="font-weight: bold; margin-left: 5px"> {{item?.house_num}}</span></div>-->
-                    <!--<div class="commission">{{item?.city}}, {{item?.region}}</div>-->
-                    <div class="commission" id="busStop" style="display: flex">Остановка {{objStop}}    Время в
-                        пути: {{timeToBusStop}}</div>
-                    <div class="commission add-margin">Добавлено {{addDate}}</div>
-                </div>
-                <div class="rightTopFullBlock">
-                    <div class="starFav" *ngIf="!compare && compareItem" (mouseenter)="favHovered = true"
-                         (mouseleave)="favHovered = false">
-                        <img class="starImg" [class.open]="!favHovered && !item?.is_fav"
-                             src="../../../../assets/4-4.png" width="22px">
-                        <img (click)="addFavObject()" class="starImg" [class.open]="favHovered  && !item?.is_fav"
-                             src="../../../../assets/4-4%20watched.png" width="22px">
-                        <img (click)="delFavObject()" class="starImg" [class.open]="item?.is_fav"
-                             src="../../../../assets/4-4%20watched.png" width="22px">
-                    </div>
-                    <!--<div class="price full"><span style="margin-right: 8px">₽</span><span>{{formattedPrice}}/ <span style="font-size:14px;position: relative;-->
-                    <!--left: -3px;">мес.</span></span></div>-->
-                    <!--<div class="commission">Без комиссии</div>-->
-                </div>
-            </div>
-
-            <div class="info add-margin">
-                <div class="rooms"><span>{{item?.roomsCount}} комнатная квартира</span></div>
-                <div style="display: flex">
-                    <div style="width: 55px">Этаж</div>
-                    <div>{{item?.floor}}/{{item?.floorsCount}}</div>
+                <div class="flex-col contact-info">
+                    <div class="name" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">{{item.name}}</div>
+                    <div class="middleman" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">{{item.IsMiddleman ? 'Посредник' : 'Частное лицо'}}</div>
                 </div>
                 <div style="display: flex">
-                    <div style="width: 55px">Площадь</div>
-                    <div>{{item?.squareTotal}}<span style="padding-left: 5px">кв.м</span></div>
+                    <div class="phone-photo" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')"></div>
+                    <div class="flex-col" style="justify-content: center;" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
+                        <div class="phone" *ngIf="item?.phoneBlock?.main != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.main | mask: ' (000) 000-0000'}}</div>
+                        <div class="phone" *ngIf="item?.phoneBlock?.other != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.other | mask: ' (000) 000-0000'}}</div>
+                        <div class="phone" *ngIf="item?.phoneBlock?.home != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.home | mask: ' (000) 000-0000'}}</div>
+                        <div class="phone" *ngIf="item?.phoneBlock?.cellphone != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.cellphone | mask: ' (000) 000-0000'}}</div>
+                        <div class="phone" *ngIf="item?.phoneBlock?.fax != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.fax | mask: ' (000) 000-0000'}}</div>
+                        <div class="phone" *ngIf="item?.phoneBlock?.ip != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.ip | mask: ' (000) 000-0000'}}</div>
+                    </div>
+                    <ng-container *ngIf="(payingMode != true && payingMode != 'true') || (loggingMode != true && loggingMode != 'true')">
+                        <div class="button-contact" (click)="checklogin();">Позвонить</div>
+                    </ng-container>
                 </div>
             </div>
-            <div class="rightBlockText title">
-                <span>КОМПЛЕКТАЦИЯ ОБЪЕКТА</span>
-            </div>
-            <div class="rightBlockText full add-margin">
-                {{conveniences}}
-            </div>
-            <div class="rightBlockText title">
-                <span>УСЛОВИЯ НАЙМА</span>
-            </div>
-            <div class="rightBlockText full">
-                {{conditions}}
-            </div>
-            <div class="rightBlockText title">
-                <span>ЦЕНА</span>
-            </div>
-            <div class="rightBlockText full">
-                {{pricefields}}
-            </div>
-            <div class="rightBlockText full">
-                Форма расчета: {{paymentType}}
-            </div>
-            <div class="rightBlockText title">
-                <span>ДОПОЛНИТЕЛЬНОЕ ОПИСАНИЕ</span>
-            </div>
-            <div class="rightBlockText full">
-                {{item?.description}}
-            </div>
         </div>
-        <div class="lineFull add"></div>
-        <div class="nearby-block add">
-            <span>ДАННЫЕ АРЕНДОДАТЕЛЯ</span>
-        </div>
-        <div class="descriptionFullBlock add">
-            <div style="display: flex">
-                <div class="contactBlock topRightInner" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
-                    <div class="contactLineBlock">
-                        <div class="one">Телефон рабочий</div>
-                        <div class="two"><span>+7 {{item?.phone | mask: '(000) 000-0000'}}</span></div>
-                    </div>
-                    <div class="contactLineBlock">
-                        <div class="one">Электронный адрес</div>
-                        <div class="two"><span>{{item?.email}}</span></div>
-                    </div>
-                    <div class="contactLineBlock" style="padding-bottom: 10px">
-                        <div class="one">Сайт</div>
-                        <div class="two"></div>
-                    </div>
+        <div class="bottom-block price" >
+            <div class="star-block">
+                <div class="starFav inner" *ngIf="!compare && compareItem" (mouseenter)="favHovered = true"
+                     (mouseleave)="favHovered = false">
+                    <img class="starImg" [class.open]="!favHovered && !item?.is_fav"
+                         src="../../../../assets/4-4.png" width="22px">
+                    <img (click)="addFavObject()" class="starImg" [class.open]="favHovered  && !item?.is_fav"
+                         src="../../../../assets/4-4%20watched.png" width="22px">
+                    <img (click)="delFavObject()" class="starImg" [class.open]="item?.is_fav"
+                         src="../../../../assets/4-4%20watched.png" width="22px">
                 </div>
-<!--                <div class="contactBlock topRightInner" *ngIf="(payingMode != true && payingMode != 'true') || (loggingMode != true && loggingMode != 'true')">-->
-<!--                    <div style="width: 100%; display: flex; justify-content: center" >-->
-<!--                        <div class="button-contacts" (click)="checklogin(); checkblock()">КОНТАКТЫ</div>-->
-<!--                    </div>-->
-<!--                </div>-->
+                <div>Добавлено в избранное</div>
+            </div>
+            <div class="write-block">
+                <div class="button-contact" (click)="checklogin();">Написать</div>
+            </div>
+        </div>
+        <div class="header-block" style="text-transform: uppercase">
+            <div *ngIf="item?.typeCode == 'room'"><span class="one">Комната</span></div>
+            <div *ngIf="item?.typeCode == 'apartment'"><span class="one">Квартира</span></div>
+            <div *ngIf="item?.typeCode == 'house'"><span class="one">Дом</span></div>
+            <div *ngIf="item?.typeCode == 'dacha'"><span class="one">Дача</span></div>
+            <div *ngIf="item?.typeCode == 'cottage'"><span class="one">Коттедж</span></div>
+        </div>
+        <div class="lineFull"></div>
+        <div class="bottom-info price inner">
+            <div class="price price-inner">{{formattedPrice}} P</div><div>Без комиссии</div>
+        </div>
+        <div class="bottom-block four">
+            <div class="flex-col four-info">
+                <div>Комнат</div>
+                <div>Общая площадь</div>
+                <div>Балкон/лоджия</div>
+            </div>
+            <div class="flex-col four-info">
+                <div *ngIf="roomC">{{item?.roomsCount}}</div>
+                <div>{{item?.squareTotal}}<span style="padding-left: 5px">кв.м</span></div>
+                <div>{{ item.loggia || item.balcony ? 'Да' : 'Нет'}}</div>
+            </div>
+            <div class="flex-col four-info">
+                <div>Этаж/этажность</div>
+                <div>Санузел</div>
+                <div>Залог</div>
+            </div>
+            <div class="flex-col four-info">
+                <div>{{item?.floor}}/{{item?.floorsCount}}</div>
+                <div>{{offItem.bathroomOptions[item?.bathroom]?.label}}</div>
+                <div>{{item?.prepayment ? 'Да' : 'Нет'}}</div>
+            </div>
+        </div>
+        <div class="header-block">Комплектация объекта</div>
+        <div class="lineFull"></div>
+        <div class="descriptionBlock">
+            {{conveniences}}
+        </div>
+        <div class="header-block">Условия найма</div>
+        <div class="lineFull"></div>
+        <div class="descriptionBlock">
+            {{conditions}}
+        </div>
+        <div class="header-block">Дополнительное описание</div>
+        <div class="lineFull"></div>
+        <div class="descriptionBlock">
+            {{item?.description}}
+        </div>
+        <div class="header-block">Добавить рейтинг, отзыв</div>
+        <div class="lineFull"></div>
 
-            </div>
-        </div>
-
-        <!--<div class="lineFull add"></div>-->
-        <!--<div class="nearby-block add">-->
-        <!--<span>МЕСТОПОЛОЖЕНИЕ</span>-->
-        <!--</div>-->
-        <!--<div class="map filters-map open" *ngIf="!compare && !similarOpen" id="filters-item{{id}}"></div>-->
-        <!--<div class="map filters-map open" *ngIf="!compare && similarOpen" id="filters-item{{id}}{{formattedPrice}}"></div>-->
-        <!--<div class="map filters-map open" *ngIf="compare" id="filters-item{{id}}{{item?.squareTotal}}{{formattedPrice}}"></div>-->
-        <div class="descriptionFullBlock">
-            <div class="nearby-block">
-                <span style="font-weight: bold;">ЧТО РЯДОМ</span>
-                <span style="font-size: 14px;color: #677578;">Объекты инфраструктуры, развлечения...</span>
-            </div>
-            <div class="lineFull"></div>
-            <div class="additional-nearby-block"
-                 [class.small-display]="widthDocument < 1540 && (compare || similarOpen)">
-                <div class="inner-additional" *ngFor="let obj of nrObjs, let i = index">
-                    <div class="nearby">
-                        <span>{{obj.name}} - {{obj.type}}</span>
-                        <span class="bottom-text">{{obj.description}}</span>
-                    </div>
-                    <div style="max-height: 18px;margin-left: 40px;    min-width: 50px;">
-                        <span>{{obj.distance}} м</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="lineFull add"></div>
-        <div class="descriptionFullBlock" style="padding: 0 30px 40px;">
-            <div class="nearby-block">
-                <span>РЕЙТИНГ ПРЕДЛОЖЕНИЯ</span>
-            </div>
-            <div class="lineFull"></div>
-            <app-rating></app-rating>
+        <div style="padding: 0 30px 40px;">
         </div>
     </div>
-<!--    <div *ngIf="mode == 'similar'">-->
-<!--        <div class="photoFull">-->
-<!--            <img src="{{src}}">-->
-<!--        </div>-->
-<!--        <div style="display: flex;    margin: 15px 0;">-->
-<!--            <div class="descriptionFullBlock" style="flex-grow: 1;">-->
-<!--                <div class="street special"><span class="special">{{item?.address}}</span><span-->
-<!--                        style="font-weight: bold; margin-left: 5px"> {{item?.house_num}}</span></div>-->
-<!--                <div class="commission add-margin">{{item?.city}}{{item?.region}}</div>-->
-<!--                <div class="info">-->
-<!--                    <div class="rooms"><span class="one">Квартира</span><span>{{item?.roomsCount}} комнатная</span>-->
-<!--                    </div>-->
-<!--                    <div class="rooms"><span class="one">Этаж</span><span>{{item?.floor}}/{{item?.floorsCount}}</span>-->
-<!--                    </div>-->
-<!--                    <div class="rooms"><span class="one">Площадь </span><span> {{item?.squareTotal}}кв.м</span></div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="descriptionFullBlock" style="align-items: flex-end">-->
-<!--                <div class="topRightInner">-->
-<!--                    <div class="price"><span style="margin-right: 8px">₽</span><span>{{formattedPrice}}/ <span style="font-size:12px;    position: relative;-->
-<!--          left: -3px;">мес.</span></span></div>-->
-<!--                    <div class="commission">Без комиссии</div>-->
-<!--                </div>-->
-<!--                <div class="topRightBlock" style="margin: 0">-->
-<!--                    <div class="starFav">-->
-<!--                        <img class="starImg" *ngIf="watched !== true" src="../../../../assets/4-4.png" width="22px">-->
-<!--                        <img class="starImg" *ngIf="item?.watched == true" src="../../../../assets/4-4%20watched.png"-->
-<!--                             width="22px">-->
-<!--                    </div>-->
-<!--                    <div class="two">Добавить в избранное</div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
 </div>
