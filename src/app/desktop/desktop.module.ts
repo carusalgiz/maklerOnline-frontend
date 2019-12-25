@@ -25,7 +25,7 @@ const routes: Routes = [
     {path: 'pay', component: PayComponent},
     {path: 'objects/:mode', component: ObjectsComponent},
   {path: '', component: HomeComponent},
-  {path: 'login', component: LoginComponent}
+  {path: 'login', component: LoginComponent} 
 ];
 
 @NgModule({
