@@ -65,7 +65,7 @@ import {AccountService} from '../../services/account.service';
                         <li class="carousel-li-img1{{item?.id}}" *ngFor="let img of item?.photos, let i = index">
                             <div class="photoBlock" [class.watched]="item?.watched">
                                 <img class="img"                                   
-                                     [src]="img.href">
+                                     [src]="img.hrefMini">
                             </div>
                         </li>
                     </ul>
