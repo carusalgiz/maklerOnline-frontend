@@ -414,12 +414,14 @@ div:hover, span:hover, p:hover {
     background-color: #FBFAF9;
 }
 .name{
+    font-family: Cadillac;
     font-weight: bold;
     font-size: 12px;
     color: #252F32;
     letter-spacing: 0.05em;
 }
 .middleman{
+    font-family: Cadillac;
     font-size: 12px;
     color: #3C4D52;
     letter-spacing: 0.05em;

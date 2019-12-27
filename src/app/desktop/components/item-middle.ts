@@ -64,7 +64,7 @@ import {AccountService} from '../../services/account.service';
                     <ul id="carousel-ul-img1{{item?.id}}" #carousel>
                         <li class="carousel-li-img1{{item?.id}}" *ngFor="let img of item?.photos, let i = index">
                             <div class="photoBlock" [class.watched]="item?.watched">
-                                <img class="img"                                   
+                                <img class="img"
                                      [src]="img.hrefMini">
                             </div>
                         </li>
@@ -78,7 +78,7 @@ import {AccountService} from '../../services/account.service';
                     </div>
                 </div>
             </div>
-            <div class="bottom-block">  
+            <div class="bottom-block">
                     <div class="info">
                         <div class="apart-type" *ngIf="item?.typeCode == 'room'"><span class="one">КОМНАТА</span></div>
                         <div class="apart-type" *ngIf="item?.typeCode == 'apartment'"><span class="one">КВАРТИРА</span></div>
@@ -120,17 +120,17 @@ import {AccountService} from '../../services/account.service';
                              src="../../../../assets/4-4%20watched.png" width="24px">
                     </div>
                     <div class="phone-block">
-                        <div class="contact-photo full" [ngStyle]="{'background-image': (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true') ? 'url('+item?.photo+')' : 'url(../../../../assets/user-icon.png)', 'background-size': (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true') ? 'cover':'125% 125%' }"></div>
+                        <div class="contact-photo full" [ngStyle]="{'background-image': (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true') && item?.photo != undefined ? 'url('+item?.photo+')' : 'url(../../../../assets/user-icon.png)', 'background-size': (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')  && item?.photo != undefined  ? 'cover':'125% 125%' }"></div>
 
-                        <div class="flex-col contact-info">
+                        <div class="flex-col contact-info" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
                             <div class="name">{{item.name}}</div>
                             <div class="middleman">{{item.IsMiddleman ? 'Посредник' : 'Частное лицо'}}</div>
                         </div>
                         <div class="lineFull contact"></div>
                         <div style="display: flex">
 <!--                            *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')"-->
-                            <div class="phone-photo" ></div>
-                            <div class="flex-col" style="justify-content: center;">
+                            <div class="phone-photo" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')"></div>
+                            <div class="flex-col" style="justify-content: center;" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
                                 <div class="phone" *ngIf="item?.phoneBlock?.main != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.main | mask: ' (000) 000-0000'}}</div>
                                 <div class="phone" *ngIf="item?.phoneBlock?.other != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.other | mask: ' (000) 000-0000'}}</div>
                                 <div class="phone" *ngIf="item?.phoneBlock?.home != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.home | mask: ' (000) 000-0000'}}</div>
@@ -138,9 +138,9 @@ import {AccountService} from '../../services/account.service';
                                 <div class="phone" *ngIf="item?.phoneBlock?.fax != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.fax | mask: ' (000) 000-0000'}}</div>
                                 <div class="phone" *ngIf="item?.phoneBlock?.ip != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.ip | mask: ' (000) 000-0000'}}</div>
                             </div>
-<!--                            <ng-container *ngIf="(payingMode != true && payingMode != 'true') || (loggingMode != true && loggingMode != 'true')">-->
-<!--                                <div class="button-contact" (click)="checklogin();">Позвонить</div>-->
-<!--                            </ng-container>-->
+                            <ng-container *ngIf="(payingMode != true && payingMode != 'true') || (loggingMode != true && loggingMode != 'true')">
+                                <div class="button-contact" (click)="checklogin();">Позвонить</div>
+                            </ng-container>
                         </div>
                     </div>
             </div>

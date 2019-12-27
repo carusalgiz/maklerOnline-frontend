@@ -358,7 +358,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }
             this.drawActive = false;
         });
-        this.get_list(100, 'initmap');
+        this.get_list(100000, 'initmap');
     }
 
     clearMap() {
@@ -1066,7 +1066,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             data => setTimeout(() =>{
             console.log(data);
                     if (flag != 'listscroll') {this.items = []}
-            // this.countOfObjects = data.hitsCount;
+             this.countOfObjects = data.hitsCount;
             this.hitsCount = data.hitsCount || (this.hitsCount > 0 ? this.hitsCount : 0);
             if (this.pagecounter == 0) {
                 for (let i = 0; i < data.hitsCount; i++) {
@@ -1128,14 +1128,14 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         if (this.activeButton == 'fav') {
             this.get_favObjects();
         } else {
-            let newitem = new Item(1, 'Центральный район','Хабаровский край','Ленина','51','Хабаровск',15000,3,3,5,73.6, 'Дмитрий', 'https://sun9-64.userapi.com/c626322/v626322965/645d2/SYugy9naJVw.jpg',
-                1576754927, new UploadFile('https://avatars.mds.yandex.net/get-pdb/988157/cb39263b-cc68-46a0-a72d-7b12818edf8e/s1200'), undefined,'https://sun9-64.userapi.com/c626322/v626322965/645d2/SYugy9naJVw.jpg', new ConditionsBlock(true, true,true,true,true,true,true,true,true,true,true,true,true,true),
-                'email@yandex.ru', '79244030001', true, true, true, true, true,true, undefined, 'combined','apartment', true, true, 'all', 'Данная квартира находится  в удобной доступности от объектов инфраструктуры. Рядом есть крупный торговый центр, детский сад.', true, true, new PhoneBlock(undefined, undefined, undefined, '79245057898', '79997929333'));
-            newitem.lat = '48.4770865';
-            newitem.lon = '135.0805373';
-            this.items = [];
-            this.items.push(newitem);
-            //this.update_list(objsOnPage, flag);
+            // let newitem = new Item(1, 'Центральный район','Хабаровский край','Ленина','51','Хабаровск',15000,3,3,5,73.6, 'Дмитрий', 'https://sun9-64.userapi.com/c626322/v626322965/645d2/SYugy9naJVw.jpg',
+            //     1576754927, new UploadFile('https://avatars.mds.yandex.net/get-pdb/988157/cb39263b-cc68-46a0-a72d-7b12818edf8e/s1200'), undefined,'https://sun9-64.userapi.com/c626322/v626322965/645d2/SYugy9naJVw.jpg', new ConditionsBlock(true, true,true,true,true,true,true,true,true,true,true,true,true,true),
+            //     'email@yandex.ru', '79244030001', true, true, true, true, true,true, undefined, 'combined','apartment', true, true, 'all', 'Данная квартира находится  в удобной доступности от объектов инфраструктуры. Рядом есть крупный торговый центр, детский сад.', true, true, new PhoneBlock(undefined, undefined, undefined, '79245057898', '79997929333'));
+            // newitem.lat = '48.4770865';
+            // newitem.lon = '135.0805373';
+            // this.items = [];
+            // this.items.push(newitem);
+            this.update_list(objsOnPage, flag);
         }
     }
 
