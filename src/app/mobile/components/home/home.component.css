@@ -157,6 +157,12 @@ width: calc(100vw - 40px);
   background-color: white;
   color: #4b4b4b;
 }
+.iconUser{
+    border-radius: 35px;
+    height: 70px;
+    width: 70px;
+    margin-bottom: 10px;
+}
 .social-icons{
   display: flex;
   justify-content: space-between;
@@ -321,6 +327,177 @@ a.social-link{
 }
 .countLine.yearBlock{
   height: 117px;
+}
+.countLine.word{
+    font-family: Cadillac, sans-serif;
+    flex-direction: column;
+    justify-content: center;
+    background-color: white;
+    color: #252f32;
+    height: auto;
+    padding: 50px 0 45px;
+}
+.author{
+    display: flex;
+    justify-content: flex-end;
+    font-style: italic;
+    color: #677578;
+}
+.wordOne{
+    font-size: 20px;
+    max-width: 730px;
+    text-align: center;
+}
+.reviewsBottom{
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    align-items: center;
+    font-family: Cadillac, sans-serif;
+}
+.compDescription{
+    font-size: 14px;
+    text-align: center;
+    letter-spacing: .05em;
+    margin-bottom: 20px;
+}
+.carousel {
+    display: none;
+    transform-origin: 0 0;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.carousel.open {
+    display: flex;
+    -webkit-animation: fade ease-in 0.3s;
+    animation: fade ease-in 0.3s;
+}
+
+.carousel ul {
+    width: 9999px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    transition: margin-left 250ms;
+    font-size: 0;
+}
+
+.carousel li {
+    display: inline-block;
+}
+
+.arrow {
+    padding: 0;
+    display: block;
+    background-color: #f6f6f6;
+}
+.arrow.left {
+    width: 40px;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    top: 30px;
+    z-index: 1;
+}
+
+.objects {
+    overflow: hidden;
+    margin-left: -40px;
+    flex: 0 0 100%;
+}
+
+.arrow.right {
+    width: 40px;
+    height: 160px;
+    position: relative;
+    right: 40px;
+    top: 30px;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+}
+
+.arrow:focus {
+    outline: none;
+}
+.barArrow1-left, .barArrow2-left{
+    width: 35px;
+    height: 2px;
+    border-radius: 5px;
+    background-color: #252f32;
+    margin: 3px 0;
+}
+.barArrow1-left{
+    transform: rotate(-55deg) translate(-13px,13px);
+}
+.barArrow2-left{
+    transform: rotate(55deg) translate(35px,21px);
+}
+.barArrow1-right, .barArrow2-right{
+    width: 35px;
+    height: 2px;
+    border-radius: 5px;
+    background-color: #252f32;
+    margin: 3px 0;
+}
+.barArrow1-right{
+    transform: rotate(55deg) translate(17px,10px);
+}
+.barArrow2-right{
+    transform: rotate(-55deg) translate(-35px,26px);
+}
+.arrowFull{
+    height: 73px;
+    width: 40px;
+}
+.reviews{
+    display: flex;
+    width: 70vw;
+    margin: 0 15vw;
+}
+.reviewText{
+    margin: 10px 0;
+    letter-spacing: 0.05em;
+}
+.reviewBlock{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.reviewBlockInfo{
+    font-family: Cadillac, sans-serif;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+}
+.name{
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    margin-bottom: 5px;
+}
+.ratingTest {
+    unicode-bidi: bidi-override;
+    direction: rtl;
+}
+.ratingTest > span {
+    display: inline-block;
+    position: relative;
+    width: 19px;
+    height: 20px;
+    background-image: url("../../../../assets/НовыйХолст2StarEmptynew.png");
+    background-size: 18px 20px;
+    margin-left: 3px;
+}
+.ratingTest > span:hover,
+.ratingTest > span:hover ~ span{
+    width: 19px;
+    height: 20px;
+    background-image: url("../../../../assets/НовыйХолст2STarFullnew.png");
+    background-size: 18px 20px;
+    margin-left: 3px;
 }
 .imgnondisp{
   display: none;

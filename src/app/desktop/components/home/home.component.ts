@@ -162,7 +162,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
   get_list() {
     this.countObjects = 0;
-    this._offer_service.list(0, 10000, '', '', '', '').subscribe(dataOffers => {
+    this._offer_service.list(0, 10000, '', '', '', '', '').subscribe(dataOffers => {
       this.countObjects = dataOffers.hitsCount;
       let data = new Date();
       for (let offer of dataOffers.list) {

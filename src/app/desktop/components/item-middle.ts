@@ -2,7 +2,7 @@ import {
     Component,
     OnChanges,
     SimpleChanges,
-    AfterViewInit, Output, EventEmitter, ChangeDetectionStrategy
+    AfterViewInit, Output, EventEmitter, ChangeDetectionStrategy, OnInit
 } from '@angular/core';
 import {
     ContentChildren,
@@ -23,6 +23,7 @@ import {
 } from '@angular/animations';
 import {Item} from '../../item';
 import {AccountService} from '../../services/account.service';
+import * as moment from 'moment';
 
 @Component({
     selector: 'item-middle',
@@ -30,24 +31,24 @@ import {AccountService} from '../../services/account.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <div class="catalog-item hovered itemBlock" id="{{item?.id}}">
-            <div class="top-card">
-                <div class="top-block" style="flex-grow: 1">
-                    <div class="street special">
-                        <span *ngIf="!item.address.includes('ул.')">ул.</span>
-                        <span class="special">
-                             {{item?.address}}
-                            <span style="font-weight: bold; margin-left: 5px"> {{item?.house_num}}</span>
-                        </span>
-                    </div>
-                    <div class="commission">{{item?.city}}, {{item?.admArea}}</div>
-                </div>
-<!--                <div class="topRightBlock">-->
-<!--                    <div class="flex-col">-->
-<!--                        -->
-<!--                        <div class="commission">Без комиссии</div>-->
+<!--            <div class="top-card">-->
+<!--                <div class="top-block" style="flex-grow: 1">-->
+<!--                    <div class="street special">-->
+<!--                        <span *ngIf="!item.address.includes('ул.')">ул.</span>-->
+<!--                        <span class="special">-->
+<!--                             {{item?.address}}-->
+<!--                            <span style="font-weight: bold; margin-left: 5px"> {{item?.house_num}}</span>-->
+<!--                        </span>-->
 <!--                    </div>-->
+<!--                    <div class="commission">{{item?.city}}, {{item?.admArea}}</div>-->
 <!--                </div>-->
-            </div>
+<!--&lt;!&ndash;                <div class="topRightBlock">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <div class="flex-col">&ndash;&gt;-->
+<!--&lt;!&ndash;                        &ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="commission">Без комиссии</div>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--            </div>-->
             <div class="photoBlock" *ngIf="imgLen == 0" [class.watched]="item?.watched">
                 <img class="img"
                      [src]="src">
@@ -64,8 +65,8 @@ import {AccountService} from '../../services/account.service';
                     <ul id="carousel-ul-img1{{item?.id}}" #carousel>
                         <li class="carousel-li-img1{{item?.id}}" *ngFor="let img of item?.photos, let i = index">
                             <div class="photoBlock" [class.watched]="item?.watched">
-                                <img class="img"
-                                     [src]="img.hrefMini">
+                                <img class="img" [class.avito]="img.href.indexOf('avito') != -1"
+                                     [src]="img.hrefMini != undefined ? img.hrefMini : img.href">
                             </div>
                         </li>
                     </ul>
@@ -85,25 +86,28 @@ import {AccountService} from '../../services/account.service';
                         <div class="apart-type" *ngIf="item?.typeCode == 'house'"><span class="one">ДОМ</span></div>
                         <div class="apart-type" *ngIf="item?.typeCode == 'dacha'"><span class="one">ДАЧА</span></div>
                         <div class="apart-type" *ngIf="item?.typeCode == 'cottage'"><span class="one">КОТТЕДЖ</span></div>
-                        <div class="price">{{formattedPrice}}<span style="margin-left: 8px">₽</span></div>
-                        <div class="rooms">Комнат</div>
-                        <div class="rooms">
-                            <span class="one">Этаж/Этажность</span>
+                        <div class="price" style="    margin-bottom: 5px;">{{formattedPrice}}<span style="margin-left: 8px">₽</span></div>
+                        <div class="address">
+                            <span *ngIf="!item.address.includes('ул.')">ул.</span><span class="special">{{item?.address}}<span style="font-weight: bold; text-transform: lowercase"> {{item?.house_num}}</span></span>
                         </div>
-                        <div class="rooms"><span class="one">Площадь</span></div>
-                    </div>
-                    <div class="info">
-                        <div class="rooms" style="margin-bottom: 10px;"></div>
-                        <div class="rooms" style="margin-bottom: 7px;"></div>
-                        <div class="rooms" *ngIf="roomC">{{item?.roomsCount}}</div>
-                        <div class="rooms" *ngIf="item?.typeCode == 'room' || item?.typeCode == 'apartment'">
-                            <span>{{item?.floor}}/{{item?.floorsCount}}</span>
+                        <div class="bus">Остановка {{item?.busStop}}</div>
+                        <div class="bottom-desc">
+                            <div class="flex-col" style="    align-items: center;">
+                                <span class="typename">{{item?.roomsCount}}</span>
+                                <span class="type">Комнат</span>
+                            </div>
+                            <div class="desc-divider"></div>
+                            <div class="flex-col" style="    align-items: center;">
+                                <span class="typename">{{item?.floor}}/{{item?.floorsCount}}</span>
+                                <span class="type">Этаж</span>
+                            </div>
+                            <div class="desc-divider"></div>
+                            <div class="flex-col" style="    align-items: center;">
+                                <span  class="typename" *ngIf="(item?.typeCode == 'apartment' || item?.typeCode == 'house' || item?.typeCode == 'dacha' || item?.typeCode == 'cottage')">{{item?.squareTotal}}</span>
+                                <span  class="typename" *ngIf="item?.typeCode == 'room'">{{item?.squareLiving}}</span>
+                                <span class="type">Площадь</span>
+                            </div>
                         </div>
-                        <div class="rooms"
-                             *ngIf="item?.typeCode == 'house' || item?.typeCode == 'dacha' || item?.typeCode == 'cottage'">
-                            <span>{{item?.floorsCount}}</span>
-                        </div>
-                        <div class="rooms"><span *ngIf="squareC">{{item?.squareTotal}} кв.м</span><span *ngIf="!squareC">кв.м</span></div>
                     </div>
                     <div class="starFav" *ngIf="item != undefined" (mouseenter)="favHovered = true"
                          (mouseleave)="favHovered = false">
@@ -119,15 +123,14 @@ import {AccountService} from '../../services/account.service';
                              [class.open]="item.is_fav && !favHovered"
                              src="../../../../assets/4-4%20watched.png" width="24px">
                     </div>
-                    <div class="phone-block">
+                    <div class="phone-block flex-col">
                         <div class="contact-photo full" [ngStyle]="{'background-image': (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true') && item?.photo != undefined ? 'url('+item?.photo+')' : 'url(../../../../assets/user-icon.png)', 'background-size': (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')  && item?.photo != undefined  ? 'cover':'125% 125%' }"></div>
-
-                        <div class="flex-col contact-info" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
+                        <div class="flex-col contact-info">
                             <div class="name">{{item.name}}</div>
                             <div class="middleman">{{item.IsMiddleman ? 'Посредник' : 'Частное лицо'}}</div>
                         </div>
-                        <div class="lineFull contact"></div>
-                        <div style="display: flex">
+                        <div class="lineFull contact" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')"></div>
+                        <div style="display: flex;align-items: center;">
 <!--                            *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')"-->
                             <div class="phone-photo" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')"></div>
                             <div class="flex-col" style="justify-content: center;" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
@@ -139,7 +142,7 @@ import {AccountService} from '../../services/account.service';
                                 <div class="phone" *ngIf="item?.phoneBlock?.ip != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.ip | mask: ' (000) 000-0000'}}</div>
                             </div>
                             <ng-container *ngIf="(payingMode != true && payingMode != 'true') || (loggingMode != true && loggingMode != 'true')">
-                                <div class="button-contact" (click)="checklogin();">Позвонить</div>
+                                <div class="button-contact" (click)="checklogin();">Контакты</div>
                             </ng-container>
                         </div>
                     </div>
@@ -154,7 +157,7 @@ export class ItemMiddle implements AfterViewInit, OnChanges {
     public payingMode: any;
     public loggingMode: any;
     @ViewChild('carousel', {static: false}) private carousel: ElementRef;
-
+    objStop: any;
     favHovered = false;
     conveniencesShort = '';
     roomC: any;
@@ -181,6 +184,7 @@ export class ItemMiddle implements AfterViewInit, OnChanges {
 
     ngAfterViewInit() {
         this.reSizeCarousel();
+        // this.getPlaces(this.item.lon, this.item.lat);
     }
 
     @HostListener('window:resize', ['$event'])
@@ -205,7 +209,55 @@ export class ItemMiddle implements AfterViewInit, OnChanges {
             this.checkParams();
         }
     }
+    degreesToRadians(degrees) {
+        return degrees * Math.PI / 180;
+    }
 
+    distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
+        let earthRadiusKm = 6371;
+
+        let dLat = this.degreesToRadians(lat2 - lat1);
+        let dLon = this.degreesToRadians(lon2 - lon1);
+
+        lat1 = this.degreesToRadians(lat1);
+        lat2 = this.degreesToRadians(lat2);
+
+        let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return earthRadiusKm * c;
+    }
+    getPlaces(x, y) {
+        this._account_service.getObjects(x, y, 'Остановка', '0.01').subscribe(res => {
+            // console.log(res);
+            let places = [];
+            for (let i = 0; i < res.length; i++) {
+                let obj = JSON.parse(JSON.stringify(res[i]));
+                let coord = JSON.parse(JSON.stringify(obj.geometry));
+                let properties = JSON.parse(JSON.stringify(obj.properties));
+                let dist = this.distanceInKmBetweenEarthCoordinates(x, y, coord.coordinates[0], coord.coordinates[1]);
+                dist = Math.floor(dist * 1000);
+                places.push({
+                    coordinates: coord.coordinates,
+                    name: properties.name,
+                    distance: Math.floor(dist)
+                });
+            }
+            console.log(places);
+            let index = 0;
+            for (let i = 1; i < places.length; i++) {
+                if (places[index].distance > places[i].distance) {
+                    index = i;
+                }
+            }
+            if (places.length != 0) {
+                this.objStop = places[index].name;
+                this.item.bus_stop = this.objStop;
+                // document.getElementById('busStop').innerHTML = this.objStop;
+
+            }
+        });
+    }
     checkParams() {
         console.log('checkparams');
         this.conveniencesShort = '';
@@ -214,13 +266,23 @@ export class ItemMiddle implements AfterViewInit, OnChanges {
                 if (this.item.photos[0] != undefined) {
                     this.src = this.item.photos[0].href;
                 } else {
-                    this.src = '../../../../assets/noph1.png';
+                    this.src = '../../../../assets/noph.png';
                     this.photo_no_title = 'ФОТО НЕТ';
                 }
             } else {
-                this.src = '../../../../assets/noph1.png';
+                this.src = '../../../../assets/noph.png';
                 this.photo_no_title = 'ФОТО НЕТ';
             }
+            if (this.item.name != undefined) {
+                let spArray = this.item.name.split(" ");
+                let ret = spArray[0].toUpperCase();
+                if (spArray.length > 1) {
+                    ret += " " + spArray[1];
+                }
+                this.item.name = ret;
+            }
+
+
             if (this.item.address != undefined) {
                 if (this.item.address.includes('ул.')) {
                     this.item.address = this.item.address.slice(this.item.address.indexOf('ул.') + 3, this.item.address.length);
@@ -268,9 +330,11 @@ export class ItemMiddle implements AfterViewInit, OnChanges {
         }
     }
     addFavObject() {
-        if (this.loggingMode) {
+        console.log(sessionStorage.getItem('useremail'));
+        if (sessionStorage.getItem('useremail')!= undefined && sessionStorage.getItem('useremail') != 'email') {
+            console.log(this.item.id);
             this._account_service.addFavObject(this.item.id).subscribe(res => {
-                console.log(res);
+                // console.log(res);
                 this.item.is_fav = true;
                 this.favItemMode.emit('add');
             });
@@ -278,7 +342,7 @@ export class ItemMiddle implements AfterViewInit, OnChanges {
     }
 
     delFavObject() {
-        if (this.loggingMode) {
+        if (sessionStorage.getItem('useremail')!= undefined && sessionStorage.getItem('useremail') != 'email') {
             this._account_service.delFavObject(this.item.id).subscribe(res => {
                 console.log(res);
                 this.item.is_fav = false;
@@ -344,17 +408,19 @@ export class ItemMiddle implements AfterViewInit, OnChanges {
     }
 
     transitionCarousel(time: any) {
-        const offset = this.currentSlide * this.itemWidth;
-        const myAnimation: AnimationFactory = this.buildAnimation(offset, time);
-        this.player = myAnimation.create(this.carousel.nativeElement);
-        this.player.play();
+        if (this.carousel != undefined) {
+            const offset = this.currentSlide * this.itemWidth;
+            const myAnimation: AnimationFactory = this.buildAnimation(offset, time);
+            this.player = myAnimation.create(this.carousel.nativeElement);
+            this.player.play();
+        }
     }
     checklogin() {
         console.log('logging: ', this.loggingMode, 'payng: ', this.payingMode);
         if (this.loggingMode == false || this.loggingMode == 'false' ) {
             this.showBlock.emit('login')
         }
-        if ((this.loggingMode == true || this.loggingMode == 'true') && (this.loggingMode == false || this.loggingMode == 'false')) {
+        if ((this.loggingMode == true || this.loggingMode == 'true') && (this.payingMode == false || this.payingMode == 'false')) {
             this.showBlock.emit('pay')
         }
     }

@@ -27,9 +27,11 @@
   width: 100vw;
   height: 90px;
   display: flex;
-  position: fixed;
+  /*position: fixed;*/
   margin-bottom: 0;
-  top: 0;
+  /*top: 0;*/
+    position: fixed;
+    top: 0;
   background-color: white;
   transition: 0.3s;
   z-index: 10;

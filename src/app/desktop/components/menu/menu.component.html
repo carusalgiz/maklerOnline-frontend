@@ -51,7 +51,7 @@
   </div>
 </header>
 <div class="uselessLine"></div>
-<app-login class="right-slide-box" [itemOpen]="true" (userLoggedIn)="checklogin()"  (blockClose)="closeBlock($event)" (loggingMode)="Logging.emit($event)"></app-login>
-<app-pay class="right-slide-box" [inpDay]="resDay" [inpTime]="resTime" [itemOpen]="true" [redirect]="redirect" (payingMode)="Paying.emit($event)" [updateBalance]="loggedIn" (logout)="log_out()" (days)="days = $event" (time)="time = $event" (blockClose)="closeBlock($event)"></app-pay>
-<div class="right-slide-box agreement"><app-agreement (blockClose)="closeBlock($event)" [mode]="'agreement'"></app-agreement></div>
-<div class="right-slide-box agreement"><app-agreement (blockClose)="closeBlock($event)" [mode]="'addition'"></app-agreement></div>
+<app-login class="right-slide-box" [class.home]="homePage" [itemOpen]="true" (userLoggedIn)="checklogin()"  (blockClose)="closeBlock($event)" (loggingMode)="Logging.emit($event); logging_var = $event"></app-login>
+<app-pay class="right-slide-box" [logging]="logging_var"  [class.home]="homePage" [inpDay]="resDay" [inpTime]="resTime" [itemOpen]="true" [redirect]="redirect" (payingMode)="Paying.emit($event)" [updateBalance]="loggedIn" (logout)="log_out()" (days)="days = $event" (time)="time = $event" (blockClose)="closeBlock($event)"></app-pay>
+<div class="right-slide-box agreement"  [class.home]="homePage"><app-agreement (blockClose)="closeBlock($event)" [mode]="'agreement'"></app-agreement></div>
+<div class="right-slide-box agreement"  [class.home]="homePage"><app-agreement (blockClose)="closeBlock($event)" [mode]="'addition'"></app-agreement></div>

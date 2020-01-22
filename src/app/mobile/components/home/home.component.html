@@ -1,134 +1,200 @@
-<app-menu [headerPos]="headerPos" (openMenu)="menuMode($event)" [blockOpenInput]="blockOpen" (blockClosed)="blockOpen = 'open_menu'"></app-menu>
-<div class="mainHome"  [class.openMain]="!menuOpen" [class.closeMain]="menuOpen"  (touchstart)="touchstart($event)" (touchend)="touchend($event)">
-  <div class="inner-main">
-    <div class="picture">
-      <div class="title">
-        <div class="logoTitle3"><span>НЕДВИЖИМОСТЬ</span><span class="special">БЕЗ КОМИССИИ</span></div>
-        <!--<div class="infoText">-->
-          <!--Cервис для аренды недвижимости без комиссии. Проверенные объявления в реальном времени.-->
-        <!--</div>-->
-        <div class="logoTitle2"><span>ZAVRUS PRESENT</span></div>
-      </div>
-    </div>
-    <div class="howItWorks">
-      <div class="rentDescription" style="margin-bottom: 15px"><span style="font-weight: bold;    letter-spacing: 0.01em;">СЕРВИС АРЕНДЫ</span> недвижимости. Проверенные объявления в реальном времени. </div>
-      <div class="rentDescription"><span style="font-weight: bold; letter-spacing: 0.01em">БЕЗ КОМИССИИ</span> мы проверяем каждое объявление и гарантируем, что объект сдается без комиссии </div>
-    </div>
-    <div class="countLine mobile">
-      <div class="add" style="    letter-spacing: 0.02em;">ДОБАВЛЕНО СЕГОДНЯ</div>
-      <div style="display: flex; width: 100vw">
-        <div id="num1">
-          <span class="countLineNumber">{{countTodayObjects}} <span class="countLineWord">Объектов</span></span>
+<app-menu [headerPos]="headerPos" (openMenu)="menuMode($event)" [blockOpenInput]="blockOpen"
+          (blockClosed)="blockOpen = 'open_menu'"></app-menu>
+<div class="mainHome" [style.margin-top.px]="mainMargin" [class.openMain]="!menuOpen" [class.closeMain]="menuOpen"
+     (touchstart)="touchstart($event)" (touchend)="touchend($event)">
+    <div class="inner-main">
+        <div class="picture">
+            <div class="title">
+                <div class="logoTitle3"><span>НЕДВИЖИМОСТЬ</span><span class="special">БЕЗ КОМИССИИ</span></div>
+                <!--<div class="infoText">-->
+                <!--Cервис для аренды недвижимости без комиссии. Проверенные объявления в реальном времени.-->
+                <!--</div>-->
+                <div class="logoTitle2"><span>ZAVRUS PRESENT</span></div>
+            </div>
         </div>
-        <div id="num2">
-          <span class="countLineNumber">417 <span class="countLineWord">Заявок</span></span>
+        <div class="howItWorks">
+            <div class="rentDescription" style="margin-bottom: 15px"><span
+                style="font-weight: bold;    letter-spacing: 0.01em;">СЕРВИС АРЕНДЫ</span> недвижимости. Проверенные
+                объявления в реальном времени. 
+            </div>
+            <div class="rentDescription"><span style="font-weight: bold; letter-spacing: 0.01em">БЕЗ КОМИССИИ</span> мы
+                проверяем каждое объявление и гарантируем, что объект сдается без комиссии 
+            </div>
         </div>
-        <div id="num3">
+        <div class="countLine mobile">
+            <div class="add" style="    letter-spacing: 0.02em;">ДОБАВЛЕНО СЕГОДНЯ</div>
+            <div style="display: flex; width: 100vw">
+                <div id="num1">
+                    <span class="countLineNumber">{{countTodayObjects}} <span
+                        class="countLineWord">Объектов</span></span>
+                </div>
+                <div id="num2">
+                    <span class="countLineNumber">417 <span class="countLineWord">Заявок</span></span>
+                </div>
+                <div id="num3">
            <span class="countLineNumber">{{countObjects}}
-              <span class="countLineWord">В прайсе</span>
+               <span class="countLineWord">В прайсе</span>
            </span>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="howItWorks">
-      <div class="titleWorks"  style="    letter-spacing: 0.02em;">КАК ЭТО РАБОТАЕТ</div>
-      <div class="step">
-        <div class="stepNum">1</div>
-        <div class="stepDescription">
-          Выберите недвижимость, воспользуйтесь
-          фильтрами, картой...
+        <div class="howItWorks">
+            <div class="titleWorks" style="    letter-spacing: 0.02em;">КАК ЭТО РАБОТАЕТ</div>
+            <div class="step">
+                <div class="stepNum">1</div>
+                <div class="stepDescription">
+                    Выберите недвижимость, воспользуйтесь
+                    фильтрами, картой...
+                </div>
+            </div>
+            <div class="step">
+                <div class="stepNum">2</div>
+                <div class="stepDescription">
+                    Зарегистрируйтесь в системе, или
+                    войдите под своей учетной записью
+                </div>
+            </div>
+            <div class="step">
+                <div class="stepNum">3</div>
+                <div class="stepDescription">
+                    Приобрести доступ к проверенным объявлениям. Стоимость доступа на одни сутки от 50 рублей.
+                </div>
+            </div>
+            <div class="textRent" style="    letter-spacing: 0.02em;">АРЕНДУЙТЕ С УВЕРЕННОСТЬЮ</div>
+            <div class="rentDescription">Мы помогаем многим арендаторам безопасно снимать жилье уже более четырех лет, и
+                мы уверены, что можем сделать то же самое для Вас.
+            </div>
         </div>
-      </div>
-      <div class="step">
-        <div class="stepNum">2</div>
-        <div class="stepDescription">
-          Зарегистрируйтесь в системе, или
-          войдите под своей учетной записью
+        <div class="countLine word" style="background-color: #F6F6F6;    padding: 25px 0 10px;">
+            <h2 class="wordOne">ОТЗЫВЫ НАШИХ КЛИЕНТОВ</h2>
         </div>
-      </div>
-      <div class="step">
-        <div class="stepNum">3</div>
-        <div class="stepDescription">
-           Приобрести доступ к проверенным объявлениям. Стоимость доступа на одни сутки от 50 рублей.
+        <div class="reviewsBottom"  style="background-color: #F6F6F6">
+            <h3 class="compDescription">Мнения,и рекомендации других пользоватей – безусловно самое оптимальное социальное доказательство качества услуги</h3>
+            <div class="carousel open" id="carousel">
+                <div class="arrow left" (click)="prev()">
+                    <div class="arrowFull">
+                        <div class="barArrow1-left"></div>
+                        <div class="barArrow2-left"></div>
+                    </div>
+                </div>
+                <div class="objects">
+                    <ul id="carousel-ul">
+                        <li class="carousel-li" *ngFor="let review of reviews">
+                            <div class="reviews">
+                                <div class="reviewBlock" >
+                                    <img class="iconUser" alt="фотография автора отзыва" title="фотография автора отзыва" [src]="review.photo">
+                                    <div class="name">{{review.name}}</div>
+                                    <div class="ratingTest">
+                                        <span></span><span></span><span></span><span></span><span></span>
+                                    </div>
+                                    <div class="reviewBlockInfo">
+                                        <div class="reviewText">
+                                            {{review.text}}
+                                            <!--     <span class="more">Написать вопрос</span>-->
+                                        </div>
+                                        <div class="author">{{review.job}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="arrow right" (click)="next()">
+                    <div class="arrowFull">
+                        <div class="barArrow1-right"></div>
+                        <div class="barArrow2-right"></div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="textRent" style="    letter-spacing: 0.02em;">АРЕНДУЙТЕ С УВЕРЕННОСТЬЮ</div>
-      <div class="rentDescription">Мы помогаем многим арендаторам безопасно снимать жилье  уже более четырех лет, и мы уверены, что можем сделать то же самое для Вас.</div>
-    </div>
-    <div class="uselessLineHome">
-      <div class="companyName">МАКЛЕРОНЛАЙН</div>
-      <div class="hideMenu" (click)="openMobileMenu()">
-        <div class="bar1"></div>
-        <div class="bar2"></div>
-        <div class="bar3"></div>
-      </div>
-    </div>
-    <div class="countLine yearBlock" style="justify-content: center">
-      <div class="anniversaryYear">5</div>
-      <div class="year">ЛЕТ</div>
-      <div class="anniversaryDate">
-        <div>ЮБИЛЕЙНЫЙ ГОД</div>
-        <div>2013 • 2018</div>
-      </div>
-    </div>
-    <!--mobile-->
-    <footer class="footer" >
-      <div class="footer-top">
-        <div class="social-icons">
-          <a  href="https://www.facebook.com/sharer.php?u=https://makleronline.net/&amp;t=MaklerOnline" style="outline: none" (click)="facebook = true">
-            <img src="../../../../assets/icons8-facebook-circled-100.png" [class.imgnondisp]="facebook">
-            <img src="../../../../assets/icons8-facebook-circled-filled-100.png" [class.imgnondisp]="!facebook">
-          </a>
-          <a  href="https://vk.com/share.php?url=https://makleronline.net/" style="outline: none" (click)="vk = true">
-            <img class="icon" src="../../../../assets/icons8-vk-circled-100.png" [class.imgnondisp]="vk"/>
-            <img class="icon" src="../../../../assets/icons8-vk-circled-filled-100.png" [class.imgnondisp]="!vk"/>
-          </a>
-          <a  href="https://connect.ok.ru/offer?url=https://makleronline.net/&title=MaklerOnline" style="outline: none"
-              (click)="odnokl = true">
-            <img class="icon" src="../../../../assets/icons8-odnoklassniki-circled-100-non-hover.png" [class.imgnondisp]="odnokl"/>
-            <img class="icon" src="../../../../assets/icons8-odnoklassniki-circled-filled-100.png" [class.imgnondisp]="!odnokl"/>
-          </a>
+        <div class="uselessLineHome">
+            <div class="companyName">МАКЛЕРОНЛАЙН</div>
+            <div class="hideMenu" (click)="openMobileMenu()">
+                <div class="bar1"></div>
+                <div class="bar2"></div>
+                <div class="bar3"></div>
+            </div>
+        </div>
+        <div class="countLine yearBlock" style="justify-content: center">
+            <div class="anniversaryYear">5</div>
+            <div class="year">ЛЕТ</div>
+            <div class="anniversaryDate">
+                <div>ЮБИЛЕЙНЫЙ ГОД</div>
+                <div>2013 • 2018</div>
+            </div>
+        </div>
+        <!--mobile-->
+        <footer class="footer">
+            <div class="footer-top">
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/sharer.php?u=https://makleronline.net/&amp;t=MaklerOnline"
+                       style="outline: none" (click)="facebook = true">
+                        <img src="../../../../assets/icons8-facebook-circled-100.png" [class.imgnondisp]="facebook">
+                        <img src="../../../../assets/icons8-facebook-circled-filled-100.png"
+                             [class.imgnondisp]="!facebook">
+                    </a>
+                    <a href="https://vk.com/share.php?url=https://makleronline.net/" style="outline: none"
+                       (click)="vk = true">
+                        <img class="icon" src="../../../../assets/icons8-vk-circled-100.png" [class.imgnondisp]="vk"/>
+                        <img class="icon" src="../../../../assets/icons8-vk-circled-filled-100.png"
+                             [class.imgnondisp]="!vk"/>
+                    </a>
+                    <a href="https://connect.ok.ru/offer?url=https://makleronline.net/&title=MaklerOnline"
+                       style="outline: none"
+                       (click)="odnokl = true">
+                        <img class="icon" src="../../../../assets/icons8-odnoklassniki-circled-100-non-hover.png"
+                             [class.imgnondisp]="odnokl"/>
+                        <img class="icon" src="../../../../assets/icons8-odnoklassniki-circled-filled-100.png"
+                             [class.imgnondisp]="!odnokl"/>
+                    </a>
 
-          <!--<a href="https://www.facebook.com/sharer.php?u=https://makleronline.net/&amp;t=MaklerOnline"><img src="../../../../assets/icons8-facebook-circled-filled-100.png"></a>-->
-          <!--<a href="https://vk.com/share.php?url=https://makleronline.net/"><img class="icon" src="../../../../assets/icons8-vk-circled-filled-100.png"/></a>-->
-          <!--<a href="https://connect.ok.ru/offer?url=https://makleronline.net/&title=MaklerOnline"><img class="icon" src="../../../../assets/icons8-odnoklassniki-circled-filled-100.png"/></a>-->
-          <!-- <img class="icon" src="../assets/pinterest1.png"/
-          <img class="icon" src="../assets/instagram1.png"/> -->
-        </div>
-        <div class="login-block">
-          <div class="button-login" (click)="openBlock('login')">
-            ВОЙТИ
-          </div>
-        </div>
-      </div>
-      <div class="line"></div>
-      <div class="footer-center">
-        <div class="contacts">
-          <div class="footer-title">НАШИ КОНТАКТЫ</div>
-          <div style="display: flex">
-            <div class="contacts-left">
-              <div>Телефон</div>
-              <div>WhatsApp</div>
-              <div>E-mail</div>
-              <div>Вконтакте</div>
-              <div>Инстаграм</div>
+                    <!--<a href="https://www.facebook.com/sharer.php?u=https://makleronline.net/&amp;t=MaklerOnline"><img src="../../../../assets/icons8-facebook-circled-filled-100.png"></a>-->
+                    <!--<a href="https://vk.com/share.php?url=https://makleronline.net/"><img class="icon" src="../../../../assets/icons8-vk-circled-filled-100.png"/></a>-->
+                    <!--<a href="https://connect.ok.ru/offer?url=https://makleronline.net/&title=MaklerOnline"><img class="icon" src="../../../../assets/icons8-odnoklassniki-circled-filled-100.png"/></a>-->
+                    <!-- <img class="icon" src="../assets/pinterest1.png"/
+                    <img class="icon" src="../assets/instagram1.png"/> -->
+                </div>
+                <div class="login-block">
+                    <div class="button-login" (click)="openBlock('login')">
+                        ВОЙТИ
+                    </div>
+                </div>
             </div>
-            <div class="contacts-right">
-              <a href="tel:+79243090030"  class="social-link">+7 (924) 309-00-30</a>
-              <a href="https://wa.me/79244040059"  class="social-link">https://wa.me/79244040059</a>
-              <a href="mailto:info@makleronline.net"  class="social-link">info@makleronline.net</a>
-              <a href="https://vk.com/club82992253" class="social-link">https://vk.com/club82992253</a>
-              <a href="https://www.instagram.com/makleronlinekhv/" class="social-link">https://www.instagram.com/ makleronlinekhv/</a>
+            <div class="line"></div>
+            <div class="footer-center">
+                <div class="contacts">
+                    <div class="footer-title">НАШИ КОНТАКТЫ</div>
+                    <div style="display: flex">
+                        <div class="contacts-left">
+                            <div>Телефон</div>
+                            <div>WhatsApp</div>
+                            <div>E-mail</div>
+                            <div>Вконтакте</div>
+                            <div>Инстаграм</div>
+                        </div>
+                        <div class="contacts-right">
+                            <a href="tel:+79243090030" class="social-link">+7 (924) 309-00-30</a>
+                            <a href="https://wa.me/79244040059" class="social-link">https://wa.me/79244040059</a>
+                            <a href="mailto:info@makleronline.net" class="social-link">info@makleronline.net</a>
+                            <a href="https://vk.com/club82992253" class="social-link">https://vk.com/club82992253</a>
+                            <a href="https://www.instagram.com/makleronlinekhv/" class="social-link">https://www.instagram.com/
+                                makleronlinekhv/</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <div style="margin-bottom: 10px;" [routerLink]="['polzovatelskoe-soglashenie']">Пользовательское соглашение</div>
-        <div style="margin-bottom: 10px;">Использование сайта, в том числе подача объявлений, означает согласие с пользовательским соглашением.</div>
-        <div>© 2013-2018 г.  Makleronline.net  Использование материалов Makleronline.net возможно только с согласия
-          правообладателя.</div>
-      </div>
-    </footer>
-  </div>
-</div >
+            <div class="footer-bottom">
+                <div style="margin-bottom: 10px;" [routerLink]="['polzovatelskoe-soglashenie']">Пользовательское
+                    соглашение
+                </div>
+                <div style="margin-bottom: 10px;">Использование сайта, в том числе подача объявлений, означает согласие
+                    с пользовательским соглашением.
+                </div>
+                <div>© 2013-2018 г. Makleronline.net Использование материалов Makleronline.net возможно только с
+                    согласия
+                    правообладателя.
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>

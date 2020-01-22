@@ -64,7 +64,7 @@ export class FiltersComponent implements OnInit {
     this.itemsYesterday = [];
     this.itemsBeforeYesterday = [];
     this.itemsOldest = [];
-    this._offer_service.list(1, 1, this.filters, this.sort, '', '').subscribe(offers => {
+    this._offer_service.list(1, 1, this.filters, this.sort, '', '','').subscribe(offers => {
       //  console.log(typeof offers);
       //  console.log(offers);
       for (let offer of offers.list) {

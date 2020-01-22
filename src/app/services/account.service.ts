@@ -218,7 +218,7 @@ export class AccountService {
           },
           err => console.log(err)
       );
-    console.log("----" + _resourceUrl);
+    // console.log("----" + _resourceUrl);
     return ret_subj;
   }
   checklogin() {
@@ -265,8 +265,8 @@ export class AccountService {
     this._http.get(_resourceUrl, { withCredentials: true }).pipe(
       map((res: Response) => res)).subscribe(
       raw => {
-        console.log(raw);
-        console.log(JSON.stringify(raw));
+        // console.log(raw);
+        // console.log(JSON.stringify(raw));
         if (raw != undefined) {
             let obj: Item[];
             let data = JSON.parse(JSON.stringify(raw));

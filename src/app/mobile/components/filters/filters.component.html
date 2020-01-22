@@ -1,295 +1,195 @@
-
 <div class="filters-inner">
-  <div>
-    <span class="title" style="margin-bottom: 15px">ВЫБЕРИТЕ ФИЛЬТРЫ ДЛЯ ПОИСКА</span>
-      <div class="filtersBoxes">
-      <div class="add-button"  (click)="cityButton = !cityButton">
-        <span class="filterButton">НАСЕЛЕННЫЙ ПУНКТ</span>
-        <div class="choosen" style="display: none">
-          <span class="choosen-type">Населенный пункт</span>
-          <span class="choosen-option"></span>
+    <div>
+        <div class="filtersBoxes" id="fil-top">
+            <div class="add-button" (click)="cityButton = !cityButton">
+                <span class="filterButton">НАСЕЛЕННЫЙ ПУНКТ</span>
+                <div class="choosen" style="display: none">
+                    <span class="choosen-type">Населенный пункт</span>
+                    <span class="choosen-option"></span>
+                </div>
+            </div>
+            <div class="additional-block" [class.open]="cityButton">
+                <div class="button-box filters-options-box">
+                    <div class="buttonOption" (click)="selectOption(0,0, 'Хабаровск', 'cityButton', '')"><span
+                        style="flex-grow: 1">Хабаровск</span><span style="padding-right: 20px">{{khv}}</span></div>
+                    <div class="buttonOption" (click)="selectOption(0,1, 'Владивосток', 'cityButton', '');"><span
+                        style="flex-grow: 1">Владивосток</span><span style="padding-right: 20px">{{vld}}</span></div>
+                    <div class="buttonOption" (click)="selectOption(0,2, 'Комсомольск-на-Амуре', 'cityButton', '')">
+                        <span style="flex-grow: 1">Комсомольск-на-Амуре</span><span
+                        style="padding-right: 20px">{{kna}}</span></div>
+                </div>
+            </div>
+            <div class="add-button" (click)="offer = !offer">
+                <span class="filterButton">ТИП ПРЕДЛОЖЕНИЯ</span>
+                <div class="choosen" style="display: none">
+                    <span class="choosen-type">Тип предложения</span>
+                    <span class="choosen-option"></span>
+                </div>
+            </div>
+            <div class="additional-block" [class.open]="offer">
+                <div class="button-box filters-options-box">
+                    <div class="buttonOption" (click)="selectOption(1,0, 'БЕЗ КОМИССИИ', '', '')"><span>Без комиссии</span>
+                    </div>
+                    <div class="buttonOption" (click)="selectOption(1,1, 'С КОМИССИЕЙ', '', '')"><span>С комиссией</span>
+                    </div>
+                    <div class="buttonOption" (click)="selectOption(1,2, 'ВСЕ', '', '')"><span>Все</span></div>
+                </div>
+            </div>
+            <div class="add-button" (click)="typeOfObject = !typeOfObject">
+                <span class="filterButton">ТИП ОБЪЕКТА</span>
+                <div class="choosen" style="display: none">
+                    <span class="choosen-type">Тип объекта</span>
+                    <span class="choosen-option"></span>
+                </div>
+            </div>
+            <div class="additional-block" [class.open]="typeOfObject">
+                <div class="button-box filters-options-box">
+                    <div class="buttonOption" (click)="selectOption(2,0, 'комната', 'typeOfObject','КОМНАТА')"><span>Комната</span>
+                    </div>
+                    <div class="buttonOption" (click)="selectOption(2,1, 'квартира', 'typeOfObject', 'КВАРТИРА')"><span>Квартира</span>
+                    </div>
+                    <div class="buttonOption"
+                         (click)="selectOption(2,2, 'дом коттедж дача', 'typeOfObject', 'ДОМ КОТТЕДЖ ДАЧА')"><span>Дом/Коттедж/Дача</span>
+                    </div>
+                </div>
+            </div>
+            <div class="add-button" (click)="countOfRooms = !countOfRooms">
+                <span class="filterButton">КОЛИЧЕСТВО КОМНАТ</span>
+                <div class="choosen" style="display: none">
+                    <span class="choosen-type">Количество комнат</span>
+                    <span class="choosen-option"></span>
+                </div>
+            </div>
+            <div class="additional-block" [class.open]="countOfRooms">
+                <div class="button-box filters-options-box">
+                    <div class="buttonOption" (click)="selectOption(3,0, '1 комн', 'countOfRooms', '')">
+                        <span>1 комн.</span></div>
+                    <div class="buttonOption" (click)="selectOption(3,1, '2 комн', 'countOfRooms', '')">
+                        <span>2 комн.</span></div>
+                    <div class="buttonOption" (click)="selectOption(3,2, '3 комн', 'countOfRooms', '')">
+                        <span>3 комн.</span></div>
+                    <div class="buttonOption" (click)="selectOption(3,3, '4 комн', 'countOfRooms', '')">
+                        <span>4 комн.</span></div>
+                </div>
+            </div>
+            <div class="add-button" (click)="cost = !cost">
+                <span class="filterButton" *ngIf="!costChosen">СТОИМОСТЬ</span>
+                <div class="choosen" *ngIf="costChosen">
+                    <span class="choosen-type">Стоимость</span>
+                    <span class="choosen-option"></span>
+                </div>
+            </div>
+            <div class="additional-block" [class.open]="cost">
+                <div class="button-box filters-options-box">
+                    <div class="buttonOption" (click)="selectOption(4,0, '10000', 'cost', '')"><span>10000</span></div>
+                    <div class="buttonOption" (click)="selectOption(4,1, '20000', 'cost', '')"><span>20000</span></div>
+                    <div class="buttonOption" (click)="selectOption(4,2, '30000', 'cost', '')"><span>30000</span></div>
+                    <div class="buttonOption" (click)="selectOption(4,3, '40000', 'cost', '')"><span>40000</span></div>
+                </div>
+            </div>
+            <div class="add-button" (click)="equipment = !equipment">
+                <span>КОМПЛЕКТАЦИЯ</span>
+                <div class="choosen" style="display: none">
+                    <span class="choosen-type">Комплектация</span>
+                    <span class="choosen-option"></span>
+                </div>
+            </div>
+            <div class="additional-block" [class.open]="equipment">
+                <div class="button-box filters-options-box">
+                    <div class="buttonOption" (click)="selectOption(5,0, 'Укомплектован полностью', 'equipment', '')">
+                        <span>Укомплектован полностью</span></div>
+                    <div class="buttonOption" (click)="selectOption(5,1, 'Гостиная мебель', 'equipment', '')"><span>Гостиная мебель</span>
+                    </div>
+                    <div class="buttonOption" (click)="selectOption(5,2, 'Кухонная мебель', 'equipment', '')"><span>Кухонная мебель</span>
+                    </div>
+                    <div class="buttonOption" (click)="selectOption(5,3, 'Спальная мебель', 'equipment', '')"><span>Спальная мебель</span>
+                    </div>
+                    <div class="buttonOption" (click)="selectOption(5,4, 'Постельные принадлежности', 'equipment', '')">
+                        <span>Постельные принадлежности</span></div>
+                    <div class="buttonOption" (click)="selectOption(5,5, 'Посуда', 'equipment', '')"><span>Посуда</span>
+                    </div>
+                    <div class="buttonOption" (click)="selectOption(5,6, 'Холодильник', 'equipment', '')"><span>Холодильник</span>
+                    </div>
+                    <div class="buttonOption" (click)="selectOption(5,7, 'Стиральная машина', 'equipment', '')"><span>Стиральная машина</span>
+                    </div>
+                    <div class="buttonOption" (click)="selectOption(5,8, 'СВЧ-печь', 'equipment', '')">
+                        <span>СВЧ-печь</span></div>
+                    <div class="buttonOption" (click)="selectOption(5,9, 'Кондиционер', 'equipment', '')"><span>Кондиционер</span>
+                    </div>
+                    <div class="buttonOption" (click)="selectOption(5,10, 'Посудомоечная машина', 'equipment', '')">
+                        <span>Посудомоечная машина</span></div>
+                    <div class="buttonOption" (click)="selectOption(5,11, 'Телевизор', 'equipment', '')">
+                        <span>Телевизор</span></div>
+                </div>
+            </div>
+            <div class="add-button" (click)="conditions = !conditions">
+                <span>УСЛОВИЯ НАЙМА</span>
+                <div class="choosen" style="display: none">
+                    <span class="choosen-type">Условия найма</span>
+                    <span class="choosen-option"></span>
+                </div>
+            </div>
+            <div class="additional-block" [class.open]="conditions">
+                <div class="button-box filters-options-box">
+                    <div class="buttonOption" (click)="selectOption(6,0, 'Животные', 'conditions', '')">
+                        <span>Животные</span></div>
+                    <div class="buttonOption" (click)="selectOption(6,1, 'Дети', 'conditions', '')"><span>Дети</span>
+                    </div>
+                    <div class="buttonOption" (click)="selectOption(6,2, 'Курить', 'conditions', '')">
+                        <span>Курить</span></div>
+                    <div class="buttonOption" (click)="selectOption(6,3, 'Мероприятия', 'conditions', '')"><span>Мероприятия</span>
+                    </div>
+                </div>
+            </div>
+            <div class="add-button" style="border: none" (click)="sort = !sort">
+                <span class="filterButton">СОРТИРОВАТЬ ПО</span>
+                <div class="choosen" style="display: none">
+                    <span class="choosen-type">Сортировать по</span>
+                    <span class="choosen-option"></span>
+                </div>
+            </div>
+            <div class="additional-block" [class.open]="sort">
+                <div class="button-box filters-options-box">
+                    <div class="buttonOption" (click)="selectOption(7,0, 'дате', 'sort', 'DESC')">
+                        <span>Дате добавления</span></div>
+                    <div class="buttonOption" (click)="selectOption(7,1, 'цене', 'sort', 'ASC')"><span>Стоимости</span>
+                    </div>
+                    <div class="buttonOption" (click)="selectOption(7,2, 'рейтингу', 'sort', 'DESC')">
+                        <span>Рейтингу</span></div>
+                </div>
+            </div>
+            <div class="add-button" style="border: none" (click)="period = !period">
+                <span class="filterButton">ПЕРИОД</span>
+                <div class="choosen" style="display: none">
+                    <span class="choosen-type">Период</span>
+                    <span class="choosen-option"></span>
+                </div>
+            </div>
+            <div class="additional-block" [class.open]="period">
+                <div class="button-box filters-options-box">
+                    <div class="buttonOption" (click)="selectOption(8,0, '1 день', 'period', '')"><span>1 день</span>
+                    </div>
+                    <div class="buttonOption" (click)="selectOption(8,1, '3 дня', 'period', '')"><span>3 дня</span>
+                    </div>
+                    <div class="buttonOption" (click)="selectOption(8,2, 'Неделя', 'period', '')"><span>Неделя</span>
+                    </div>
+                    <div class="buttonOption" (click)="selectOption(8,3, '2 недели', 'period', '')">
+                        <span>2 недели</span></div>
+                    <div class="buttonOption" (click)="selectOption(8,4, 'Месяц', 'period', '')"><span>Месяц</span>
+                    </div>
+                    <div class="buttonOption" (click)="selectOption(8,5, '3 месяца', 'period', '')">
+                        <span>3 месяца</span></div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="additional-block" [class.open]="cityButton">
+        <div style="display: flex; justify-content: center">
+            <div class="brownLine"></div>
+        </div>
         <div class="button-box filters-options-box">
-          <div class="buttonOption" (click)="selectOption(0,0, 'Хабаровск', 'cityButton', '')"><span style="flex-grow: 1">Хабаровск</span><span style="padding-right: 20px">{{khv}}</span></div>
-          <div class="buttonOption" (click)="selectOption(0,1, 'Владивосток', 'cityButton', '');"><span style="flex-grow: 1">Владивосток</span><span style="padding-right: 20px">{{vld}}</span></div>
-          <div class="buttonOption" (click)="selectOption(0,2, 'Комсомольск-на-Амуре', 'cityButton', '')"><span style="flex-grow: 1">Комсомольск-на-Амуре</span><span style="padding-right: 20px">{{kna}}</span></div>
+            <input type="button" id="fil" class="button clear" value="ОЧИСТИТЬ ФИЛЬТРЫ" (click)="reset()">
         </div>
-      </div>
-      <div class="add-button" (click)="offer = !offer">
-        <span class="filterButton">ТИП ПРЕДЛОЖЕНИЯ</span>
-        <div class="choosen" style="display: none">
-          <span class="choosen-type">Тип предложения</span>
-          <span class="choosen-option"></span>
-        </div>
-      </div>
-      <div class="additional-block" [class.open]="offer">
-        <div class="button-box filters-options-box">
-          <div class="buttonOption" (click)="selectOption(1,0, 'БЕЗ КОМИССИИ', 'offer', 'owner')"><span>Без комиссии</span></div>
-          <div class="buttonOption" (click)="selectOption(1,1, 'С КОМИССИЕЙ', 'offer', 'middleman')"><span>С комиссией</span></div>
-          <div class="buttonOption" (click)="selectOption(1,2, 'ВСЕ', 'offer', 'all')"><span>Все</span></div>
-        </div>
-      </div>
-      <div class="add-button" (click)="typeOfObject = !typeOfObject">
-        <span class="filterButton">ТИП ОБЪЕКТА</span>
-        <div class="choosen" style="display: none">
-          <span class="choosen-type">Тип объекта</span>
-          <span class="choosen-option"></span>
-        </div>
-      </div>
-      <div class="additional-block" [class.open]="typeOfObject">
-        <div class="button-box filters-options-box">
-          <div class="buttonOption" (click)="selectOption(2,0, 'комната', 'typeOfObject','КОМНАТА')"><span>Комната</span></div>
-          <div class="buttonOption" (click)="selectOption(2,1, 'квартира', 'typeOfObject', 'КВАРТИРА')"><span>Квартира</span></div>
-          <div class="buttonOption" (click)="selectOption(2,2, 'дом коттедж дача', 'typeOfObject', 'ДОМ КОТТЕДЖ ДАЧА')"><span>Дом/Коттедж/Дача</span></div>
-        </div>
-      </div>
-      <div class="add-button" (click)="countOfRooms = !countOfRooms">
-        <span class="filterButton">КОЛИЧЕСТВО КОМНАТ</span>
-        <div class="choosen" style="display: none">
-          <span class="choosen-type">Количество комнат</span>
-          <span class="choosen-option"></span>
-        </div>
-      </div>
-      <div class="additional-block" [class.open]="countOfRooms">
-        <div class="button-box filters-options-box">
-          <div class="buttonOption" (click)="selectOption(3,0, '1 комн', 'countOfRooms', '')"><span>1 комн.</span></div>
-          <div class="buttonOption" (click)="selectOption(3,1, '2 комн', 'countOfRooms', '')"><span>2 комн.</span></div>
-          <div class="buttonOption" (click)="selectOption(3,2, '3 комн', 'countOfRooms', '')"><span>3 комн.</span></div>
-          <div class="buttonOption" (click)="selectOption(3,3, '4 комн', 'countOfRooms', '')"><span>4 комн.</span></div>
-        </div>
-      </div>
-      <div class="add-button" (click)="cost = !cost">
-        <span class="filterButton"  *ngIf="!costChosen">СТОИМОСТЬ</span>
-        <div class="choosen"  *ngIf="costChosen">
-          <span class="choosen-type">Стоимость</span>
-          <span class="choosen-option"></span>
-        </div>
-      </div>
-      <div class="additional-block" [class.open]="cost">
-        <div class="button-box filters-options-box">
-          <div class="buttonOption" (click)="selectOption(4,0, '10000', 'cost', '')"><span>10000</span></div>
-          <div class="buttonOption" (click)="selectOption(4,1, '20000', 'cost', '')"><span>20000</span></div>
-          <div class="buttonOption" (click)="selectOption(4,2, '30000', 'cost', '')"><span>30000</span></div>
-          <div class="buttonOption" (click)="selectOption(4,3, '40000', 'cost', '')"><span>40000</span></div>
-        </div>
-      </div>
-      <div class="add-button" (click)="equipment = !equipment">
-        <span>КОМПЛЕКТАЦИЯ</span>
-        <div class="choosen" style="display: none">
-          <span class="choosen-type">Комплектация</span>
-          <span class="choosen-option"></span>
-        </div>
-      </div>
-      <div class="additional-block" [class.open]="equipment">
-        <div class="button-box filters-options-box">
-          <div class="buttonOption" (click)="selectOption(5,0, 'Укомплектован полностью', 'equipment', '')"><span>Укомплектован полностью</span></div>
-          <div class="buttonOption" (click)="selectOption(5,1, 'Гостиная мебель', 'equipment', '')"><span>Гостиная мебель</span></div>
-          <div class="buttonOption" (click)="selectOption(5,2, 'Кухонная мебель', 'equipment', '')"><span>Кухонная мебель</span></div>
-          <div class="buttonOption" (click)="selectOption(5,3, 'Спальная мебель', 'equipment', '')"><span>Спальная мебель</span></div>
-          <div class="buttonOption" (click)="selectOption(5,4, 'Постельные принадлежности', 'equipment', '')"><span>Постельные принадлежности</span></div>
-          <div class="buttonOption" (click)="selectOption(5,5, 'Посуда', 'equipment', '')"><span>Посуда</span></div>
-          <div class="buttonOption" (click)="selectOption(5,6, 'Холодильник', 'equipment', '')"><span>Холодильник</span></div>
-          <div class="buttonOption" (click)="selectOption(5,7, 'Стиральная машина', 'equipment', '')"><span>Стиральная машина</span></div>
-          <div class="buttonOption" (click)="selectOption(5,8, 'СВЧ-печь', 'equipment', '')"><span>СВЧ-печь</span></div>
-          <div class="buttonOption" (click)="selectOption(5,9, 'Кондиционер', 'equipment', '')"><span>Кондиционер</span></div>
-          <div class="buttonOption" (click)="selectOption(5,10, 'Посудомоечная машина', 'equipment', '')"><span>Посудомоечная машина</span></div>
-          <div class="buttonOption" (click)="selectOption(5,11, 'Телевизор', 'equipment', '')"><span>Телевизор</span></div>
-        </div>
-      </div>
-      <div class="add-button" (click)="conditions = !conditions">
-        <span>УСЛОВИЯ НАЙМА</span>
-        <div class="choosen" style="display: none">
-          <span class="choosen-type">Условия найма</span>
-          <span class="choosen-option"></span>
-        </div>
-      </div>
-      <div class="additional-block" [class.open]="conditions">
-        <div class="button-box filters-options-box">
-          <div class="buttonOption" (click)="selectOption(6,0, 'Животные', 'conditions', '')"><span>Животные</span></div>
-          <div class="buttonOption" (click)="selectOption(6,1, 'Дети', 'conditions', '')"><span>Дети</span></div>
-          <div class="buttonOption" (click)="selectOption(6,2, 'Курить', 'conditions', '')"><span>Курить</span></div>
-          <div class="buttonOption" (click)="selectOption(6,3, 'Мероприятия', 'conditions', '')"><span>Мероприятия</span></div>
-        </div>
-      </div>
-      <div class="add-button" style="border: none" (click)="sort = !sort">
-        <span class="filterButton">СОРТИРОВАТЬ ПО</span>
-        <div class="choosen" style="display: none">
-          <span class="choosen-type">Сортировать по</span>
-          <span class="choosen-option"></span>
-        </div>
-      </div>
-      <div class="additional-block" [class.open]="sort">
-        <div class="button-box filters-options-box">
-          <div class="buttonOption" (click)="selectOption(7,0, 'дате', 'sort', 'DESC')"><span>Дате добавления</span></div>
-          <div class="buttonOption" (click)="selectOption(7,1, 'цене', 'sort', 'ASC')"><span>Стоимости</span></div>
-          <div class="buttonOption" (click)="selectOption(7,2, 'рейтингу', 'sort', 'DESC')"><span>Рейтингу</span></div>
-        </div>
-      </div>
-      <div class="add-button" style="border: none" (click)="period = !period">
-        <span class="filterButton">ПЕРИОД</span>
-        <div class="choosen" style="display: none">
-          <span class="choosen-type">Период</span>
-          <span class="choosen-option"></span>
-        </div>
-      </div>
-      <div class="additional-block" [class.open]="period">
-        <div class="button-box filters-options-box">
-          <div class="buttonOption" (click)="selectOption(8,0, '1 день', 'period', '')"><span>1 день</span></div>
-          <div class="buttonOption" (click)="selectOption(8,1, '3 дня', 'period', '')"><span>3 дня</span></div>
-          <div class="buttonOption" (click)="selectOption(8,2, 'Неделя', 'period', '')"><span>Неделя</span></div>
-          <div class="buttonOption" (click)="selectOption(8,3, '2 недели', 'period', '')"><span>2 недели</span></div>
-          <div class="buttonOption" (click)="selectOption(8,4, 'Месяц', 'period', '')"><span>Месяц</span></div>
-          <div class="buttonOption" (click)="selectOption(8,5, '3 месяца', 'period', '')"><span>3 месяца</span></div>
-        </div>
-      </div>
     </div>
-    <div style="display: flex; justify-content: center">
-      <div class="brownLine"></div>
-    </div>
-
-    <!---------------------FOOD------------------------>
-    <div class="add-button" style="border: none" (click)="food = !food">
-      <span class="filterButton">ПИТАНИЕ</span>
-      <div class="choosen" style="display: none">
-        <span class="choosen-type">Питание</span>
-        <span class="choosen-option"></span>
-      </div>
-    </div>
-    <div class="additional-block" [class.open]="food">
-      <div class="button-box filters-options-box">
-        <div class="buttonOption" (click)="selectOption(9,0, 'Супермаркеты', 'food', '')"><span>Супермаркеты</span></div>
-        <div class="buttonOption" (click)="selectOption(9,1, 'Рынки', 'food', '')"><span>Рынки</span></div>
-        <div class="buttonOption" (click)="selectOption(9,2, 'Магазины продуктов', 'food', '')"><span>Магазины продуктов</span></div>
-        <div class="buttonOption" (click)="selectOption(9,3, 'Рестораны', 'food', '')"><span>Рестораны</span></div>
-        <div class="buttonOption" (click)="selectOption(9,4, 'Кафе', 'food', '')"><span>Кафе</span></div>
-        <div class="buttonOption" (click)="selectOption(9,5, 'Столовые', 'food', '')"><span>Столовые</span></div>
-      </div>
-    </div>
-
-    <!------------------------EDUCATION----------------->
-    <div class="add-button" style="border: none" (click)="education = !education">
-      <span class="filterButton">ОБРАЗОВАНИЕ</span>
-    </div>
-    <div class="additional-block" [class.open]="education">
-      <div class="button-box filters-options-box">
-        <div class="buttonOption" (click)="selectOption(10,0, 'Детские сады', 'education', '')"><span>Детские сады</span></div>
-        <div class="buttonOption" (click)="selectOption(10,1, 'Школы', 'education', '')"><span>Школы</span></div>
-        <div class="buttonOption" (click)="selectOption(10,2, 'Гимназии', 'education', '')"><span>Гимназии</span></div>
-        <div class="buttonOption" (click)="selectOption(10,3, 'Техникумы', 'education', '')"><span>Техникумы</span></div>
-        <div class="buttonOption" (click)="selectOption(10,4, 'Институты', 'education', '')"><span>Институты</span></div>
-        <div class="buttonOption" (click)="selectOption(10,5, 'Университеты', 'education', '')"><span>Университеты</span></div>
-      </div>
-    </div>
-
-    <!------------------------ФИТНЕС----------------->
-    <div class="add-button" style="border: none" (click)="fitness = !fitness">
-      <span class="filterButton">ФИТНЕС</span>
-    </div>
-    <div class="additional-block" [class.open]="fitness">
-      <div class="button-box filters-options-box">
-        <div class="buttonOption" (click)="selectOption(11,0, 'Тренажерные залы', 'fitness', '')"><span>Спортивные тренажерные залы</span></div>
-        <div class="buttonOption" (click)="selectOption(11,1, 'Фитнес клубы', 'fitness', '')"><span>Фитнес клубы</span></div>
-      </div>
-    </div>
-
-    <!------------------------МЕДИЦИНА----------------->
-    <div class="add-button" style="border: none" (click)="medicine = !medicine">
-      <span class="filterButton">МЕДИЦИНА</span>
-    </div>
-    <div class="additional-block" [class.open]="medicine">
-      <div class="button-box filters-options-box">
-        <div class="buttonOption" (click)="selectOption(12,0, 'Аптеки', 'medicine', '')"><span>Аптеки</span></div>
-        <div class="buttonOption" (click)="selectOption(12,1, 'Поликлиники', 'medicine', '')"><span>Поликлиники</span></div>
-        <div class="buttonOption" (click)="selectOption(12,2, 'Больницы', 'medicine', '')"><span>Больницы</span></div>
-        <div class="buttonOption" (click)="selectOption(12,3, 'Ветеринарные клиники', 'medicine', '')"><span>Ветеринарные клиники</span></div>
-        <div class="buttonOption" (click)="selectOption(12,4, 'Ветеринарные аптеки', 'medicine', '')"><span>Ветеринарные аптеки</span></div>
-      </div>
-    </div>
-
-    <!------------------------РАЗВЛЕЧЕНИЯ----------------->
-    <div class="add-button" style="border: none" (click)="entertainment = !entertainment">
-      <span class="filterButton">РАЗВЛЕЧЕНИЯ</span>
-    </div>
-    <div class="additional-block" [class.open]="entertainment">
-      <div class="button-box filters-options-box">
-        <div class="buttonOption" (click)="selectOption(13,0, 'Кинотеатры', 'entertainment', '')"><span>Кинотеатры</span></div>
-        <div class="buttonOption" (click)="selectOption(13,1, 'Театры', 'entertainment', '')"><span>Театры</span></div>
-        <div class="buttonOption" (click)="selectOption(13,2, 'Цирки', 'entertainment', '')"><span>Цирки</span></div>
-        <div class="buttonOption" (click)="selectOption(13,3, 'Парки', 'entertainment', '')"><span>Парки</span></div>
-        <div class="buttonOption" (click)="selectOption(13,4, 'Ночные клубы', 'entertainment', '')"><span>Ночные клубы</span></div>
-      </div>
-    </div>
-
-    <!------------------------ПАРКОВКИ----------------->
-    <div class="add-button" style="border: none" (click)="parking = !parking">
-      <span class="filterButton">ПАРКОВКИ</span>
-    </div>
-    <div class="additional-block" [class.open]="parking">
-      <div class="button-box filters-options-box">
-        <!--<div class="buttonOption" (click)="selectOption(14,0, 'Бесплатные парковки', 'parking', '')"><span>Бесплатные</span></div>-->
-        <!--<div class="buttonOption" (click)="selectOption(14,1, 'Платные парковки', 'parking', '')"><span>Платные</span></div>-->
-        <div class="buttonOption" (click)="selectOption(14,0, 'Автостоянки', 'parking', '')"><span>Автостоянки</span></div>
-      </div>
-    </div>
-    <div class="button-box filters-options-box">
-      <input type="button" class="button clear" value="ОЧИСТИТЬ ФИЛЬТРЫ" (click)="reset()">
-    </div>
-  </div>
-  <!-- <div class="additional">
-    <span class="title">ДОПОЛНИТЕЛЬНЫЕ ВОЗМОЖНОСТИ</span>
-  </div>
-  <div class="add-button" (click)="openNews = !openNews">
-      <span>ОФОРМИТЬ РАССЫЛКУ</span>
-    <div class="plusExt" [class.change]="openNews">
-      <div class="bar1"></div>
-      <div class="bar2"></div>
-    </div>
-
-  </div>
-  <div class="additional-block" [class.open]="openNews">
-    <p class="add-text">Уютная двушка с отличным ремонтом в 150 метрах от м. Молодежная. Полностью оборудована мебелью и техникой, всё в отличном состоянии.</p>
-    <input type="text" value="Введите ваш e-mail" class="email">
-    <input type="button" value="Подписаться" class="news-button">
-  </div>
-  <div class="add-button" (click)="manager = !manager">
-      <span>ВАШ ПЕРСОНАЛЬНЫЙ МЕНЕДЖЕР</span>
-    <div class="plusExt" [class.change]="manager">
-      <div class="bar1"></div>
-      <div class="bar2"></div>
-    </div>
-
-  </div>
-  <div class="additional-block"  [class.open]="manager">
-    <p class="add-text">​Заказывая эту услугу,вы нанимаете персонального менеджера, который найдет нужные вам варианты,договорится  о просмотре объектов в удобное Вам время, и проконтролирует юридическую чистоту заключения договора найма жилья.Также Вы получите отчет о проделанной работе на Вашу почту и в личный кабинет сайта.</p>
-    <input type="button" value="Заказать" class="news-button">
-  </div>
-  <div class="add-button" (click)="realtor =! realtor">
-      <span>НАНЯТЬ ПРОФЕССИОНАЛЬНОГО РИЭЛТОРА</span>
-    <div class="plusExt" [class.change]="realtor">
-      <div class="bar1"></div>
-      <div class="bar2"></div>
-    </div>
-
-  </div>
-  <div class="additional-block"  [class.open]="realtor">
-    <p class="add-text">Нанять риэлтора с хорошим рейтингом.</p>
-    <input type="button" value="НАНЯТЬ" class="news-button">
-  </div> -->
-  <span class="title">ОПРЕДЕЛИТЕ ОБЛАСТЬ ПОИСКА</span>
-  <span class="title map">Двигайте карту для поиска</span>
-  <!--<a class="mapButton" *ngIf="!drawActive && !clearActive" (click)="draw(); drawActive = true; clearActive = true">-->
-    <!--<div [class.drawMap]="!drawActive" class="mapButton">-->
-      <!--<span>Нарисовать</span>-->
-    <!--</div>-->
-  <!--</a>-->
-  <!--&lt;!&ndash;</div>&ndash;&gt;-->
-  <!--<a class="mapButton" *ngIf="clearActive" (click)="clearMap();drawActive = false">-->
-    <!--<div  [class.clearMap]="clearActive" class="mapButton">-->
-      <!--<span>Очистить</span>-->
-    <!--</div>-->
-  <!--</a><canvas id="canvas" class="canvas"></canvas>-->
-  <div class="map filters-map open" id="ymapsContainer"></div>
-  <!--<div class="map filters-map" id="filters-panorama1"></div>-->
+<!--    <span class="title">ОПРЕДЕЛИТЕ ОБЛАСТЬ ПОИСКА</span>-->
+    <span class="title map">Двигайте карту для поиска</span>
+    <div class="map filters-map open" id="ymapsContainer"></div>
 </div>

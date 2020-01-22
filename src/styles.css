@@ -8,6 +8,12 @@ h2, h1, h3{
     font-size: initial;
 }
 @font-face {
+    font-family: Segoe MDL2 Assets;
+    src: url("assets/segmdl2.ttf") format('ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
   font-family: Helvetica;
   src: url("assets/HelveticaRegular.woff") format('woff');
   font-weight: normal;

@@ -3,6 +3,7 @@ div:hover, span:hover, p:hover {
   cursor: default;
 }
 .right-slide-box::-webkit-scrollbar { width: 0;height: 0; }
+
 .right-slide-box{
   background-color: #fff;
   /*top: 195px;*/
@@ -15,6 +16,10 @@ div:hover, span:hover, p:hover {
   /*box-shadow: #677578 0 2px 10px 0;*/
   overflow-y: auto;
   top: 195px;
+}
+.right-slide-box.home{
+  top: 130px;
+  height: calc(100% - 130px);
 }
 .instruction{
     padding: 20px;
@@ -161,7 +166,7 @@ div:hover, span:hover, p:hover {
   outline: none;
 }
 .uselessLine{
-  height: 65px;
+  height: 70px;
   width: 100%;
   background-color: #4b4b4b;
   display: block;
@@ -169,7 +174,6 @@ div:hover, span:hover, p:hover {
   top: 130px;
   z-index: 8;
   transition: 0.3s;
-  box-shadow: #677578 0px 2px 10px 0px;
 }
 .homePage{
   display: none;

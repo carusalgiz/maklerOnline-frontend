@@ -62,10 +62,10 @@ a.social-link:hover{
   padding: 0;
   display: block;
   background-color: #f6f6f6;
-  visibility: hidden;
+    visibility: hidden;
 }
 .carousel:hover > .arrow{
-  visibility: visible;
+    visibility: visible;
 }
 .arrow.left {
   width: 40px;
@@ -367,7 +367,7 @@ a.social-link:hover{
 .mainHome{
   margin-top: 130px;
   height: max-content;
-  min-height: calc(100vh - 65px);
+  min-height: calc(100vh - 70px);
   background: url("../../../../assets/background-main.jpg");
   background-size: 100vw auto;
   transition: 0.3s;
@@ -479,7 +479,7 @@ border-bottom: 3px solid #821529;
   padding-bottom: 30px;
 }
 .planExt{
-  margin: 0 65px;
+  margin: 0 70px;
 }
 .planBlock, .additionalPlan{
   display: flex;
@@ -727,6 +727,7 @@ border-bottom: 3px solid #821529;
   cursor: pointer;
   text-decoration: underline;
 }
+
 .inner-main::-webkit-scrollbar { width: 0;height: 0; }
 @media all and (max-width: 1600px){
     .planBlock, .additionalPlan{

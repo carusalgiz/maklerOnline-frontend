@@ -21,8 +21,7 @@
                 <ul id="carousel-ul-img2{{item?.id}}">
                     <li class="carousel-li-img2{{item?.id}}" *ngFor="let img of item?.photos">
                         <div class="photoBlock">
-                            <img class="img"
-                                 [src]="img.hrefMini">
+                            <img class="img" [src]="img.hrefMini">
                         </div>
                     </li>
                 </ul>
@@ -40,23 +39,17 @@
                   [src]="src">
             <div class="no-photo">{{photo_no_title}}</div>
         </div>
-        <div class="bottom-block">
+        <div class="bottom-block" style="min-height: unset">
             <div class="flex-col bottom-info">
                 <div class="street-block">
-                    <div style="font-weight: bold;color:#252F32">{{item?.address}} {{item?.house_num}}</div>
                     <div style="color: #72727D">{{item?.city}}</div>
                     <div style="color: #72727D">{{item?.admArea}}</div>
+                   <div class="address" style="margin: 7px 0;"><span *ngIf="!item.address.includes('ул.')">ул.</span><span class="special">{{item?.address}}<span style="font-weight: bold; text-transform: lowercase"> {{item?.house_num}}</span></span></div>
                 </div>
                 <div class="add-info">
-                    <div class="info left">
-                        <div>Остановка</div>
-                        <div>Время в пути:</div>
-                        <div>Добавлено</div>
-                    </div>
-                    <div class="info">
-                        <div id="busStop">{{objStop}}</div>
-                        <div id="timeToBus">{{timeToBusStop}}</div>
-                        <div>{{addDate}}</div>
+                    <div class="info left"  style="color: #72727D">
+                        <div>Остановка {{item?.busStop}}</div>
+                        <div>До остановки {{timeToBusStop}}</div>
                     </div>
                 </div>
 
@@ -80,26 +73,30 @@
                         <div class="phone" *ngIf="item?.phoneBlock?.ip != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.ip | mask: ' (000) 000-0000'}}</div>
                     </div>
                     <ng-container *ngIf="(payingMode != true && payingMode != 'true') || (loggingMode != true && loggingMode != 'true')">
-                        <div class="button-contact" (click)="checklogin();">Позвонить</div>
+                        <div class="button-contact" (click)="checkblock();">Контакты</div>
                     </ng-container>
                 </div>
             </div>
         </div>
         <div class="bottom-block price" >
-            <div class="star-block">
-                <div class="starFav inner" *ngIf="!compare && compareItem" (mouseenter)="favHovered = true"
-                     (mouseleave)="favHovered = false">
-                    <img class="starImg" [class.open]="!favHovered && !item?.is_fav"
-                         src="../../../../assets/4-4.png" width="22px">
-                    <img (click)="addFavObject()" class="starImg" [class.open]="favHovered  && !item?.is_fav"
-                         src="../../../../assets/4-4%20watched.png" width="22px">
-                    <img (click)="delFavObject()" class="starImg" [class.open]="item?.is_fav"
-                         src="../../../../assets/4-4%20watched.png" width="22px">
+            <div class="flex-col addBlock">
+                <div class="addDate">Предложение добавлено {{addDate}}</div>
+                <div class="star-block">
+                    <div>Добавить в избранное</div>
+                    <div class="starFav inner" *ngIf="!compare && compareItem" (mouseenter)="favHovered = true"
+                         (mouseleave)="favHovered = false">
+                        <img class="starImg" [class.open]="!favHovered && !item?.is_fav"
+                             src="../../../../assets/4-4.png" width="22px">
+                        <img (click)="addFavObject()" class="starImg" [class.open]="favHovered  && !item?.is_fav"
+                             src="../../../../assets/4-4%20watched.png" width="22px">
+                        <img (click)="delFavObject()" class="starImg" [class.open]="item?.is_fav"
+                             src="../../../../assets/4-4%20watched.png" width="22px">
+                    </div>
                 </div>
-                <div>Добавлено в избранное</div>
             </div>
+
             <div class="write-block">
-                <div class="button-contact" (click)="checklogin();">Написать</div>
+                <div class="button-whatsapp" (click)="checkblock();">WhatsApp</div>
             </div>
         </div>
         <div class="header-block" style="text-transform: uppercase">

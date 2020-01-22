@@ -39,7 +39,7 @@
 }
 .map.open{
   width: 100vw;
-  height: calc(100vh - 55px);
+  height: calc(100vh - 160px);
 }
 
 .add-button span{
@@ -105,6 +105,21 @@
   font-size: 16px;
   font-weight: bold;
 }
+.title.top{
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    height: 65px;
+    width: calc(100% - 20px);
+    padding: 0 0 0 20px;
+    position: sticky;
+    top: 0;
+    align-items: center;
+    background-color: white;
+    transition: 0.3s top;
+    z-index: 100;
+    border-bottom: 1px solid #bdc0c1;
+    box-shadow: #bdc0c1 inset 0 8px 8px -7px;
+}
 .title.map{
   margin-bottom: 30px;
   font-size: 14px;
@@ -124,7 +139,6 @@
   display: none;
 }
 .filters-inner{
-  padding-top: 13px;
   font-family: Cadillac, sans-serif;
   letter-spacing: 0.05em;
   font-size: 12px;
@@ -181,9 +195,6 @@
 }
 .button.add{
   border-left: none;
-}
-.button:hover{
-  background-color: #dbdbdb;
 }
 .button-box{
   display: flex;

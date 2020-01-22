@@ -1,19 +1,19 @@
 <!--<app-menu></app-menu>-->
 <div class="main right-main close-login">
 
-  <div class="right-block addRight" *ngIf="!recover" [class.addRight]="itemOpen">
+  <div class="right-block addRight" [class.addRight]="itemOpen">
     <div class="hideMenu" (click)="blockCloseFunc('login');">
       <div class="barExit1"></div>
       <div class="barExit2"></div>
     </div>
     <div class="registerButtons">
-      <div class="similar-button" (click)="phone1 = '+7';modeButton = false;enterMode('log in')">
+      <div class="similar-button" (click)="recover = false;phone1 = '+7';modeButton = false;enterMode('log in')">
           <div style="display: flex; flex-direction: column">
               <span>ВХОД</span>
               <div class="wordLine" [class.active]="!modeButton"></div>
           </div>
       </div>
-      <div class="similar-button" style="margin-left: 30px" (click)="phone = '+7';modeButton = true;enterMode('register')">
+      <div class="similar-button" style="margin-left: 30px" (click)="recover = false;phone = '+7';modeButton = true;enterMode('register')">
           <div style="display: flex; flex-direction: column">
               <span>РЕГИСТРАЦИЯ</span>
               <div class="wordLine" [class.active]="modeButton"></div>
@@ -77,40 +77,44 @@
           <div class="arrowBar2"></div>
         </div>
       </div>
-      <div class="button-next loginButton close" (click)="blockCloseFunc('login')">
-        <span>ПРОДОЛЖИТЬ</span>
-        <div class="arrowBars">
-          <div class="arrowBar1"></div>
-          <div class="arrowBar2"></div>
-        </div>
-      </div>
+<!--      <div class="button-next loginButton close" (click)="blockCloseFunc('login')">-->
+<!--        <span>ПРОДОЛЖИТЬ</span>-->
+<!--        <div class="arrowBars">-->
+<!--          <div class="arrowBar1"></div>-->
+<!--          <div class="arrowBar2"></div>-->
+<!--        </div>-->
+<!--      </div>-->
 
   </div>
   </div>
-  <!--pass recover block-->
-  <!--<div class="right-block recover-class"  *ngIf="recover" [class.addRight]="itemOpen">-->
-      <!--<span class="recover-title">Выберите способ восстановления пароля</span>-->
-    <!--<div class="recover-choose-block">-->
-      <!--<input style="flex: 0 0 10%;" type="radio" name="chooseMethod" (click)="emailPass = true; phonePass = false" class="radio" id="emailRadio"/>-->
-      <!--<label class="label" style="flex: 0 0 90%;" for="emailRadio">Восстановить пароль с помощью электронной почты</label>-->
-    <!--</div>-->
-    <!--<input class="recover-input" *ngIf="emailPass" type="text" id="recoverEmail">-->
+<!--  pass recover block-->
+<!--  <div class="right-block recover-class"  *ngIf="recover" [class.addRight]="itemOpen">-->
+<!--&lt;!&ndash;      <span class="recover-title">Выберите способ восстановления пароля</span>&ndash;&gt;-->
+<!--&lt;!&ndash;    <div class="recover-choose-block">&ndash;&gt;-->
+<!--&lt;!&ndash;      <input style="flex: 0 0 10%;" type="radio" name="chooseMethod" (click)="emailPass = true; phonePass = false" class="radio" id="emailRadio"/>&ndash;&gt;-->
+<!--&lt;!&ndash;      <label class="label" style="flex: 0 0 90%;" for="emailRadio">Восстановить пароль с помощью электронной почты</label>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;    <input class="recover-input" *ngIf="emailPass" type="text" id="recoverEmail">&ndash;&gt;-->
 
-    <!--<div class="recover-choose-block">-->
-      <!--<input style="flex: 0 0 10%;" type="radio" name="chooseMethod" (click)="emailPass = false; phonePass = true" class="radio" id="phoneRadio" />-->
-      <!--<label class="label" style="flex: 0 0 90%;" for="phoneRadio">Восстановить пароль с помощью телефона</label>-->
-    <!--</div>-->
-    <!--<input class="recover-input" *ngIf="phonePass" type="text" id="recoverPhone">-->
-    <!--<div  class="confirmButton" style="margin: 0 20px;width: calc(100vw - 40px);" (click)="enterMode('recoverPass');get_users();-->
-      <!--sendButton = false; saveButton = true">Отправить код</div>-->
+<!--&lt;!&ndash;    <div class="recover-choose-block">&ndash;&gt;-->
+<!--&lt;!&ndash;      <input style="flex: 0 0 10%;" type="radio" name="chooseMethod" (click)="emailPass = false; phonePass = true" class="radio" id="phoneRadio" />&ndash;&gt;-->
+<!--&lt;!&ndash;      <label class="label" style="flex: 0 0 90%;" for="phoneRadio">Восстановить пароль с помощью телефона</label>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;    <input class="recover-input" *ngIf="phonePass" type="text" id="recoverPhone">&ndash;&gt;-->
+<!--      <div class="input-block font" [class.email-login]="log_in" *ngIf="log_in">-->
+<!--          <span>Телефон</span>-->
+<!--          <input type="text"  [(ngModel)]="recoverPhone" [patterns]="customPatterns" mask="10 (000) 000-00-00" (keypress)="checkKey('recoverPhone')"  style="margin: 0">-->
+<!--      </div>-->
+<!--    <div  class="confirmButton" style="margin: 0 20px;width: calc(100vw - 40px);" (click)="enterMode('recoverPass');get_users();-->
+<!--      sendButton = false; saveButton = true">Отправить код</div>-->
 
-    <!--<div style="margin: 30px 0;text-align: center;">-->
-      <!--<span>Введите новый код доступа</span>-->
-      <!--<input class="recover-input" type="text" id="recoverKey">-->
-    <!--</div>-->
+<!--    <div style="margin: 30px 0;text-align: center;">-->
+<!--      <span>Введите новый код доступа</span>-->
+<!--      <input class="recover-input" type="text" id="recoverKey">-->
+<!--    </div>-->
 
-      <!--<div   class="confirmButton" style="margin: 0 20px;width: calc(100vw - 40px);" *ngIf="saveButton" (click)="enterMode('savePassRecover');get_users();">Сохранить</div>-->
-    <!--&lt;!&ndash;<div class="font" id="res1" style="margin: 20px 0;"></div>&ndash;&gt;-->
-      <!--<div (click)="recover = false; log_in = true">Close</div>-->
-  <!--</div>-->
+<!--      <div   class="confirmButton" style="margin: 0 20px;width: calc(100vw - 40px);" *ngIf="saveButton" (click)="enterMode('savePassRecover');get_users();">Сохранить</div>-->
+<!--    <div class="font" id="resRecover" style="margin: 20px 0;"></div>-->
+<!--      <div (click)="recover = false; log_in = true">Close</div>-->
+<!--  </div>-->
 </div>

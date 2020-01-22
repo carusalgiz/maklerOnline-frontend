@@ -3,6 +3,7 @@ import {ConditionsBlock} from "./class/conditionsBlock";
 import {PhoneBlock} from './class/phoneBlock';
 
 export class Item {
+    bus_stop: any;
     watched: boolean;
     id: number;
     admArea: string;
@@ -19,6 +20,7 @@ export class Item {
     floorsCount: number;
     phoneBlock: PhoneBlock;
     squareTotal: number;
+    squareLiving: number;
     photos: UploadFile[];
     documents: UploadFile[];
     addDate: number;
@@ -43,6 +45,8 @@ export class Item {
     description: string;
     deposit: boolean;
     IsMiddleman: boolean;
+    busStop: string;
+    commission: number;
 
     constructor(id?: number,
                 admArea?: string,
@@ -55,6 +59,7 @@ export class Item {
                 floor?: number,
                 floorsCount?: number,
                 squareTotal?: number,
+                squareLiving?: number,
                 name?: string,
                 photo?: string,
                 addDate?: number,
@@ -79,7 +84,9 @@ export class Item {
                 description?: string,
                 deposit?: boolean,
                 IsMiddleman?: boolean,
-                phoneBlock?: PhoneBlock
+                phoneBlock?: PhoneBlock,
+                busStop?: string,
+                commission?: number
     ) {
         this.id = id;
         this.admArea = admArea;
@@ -92,6 +99,9 @@ export class Item {
         this.floor = floor;
         this.floorsCount = floorsCount;
         this.squareTotal = squareTotal;
+        this.squareLiving = squareLiving;
+        this.busStop = busStop;
+        this.commission = commission;
         this.name = name;
         this.photos = [];
         this.photos.push(photos);

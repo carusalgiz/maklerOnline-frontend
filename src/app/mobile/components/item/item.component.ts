@@ -40,8 +40,8 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     @Input() id: number;
     @Input() historyId: number;
     @Input() currentPage: string;
-    @Input() loggingMode: boolean;
-    @Input() payingMode: boolean;
+    @Input() loggingMode: any;
+    @Input() payingMode: any;
 
     siteUrl: any;
     loggedIn = false;
@@ -73,6 +73,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     length = false;
     src = 'https://makleronline.net/assets/noph.png';
     photo_no_title: any;
+    commission = 0;
     @Output() similarItem = new EventEmitter<Item>();
     @Output() showInfoEvent = new EventEmitter();
     @Output() favouriteItemEvent = new EventEmitter();
@@ -84,8 +85,6 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
             this.imgLen = 0;
         } else {
             this.imgLen = this.item.photos.length;
-        }
-        if (this.item.photos != undefined) {
             this.src = this.item.photos[0] != undefined ? this.item.photos[0].href : 'https://makleronline.net/assets/noph.png';
         }
         this.getNumWithDellimet();
@@ -97,10 +96,9 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
         let desk = document.getElementsByClassName('desk') as HTMLCollectionOf<HTMLElement>;
         this.length = desk.length !== 0;
         if (this.mode == 'full') {
-            this.checklogin();
+            // this.checklogin();
             this.time = this.localStorage.getItem("timeAdd");
         }
-
     }
     ngOnChanges(changes: SimpleChanges): void {
         if (this.item != undefined) {
@@ -112,7 +110,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     ngAfterViewInit() {
         this.checkParams();
         if (this.mode == "full") {
-            document.getElementById('filters-map-map').style.setProperty('height', document.documentElement.clientHeight - 75 + 'px');
+            document.getElementById('filters-map-map').style.setProperty('height', '300px');
 
             ymaps.load('https://api-maps.yandex.ru/2.1/?apikey=<ADRpG1wBAAAAtIMIVgMAmOY9C0gOo4fhnAstjIg7y39Ls-0AAAAAAAAAAAAbBvdv4mKDz9rc97s4oi4IuoAq6g==>&lang=ru_RU&amp;load=package.full').then(maps => {
                 const map = new maps.Map('filters-map-map', {
@@ -129,7 +127,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                 });
                 map.geoObjects.add(baloon);
                 map.setCenter([this.item.lat, this.item.lon], 17);
-                let mapStyle = document.getElementsByClassName('ymaps-2-1-74-ground-pane') as HTMLCollectionOf<HTMLElement>;
+                let mapStyle = document.getElementsByClassName('ymaps-2-1-75-ground-pane') as HTMLCollectionOf<HTMLElement>;
                 mapStyle.item(0).style.setProperty('filter', 'grayscale(.9)');
             }).catch(error => console.log('Failed to load Yandex Maps', error));
             let date = this.item.addDate;
@@ -152,8 +150,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                 }
                 this.addDate = hour + 'назад в ' + day.hours() + ':' + day.minutes();
             }
-            this.getPlaces(this.item.lon, this.item.lat, [this.item.lon, this.item.lat]);
-
+            // this.getPlaces(this.item.lon, this.item.lat, [this.item.lon, this.item.lat]);
             this.window.scrollTo(0, 0);
         }
         // this.changeSize();
@@ -228,7 +225,14 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                 this.conditions += "Депозит нет, ";
                 this.conveniencesShort += "Депозит нет\n";
             }
-
+            if (this.item.name != undefined) {
+                let spArray = this.item.name.split(" ");
+                let ret = spArray[0].toUpperCase();
+                if (spArray.length > 1) {
+                    ret += " " + spArray[1];
+                }
+                this.item.name = ret;
+            }
 
             this.conditions = this.conditions.substring(0, this.conditions.length - 2);
             this.conveniences = this.conveniences.substring(0, this.conveniences.length - 2);
@@ -245,7 +249,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
 
         }
         this.getNumWithDellimet();
-        this.checklogin();
+        // this.checklogin();
 
         if (this.mode == 'full' && this.item != undefined) {
             this.time = this.localStorage.getItem("timeAdd");
@@ -271,7 +275,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                 this.addDate = hour + 'назад в ' + day.hours() + ':' + day.minutes();
             }
 
-            this.getPlaces(this.item.lon, this.item.lat, [this.item.lon, this.item.lat]);
+            // this.getPlaces(this.item.lon, this.item.lat, [this.item.lon, this.item.lat]);
         }
         setTimeout( () => {
 
@@ -302,14 +306,10 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     checklogin() {
         this.time = this.localStorage.getItem("timeAdd");
         this._account_service.checklogin().subscribe(res => {
-            console.log(res);
+            // console.log(res);
             if (res != undefined) {
                 let data = JSON.parse(JSON.stringify(res));
-                // console.log(data.result);
-                // console.log(data.user_id);
-                // console.log(data.email);
                 if (data.result == 'success') {
-                    // this.userEmail = data.email;
                     this.loggedIn = true;
                     this.loggingMode = true;
                 } else {
@@ -323,10 +323,34 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
             }
         });
     }
+    addFavObject() {
+        console.log(sessionStorage.getItem('useremail'));
+        if (sessionStorage.getItem('useremail')!= undefined && sessionStorage.getItem('useremail') != 'email') {
+            console.log(this.item.id);
+            this._account_service.addFavObject(this.item.id).subscribe(res => {
+                // console.log(res);
+                this.item.is_fav = true;
+            });
+        }
+    }
 
+    delFavObject() {
+        if (sessionStorage.getItem('useremail')!= undefined && sessionStorage.getItem('useremail') != 'email') {
+            this._account_service.delFavObject(this.item.id).subscribe(res => {
+                console.log(res);
+                this.item.is_fav = false;
+            });
+        }
+    }
     getNumWithDellimet() {
         this.formattedPrice = this.item.price.toString();
         this.formattedPrice = this.formattedPrice.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
+        let one_percent = this.item.price / 100;
+        if (this.item.commission != undefined) {
+            this.commission = this.item.commission / one_percent;
+        } else {
+            this.commission = 0;
+        }
     }
 
     galleryOpen() {
@@ -392,28 +416,6 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
         (<HTMLElement>el.currentTarget).style.setProperty('background-color', 'rgba(38,47,50,1)');
         (<HTMLElement>(<HTMLElement>el.currentTarget).firstChild).style.setProperty('border-bottom', '1px solid white');
     }
-
-    // changeSize() {
-    //   let desk = document.getElementsByClassName('desk') as HTMLCollectionOf<HTMLElement>;
-    //   if (desk.length !== 0) {
-    //     this.length = true;
-    //   } else {
-    //     this.length = false;
-    //   }
-    //   this.widthDocument = document.documentElement.clientWidth;
-    //   let photo = document.getElementsByClassName('photoBlock')   as HTMLCollectionOf<HTMLElement>;
-    //   let userInfo = document.getElementsByClassName('userInfo')  as HTMLCollectionOf<HTMLElement>;
-    //   let top = photo.item(0).clientHeight - userInfo.item(0).clientHeight;
-    //   if (document.documentElement.clientWidth > 650) {
-    //     for (let i = 0; i < userInfo.length; i++) {
-    //       userInfo.item(i).style.setProperty('top', top + 'px');
-    //     }
-    //   } else {
-    //     for (let i = 0; i < userInfo.length; i++) {
-    //       userInfo.item(i).style.setProperty('top', 'auto');
-    //     }
-    //   }
-    // }
     onResize() {
         this.widthPhotoBlock = document.documentElement.clientWidth;
         let bottomButtons = document.getElementsByClassName('bottom-buttons') as HTMLCollectionOf<HTMLElement>;

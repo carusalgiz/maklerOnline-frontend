@@ -142,15 +142,17 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
             // console.log(arr);
             if (res != undefined) {
-                let arr = Object.values(res);
-                if (arr[0] == 201 || arr[0] == '201') {
-                    this.enterMode('register');
-                    this.get_users();
-                } else if (arr[0] != 201 && arr[0] != '201') {
-                    document.getElementById('res1').innerHTML = 'Пользователь с такими данными уже существует, регистрация ' +
-                        'невозможна. Воспользуйтесь пожалуйста функцией восстановления пароля на странице входа.';
-                    //  alert('Пользователь с такими данными уже существует');
-                }
+                this.enterMode('register');
+                this.get_users();
+                // let arr = Object.values(res);
+                // if (arr[0] == 201 || arr[0] == '201') {
+                //     this.enterMode('register');
+                //     this.get_users();
+                // } else if (arr[0] != 201 && arr[0] != '201') {
+                //     document.getElementById('res1').innerHTML = 'Пользователь с такими данными уже существует, регистрация ' +
+                //         'невозможна. Воспользуйтесь пожалуйста функцией восстановления пароля на странице входа.';
+                //     //  alert('Пользователь с такими данными уже существует');
+                // }
             } else {
                 document.getElementById('res1').innerHTML = 'Произошла ошибка в системе. Регистрация на данный момент невозможна';
             }
@@ -214,14 +216,17 @@ export class LoginComponent implements OnInit, AfterViewInit {
             this._account_service.data(this.login, this.pass, this.phone, this.mode, recoverMethod).subscribe(res => {
                 let i = 0;
                 for (let str of Object.values(res)) {
-                    console.log(str);
-                    if (str.toString() == "ok") {
-                        document.getElementById('res1').innerHTML = "Учетная запись успешно создана";
-                        this.register = false;
-                        this.log_in = true;
-                        this.phone1 = "+" + this.phone;
+                    if (i == 0) {
+                        i++;
+                        console.log(str);
+                        if (str.toString() == "ok") {
+                            document.getElementById('res1').innerHTML = "Учетная запись успешно создана";
+                            this.register = false;
+                            this.log_in = true;
+                            this.phone1 = "+" + this.phone;
+                        }
                     }
-                    i++;
+
                 }
             });
 

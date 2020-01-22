@@ -16,7 +16,9 @@ import {EgrnComponent} from './components/egrn/egrn.component';
 import {NgxMaskModule} from 'ngx-mask';
 import {ProposalComponent} from './components/proposal/proposal.component';
 import {AgreementComponent} from './components/agreement/agreement.component';
-
+import { VirtualScrollerModule } from 'ngx-virtual-scroller';
+import {ScrollingModule} from '@angular/cdk/scrolling';
+import {ItemMiddle} from './components/item-middle';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -28,7 +30,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    CommonModule, FormsModule,
+    CommonModule, FormsModule,VirtualScrollerModule, ScrollingModule,
     ReactiveFormsModule, NgxMaskModule.forRoot(),
     RouterModule.forChild(routes),
     AgmCoreModule.forRoot({
@@ -36,6 +38,7 @@ const routes: Routes = [
     })
   ],
   declarations: [
+      ItemMiddle,
     MenuComponent,
     HomeComponent,
     ObjectsComponent,

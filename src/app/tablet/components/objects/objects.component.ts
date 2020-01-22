@@ -819,7 +819,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
   get_list() {
     console.log("get_list");
     this.items = [];
-    this._offer_service.list(1, 5, this.filters, this.sort, '', '').subscribe(offers => {
+    this._offer_service.list(1, 5, this.filters, this.sort, '', '','').subscribe(offers => {
       for (let offer of offers.list) {
         this.items.push(offer);
       }

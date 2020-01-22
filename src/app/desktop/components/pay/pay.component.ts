@@ -33,6 +33,7 @@ export class PayComponent implements OnInit, AfterViewInit, OnChanges {
     @Output() payingMode = new EventEmitter();
     @Input() inpDay: any;
     @Input() inpTime: any;
+    @Input() logging: any;
 
     logged_in = false;
     user: any;
@@ -77,7 +78,7 @@ export class PayComponent implements OnInit, AfterViewInit, OnChanges {
     payment(block, type, cost) {
         this.selectedButton = [];
         this.selectedButton.push({block: block});
-        if (localStorage.getItem('cur_id') != null) {
+        if (sessionStorage.getItem('useremail')!= undefined && sessionStorage.getItem('useremail') != 'email') {
             this._account_service.payment(type, cost).subscribe((res) => {
                 console.log(res);
                 if (res == "Такого пользователя не существует, либо вход не был произведен") {
@@ -89,7 +90,7 @@ export class PayComponent implements OnInit, AfterViewInit, OnChanges {
                 }
             });
         } else {
-            alert("Вход не был произведен, войдите пожалуйста в систему перед совершение оплаты");
+            alert("Вход не был произведен, войдите пожалуйста в систему перед совершением оплаты");
         }
     }
 }

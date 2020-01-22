@@ -53,8 +53,8 @@ export class ItemComponent implements OnInit, OnChanges, AfterViewInit {
     @Input() historyId: number;
     @Input() compare: boolean;
     @Input() compareItem: boolean;
-    @Input() loggingMode: boolean;
-    @Input() payingMode: boolean;
+    @Input() loggingMode: any;
+    @Input() payingMode: any;
     @ViewChild('carousel', {static: false}) private carousel: ElementRef;
 
     offItem = Item;
@@ -197,11 +197,11 @@ export class ItemComponent implements OnInit, OnChanges, AfterViewInit {
                 if (this.item.photos[0] != undefined) {
                     this.src = this.item.photos[0].href;
                 } else {
-                    this.src = '../../../../assets/noph1.png';
+                    this.src = '../../../../assets/noph.png';
                     this.photo_no_title = 'ФОТО НЕТ';
                 }
             } else {
-                this.src = '../../../../assets/noph1.png';
+                this.src = '../../../../assets/noph.png';
                 this.photo_no_title = 'ФОТО НЕТ';
             }
             if (this.item.paymentType != undefined) {
@@ -327,6 +327,14 @@ export class ItemComponent implements OnInit, OnChanges, AfterViewInit {
         }
 
         if (this.mode == 'full' && this.item != undefined) {
+            if (this.item.name != undefined) {
+                let spArray = this.item.name.split(" ");
+                let ret = spArray[0].toUpperCase();
+                if (spArray.length > 1) {
+                    ret += " " + spArray[1];
+                }
+                this.item.name = ret;
+            }
             this.checklogin();
             this.time = this.localStorage.getItem('timeAdd');
             if (!this.compare && !this.similarOpen) {
@@ -357,7 +365,10 @@ export class ItemComponent implements OnInit, OnChanges, AfterViewInit {
                 this.addDate = hour + 'назад в ' + day.hours() + ':' + day.minutes();
             }
 
-            this.getPlaces(this.item.lon, this.item.lat);
+            // if (this.item.bus_stop == undefined) {
+            //     this.getPlaces(this.item.lon, this.item.lat);
+            // }
+
         }
     }
 
@@ -461,12 +472,11 @@ export class ItemComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     checkblock() {
-        if (this.time == 'false' && this.loggingMode) {
-            this.openBlock('pay');
-        } else if (this.time != 'false' && this.loggingMode) {
-            this.openBlock('pay');
-        } else {
+        if (this.loggingMode == false || this.loggingMode == 'false' ) {
             this.openBlock('login');
+        }
+        if ((this.loggingMode == true || this.loggingMode == 'true') && (this.payingMode == false || this.payingMode == 'false')) {
+            this.openBlock('pay');
         }
     }
 

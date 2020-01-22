@@ -8,9 +8,6 @@ import {NgxMetrikaService} from '@kolkov/ngx-metrika';
 import ymaps from 'ymaps';
 import {Router} from "@angular/router";
 import {AccountService} from '../../../services/account.service';
-import {UploadFile} from '../../../class/UploadFile';
-import {ConditionsBlock} from '../../../class/conditionsBlock';
-import {PhoneBlock} from '../../../class/phoneBlock';
 @Component({
     selector: 'app-objects',
     templateUrl: './objects.component.html',
@@ -63,7 +60,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     logged_in: boolean = false;
     activeBalloon: any;
     public selectedMarker: any;
-    obj_to_find: any;
     find_obj_check = false;
     objClickIterator = 0;
     curItem: Item;
@@ -72,6 +68,9 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     polygonActive = false;
     hitsCount: number = 0;
     canLoad: number = 0;
+    searchQuery: string = "";
+    suggestionTo: any;
+    sgList: string[] = [];
 
     constructor(private ym: NgxMetrikaService, @Inject(WINDOW) private window: Window, @Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, private router: Router,
                 private _offer_service: OfferService,
@@ -87,47 +86,14 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             console.log(str);
         }
         this.subscription = route.params.subscribe((urlParams) => {
-            if (urlParams['mode'] === 'access') {
-                this.historyActive = false;
-                this.filtersActive = true;
-                this.itemOpen = false;
-                this.activeButton = 'items';
-                this.itemsActive = true;
-            } else if (urlParams['mode'] === 'list') {
-                this.historyActive = false;
-                this.filtersActive = true;
-                this.itemOpen = false;
-                this.activeButton = 'items';
-                this.itemsActive = true;
-                this.get_list(100, 'constructor')
-            } else if (urlParams['mode'] === 'favorite') {
-                this.activeButton = 'fav';
-                this.itemsActive = false;
-            } else {
-                this.historyActive = false;
-                this.itemOpen = true;
-                this.activeButton = 'obj';
-                if (sessionStorage.getItem('con_data') == 'true') {
-                    this.payed = true;
-                    this.logged_in = true;
-                } else {
-                    this.payed = false;
-                    this.logged_in = false;
-                }
-                let str = '';
-                str = urlParams['mode'];
-                this.find_obj_check = true;
-                this.obj_to_find = Number.parseInt(str.substring(0, 13), 10);
-                this._offer_service.list(0, 10000, '', '', '', '').subscribe(data => {
-                    for (let offer of data.list) {
-                        if (Number.parseInt(str.substring(0, 13), 10) == offer.id) {
-
-                            this.item = offer;
-                            this.redrawObjectsOnMap([this.item], 'item');
-                        }
-                    }
-                });
-            }
+             if (urlParams['mode'] === 'list') {
+                 this.historyActive = false;
+                 this.filtersActive = true;
+                 this.itemOpen = false;
+                 this.activeButton = 'items';
+                 this.itemsActive = true;
+                 this.get_list(10000, 'constructor')
+             }
         });
     }
 
@@ -184,13 +150,41 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }
         }
     }
-
+    searchStringChanged(e) {
+        let c = this;
+        clearTimeout(this.suggestionTo);
+        this.suggestionTo = setTimeout(() => {
+            c.searchParamChanged();
+        }, 500);
+    }
+    searchParamChanged() {
+        if (this.searchQuery.length > 0) {
+            let sq = this.searchQuery.split(" ");
+            let lp = sq.pop()
+            let q = sq.join(" ");
+            this.sgList = [];
+            if (lp.length > 0) {
+                // запросить варианты
+                this._offer_service.listKeywords(this.searchQuery).subscribe(sgs => {
+                    sgs.forEach(ev => {
+                        this.sgList.push(ev);
+                    });
+                });
+            }
+        }
+        this.pagecounter = 0;
+        this.update_list(10000, 'filters');
+    }
     changeLog(ev: any) {
         this.logged_in = ev;
     }
 
     changePay(ev: any) {
         this.payed = ev;
+    }
+    modeChange(type){
+        this.closeBlock('item');
+        localStorage.setItem('listType', type);
     }
 
     listActive() {
@@ -333,7 +327,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 if (coordinates.length != 0) {
                     this.polygons.push(this.geoObject);
                     this.items = [];
-                    this._offer_service.list(0, 10000, this.filters, this.sort, this.equipment, this.coordsPolygon).subscribe(offers => {
+                    this._offer_service.list(0, 10000, this.filters, this.sort, this.equipment, this.coordsPolygon, this.searchQuery).subscribe(offers => {
                         for (let offer of offers.list) {
                             if (this.items.indexOf(offer) == -1) {
                                 this.items.push(offer);
@@ -376,7 +370,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }
         }
         this.canLoad = 1;
-        this._offer_service.list(this.pagecounter, 100, this.filters, this.sort, this.equipment, this.coordsPolygon).subscribe(data => {
+        this._offer_service.list(this.pagecounter, 100, this.filters, this.sort, this.equipment, this.coordsPolygon,this.searchQuery).subscribe(data => {
             console.log(data);
             this.countOfObjects = data.hitsCount;
             this.hitsCount = data.hitsCount || (this.hitsCount > 0 ? this.hitsCount : 0);
@@ -837,15 +831,33 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     get_favObjects() {
         this.favItems = [];
         this._account_service.getFavObjects().subscribe(offers => {
+            // console.log(offers);
             for (let offer of offers) {
                 if (this.favItems.indexOf(offer) == -1) {
                     this.favItems.push(offer);
                 }
             }
-            for (let i = 0; i < this.favItems.length; i++) {
-                this.favItems[i].is_fav = true;
+            if (localStorage.getItem('listType') == 'fav') {
+                for (let i = 0; i < this.favItems.length; i++) {
+                    this.favItems[i].is_fav = true;
+                }
             }
-            this.redrawObjectsOnMap(this.favItems, 'fav');
+            for (let j = 0; j < this.items.length; j++) {
+                this.items[j].is_fav = false;
+            }
+            for (let i = 0; i < this.favItems.length; i++) {
+                for (let j = 0; j < this.items.length; j++) {
+                    if (this.favItems[i].id == this.items[j].id) {
+                        console.log(this.items[j]);
+                        this.items[j].is_fav = true;
+                        this.items[j].watched = true;
+                    }
+                }
+            }
+            this.favItems = [];
+            for (let j = 0; j < this.items.length; j++) {
+                if (this.items[j].is_fav == true) {this.favItems.push(this.items[j]);}
+            }
         });
     }
 
@@ -1062,32 +1074,54 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         }
 
         this.canLoad = 1;
-        this._offer_service.list(this.pagecounter, objsOnPage, this.filters, this.sort, this.equipment, this.coordsPolygon).subscribe(
+        this._offer_service.list(this.pagecounter, objsOnPage, this.filters, this.sort, this.equipment, this.coordsPolygon, this.searchQuery).subscribe(
             data => setTimeout(() =>{
-            console.log(data);
+            // console.log(data);
                     if (flag != 'listscroll') {this.items = []}
              this.countOfObjects = data.hitsCount;
             this.hitsCount = data.hitsCount || (this.hitsCount > 0 ? this.hitsCount : 0);
+            console.log("favs:",this.favItems);
+            console.log('list: ', data.list);
             if (this.pagecounter == 0) {
                 for (let i = 0; i < data.hitsCount; i++) {
                     if (this.items.indexOf(data.list[i]) == -1) {
-                        this.items.push(data.list[i]);
+
                         if (this.watchedItems.indexOf(data.list[i].id) != -1) {
-                            this.items[this.items.length-1].watched = true;
+                            data.list[i].watched = true;
                         }
+                        for (let i = 0; i < this.favItems.length; i++) {
+                            if (this.favItems[i].id == data.list[i].id) {
+                                data.list[i].is_fav = true;
+                                console.log('founded: ', data.list[i].id);
+                            }
+                        }
+                        this.items.push(data.list[i]);
                     }
-
-
+                }
+                for (let i = 0; i < this.favItems.length; i++) {
+                    this.favItems[i].is_fav = true;
                 }
             } else {
                 for (let i = 0; i < data.hitsCount; i++) {
                     if (this.items.indexOf(data.list[i]) == -1) {
+                        if (this.watchedItems.indexOf(data.list[i].id) != -1) {
+                            data.list[i].watched = true;
+                        }
+                        for (let i = 0; i < this.favItems.length; i++) {
+                            if (this.favItems[i].id == data.list[i].id) {
+                                data.list[i].is_fav = true;
+                                console.log('founded: ', data.list[i].id);
+                            }
+                        }
                         this.items.push(data.list[i]);
                     }
                 }
                     if(~~(this.hitsCount/20) != this.pagecounter+1 && data.list.length < 20){
                         this.hitsCount -= (20 - data.list.length);
                     }
+                for (let i = 0; i < this.favItems.length; i++) {
+                    this.favItems[i].is_fav = true;
+                }
             }
             if (flag == 'filters') { this.countOfObjects = this.items.length; } else {this.countOfObjects = data.hitsCount;}
             // for (let i = 0; i < this.items.length; i++) {

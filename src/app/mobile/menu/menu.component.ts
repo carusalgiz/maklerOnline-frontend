@@ -191,7 +191,15 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
     this.logged_in = false;
     this.days = "0дн.";
     this.time = "00ч.00мин.";
-    this.localStorage.removeItem("logged_in")
+    this.localStorage.removeItem("logged_in");
+      sessionStorage.removeItem('days');
+      sessionStorage.removeItem('time');
+      sessionStorage.removeItem('resDay');
+      sessionStorage.removeItem('resTime');
+      sessionStorage.removeItem('useremail');
+      sessionStorage.removeItem('con_data');
+      this.Paying.emit('false');
+      this.Logging.emit('false');
     this._account_service.logout();
   }
   checklogin() {

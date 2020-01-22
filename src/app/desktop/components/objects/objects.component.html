@@ -1,86 +1,92 @@
 <app-menu
-    (updateItems)="activeButton = 'items';itemOpen = false;listMode = true; filtersInnerActive = false; listActive();get_list(100, 'menu')" (Logging)="changeLog($event)" (Paying)="changePay($event)"></app-menu>
+    (updateItems)="activeButton = 'items';itemOpen = false;listMode = true; filtersInnerActive = false; listActive();get_list(10000, 'menu')" (Logging)="changeLog($event)" (Paying)="changePay($event)"></app-menu>
 <div class="filters-menu-desktop" (window:resize)="onResize()">
-    <div class="mapTopButtons" *ngIf="activeButton != 'obj'">
-        <div class="mapTopButton" style="border-right: none;" [class.disable]="drawActive == false"
+    <div class="mapTopButtons l" *ngIf="activeButton != 'obj'">
+        <div class="mapTopButton l" style="border-right: none;" [class.disable]="drawActive == false"
              *ngIf="!drawActive && !clearActive  "
              (click)="panorama('close'); drawActive = true; clearActive = true; panoramaActive = false">
-            НАРИСОВАТЬ
+            Обвести
         </div>
-        <div class="mapTopButton active" style="border-right: 1px solid white;" *ngIf="clearActive"
+        <div class="mapTopButton l active" style="border-right: 1px solid white;" *ngIf="clearActive"
              (click)="panorama('close');clearMap();drawActive = false;
-    clearActive = false;panoramaActive = false;">ОЧИСТИТЬ
+    clearActive = false;panoramaActive = false;">Очистить
         </div>
 
-        <div class="mapTopButton" [class.disable]="panoramaActive == false"
+        <div class="mapTopButton r" [class.disable]="panoramaActive == false"
              [class.active]="drawActive == false && panoramaActive == true"
              *ngIf="!panoramaActive"
              (click)="panorama('open');panoramaActive = true;drawActive = false;clearActive = false;">
-            ПАНОРАМА
+            Панорама
         </div>
-        <div class="mapTopButton active" *ngIf="panoramaActive"
-             (click)="panorama('close');panoramaActive = false;drawActive = false;clearActive = false;">КАРТА
+        <div class="mapTopButton r active" *ngIf="panoramaActive"
+             (click)="panorama('close');panoramaActive = false;drawActive = false;clearActive = false;">Карта
         </div>
     </div>
     <div class="filter-right-buttons">
-        <div class="counter">{{countOfObjects}}</div>
-        <div class="count-filters flex-col">
-            <span>предложений</span>
-            <span>найдено</span>
+<!--        <div class="counter">{{countOfObjects}}</div>-->
+<!--        <div class="count-filters flex-col">-->
+<!--            <span>предложений</span>-->
+<!--            <span>найдено</span>-->
+<!--        </div>-->
+        <div class="plus">
+            <div class="one"></div>
+            <div class="two"></div>
         </div>
+        <div class="count-filters"><span>ДОБАВИТЬ ПРЕДЛОЖЕНИЕ</span></div>
         <div class="filters-divider"></div>
-        <div class="fav-button" [class.open]=" itemsActive" (click)="get_favObjects(); activeButton = 'fav';itemsActive = false;listMode = true; listActive()"></div>
-        <div class="list-button" [class.open]=" !itemsActive" (click)="activeButton = 'items';itemsActive = true;historyClose();listMode = true;listActive()"></div>
-<!--        <div class="mapTopButton left active" style="border-right: 1px solid white "-->
-<!--             [class.open]=" !itemsActive"-->
-<!--             (click)="activeButton = 'items';itemsActive = true;historyClose();listMode = true;listActive()">-->
-<!--            ВСЕ ПРЕДЛОЖЕНИЯ-->
-<!--        </div>-->
-<!--        <div class="mapTopButton left disable" style="border-right: 1px solid white"-->
-<!--             [class.open]=" itemsActive"-->
-<!--             (click)="get_favObjects(); activeButton = 'fav';itemsActive = false;listMode = true; listActive()">-->
-<!--            ИЗБРАННОЕ-->
-<!--        </div>-->
-        <div class="list-button" [class.open]="!filtersInnerActive" (click)="checkFilters()"></div>
-        <div class="list-button active" [class.open]="filtersInnerActive" (click)="checkFilters();listMode=true; listActive()"></div>
-        <div class="hide-block">
-            <div class="hide-button open" [class.active]="!listMode" (click)="listMode=!listMode; listActive()"></div>
+        <div class="fav" (click)="modeChange('fav');get_favObjects(); activeButton = 'fav';itemsActive = false;listMode = true; listActive()">
+            <div class="fav-button" [class.open]=" itemsActive" ></div>
+            <div class="count-filters" *ngIf="itemsActive"><span>ИЗБРАННОЕ</span></div>
         </div>
-
-<!--        <div class="mapTopButton right disable"  [class.open]="!filtersInnerActive" (click)="checkFilters()">-->
-<!--            ФИЛЬТРЫ-->
-<!--        </div>-->
-<!--        <div class="mapTopButton right active "-->
-<!--             [class.open]="filtersInnerActive" (click)="checkFilters();listMode=true; listActive()">СПИСОК-->
-<!--        </div>-->
+        <div class="list" (click)="modeChange('list');activeButton = 'items';itemsActive = true;historyClose();listMode = true;listActive()">
+            <div class="fav-button" [class.open]=" !itemsActive"></div>
+            <div class="count-filters" *ngIf="!itemsActive"><span>СПИСОК</span></div>
+        </div>
+        <div class="filter" [class.open]="!filtersInnerActive" (click)="checkFilters()">
+            <div class="list-button open"></div>
+            <div class="count-filters"><span>ФИЛЬТРЫ</span></div>
+        </div>
+        <div class="filter" [class.open]="filtersInnerActive" (click)="checkFilters();listMode=true; listActive()">
+            <div class="list-button active open"></div>
+            <div class="count-filters"><span>ФИЛЬТРЫ</span></div>
+        </div>
+        <div class="mapTopButtons r">
+            <div class="mapTopButton l" style="border-right: none;" [class.disable]="listMode" [class.active]="!listMode"
+                 (click)="listMode = false; listActive()">
+                Карта
+            </div>
+            <div class="mapTopButton r " [class.disable]="!listMode" [class.active]="listMode"
+                 (click)="listMode = true; listActive()">Список
+            </div>
+        </div>
     </div>
 </div>
 <div class="main-objects">
     <div class="inner-left">
         <div class="map filters-map open" id="filters-map-map1" [class.full]="!listMode"></div>
-<!--        <div class="listButton1" (click)="listMode=!listMode; listActive()" *ngIf="!listMode">-->
-<!--            <div class="arrowFull">-->
-<!--                <div class="barArrow1-left"></div>-->
-<!--                <div class="barArrow2-left"></div>-->
-<!--            </div>-->
-<!--        </div>-->
         <div class="filters open blur" [class.close]="!listMode">
-<!--            <div class="listButton" (click)="listMode=!listMode; listActive()">-->
-<!--                <div class="arrowFull">-->
-<!--                    <div class="barArrow1-left"></div>-->
-<!--                    <div class="barArrow2-left"></div>-->
-<!--                </div>-->
-<!--            </div>-->
             <div class="scroll-items open blur fav-list"
                  *ngIf="!historyActive && (activeButton == 'fav' || activeButton == 'obj') && !itemOpen">
-                <app-item *ngFor="let obj of favItems, let i = index" [item]="obj" [mode]="'middle'" [loggingMode]="logged_in" [payingMode]="payed"
-                          [similarOpen]="false"
-                          [compareItem]="false" [watched]="watchedItems.indexOf(obj.id) != -1"
-                          (favItemMode)="changeFav($event, obj)" (click)="focusOnObject($event, obj, i, 'fav')">
-                </app-item>
+                <virtual-scroller #scroll [items]="favItems" [enableUnequalChildrenSizes]="true" style="height: 100%">
+                    <ng-container *ngFor="let obj of scroll.viewPortItems, let i = index">
+                        <item-middle *ngIf="obj.id != null" [item]="obj" [loggingMode]="logged_in" [payingMode]="payed" (showBlock)="openBlock($event)"
+                                     (favItemMode)="changeFav($event, obj)" (click)="focusOnObject($event, obj, i, 'fav')"></item-middle>
+                    </ng-container>
+                </virtual-scroller>
+            </div>
+            <div class="find-block" *ngIf="!historyActive && (activeButton == 'items' || activeButton == 'obj') && !itemOpen">
+                <input type="text" class="input_line" placeholder="Введите поисковый запрос"
+                       [(ngModel)]="searchQuery" (keyup)="searchStringChanged($event)"
+                ><div class="find_icon_block"><div class="find_icon"></div></div>
+                <div class="counter">{{countOfObjects}}</div>
+                <div class="count-filters flex-col find">
+                    <span>предложений</span>
+                    <span>всего</span>
+                </div>
             </div>
             <div class="scroll-items open blur common-list" (mousewheel)="listScroll($event)"
                  *ngIf="!historyActive && (activeButton == 'items' || activeButton == 'obj') && !itemOpen">
+
                 <virtual-scroller #scroll [items]="items" [enableUnequalChildrenSizes]="true" style="height: 100%">
                     <ng-container *ngFor="let obj of scroll.viewPortItems, let i = index">
                         <item-middle *ngIf="obj.id != null" [item]="obj" [loggingMode]="logged_in" [payingMode]="payed" (showBlock)="openBlock($event)"

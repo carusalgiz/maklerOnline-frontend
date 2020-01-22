@@ -1,7 +1,10 @@
 div:hover, span:hover, p:hover {
     cursor: default;
 }
-
+*{
+    font-family: Cadillac, sans-serif;
+    letter-spacing: 0.05em;
+}
 body {
     overflow: hidden;
 }
@@ -164,6 +167,8 @@ body {
 .item-blur {
     position: relative;
     z-index: 1000;
+    border-left: 1px solid #d3d5d6;
+    font-weight: normal !important;
 }
 
 .inner-left {
@@ -183,8 +188,8 @@ body {
 .main-objects {
     display: flex;
     /*padding-top: 7px;*/
-    height: calc(100vh - 65px);
-    top: 65px;
+    height: calc(100vh - 70px);
+    top: 70px;
     /*width: 100vw;*/
     position: fixed;
     transition: 0.3s;
@@ -197,7 +202,7 @@ body {
 .map.open {
     display: block;
     width: 100vw;
-    height: calc(100vh - 65px);
+    height: calc(100vh - 70px);
 }
 
 .map.full {
@@ -214,10 +219,12 @@ body {
 }
 
 .filters {
-    height: calc(100vh - 195px);
+    height: calc(100vh - 200px);
     width: 31vw;
     min-width: 400px;
-    max-width: 585px;
+    max-width: 605px;
+    padding-left: 10px;
+    padding-right: 10px;
     display: flex;
     flex-direction: column;
     overflow-y: hidden;
@@ -225,11 +232,11 @@ body {
     -webkit-overflow-scrolling: touch;
     transition: 0.3s;
     z-index: 5;
-    box-shadow: #677578 0 2px 10px 0;
+    /*box-shadow: #677578 0 2px 10px 0;*/
     position: fixed;
     right: 0;
     background-color: white;
-    top: 195px;
+    top: 200px;
 }
 
 .filters:hover {
@@ -279,7 +286,7 @@ body {
     position: fixed;
     right: 0;
     top: 130px;
-    height: 65px;
+    height: 70px;
     z-index: 10;
     transition: 0.3s;
     width: 100%;
@@ -290,7 +297,7 @@ body {
     flex-direction: column;
     background-color: #fff;
     position: absolute;
-    height: calc(100vh - 195px);
+    height: calc(100vh - 200px);
     width: 350px;
     transition: 0.3s;
     z-index: 1500;
@@ -395,10 +402,15 @@ body {
 }
 
 .mapTopButtons {
-    height: 30px;
+    height: 35px;
     display: flex;
-    margin: 0 30px;
     flex-grow: 1;
+}
+.mapTopButtons.l{
+    margin: 0 0 0 110px;
+}
+.mapTopButtons.r{
+    margin: 0 30px 0 80px;
 }
 
 .mapTopButton {
@@ -406,14 +418,19 @@ body {
     align-items: center;
     justify-content: center;
     width: 100px;
+    font-size: 12px;
 }
 
 .mapTopButton.right, .mapTopButton.left {
     display: none;
     width: 50%;
-
 }
-
+.mapTopButton.r{
+    border-radius: 0 18px 18px 0;
+}
+.mapTopButton.l{
+    border-radius:  18px 0 0 18px;
+}
 .mapTopButton.right, .mapTopButton.right:hover {
     border-left: none !important;
 }
@@ -423,7 +440,7 @@ body {
 }
 
 .mapTopButton.left {
-    border-right: 1px solid white;
+    border-right: 1px solid #D3D5D6;
 }
 
 .mapTopButton.left.active {
@@ -433,31 +450,32 @@ body {
 .mapTopButton.active {
     background-color: white;
     color: #252f32;
-    border: 1px solid white;
+    border: 1px solid #D3D5D6;
 }
 
-.mapTopButton.active:hover {
-    background-color: #4b4b4b;
-    color: white;
-}
+/*.mapTopButton.active:hover {*/
+/*    background-color: #4b4b4b;*/
+/*    color: white;*/
+/*}*/
 
 .mapTopButton.left:hover {
     border-right: 1px solid #4b4b4b !important;
 }
 
 .mapTopButton.left.active:hover {
-    border-right: 1px solid white !important;
+    border-right: 1px solid #D3D5D6 !important;
 }
 
 .mapTopButton.disable {
     background-color: #4b4b4b;
-    color: white;
-    border: 1px solid white;
+    color: #D3D5D6;
+    border: 1px solid #D3D5D6;
 }
 
 .mapTopButton.disable:hover {
     background-color: white;
     color: #252f32;
+    border: 1px solid #D3D5D6;
 }
 
 .mapTopButton.open {
@@ -480,10 +498,7 @@ body {
 .filter-right-buttons {
     display: flex;
     align-items: center;
-    width: calc(31vw - 60px);
-    padding: 0 30px 0 30px;
-    max-width: 525px;
-    min-width: 350px;
+    width: auto;
 }
 
 .offers {
@@ -492,25 +507,41 @@ body {
 
 .fav-button, .list-button, .hide-button {
     display: none;
-    width: 38px;
-    height: 38px;
+    width: 30px;
+    height: 30px;
     background-size: contain;
-    margin-right: 20px;
+    margin: 0 10px 0 50px;
     transition: 0.03s;
     border-radius: 20px;
 }
-.hide-button{
-    margin: 0;
+.plus{
+    width: 26px;
+    height: 26px;
+    display: flex;
+    margin-right: 10px;
+}
+.plus > .one, .plus > .two {
+    width: 26px;
+    min-width: 26px;
+    height: 2px;
+    background-color: #D3D5D6;
+}
+
+.plus > .one {
+    transform: rotate(-90deg) translate(-12px, 0px);
+}
+.plus > .two {
+    transform: translate(-26px, 12px);
 }
 .filters-divider {
-    background-color: #D3D5D6;
-    width: 1px;
+    background-color: #848686;
+    width: 2px;
     height: 40px;
-    margin: 0 30px;
+    margin: 0 0 0 17px;
 }
 
 .counter {
-    color: #d3d5d6;
+    color: #32323D;
     font-family: Stolzl, sans-serif;
     font-size: 30px;
     margin-right: 15px;
@@ -521,19 +552,35 @@ body {
     justify-content: center;
     flex-direction: column;
     text-transform: uppercase;
-    color: #d3d5d6;
-    font-size: 12px;
-}
+    color: #D3D5D6;
 
-.fav-button:hover, .list-button:hover, .hide-button:hover {
+    position: relative;
+    top: 1px;
+}
+.count-filters.find{
+    font-family: Cadillac, sans-serif;
+    letter-spacing: 0.05em;
+    color: #32323D;
+    font-size: 10px;
+}
+.filter{
+    display: none;
+}
+.fav, .list, .filter.open{
+    display: flex;
+}
+.fav:hover .fav-button, .list:hover .list-button,.filter:hover .list-button {
     background-color: rgba(146, 146, 145, 0.8);
     cursor: pointer;
 }
+.fav:hover .count-filters, .list:hover .count-filters, .filter:hover .count-filters{
+    color: #f6f6f6;
+}
 
-.fav-button.open, .list-button.open, .hide-button.open {
+.fav-button.open, .list-button.open {
     display: block;
 }
-.fav-button.active, .list-button.active, .hide-button.active {
+.fav-button.active, .list-button.active {
     background-color: rgba(146, 146, 145, 0.8);
 }
 
@@ -541,15 +588,55 @@ body {
     background-image: url("../../../../assets/fav-button.png");
 }
 
-.list-button, .hide-button {
+.list-button {
     background-image: url("../../../../assets/list-button.png");
 }
-.hide-block{
-    flex-grow: 1;
-    display: flex;
-    justify-content: flex-end;
+.find_icon_block{
+    position: relative;
+    right: 30px;
 }
-
+.find-block{
+    display: flex;
+    height: 65px;
+    width: 100%;
+    position: relative;
+    top: 0;
+    align-items: center;
+}
+.find_icon{
+    background-image: url("../../../../assets/лупа.png");
+    background-size: contain;
+    width: 20px;
+    height: 20px;
+}
+/*.find_icon:before {*/
+/*    content: "\E094";*/
+/*    font-family: 'Segoe MDL2 Assets', sans-serif;*/
+/*    line-height: 30px;*/
+/*    color: #3d615b;*/
+/*}*/
+.input_line{
+    height: 35px;
+    width: 255px;
+    border: 1px solid #D3D5D6;
+    color: #252F32;
+    font-size: 12px;
+    padding-left: 15px;
+}
+input{
+    font-family: Cadillac, sans-serif;
+    letter-spacing: 0.05em;
+}
+input::placeholder{
+    color: #72727D;
+    font-size: 12px;
+    font-style: italic;
+    font-family: Cadillac, sans-serif;
+    letter-spacing: 0.05em;
+}
+input:focus, input:active{
+    outline: none;
+}
 @media all and (max-width: 1540px) {
     .inner-left {
         height: unset;

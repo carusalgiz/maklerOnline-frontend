@@ -42,7 +42,8 @@ export class FiltersComponent implements OnInit {
         'roomsCount': String,
         'price': String,
         'isMiddleman': String,
-        'addDate': undefined
+        'addDate': undefined,
+        'commission': undefined
     };
     equipmentFilters = {
         'complete': undefined,
@@ -118,6 +119,7 @@ export class FiltersComponent implements OnInit {
         this.filters.roomsCount = undefined;
         this.filters.price = undefined;
         this.filters.addDate = undefined;
+        this.filters.commission = undefined;
         this.equipmentFilters.complete = undefined;
         this.equipmentFilters.living_room_furniture = undefined;
         this.equipmentFilters.kitchen_furniture = undefined;
@@ -162,7 +164,7 @@ export class FiltersComponent implements OnInit {
             }
 
             if (blockId == 1) {
-                this.filters.isMiddleman = undefined;
+                this.filters.commission = undefined;
             } else if (blockId == 3) {
                 if (selected.length == 1) {
                     name = selected[0];
@@ -273,7 +275,17 @@ export class FiltersComponent implements OnInit {
             }
 
             if (blockId == 1) {
-                this.filters.isMiddleman = param;
+                for (let i = 0; i < buttonBox.item(blockId).childNodes.length; i++) {
+                    buttonBox.item(blockId).children[i].classList.remove('selected');
+                }
+                buttonBox.item(blockId).children[optionId].classList.add('selected');
+                if (optionId == 0) {
+                    this.filters.commission = 0;
+                } else if (optionId == 1) {
+                    this.filters.commission = 0.00001;
+                } else {
+                    this.filters.commission = undefined;
+                }
             } else if (blockId == 3) {
                 if (selected.length == 1) {
                     name = selected[0];
