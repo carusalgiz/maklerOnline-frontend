@@ -66,6 +66,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.get_list();
   }
   ngAfterViewInit() {
+      // document.getElementById('title').scrollIntoView(false);
+      window.scrollTo(0,0);
     let picture = document.getElementsByClassName('picture')   as HTMLCollectionOf<HTMLElement>;
     let mainHome = document.getElementsByClassName('mainHome')   as HTMLCollectionOf<HTMLElement>;
     let logotitle2 = document.getElementsByClassName('logoTitle2')   as HTMLCollectionOf<HTMLElement>;
@@ -132,7 +134,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         for (let offer of dataOffers.list) {
             let time = new Date(offer.addDate * 1000);
             if ( Math.floor((new Date()).getTime() / 1000) - offer.addDate < 84600) {
-                console.log('time: ' + time + ' cur: ' + data);
+                // console.log('time: ' + time + ' cur: ' + data);
                 if (data.getDay() == time.getDay()) {
                     this.countTodayObjects++;
                 }

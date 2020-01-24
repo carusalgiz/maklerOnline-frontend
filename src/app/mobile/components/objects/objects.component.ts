@@ -261,7 +261,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             this.mainObjectsPadding = 0;
             this.mainHeight = 'calc(100vh - 65px)';
             this.findPadding = 0;
-            this.listScroll();
         } else if (num < -2){
             this.headerPos = 0;
             this.mainObjectsPadding = 90;
@@ -897,9 +896,10 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             this.canLoad = 0;
         };
     }
-    listScroll() {
+    listScroll(event: TouchEvent) {
+        let num = this.touchStartPos - event.changedTouches[0].clientY;
         let its = document.documentElement.getElementsByClassName('catalog-item') as HTMLCollectionOf<HTMLElement>;
-        if (its.length != 0) {
+        if (its.length != 0 && num > 2) {
             // console.log(its.item(its.length-1).getBoundingClientRect().top, this.canLoad);
             if (this.canLoad == 0 && its.item(its.length-1).getBoundingClientRect().top < 2000){
                 this.pagecounter += 1;

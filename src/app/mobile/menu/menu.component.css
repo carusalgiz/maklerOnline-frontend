@@ -66,7 +66,7 @@
   transition: 0.4s;
 }
 .menuMobile{
-  min-height: calc(100vh - 60px);
+  min-height: calc(100vh - 40px);
   display: none;
   flex-direction: column;
   width: 100vw;
@@ -82,9 +82,9 @@
 .menuMobile.open{
   display: flex;
   overflow-y: scroll;
-  position: relative;
+  position: fixed;
   -webkit-overflow-scrolling: touch;
-  height: calc(100vh - 40px);
+  height: 100%;
   left: 0;
   top: 0;
   z-index: 1000;
@@ -185,9 +185,13 @@
 }
 .add-block-menu {
   display: none;
-  position: relative;
+    position: fixed;
+    overflow-y: auto;
+    height: 100%;
+    min-height: 100vh;
   top: 0;
   z-index: 1000;
+    background-color: white;
 }
 .add-block-menu.open{
   display: block;

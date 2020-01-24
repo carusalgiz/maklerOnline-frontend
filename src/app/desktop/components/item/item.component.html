@@ -21,7 +21,7 @@
                 <ul id="carousel-ul-img2{{item?.id}}">
                     <li class="carousel-li-img2{{item?.id}}" *ngFor="let img of item?.photos">
                         <div class="photoBlock">
-                            <img class="img" [src]="img.hrefMini">
+                            <img class="img" [src]="img.hrefMini"  [class.avito]="img.href.indexOf('avito') != -1">
                         </div>
                     </li>
                 </ul>

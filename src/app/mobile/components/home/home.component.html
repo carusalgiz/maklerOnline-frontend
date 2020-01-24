@@ -1,10 +1,11 @@
 <app-menu [headerPos]="headerPos" (openMenu)="menuMode($event)" [blockOpenInput]="blockOpen"
           (blockClosed)="blockOpen = 'open_menu'"></app-menu>
-<div class="mainHome" [style.margin-top.px]="mainMargin" [class.openMain]="!menuOpen" [class.closeMain]="menuOpen"
+<!--[class.openMain]="!menuOpen" [class.closeMain]="menuOpen"-->
+<div class="mainHome" [style.margin-top.px]="mainMargin"
      (touchstart)="touchstart($event)" (touchend)="touchend($event)">
     <div class="inner-main">
         <div class="picture">
-            <div class="title">
+            <div class="title" id="title">
                 <div class="logoTitle3"><span>НЕДВИЖИМОСТЬ</span><span class="special">БЕЗ КОМИССИИ</span></div>
                 <!--<div class="infoText">-->
                 <!--Cервис для аренды недвижимости без комиссии. Проверенные объявления в реальном времени.-->

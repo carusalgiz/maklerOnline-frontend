@@ -8,6 +8,7 @@
   display: flex;
   background-color: white;
   transition: 0.3s;
+    align-items: center;
 }
 .logo-mobile1{
   display: flex;
@@ -24,18 +25,18 @@
   font-size: 8px;
 }
 .hideMenu{
-  position: relative;
-  right: calc(-50% + 60px);
-  width: 30px;
-  height: 30px;
-  transition: .03s;
-  margin: 35px 0 15px;
+    position: relative;
+    right: calc(-50% + 40px);
+    width: 30px;
+    height: 30px;
+    transition: .03s;
+    margin: 15px 0 10px;
 }
 .barExit1, .barExit2{
-  width: 25px;
-  height: 1px;
-  background-color: #8F8F8F;
-  margin: 3px 0;
+    width: 25px;
+    height: 1px;
+    background-color: #8F8F8F;
+    margin: 3px 0;
 }
 .barExit1{
   transform: rotate(45deg) translate(13px,6px);

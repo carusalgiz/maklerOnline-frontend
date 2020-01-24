@@ -3,7 +3,7 @@
           *ngIf="(blockInputOpen != 'open_item' && blockMode != 'item') || (blockInputOpen != 'open_menu' && blockMode == 'item') "></app-menu>
 <div class="find-block fil" [style.top.px]="findPadding" *ngIf=" blockMode == 'filters'">{{filterText}}</div>
 <div class="find-block"  [style.top.px]="findPadding"
-     *ngIf="!historyActive && (activeButton == 'items' || activeButton == 'obj') && !itemOpen && blockMode != 'filters'">
+     *ngIf="!historyActive && (activeButton == 'items' || activeButton == 'obj') && !itemOpen && blockMode != 'filters' && !menuOpen">
     <input type="text" class="input_line" placeholder="Введите поисковый запрос"
            [(ngModel)]="searchQuery" (keyup)="searchStringChanged($event)">
     <div class="find_icon_block">
@@ -18,8 +18,9 @@
              src="../../../../assets/4-4.png" width="24px">
     </div>
 </div>
-<div [class.openMain]="!menuOpen && blockInputOpen != 'open_login' && blockInputOpen != 'open_pay'"
-     [class.closeMain]="menuOpen || blockInputOpen == 'open_login' || blockInputOpen == 'open_pay'">
+<!-- [class.openMain]="!menuOpen && blockInputOpen != 'open_login' && blockInputOpen != 'open_pay'"
+     [class.closeMain]="menuOpen || blockInputOpen == 'open_login' || blockInputOpen == 'open_pay'"-->
+<div>
     <div class="bottom-buttons1" *ngIf="blockMode == 'item' && !logged_in" (click)="blockInputOpen = 'open_login'">
         <a class="show-contact-button" style=" text-decoration: none">
             <span>КОНТАКТЫ</span>
@@ -81,7 +82,7 @@
 
             <div class="filters open" *ngIf="this.blockMode != 'map'" (touchstart)="touchstart($event)"
                  (touchend)="touchend($event)">
-                <div class="scroll-items open"
+                <div class="scroll-items open" (touchend)="listScroll($event)"
                      *ngIf="blockMode == 'items'">
                         <item-middle *ngFor="let obj of items, let i = index" [index]="i" [item]="obj" [loggingMode]="logged_in" [payingMode]="payed" [watched]="watchedItems.indexOf(i) != -1"
                                      (favItemMode)="changeFav($event, obj)" (click)="checkClick(i,obj, $event, 'list')"></item-middle>
