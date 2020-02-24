@@ -1,7 +1,7 @@
 import {LOCAL_STORAGE} from '@ng-toolkit/universal';
 import {Component, EventEmitter, Input, OnInit, OnChanges, Output, AfterViewInit, Inject} from '@angular/core';
 import {AccountService} from '../../../services/account.service';
-
+import {NgxMetrikaService} from '@kolkov/ngx-metrika';
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
@@ -11,7 +11,7 @@ import {AccountService} from '../../../services/account.service';
 
 export class LoginComponent implements OnInit, AfterViewInit, OnChanges {
 
-    constructor(@Inject(LOCAL_STORAGE) private localStorage: any, private _account_service: AccountService) {
+    constructor(private ym: NgxMetrikaService,@Inject(LOCAL_STORAGE) private localStorage: any, private _account_service: AccountService) {
     }
 
     public customPatterns = {
@@ -23,6 +23,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnChanges {
     @Output() blockClose = new EventEmitter();
     @Output() userLoggedIn = new EventEmitter();
     @Output() loggingMode = new EventEmitter();
+    regVar = true;
     logged_in = false;
     user: any;
     mode: any;
@@ -106,7 +107,9 @@ export class LoginComponent implements OnInit, AfterViewInit, OnChanges {
 
         }
     }
-
+    ymFunc(target) {
+        this.ym.reachGoal.next({target: target});
+    }
     enterMode(name) {
         if (name === 'log in') {
             this.mode = 'login';
@@ -149,6 +152,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     save_user() {
+        this.regVar = false;
         console.log('save_user');
         let phones = {
             'main': this.phone.slice(1, this.phone.length)
@@ -156,7 +160,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnChanges {
         let emails = {
             'main': this.login
         };
-        this._account_service.saveUser('1545092165300', emails, phones).subscribe(res => {
+        this._account_service.saveUser('1545092165300', emails, phones,'','','','','', '').subscribe(res => {
             if (res != undefined) {
                 this.enterMode('register');
                 this.get_users();
@@ -331,7 +335,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnChanges {
             //     }
             //   });
             // }
-        } else if (this.mode === 'checkAccessKey') {
+        } else if (this.mode === 'checkAccessKey' && this.regVar == true) {
             if (this.check) {
                 let i = 0;
                 this._account_service.data(this.login, this.pass, this.phone, this.mode, recoverMethod).subscribe(res => {

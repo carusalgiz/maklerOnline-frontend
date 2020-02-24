@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output, AfterViewInit} from '@angular/core';
 import {AccountService} from '../../../services/account.service';
+import {NgxMetrikaService} from '@kolkov/ngx-metrika';
 
 @Component({
     selector: 'app-login',
@@ -9,7 +10,7 @@ import {AccountService} from '../../../services/account.service';
 export class LoginComponent implements OnInit, AfterViewInit {
 
     constructor(
-        private _account_service: AccountService) {
+        private ym: NgxMetrikaService,private _account_service: AccountService) {
     }
 
     public customPatterns = {
@@ -21,6 +22,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     @Output() blockClose = new EventEmitter();
     @Output() userLoggedIn = new EventEmitter();
     @Output() loggingMode = new EventEmitter();
+    regVar = true;
     counter: any;
     openBlock = true;
     height: number;
@@ -49,7 +51,9 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
     }
-
+    ymFunc(target) {
+        this.ym.reachGoal.next({target: target});
+    }
     blockCloseFunc(name) {
         if (document.getElementById('res') != null) {
             document.getElementById('res').innerHTML = "";
@@ -130,35 +134,22 @@ export class LoginComponent implements OnInit, AfterViewInit {
     }
 
     save_user() {
-
+        this.regVar = false;
         let phones = {
             'main': this.phone.slice(1, this.phone.length)
         };
         let emails = {
             'main': this.login
         };
-        this._account_service.saveUser('1545092165300', emails, phones).subscribe(res => {
-            console.log(res);
+            this._account_service.saveUser('1545092165300', emails, phones,'','','','','','').subscribe(res => {
+                if (res != undefined) {
+                    this.enterMode('register');
+                    this.get_users();
+                } else {
+                    document.getElementById('res1').innerHTML = 'Произошла ошибка в системе. Регистрация на данный момент невозможна';
+                }
+            });
 
-            // console.log(arr);
-            if (res != undefined) {
-                this.enterMode('register');
-                this.get_users();
-                // let arr = Object.values(res);
-                // if (arr[0] == 201 || arr[0] == '201') {
-                //     this.enterMode('register');
-                //     this.get_users();
-                // } else if (arr[0] != 201 && arr[0] != '201') {
-                //     document.getElementById('res1').innerHTML = 'Пользователь с такими данными уже существует, регистрация ' +
-                //         'невозможна. Воспользуйтесь пожалуйста функцией восстановления пароля на странице входа.';
-                //     //  alert('Пользователь с такими данными уже существует');
-                // }
-            } else {
-                document.getElementById('res1').innerHTML = 'Произошла ошибка в системе. Регистрация на данный момент невозможна';
-            }
-
-            //  console.log(this.result + " " + typeof this.result);
-        });
     }
 
     selected(el: MouseEvent) {
@@ -276,7 +267,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
                 }
             }
 
-        } else if (this.mode === 'checkAccessKey') {
+        } else if (this.mode === 'checkAccessKey' && this.regVar == true) {
             this.counter = 0;
             if (this.check) {
                 let i = 0;

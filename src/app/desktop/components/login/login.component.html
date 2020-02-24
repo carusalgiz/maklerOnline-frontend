@@ -80,15 +80,8 @@
                                                                (click)="openDocument()">
           условиями использования</span> и политикой конфиденциальности.</span>
         </div>
-        <div class="button-next register" *ngIf="register && check"
-             (click)="enterMode('checkAccessKey');get_users()">
-            <span>ЗАРЕГИСТРИРОВАТЬСЯ</span>
-            <div class="arrowBars">
-                <div class="arrowBar1"></div>
-                <div class="arrowBar2"></div>
-            </div>
-        </div>
-        <div class="button-next non-register" *ngIf="register && !check">
+        <div class="button-next register" *ngIf="register"
+             (click)="ymFunc('registration-login');enterMode('checkAccessKey');get_users()">
             <span>ЗАРЕГИСТРИРОВАТЬСЯ</span>
             <div class="arrowBars">
                 <div class="arrowBar1"></div>
@@ -96,7 +89,7 @@
             </div>
         </div>
         <div class="button-next loginButton" style="margin-top: 10px;" *ngIf="log_in"
-             (click)="enterMode('log in'); get_users()">
+             (click)="ymFunc('login-login');enterMode('log in'); get_users()">
             <span>ВОЙТИ</span>
         </div>
 

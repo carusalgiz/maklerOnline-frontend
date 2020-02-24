@@ -19,6 +19,9 @@ import {AgreementComponent} from './components/agreement/agreement.component';
 import { VirtualScrollerModule } from 'ngx-virtual-scroller';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {ItemMiddle} from './components/item-middle';
+import { UIUploadFile} from './ui/ui-upload-file.component';
+import { ImageCropperModule } from 'ngx-image-cropper';
+import { TextareaAutosizeModule } from 'ngx-textarea-autosize';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -29,14 +32,15 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    CommonModule, FormsModule,VirtualScrollerModule, ScrollingModule,
-    ReactiveFormsModule, NgxMaskModule.forRoot(),
-    RouterModule.forChild(routes),
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyAi9zTbzWtEhLVZ8syBV6l7d3QMNLRokVY'
-    })
-  ],
+    imports: [
+        CommonModule, FormsModule, VirtualScrollerModule, ScrollingModule, TextareaAutosizeModule,
+        ReactiveFormsModule, NgxMaskModule.forRoot(),
+        RouterModule.forChild(routes),
+        AgmCoreModule.forRoot({
+            apiKey: 'AIzaSyAi9zTbzWtEhLVZ8syBV6l7d3QMNLRokVY'
+        }),
+        ImageCropperModule
+    ],
   declarations: [
       ItemMiddle,
     MenuComponent,
@@ -50,7 +54,8 @@ const routes: Routes = [
     ContactComponent,
     EgrnComponent,
     ProposalComponent,
-    AgreementComponent
+    AgreementComponent,
+      UIUploadFile
   ],
     providers: [ {provide: LocationStrategy, useClass: PathLocationStrategy} ]
 })

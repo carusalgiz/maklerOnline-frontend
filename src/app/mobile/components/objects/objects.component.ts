@@ -5,7 +5,7 @@ import {Item} from '../../../item';
 import {ActivatedRoute, Router} from '@angular/router';
 import {OfferService} from '../../../services/offer.service';
 import {AccountService} from '../../../services/account.service';
-
+import {NgxMetrikaService} from '@kolkov/ngx-metrika';
 @Component({
     selector: 'app-objects',
     templateUrl: './objects.component.html',
@@ -15,6 +15,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
 
     private subscription: Subscription;
     initCoords = [48.4862268, 135.0826369];
+    tempItems: Item[] = [];
     initZoom = 15;
     mapBig = false;
     public map: any;
@@ -53,7 +54,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     coordsPolygon: any[] = [];
     filtersChosen = 'empty';
     countOfItems: any;
-    blockInputOpen = 'open_menu';
+    blockInputOpen = 'close_menu';
     current = 0;
     y: number;
     width: number;
@@ -62,8 +63,8 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     lng = 135.0826369;
     activeButton: string;
     menuOpen = false;
-    logged_in: boolean = false;
-    payed: boolean = false;
+    logged_in: any;
+    payed: any;
     bottomPxButton: any;
     headerPos: any;
     touchStartPos: any;
@@ -113,13 +114,34 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         }
     ];
 
-    constructor(@Inject(WINDOW) private window: Window, @Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, private router: Router,
+    constructor(private ym: NgxMetrikaService,@Inject(WINDOW) private window: Window, @Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, private router: Router,
                 private _offer_service: OfferService,
                 private _account_service: AccountService) {
         this.subscription = route.params.subscribe((urlParams) => {
             if (urlParams['mode'] === 'list') {
                 this.blockMode = 'items';
                 this.activeButton = 'items';
+                this.itemOpen = false;
+                window.scrollTo(0, 0);
+                this.filtersInnerActive = false;
+                let filters = document.documentElement.getElementsByClassName('filters') as HTMLCollectionOf<HTMLElement>;
+                if (filters.length !== 0) {
+                    filters.item(0).style.setProperty('display', 'flex');
+                }
+            } else if (urlParams['mode'] === 'request') {
+                this.activeButton = 'request';
+                this.itemOpen = false;
+                window.scrollTo(0, 0);
+                this.filtersInnerActive = false;
+                let filters = document.documentElement.getElementsByClassName('filters') as HTMLCollectionOf<HTMLElement>;
+                if (filters.length !== 0) {
+                    filters.item(0).style.setProperty('display', 'flex');
+                }
+                this.blockMode = 'filters';
+                this.openBlock('filters');
+            } else if (urlParams['mode'] === 'fav') {
+                this.blockMode = 'items';
+                this.activeButton = 'fav';
                 this.itemOpen = false;
                 window.scrollTo(0, 0);
                 this.filtersInnerActive = false;
@@ -168,6 +190,8 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
+        document.body.style.removeProperty('height');
+        document.body.style.removeProperty('background-color');
         this.get_list(20, 'init');
         let header = document.getElementsByClassName('header') as HTMLCollectionOf<HTMLElement>;
         header.item(0).style.setProperty('z-index', '8');
@@ -193,6 +217,9 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 this.watchedItems.push(Number(sessionStorage.key(i)));
             }
         }
+    }
+    ymFunc(target) {
+        this.ym.reachGoal.next({target: target});
     }
     changeFav(mode, item) {
         this.get_favObjects();
@@ -325,7 +352,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             this.blockMode = 'item';
             this.checklogin();
             // console.log('blockMode:' + this.blockMode + ' logged_in:' + this.logged_in + ' timeAdd:' + this.timeAdd);
-            this.blockInputOpen = 'open_menu';
+            this.blockInputOpen = 'close_menu';
             this.getObj(index ,flag);
             this.item = obj;
             this.mobileItemFunc();
@@ -459,7 +486,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }
             case 'item': {
                 this.mainHeight = 'calc(100vh - 155px)';
-                this.blockInputOpen = 'open_menu';
+                this.blockInputOpen = 'close_menu';
                 this.blockMode = 'items';
                 this.activeButton = 'items';
                 this.itemOpen = false;
@@ -787,13 +814,22 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     menuMode(mode) {
 
         switch (mode) {
-            case 'open':
+            case 'open_menu':
+                this.tempItems = this.items;
                 this.menuOpen = true;
-                break;
-            case 'close':
-                this.menuOpen = false;
                 this.blockInputOpen = 'open_menu';
+                break;
+            case 'close_menu':
+
+                this.items = [];
+                this.menuOpen = false;
+                this.blockInputOpen = 'close_menu';
                 this.checklogin();
+                setTimeout( () => {
+                    console.log(this.tempItems);
+                    this.items = this.tempItems;
+                },100);
+
                 break;
             case 'close_login':
                 this.blockInputOpen = 'open_menu';
@@ -804,6 +840,11 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 this.checklogin();
                 break;
         }
+
+        // let items = document.getElementsByClassName('catalog-item') as HTMLCollectionOf<HTMLElement>;
+        // setTimeout( ev => {
+        //     items.item(0).scrollIntoView(false);
+        // }, 300);
         // console.log('mode:' + mode + ' blockMode:' + this.blockMode + ' blockInputOpen:' + this.blockInputOpen);
     }
 

@@ -150,6 +150,9 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }
         }
     }
+    ymFunc(target) {
+        this.ym.reachGoal.next({target: target});
+    }
     searchStringChanged(e) {
         let c = this;
         clearTimeout(this.suggestionTo);

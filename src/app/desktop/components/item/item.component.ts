@@ -35,7 +35,7 @@ import {Title} from '@angular/platform-browser';
 import 'moment/locale/ru.js';
 import {HttpClient} from '@angular/common/http';
 import {ConfigService} from '../../../services/config.service';
-
+import {NgxMetrikaService} from '@kolkov/ngx-metrika';
 @Component({
     selector: 'app-item',
     templateUrl: './item.component.html',
@@ -103,7 +103,7 @@ export class ItemComponent implements OnInit, OnChanges, AfterViewInit {
     pricefields: any;
     paymentType: any;
 
-    constructor(@Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, private _http: HttpClient,private config: ConfigService,
+    constructor(private ym: NgxMetrikaService,@Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, private _http: HttpClient,private config: ConfigService,
                 private _account_service: AccountService, private titleService: Title,private builder: AnimationBuilder) {
         this.servUrl = config.getConfig('servUrl');
         this.siteUrl = config.getConfig('siteUrl');
@@ -131,6 +131,9 @@ export class ItemComponent implements OnInit, OnChanges, AfterViewInit {
     @HostListener('window:resize', ['$event'])
     onResize(event) {
         this.reSizeCarousel();
+    }
+    ymFunc(target) {
+        this.ym.reachGoal.next({target: target});
     }
     reSizeCarousel(): void {
         // re-size the container
@@ -331,7 +334,9 @@ export class ItemComponent implements OnInit, OnChanges, AfterViewInit {
                 let spArray = this.item.name.split(" ");
                 let ret = spArray[0].toUpperCase();
                 if (spArray.length > 1) {
-                    ret += " " + spArray[1];
+                    for (let i = 1; i < spArray.length; i++) {
+                        ret += " " + spArray[i];
+                    }
                 }
                 this.item.name = ret;
             }

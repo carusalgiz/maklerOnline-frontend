@@ -1,6 +1,9 @@
 .openMain{
   display: block;
 }
+app-menu.close{
+    display: none;
+}
 .closeMain{
   display: none;
 }

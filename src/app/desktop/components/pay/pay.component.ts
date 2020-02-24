@@ -10,6 +10,7 @@ import {
     Inject,
     SimpleChanges
 } from '@angular/core';
+import {NgxMetrikaService} from '@kolkov/ngx-metrika';
 import {AccountService} from '../../../services/account.service';
 
 @Component({
@@ -20,7 +21,7 @@ import {AccountService} from '../../../services/account.service';
 export class PayComponent implements OnInit, AfterViewInit, OnChanges {
 
     constructor(
-                @Inject(WINDOW) private window: Window, @Inject(LOCAL_STORAGE) private localStorage: any, private _account_service: AccountService) {
+        private ym: NgxMetrikaService, @Inject(WINDOW) private window: Window, @Inject(LOCAL_STORAGE) private localStorage: any, private _account_service: AccountService) {
     }
 
     @Input() itemOpen: boolean;
@@ -59,7 +60,9 @@ export class PayComponent implements OnInit, AfterViewInit, OnChanges {
 
     ngAfterViewInit() {
     }
-
+    ymFunc(target) {
+        this.ym.reachGoal.next({target: target});
+    }
     log_out() {
         this.localStorage.removeItem('time');
         this.localStorage.removeItem('logged_in');

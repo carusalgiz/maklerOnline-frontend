@@ -24,6 +24,7 @@ export class Item {
     photos: UploadFile[];
     documents: UploadFile[];
     addDate: number;
+    changeDate: number;
     phone: string;
     photo: string;
     photoMini: string;

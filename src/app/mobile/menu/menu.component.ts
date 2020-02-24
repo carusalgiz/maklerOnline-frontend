@@ -1,10 +1,16 @@
 import {LOCAL_STORAGE} from '@ng-toolkit/universal';
-import {Component, OnInit, OnChanges, AfterViewInit, Output, EventEmitter, Input, Inject} from '@angular/core';
+import {Component, OnInit, OnChanges, AfterViewInit, Output, EventEmitter, Input, Inject, SimpleChanges, NgZone, ViewChild} from '@angular/core';
 import {Item} from '../../item';
 import {ActivatedRoute} from '@angular/router';
 import {OfferService} from '../../services/offer.service';
 import {AccountService} from '../../services/account.service';
 import {ConfigService} from '../../services/config.service';
+import {NgxMetrikaService} from '@kolkov/ngx-metrika';
+import {Person} from '../../class/person';
+import * as $ from 'jquery';
+import 'simple-keyboard/build/css/index.css';
+import {CdkTextareaAutosize} from '@angular/cdk/text-field';
+import {take} from 'rxjs/operators';
 
 @Component({
     selector: 'app-menu',
@@ -29,16 +35,57 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
     timer: any;
     mode = '';
     timeT: any;
-    resTime: any;
-    resDay: any;
+    resDay = '0';
+    resTime = '01:00:00';
+    balance = 0;
+    payCarouselMargin = 0;
+    payCarouselBlock = 124;
+    blocked = false;
+    menuMode = 'close';
+
+    //login vars
+    phone = '+7';
+    phone1 = '+7';
+    recoverPhone = '+7';
+    pass: any;
+    pass_reg: any;
+    recover = false;
+    result: any;
+    log_in = false;
+    register = false;
+    update = false;
+    login: any;
+    regVar = true;
+    check = false;
+    person_name = '';
+    model_name: any;
+    model_company: any;
+    model_whatsapp: any;
+    model_vk: any;
+    model_ok: any;
+    model_instagram: any;
+    model_description: any;
+    person: Person = new Person();
+    progressWidth: number = 0;
+    freeAccess = false;
+    // pay vars
+    payblock = false;
+    payitem = 1;
+    pay_button = 0;
+    requestMenu = false;
+
+    public customPatterns = {
+        '0': {pattern: new RegExp('([\\d])')},
+        '1': {pattern: new RegExp('[\+]?')}
+    };
     @Output() Logging = new EventEmitter();
     @Output() Paying = new EventEmitter();
     @Input() blockOpenInput: String;
     @Input() headerPos: number;
     @Output() openMenu = new EventEmitter();
     @Output() blockClosed = new EventEmitter();
-
-    constructor(@Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, config: ConfigService,
+    @ViewChild('autosize', {static: false}) autosize: CdkTextareaAutosize;
+    constructor(private _ngZone: NgZone, private ym: NgxMetrikaService,@Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, config: ConfigService,
                 private _offer_service: OfferService,
                 private _account_service: AccountService) {
         this.siteUrl = config.getConfig('siteUrl');
@@ -51,22 +98,333 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
             this.days = this.localStorage.getItem('days');
             this.time = this.localStorage.getItem('time');
         }
-
     }
 
-    ngOnChanges() {
-        // this.check();
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes.blockOpenInput) {
+            this.menuOpen(this.blockOpenInput);
+        }
     }
 
     ngAfterViewInit() {
         window.scrollTo(0, 0);
         document.body.style.removeProperty('overflow-y');
-        // document.getElementById('header').scrollIntoView(false);
-        // this.checklogin();
+    }
+    triggerResize() {
+        // Wait for changes to be applied, then trigger textarea resize.
+        this._ngZone.onStable.pipe(take(1))
+            .subscribe(() => this.autosize.resizeToFitContent(true));
+    }
+    scrollXCarousel(size, event){
+        let itPay = document.getElementsByClassName('pay-item')[0] as HTMLElement;
+        this.payCarouselBlock = itPay.offsetWidth;// + ((document.documentElement.offsetWidth - itPay.offsetWidth) / 2);
+        let sub_size = size * document.documentElement.offsetWidth;
+        console.log(sub_size);
+        size = (this.payCarouselBlock * size) - (this.payCarouselBlock / 2);
+
+        $(document).ready(function(){
+            var outerContent = $('#outerPay');
+            var outerSub = $('#paySubBlocks');
+            outerContent.animate({scrollLeft: size}, 300);
+            outerSub.animate({scrollLeft: sub_size}, 300);
+        });
+    }
+    inputToCenter(ev){
+        setTimeout(() => {
+            ev.target.scrollIntoView({block: 'center', behavior: 'smooth'});
+        },300);
+
+    }
+    clearInfo(){
+        if (document.getElementById('res') != undefined)
+            document.getElementById('res').innerHTML = '';
+        if (document.getElementById('res1') != undefined)
+            document.getElementById('res1').innerHTML = 'После регистрации доступен Бесплатный период';
+        if (document.getElementById('res2') != undefined)
+            document.getElementById('res2').innerHTML = '';
+    }
+    updatePerson(){
+        this._account_service.updateUser(this.person).subscribe(res => {
+            let result = JSON.parse(JSON.stringify(res));
+            if (result.person){
+                this.person = result.person;
+                if (this.person.name != undefined) {
+                    let spArray = this.person.name.split(" ");
+                    let ret = spArray[0].toUpperCase();
+                    if (spArray.length > 1) {
+                        for (let i = 1; i < spArray.length; i++) {
+                            ret += " " + spArray[i];
+                        }
+                    }
+                    this.person_name = ret;
+                }
+                sessionStorage.setItem('useremail', this.person.emailBlock.main);
+                document.getElementById('res2').innerHTML = 'Информация успешно обновлена';
+            }
+        });
+    }
+    addFile(event){
+        this.person.photo = event[0].href;
+        this.person.photoMini = event[0].href;
+        this.updatePerson();
+    }
+    displayProgress(event) {
+        this.progressWidth = event;
+        if (event == 100) setTimeout(() => {
+            this.progressWidth = 0;
+        }, 1300);
+    }
+    enterMode(name) {
+        this.mode = name;
+        if (name === 'login') {
+            document.getElementById('res').innerHTML = '';
+        } else if (name === 'register') {
+            this.mode = 'register';
+            document.getElementById('res1').innerHTML = '';
+        } else if (name === 'recoverPass') {
+            document.getElementById('resRecover').innerHTML = this.result;
+            this.mode = 'recoverPass';
+        }
+    }
+    get_users() {
+        if (!this.recover && this.log_in) {
+            document.getElementById('res').style.setProperty('display', 'block');
+        }
+
+        this.result = '';
+        let recoverMethod = '';
+
+        if (this.mode == 'login') {
+            this._account_service.login(this.phone1, this.pass).subscribe(res => {
+                let i = 0;
+                console.log(res);
+                for (let str of Object.values(res)) {
+                    i++;
+                    this.result = str.toString();
+                    if (i == 1) {
+                        document.getElementById('res').innerHTML = this.result;
+                        if (this.result == 'Успешный вход') {
+                            this.user = this.phone1;
+                            this.logged_in = true;
+                            this.phone1 = '+7';
+                            this.pass = '';
+                            this.register = false;
+                            this.log_in = false;
+                            this.checklogin();
+                            this.Logging.emit(true);
+                        }
+                    } else if (i == 2) {
+                        this.person.name = this.result;
+                        // this.user_name = this.result;
+                        // this.userLoggedIn.emit(this.result);
+                    } else if (i == 3) {
+                        this.person.emailBlock.main = this.result;
+                        // this.user_email = this.result;
+                        // this.userLoggedIn.emit(this.result);
+                    }
+                }
+            });
+        }
+
+        if (this.mode === 'register') {
+            this._account_service.data(this.login, this.pass_reg, this.phone, this.mode, recoverMethod).subscribe(res => {
+                let i = 0;
+                for (let str of Object.values(res)) {
+                    if (str.toString() == 'ok') {
+                        this.register = false;
+                        this.phone1 = '+'+this.phone;
+                        // document.getElementById('res').innerHTML = 'Учетная запись успешно создана';
+                        // this.log_in = true;
+                        setTimeout(()=> {
+                            this.enterMode('login');
+                            this.get_users();
+                        },300);
+                    }
+                    i++;
+                }
+            });
+
+        } else if (this.mode === 'recoverPass') {
+            recoverMethod = 'phone';
+            if (this.recoverPhone == '') {
+                alert('Поле телефона для восстановления не заполнено');
+            } else {
+                this._account_service.data(this.login, this.pass, this.recoverPhone, this.mode, recoverMethod).subscribe(res => {
+                    for (let str of Object.values(res)) {
+                        if (str != 'ok')
+                            this.result += str.toString();
+                        document.getElementById('resRecover').innerHTML = this.result;
+                    }
+                });
+            }
+        } else if (this.mode === 'sendKey') {
+            recoverMethod = 'phone';
+
+            let regexp = new RegExp('@');
+            let test = regexp.test(this.login);
+            if (this.recover == true) {
+                if (this.phone1 == '' || this.phone1 == undefined || this.phone1.length < 11) {
+                    document.getElementById('res').innerHTML = 'Для восстановления пароля пожалуйста введите номер Вашего телефона';
+                } else {
+                    this._account_service.data(this.login, this.pass, this.phone1, 'recoverPass', recoverMethod).subscribe(res => {
+                        let i = 0;
+                        for (let str of Object.values(res)) {
+                            if (i == 0) {
+                                this.result += str.toString();
+                                document.getElementById('res').innerHTML = this.result;
+                            }
+                            i++;
+                        }
+                    });
+                }
+            } else {
+                if (this.login == '' || this.login == undefined || !test) {
+                    document.getElementById('res1').innerHTML = 'Некорректно введен адрес почтового ящика, пожалуйста проверьте правильность написания';
+                } else if (this.phone == '' || this.phone == undefined || this.phone.length < 11) {
+                    document.getElementById('res1').innerHTML = 'Некорректно введен номер телефона, пожалуйста проверьте правильность написания';
+                } else {
+                    this._account_service.data(this.login, this.pass, this.phone, this.mode, recoverMethod).subscribe(res => {
+                        document.getElementById('res1').style.setProperty('display', 'block');
+                        let i = 0;
+                        for (let str of Object.values(res)) {
+                            if (i == 0) {
+                                this.result = str.toString();
+                                document.getElementById('res1').innerHTML = str.toString();
+                            }
+                            i++;
+                        }
+                    });
+                }
+            }
+        } else if (this.mode === 'checkAccessKey' && this.regVar == true) {
+                let i = 0;
+                this._account_service.data(this.login, this.pass_reg, this.phone, this.mode, recoverMethod).subscribe(res => {
+                    for (let str of Object.values(res)) {
+                        if (i == 0) {
+                            i++;
+                            this.result = str.toString();
+                            if (str.toString() == 'ok') {
+                                console.log('hello!');
+                                document.getElementById('res1').innerHTML = 'Учетная запись успешно создана';
+                                this.save_user();
+                            } else {
+                                document.getElementById('res1').innerHTML = str.toString();
+                            }
+                        }
+                    }
+                });
+        } else if (this.mode === 'savePassRecover') {
+            recoverMethod = 'phone';
+            let access_code1 = (<HTMLInputElement> document.getElementById('recoverKey')).value;
+            this._account_service.data(this.login, access_code1, this.recoverPhone, this.mode, recoverMethod).subscribe(res => {
+                console.log(res);
+                for (let str of Object.values(res)) {
+                    if (str != 'ok')
+                        this.result += str.toString();
+                    document.getElementById('resRecover').innerHTML = this.result;
+                }
+            });
+        }
+    }
+    payment(block, type, cost) {
+        if (sessionStorage.getItem('useremail')!= undefined && sessionStorage.getItem('useremail') != 'email') {
+            this._account_service.payment(type, cost).subscribe((res) => {
+                console.log(res);
+                if (res == "Такого пользователя не существует, либо вход не был произведен") {
+                    alert(res);
+                } else if (res.indexOf("http") != -1) {
+                    window.location.href = res;
+                } else {
+                    alert(res);
+                }
+            });
+        } else {
+            alert("Вход не был произведен, войдите пожалуйста в систему перед совершением оплаты");
+        }
+    }
+    save_user() {
+        this.regVar = false;
+        let phones = {
+            'main': this.phone.slice(1, this.phone.length)
+        };
+        let emails = {
+            'main': this.login
+        };
+        let messengers = {
+            'whatsapp': this.model_whatsapp
+        };
+        let socials = {
+            'vk': this.model_vk,
+            'ok': this.model_ok,
+            'instagram': this.model_instagram
+        };
+        let organisation = {
+            'name' : this.model_company
+        };
+        this._account_service.saveUser('1545092165300', emails, phones, messengers, socials, undefined, this.model_name, this.model_description, false).subscribe(res => {
+            if (res != undefined) {
+                this.enterMode('register');
+                this.get_users();
+            } else {
+                document.getElementById('res1').innerHTML = 'Произошла ошибка в системе. Регистрация на данный момент невозможна';
+            }
+        });
     }
 
+    checkKey(key) {
+        if (document.getElementById('res') != null) {
+            document.getElementById('res').innerHTML = '';
+        }
+        if (document.getElementById('res1') != null) {
+            document.getElementById('res1').innerHTML = '';
+        }
+        if (key == 'phone') {
+            if ((this.phone.charAt(0) == '7' || this.phone[0] == '7') && this.phone.length < 2) {
+                this.phone = '+7';
+            } else if (this.phone.charAt(0) != '7' && this.phone[0] != '7' && this.phone.charAt(0) != '8' && this.phone[0] != '8'
+                && this.phone.charAt(0) != '+' && this.phone[0] != '+' && this.phone.length < 2) {
+                this.phone = '+7';
+            }
+        } else if (key == 'phone1') {
+            console.log(this.phone1.charAt(0) + ' ' + this.phone1[0]);
+            if ((this.phone1.charAt(0) == '7' || this.phone1[0] == '7') && this.phone1.length < 2) {
+                this.phone1 = '+7';
+            } else if (this.phone1.charAt(0) != '7' && this.phone1[0] != '7' && this.phone1.charAt(0) != '8' && this.phone1[0] != '8'
+                && this.phone1.charAt(0) != '+' && this.phone1[0] != '+' && this.phone1.length < 2) {
+                this.phone1 = '+7';
+            }
+        } else if (key == 'recoverPhone') {
+            console.log(this.recoverPhone.charAt(0) + ' ' + this.recoverPhone[0]);
+            if ((this.recoverPhone.charAt(0) == '7' || this.recoverPhone[0] == '7') && this.recoverPhone.length < 2) {
+                this.recoverPhone = '+7';
+            } else if (this.recoverPhone.charAt(0) != '7' && this.recoverPhone[0] != '7' && this.recoverPhone.charAt(0) != '8' && this.recoverPhone[0] != '8'
+                && this.recoverPhone.charAt(0) != '+' && this.recoverPhone[0] != '+' && this.recoverPhone.length < 2) {
+                this.recoverPhone = '+7';
+            }
+        }
+    }
+    ymFunc(target) {
+        this.ym.reachGoal.next({target: target});
+    }
+    setFocus(name){
+        document.getElementById(name).focus();
+    }
     menuOpen(mode) {
-        this.openMenu.emit(mode);
+        this.blockOpenInput = mode;
+
+        if (mode == 'open_menu') {
+            this.blocked = false;
+            document.body.style.setProperty('height', '100vh');
+            document.body.style.setProperty('background-color', '#1c2628');
+            setTimeout(ev => {
+                document.getElementById('menuTop').scrollIntoView({'block': 'center', 'behavior':'smooth'});
+            },200);
+        } else {
+            // document.body.style.removeProperty('height');
+            document.body.style.removeProperty( 'background-color');
+        }
+            this.openMenu.emit(mode);
+
     }
 
     addFunc(name) {
@@ -170,38 +528,11 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
         }
     }
 
-    displayMenu(mode) {
-        let home = document.documentElement.getElementsByClassName('mainHome') as HTMLCollectionOf<HTMLElement>;
-        let objects = document.documentElement.getElementsByClassName('main-objects') as HTMLCollectionOf<HTMLElement>;
-        let header = document.documentElement.getElementsByClassName('header') as HTMLCollectionOf<HTMLElement>;
-        let mobileMenu = document.getElementsByClassName('menuMobile') as HTMLCollectionOf<HTMLElement>;
-        if (mode === 'show') {
-            document.body.style.setProperty('overflow-y', 'hidden');
-            header.item(0).style.setProperty('display', 'none');
-            mobileMenu.item(0).classList.add('open');
-            if (home.length != 0) {
-                // home.item(0).style.setProperty('display', 'none');
-            } else if (objects.length != 0) {
-                // objects.item(0).style.setProperty('display', 'none');
-            }
-        } else if (mode === 'hide') {
-            document.body.style.removeProperty('overflow-y');
-            let add_block = document.documentElement.getElementsByClassName('add-block-menu') as HTMLCollectionOf<HTMLElement>;
-            add_block.item(0).classList.add('close');
-            add_block.item(1).classList.add('close');
-            header.item(0).style.setProperty('display', 'flex');
-            mobileMenu.item(0).classList.remove('open');
-            if (home.length != 0) {
-                // home.item(0).style.setProperty('display', 'block');
-            } else if (objects.length != 0) {
-                // objects.item(0).style.setProperty('display', 'flex');
-            }
-        }
-
-    }
-
     log_out() {
-        this.userEmail = 'email';
+        this.person = new Person();
+        this.person_name = '';
+        // this.user_email = '';
+        // this.userEmail = 'email';
         this.logged_in = false;
         this.days = '0дн.';
         this.time = '00ч.00мин.';
@@ -218,23 +549,39 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     checklogin() {
-        console.log('checkloginmenu');
         this.logged_in = false;
         this._account_service.checklogin().subscribe(res => {
-            console.log(res);
             if (res != undefined) {
                 let data = JSON.parse(JSON.stringify(res));
                 if (data.result == 'success') {
-                    if (data.email != '') {
-                        this.userEmail = data.email;
-                    } else {
-                        this.userEmail = 'email';
-                    }
-                    sessionStorage.setItem('useremail', this.userEmail);
+                    this._account_service.personInfo().subscribe(res1 => {
+                        // console.log("checkbalance");
+                        console.log('pesronInfo:', res1);
+                        let result = JSON.parse(JSON.stringify(res1));
+                        if (result.person){
+                            this.person = result.person;
+                            if (this.person.name != undefined) {
+                                let spArray = this.person.name.split(" ");
+                                let ret = spArray[0].toUpperCase();
+                                if (spArray.length > 1) {
+                                    for (let i = 1; i < spArray.length; i++) {
+                                        ret += " " + spArray[i];
+                                    }
+                                }
+                                this.person_name = ret;
+                            }
+                            sessionStorage.setItem('useremail', this.person.emailBlock.main);
+                        }
+                    });
                     this.days = sessionStorage.getItem('days');
                     this.time = sessionStorage.getItem('time');
                     this.resDay = sessionStorage.getItem('resDay');
-                    this.resTime = sessionStorage.getItem('resTime');
+                    if (sessionStorage.getItem('resTime') != undefined) {
+                        this.resTime = sessionStorage.getItem('resTime');
+                    } else {
+                        this.resTime = '01:00:00';
+                    }
+
                     localStorage.setItem('cur_id', data.user_id);
                     this.logged_in = true;
                     this.Logging.emit('true');
@@ -242,8 +589,9 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
                     this._account_service.checkBalance().subscribe(res => {
                         // console.log("checkbalance");
                         let result = JSON.parse(JSON.stringify(res));
-                        // console.log(result);
+                         console.log(result);
                         this.timeT = parseInt(result.time, 10);
+                        this.freeAccess = result.freeAccess;
                         clearInterval(this.timer);
                         this.timer = setInterval(e => this.updateTime(), 1000);
                     });
@@ -269,8 +617,17 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
                 let resDay = Math.floor(hour / 24);
                 this.days = resDay + 'дн.';
                 this.time = Math.floor(hour % 24) + 'ч.' + Math.floor(min % 60) + 'мин.';
-                this.resDay = Math.floor(hour / 24);
-                this.resTime = Math.floor(hour % 24) + ':' + Math.floor(min % 60) + ':' + Math.floor(this.timeT % 60);
+                this.resDay = Math.floor(hour / 24).toString();
+
+                let hours = Math.floor(hour % 24);
+                let minutes = Math.floor(min % 60);
+                let seconds = Math.floor(this.timeT % 60);
+                let h="",m="",s = "";
+                if (hours   < 10) {h   = "0"+hours.toString();} else {h = hours.toString();}
+                if (minutes < 10) {m = "0"+minutes.toString();} else {m = minutes.toString();}
+                if (seconds < 10) {s = "0"+seconds.toString();} else {s = seconds.toString();}
+
+                this.resTime = h + ':' + m + ':' + s;
                 sessionStorage.setItem('days', this.days);
                 sessionStorage.setItem('time', this.time);
                 sessionStorage.setItem('resDay', this.resDay);
@@ -281,7 +638,7 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
                 clearInterval(this.timer);
                 this.days = '00дн.';
                 this.time = '00ч.00мин.';
-                this.resDay = 0;
+                this.resDay = '0';
                 this.resTime = '00:00:00';
                 sessionStorage.setItem('days', this.days);
                 sessionStorage.setItem('time', this.time);
@@ -294,7 +651,7 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
         } else {
             this.days = '00дн.';
             this.time = '00ч.00мин.';
-            this.resDay = 0;
+            this.resDay = '0';
             this.resTime = '00:00:00';
             sessionStorage.setItem('days', this.days);
             sessionStorage.setItem('time', this.time);
@@ -323,10 +680,9 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
         if (newhref != window.location.href) {
             document.location.href = newhref;
         } else {
-            this.displayMenu('hide');
             this.closeButtons();
             this.homePageOpen(home);
-            this.menuOpen('close')
+            this.menuOpen('close_menu')
         }
     }
     openBlock(pay: string) {

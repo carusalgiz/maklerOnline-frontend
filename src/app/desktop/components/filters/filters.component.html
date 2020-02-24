@@ -3,7 +3,7 @@
   <div>
     <span class="title" style="margin-bottom: 15px">Найдено <span class="objectsNum">{{count}}</span> предложений</span>
     <div class="filtersBoxes">
-      <div class="add-button"  (click)="cityButton = !cityButton">
+      <div class="add-button"  (click)="ymFunc('city-filter');cityButton = !cityButton">
         <span class="filterButton">НАСЕЛЕННЫЙ ПУНКТ</span>
         <div class="choosen" style="display: none">
           <span class="choosen-type">Населенный пункт</span>
@@ -17,7 +17,7 @@
           <div class="buttonOption" (click)="selectOption(0,2, 'Комсомольск-на-Амуре', 'cityButton', '')"><span style="flex-grow: 1">Комсомольск-на-Амуре</span><span style="padding-right: 20px">{{kna}}</span></div>
         </div>
       </div>
-      <div class="add-button" (click)="offer = !offer">
+      <div class="add-button" (click)="ymFunc('typeOffer-filter');offer = !offer">
         <span class="filterButton">ТИП ПРЕДЛОЖЕНИЯ</span>
         <div class="choosen" style="display: none">
           <span class="choosen-type">Тип предложения</span>
@@ -31,7 +31,7 @@
           <div class="buttonOption" (click)="selectOption(1,2, 'ВСЕ', 'offer', 'all')"><span>Все</span></div>
         </div>
       </div>
-      <div class="add-button" (click)="typeOfObject = !typeOfObject">
+      <div class="add-button" (click)="ymFunc('typeObject-filter');typeOfObject = !typeOfObject">
         <span class="filterButton">ТИП ОБЪЕКТА</span>
         <div class="choosen" style="display: none">
           <span class="choosen-type">Тип объекта</span>
@@ -45,7 +45,7 @@
           <div class="buttonOption" (click)="selectOption(2,2, 'дом коттедж дача', 'typeOfObject', 'ДОМ КОТТЕДЖ ДАЧА')"><span>Дом/Коттедж/Дача</span></div>
         </div>
       </div>
-      <div class="add-button" (click)="countOfRooms = !countOfRooms">
+      <div class="add-button" (click)="ymFunc('rooms-filter');countOfRooms = !countOfRooms">
         <span class="filterButton">КОЛИЧЕСТВО КОМНАТ</span>
         <div class="choosen" style="display: none">
           <span class="choosen-type">Количество комнат</span>
@@ -60,7 +60,7 @@
           <div class="buttonOption" (click)="selectOption(3,3, '4 комн', 'countOfRooms', '')"><span>4 комн.</span></div>
         </div>
       </div>
-      <div class="add-button" (click)="cost = !cost">
+      <div class="add-button" (click)="ymFunc('cost-filter');cost = !cost">
         <span class="filterButton"  *ngIf="!costChosen">СТОИМОСТЬ</span>
         <div class="choosen"  *ngIf="costChosen">
           <span class="choosen-type">Стоимость</span>
@@ -75,7 +75,7 @@
           <div class="buttonOption" (click)="selectOption(4,3, '40000', 'cost', '')"><span>40000</span></div>
         </div>
       </div>
-      <div class="add-button" (click)="equipment = !equipment">
+      <div class="add-button" (click)="ymFunc('equipment-filter');equipment = !equipment">
         <span>КОМПЛЕКТАЦИЯ</span>
         <div class="choosen" style="display: none">
           <span class="choosen-type">Комплектация</span>
@@ -98,7 +98,7 @@
           <div class="buttonOption" (click)="selectOption(5,11, 'Телевизор', 'equipment', '')"><span>Телевизор</span></div>
         </div>
       </div>
-      <div class="add-button" (click)="conditions = !conditions">
+      <div class="add-button" (click)="ymFunc('condition-filter');conditions = !conditions">
         <span>УСЛОВИЯ НАЙМА</span>
         <div class="choosen" style="display: none">
           <span class="choosen-type">Условия найма</span>
@@ -113,7 +113,7 @@
           <div class="buttonOption" (click)="selectOption(6,3, 'Мероприятия', 'conditions', '')"><span>Мероприятия</span></div>
         </div>
       </div>
-      <div class="add-button" style="border: none" (click)="sort = !sort">
+      <div class="add-button" style="border: none" (click)="ymFunc('sort-filter');sort = !sort">
       <span class="filterButton">СОРТИРОВАТЬ ПО</span>
       <div class="choosen" style="display: none">
         <span class="choosen-type">Сортировать по</span>
@@ -127,7 +127,7 @@
           <div class="buttonOption" (click)="selectOption(7,2, 'рейтингу', 'sort', 'DESC')"><span>Рейтингу</span></div>
         </div>
       </div>
-      <div class="add-button" style="border: none" (click)="period = !period">
+      <div class="add-button" style="border: none" (click)="ymFunc('period-filter');period = !period">
         <span class="filterButton">ПЕРИОД</span>
         <div class="choosen" style="display: none">
           <span class="choosen-type">Период</span>

@@ -4,7 +4,7 @@
     <div class="mapTopButtons l" *ngIf="activeButton != 'obj'">
         <div class="mapTopButton l" style="border-right: none;" [class.disable]="drawActive == false"
              *ngIf="!drawActive && !clearActive  "
-             (click)="panorama('close'); drawActive = true; clearActive = true; panoramaActive = false">
+             (click)="ymFunc('paint');panorama('close'); drawActive = true; clearActive = true; panoramaActive = false">
             Обвести
         </div>
         <div class="mapTopButton l active" style="border-right: 1px solid white;" *ngIf="clearActive"
@@ -15,7 +15,7 @@
         <div class="mapTopButton r" [class.disable]="panoramaActive == false"
              [class.active]="drawActive == false && panoramaActive == true"
              *ngIf="!panoramaActive"
-             (click)="panorama('open');panoramaActive = true;drawActive = false;clearActive = false;">
+             (click)="ymFunc('panorama');panorama('open');panoramaActive = true;drawActive = false;clearActive = false;">
             Панорама
         </div>
         <div class="mapTopButton r active" *ngIf="panoramaActive"
@@ -34,7 +34,7 @@
         </div>
         <div class="count-filters"><span>ДОБАВИТЬ ПРЕДЛОЖЕНИЕ</span></div>
         <div class="filters-divider"></div>
-        <div class="fav" (click)="modeChange('fav');get_favObjects(); activeButton = 'fav';itemsActive = false;listMode = true; listActive()">
+        <div class="fav" (click)="ymFunc('fav-offer');modeChange('fav');get_favObjects(); activeButton = 'fav';itemsActive = false;listMode = true; listActive()">
             <div class="fav-button" [class.open]=" itemsActive" ></div>
             <div class="count-filters" *ngIf="itemsActive"><span>ИЗБРАННОЕ</span></div>
         </div>
@@ -42,11 +42,11 @@
             <div class="fav-button" [class.open]=" !itemsActive"></div>
             <div class="count-filters" *ngIf="!itemsActive"><span>СПИСОК</span></div>
         </div>
-        <div class="filter" [class.open]="!filtersInnerActive" (click)="checkFilters()">
+        <div class="filter" [class.open]="!filtersInnerActive" (click)="ymFunc('filter-offer');checkFilters()">
             <div class="list-button open"></div>
             <div class="count-filters"><span>ФИЛЬТРЫ</span></div>
         </div>
-        <div class="filter" [class.open]="filtersInnerActive" (click)="checkFilters();listMode=true; listActive()">
+        <div class="filter" [class.open]="filtersInnerActive" (click)="ymFunc('filter-offer');checkFilters();listMode=true; listActive()">
             <div class="list-button active open"></div>
             <div class="count-filters"><span>ФИЛЬТРЫ</span></div>
         </div>
@@ -75,7 +75,7 @@
                 </virtual-scroller>
             </div>
             <div class="find-block" *ngIf="!historyActive && (activeButton == 'items' || activeButton == 'obj') && !itemOpen">
-                <input type="text" class="input_line" placeholder="Введите поисковый запрос"
+                <input type="text" class="input_line" placeholder="Введите поисковый запрос" (click)="ymFunc('find-offer');"
                        [(ngModel)]="searchQuery" (keyup)="searchStringChanged($event)"
                 ><div class="find_icon_block"><div class="find_icon"></div></div>
                 <div class="counter">{{countOfObjects}}</div>

@@ -31,24 +31,6 @@ import * as moment from 'moment';
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <div class="catalog-item hovered itemBlock" id="{{item?.id}}">
-<!--            <div class="top-card">-->
-<!--                <div class="top-block" style="flex-grow: 1">-->
-<!--                    <div class="street special">-->
-<!--                        <span *ngIf="!item.address.includes('ул.')">ул.</span>-->
-<!--                        <span class="special">-->
-<!--                             {{item?.address}}-->
-<!--                            <span style="font-weight: bold; margin-left: 5px"> {{item?.house_num}}</span>-->
-<!--                        </span>-->
-<!--                    </div>-->
-<!--                    <div class="commission">{{item?.city}}, {{item?.admArea}}</div>-->
-<!--                </div>-->
-<!--&lt;!&ndash;                <div class="topRightBlock">&ndash;&gt;-->
-<!--&lt;!&ndash;                    <div class="flex-col">&ndash;&gt;-->
-<!--&lt;!&ndash;                        &ndash;&gt;-->
-<!--&lt;!&ndash;                        <div class="commission">Без комиссии</div>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                </div>&ndash;&gt;-->
-<!--            </div>-->
             <div class="photoBlock" *ngIf="imgLen == 0" [class.watched]="item?.watched">
                 <img class="img"
                      [src]="src">
@@ -277,7 +259,9 @@ export class ItemMiddle implements AfterViewInit, OnChanges {
                 let spArray = this.item.name.split(" ");
                 let ret = spArray[0].toUpperCase();
                 if (spArray.length > 1) {
-                    ret += " " + spArray[1];
+                    for (let i = 1; i < spArray.length; i++) {
+                        ret += " " + spArray[i];
+                    }
                 }
                 this.item.name = ret;
             }

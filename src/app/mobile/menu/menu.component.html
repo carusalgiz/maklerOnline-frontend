@@ -1,120 +1,397 @@
 <!--The content below is only a placeholder and can be replaced.  || innerBlockOpen == 'menu'-->
-<div  [class.openMain]="blockOpenInput == 'open_menu'"
-    [class.closeMain]="blockOpenInput != 'open_menu'">
-
-
-    <div style="-webkit-overflow-scrolling: touch;max-height: 100%;">
-        <header class="header" [style.top.px]="headerPos">
+<div  [class.openMain]="blockOpenInput == 'open_menu'" style="-webkit-overflow-scrolling: touch;"
+    [class.closeMain]="blockOpenInput != 'open_menu'" class="inner-left">
+        <header class="header" [style.top.px]="headerPos" [class.open]="blockOpenInput != 'open_menu'">
             <div class="top-logo-block">
                 <a class="logo-mobile" style="outline: none;text-decoration: none"
                     href="//{{siteUrl}}/#/m">
                     <div>MAKLERONLINE</div>
                     <div class="logo-mobile-title">ГРУППА КОМПАНИЙ ZAVRUS</div>
                 </a>
-                <div class="hideMenu" (click)="checklogin();displayMenu('show');menuOpen('open')">
+                <div class="hideMenu" (click)="checklogin();menuOpen('open_menu')">
                     <div class="bar1"></div>
                     <div class="bar2"></div>
                     <div class="bar3"></div>
                 </div>
-                <div class="hideMenu exit-close" (click)="closeFunc('smth');menuOpen('close')">
+                <div class="hideMenu exit-close" (click)="closeFunc('smth');menuOpen('close_menu')">
                     <div class="barExit1"></div>
                     <div class="barExit2"></div>
                 </div>
             </div>
         </header>
 
-        <div class="menuMobile" [class.open]="mobileMenuActive">
-            <div style="display: flex;margin-bottom: 25px;">
-                <a class="logo-mobile contact-menu-info"
-                   id="header"  (click)="displayMenu('hide');closeButtons(); homePageOpen(false);menuOpen('close')"
-                    href="//{{siteUrl}}/#/m"
-                   style="outline: none;text-decoration: none;margin-left: 30px;color: #8F8F8F" [class.close]="logged_in">
-                    <div>MAKLERONLINE</div>
-                    <div class="logo-mobile-title">ГРУППА КОМПАНИЙ ZAVRUS</div>
-                </a>
-                <div class="contact-block contact-menu-info" [class.close]="!logged_in">
-                    <div>
-                        <img src="../../../assets/unnamed.png" width="30px" height="30px">
-                    </div>
-                    <div class="contact-info">
-                        <div>{{userEmail}}</div>
-                        <div>Доступ Премиум</div>
+        <div class="filters" id="menuMobile" [class.open]="blockOpenInput == 'open_menu'">
+            <div class="scroll-items">
+                <div style="display: flex;margin-bottom: 25px;    margin-top: 40px;" id="menuTop">
+                    <a class="logo-mobile contact-menu-info"
+                       id="header"  (click)="closeButtons(); homePageOpen(false);menuOpen('close_menu')"
+                        href="//{{siteUrl}}/#/m"
+                       style="outline: none;text-decoration: none;margin-left: 30px;color: #8A9092">
+                        <div>MAKLERONLINE</div>
+                        <div class="logo-mobile-title">ГРУППА КОМПАНИЙ ZAVRUS</div>
+                    </a>
+                    <div style="margin-right: 30px;height: 20px;" (click)="menuOpen('close_menu')">
+                        <div class="barMenu1"></div>
+                        <div class="barMenu2"></div>
                     </div>
                 </div>
-                <div style="margin-right: 30px;height: 20px;" (click)="displayMenu('hide');menuOpen('close')">
-                    <div class="barMenu1"></div>
-                    <div class="barMenu2"></div>
+                <div class="user-block">
+                    <div style="flex-grow: 1;display: flex;">
+                        <div class="contact-photo" [ngStyle]="{'background-image':  person?.photoMini ? 'url('+ person?.photoMini +')' : 'url(../../../../assets/user-icon-gray.png)', 'background-size': person?.photoMini ?  'cover' : '125% 125%'}">
+                            <ui-upload-file *ngIf="person?.phoneBlock?.main != undefined" [type]="'image'" (addNewFile)="addFile($event)"
+                                (progressState)="displayProgress($event)" [obj_type]="'users'">
+                            </ui-upload-file>
+                        </div>
+                        <div class="user-infoBlock">
+                            <div>{{person_name}}</div>
+                            <div style="color: #8A9092">{{person?.emailBlock?.main}}</div>
+                        </div>
+                    </div>
+                    <div class="contact-info" *ngIf="person?.phoneBlock?.main != undefined && !freeAccess">
+                        <div>
+                            <span style="margin-right: 5px">ВАШ БАЛАНС:</span>
+                            <span style="font-size:18px; font-family: Stolzl, sans-serif">{{balance}}</span>
+                        </div>
+                        <div>
+                            <span style="margin-right: 5px">ОСТАЛОСЬ:</span>
+                            <span style="font-size: 18px; font-family: Stolzl, sans-serif">{{resTime}}</span>
+                        </div>
+                    </div>
+                    <div class="contact-info" *ngIf="person?.phoneBlock?.main == undefined">
+                        <div style="display: flex;align-items: center">
+                            <span style="color: #FF9365; font-size: 14px;height: 16px">БЕСПЛАТНЫЙ ПЕРИОД (после регистрации)</span>
+                        </div>
+                    </div>
+                    <div class="contact-info" *ngIf="person?.phoneBlock?.main != undefined && freeAccess">
+                        <div style="width: 125px;min-width: 125px;display: flex;align-items: center">
+                            <span style="color: #FF9365; font-size: 14px;height: 16px">БЕСПЛАТНЫЙ ПЕРИОД</span>
+                        </div>
+                        <div>
+                            <span style="color: #FF9365;font-size: 18px; font-family: Stolzl, sans-serif;display: flex"><a style="font-weight: bold;margin-right: 5px">{{resTime}}</a>ч</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <!-- <div class="contact-mobile">
-              <img src="../../../assets/photo.PNG" width="50px" height="50px">
-              <div class="user-mobile-menu">
-                <div>ИВАНОВ Иван</div>
-                <div style="font-size: 10px">ЭКСПЕРТ</div>
-              </div>
-            </div> -->
-            <div class="line"></div>
-            <ul>
-                <!--       -->
-                <li>
-                    <a style="outline: none;text-decoration: none"
-                       class="mobileBlock" (click)="redirectFunc('m',false)">
-                        <div class="mobUl">ГЛАВНАЯ</div>
-                    </a>
-                </li>
-                <li>
-                    <a class="mobileBlock" (click)="objectMenu = !objectMenu">
-                        <div class="mobUl">ПРЕДЛОЖЕНИЯ</div>
-                    </a>
-                    <ul class="innerUL" *ngIf="objectMenu">
-                        <li>
-                            <div style="display: flex">
-                                <!--              -->
-                                <div style="flex-grow: 1" (click)="redirectFunc('m/objects/list',true)">
-                                    <a style="outline: none;text-decoration: none"
-                                       class="innerMenu">Все предложения
-                                    </a>
+                <ul>
+                    <li>
+                        <div style="outline: none;text-decoration: none"
+                             class="mobileBlock exit"  [class.close]="!logged_in" *ngIf="logged_in" >
+                            <div class="mobUl" (click)=" log_out(); homePageOpen(false);">ВЫЙТИ</div>
+                        </div>
+                        <div style="outline: none;text-decoration: none"
+                             class="mobileBlock" *ngIf="!logged_in">
+                            <div class="mobUl" [class.active]="log_in" (click)="log_in = !log_in;clearInfo()">ВХОД</div>
+                            <!--                        <div class="close-sub" [class.open]="log_in" (click)="log_in = false;clearInfo()">Закрыть</div>-->
+                        </div>
+                        <div class="sub-block" [class.open]="log_in">
+                            <div class="input-block">
+                                <span (click)="setFocus('phone_login')">Телефон</span>
+                                <input class="number" id="phone_login" (click)="inputToCenter($event)" type="text"  [(ngModel)]="phone1" [patterns]="customPatterns" mask="10 (000) 000-00-00" (keypress)="checkKey('phone1')"  style="margin: 0">
+                            </div>
+                            <div class="input-block">
+                                <span (click)="setFocus('pass_login')">Введите пароль</span>
+                                <input class="number" id="pass_login" (click)="inputToCenter($event)" title="пароль"
+                                    (keypress)="checkKey('pass')" [(ngModel)]="pass" style="margin: 0;width: calc(100% - 230px);" type="text">
+                                <div class="recover" (click)="recover = true;enterMode('sendKey'); get_users();">Забыли пароль</div>
+                            </div>
+                            <div class="font" id="res" style="color: #FF9365;margin: 20px 0 10px 0;height: 35px; width: 315px"></div>
+                            <div class="button-next" (click)="enterMode('login'); get_users()">
+                                <span>ВОЙТИ</span>
+                                <div class="arrowBars">
+                                    <div class="arrowBar1"></div>
+                                    <div class="arrowBar2"></div>
                                 </div>
                             </div>
-                        </li>
-                    </ul>
-                </li>
-                <!--<li><a class="mobileBlock" (click)="displayMenu('hide');closeButtons(); homePageOpen(true)">-->
-                <!--<div class="mobUl">ПРОСМОТРЕННОЕ</div>-->
-                <!--</a></li>-->
-                <!--<li><a class="mobileBlock" (click)="displayMenu('hide');closeButtons(); homePageOpen(true)">-->
-                <!--<div class="mobUl">ИЗБРАННОЕ</div>-->
-                <!--</a></li>-->
-                <!--<li><a style="outline: none;text-decoration: none" class="mobileBlock" (click)="displayMenu('hide');closeButtons();menuOpen('close'); homePageOpen(true)">-->
-                <!--<div class="mobUl">ОСТАВИТЬ ОТЗЫВ</div>-->
-                <!--</a></li>-->
-                <!--<li><a style="outline: none;text-decoration: none" class="mobileBlock" (click)="displayMenu('hide');closeButtons(); menuOpen('close');homePageOpen(true)">-->
-                <!--<div class="mobUl">МОИ ЗАЯВКИ</div>-->
-                <!--</a></li>-->
-                <!--<li><a class="mobileBlock" (click)="displayMenu('hide');closeButtons(); homePageOpen(true)">-->
-                <!--<div class="mobUl">ДОБАВИТЬ ОБЪЕКТ</div>-->
-                <!--</a></li>-->
-                <li>
-                    <a style="outline: none;text-decoration: none"
-                       class="mobileBlock" (click)="openBlock('pay'); homePageOpen(false);">
-                        <div class="mobUl">ОПЛАТА</div>
-                    </a>
-                </li>
-                <li>
-                    <a style="outline: none;text-decoration: none"
-                       class="mobileBlock exit" [class.close]="logged_in"  (click)="openBlock('login'); homePageOpen(false);">
-                        <div class="mobUl">ВОЙТИ</div>
-                    </a>
-                </li>
-                <li>
-                    <a style="outline: none;text-decoration: none"
-                       class="mobileBlock exit"  [class.close]="!logged_in" *ngIf="logged_in" (click)=" log_out(); homePageOpen(false);">
-                        <div class="mobUl">ВЫЙТИ</div>
-                    </a>
-                </li>
-            </ul>
+                        </div>
+<!--                        <div class="sub-line" *ngIf="log_in"></div>-->
+                    </li>
+                    <li *ngIf="person?.phoneBlock?.main == undefined">
+                        <div style="outline: none;text-decoration: none"
+                             class="mobileBlock">
+                            <div class="mobUl" [class.active]="register" (click)="register = !register;clearInfo()">РЕГИСТРАЦИЯ</div>
+                            <!--                        <div class="close-sub" [class.open]="register" (click)="register = false;clearInfo()">Закрыть</div>-->
+                        </div>
+                        <div class="sub-block" [class.open]="register">
+                            <div class="input-block">
+                                <a (click)="setFocus('reg_phone')">Телефон</a>
+                                <input  (click)="inputToCenter($event)" id="reg_phone" class="number reg" type="text" [(ngModel)]="phone" [patterns]="customPatterns"  style="margin: 0" mask="10 (000) 000-00-00" (keypress)="checkKey('phone')">
+                            </div>
+                            <div class="input-block">
+                                <a (click)="setFocus('reg_email')">E-mail</a>
+                                <input (click)="inputToCenter($event)" id="reg_email" class="reg" title="email" [(ngModel)]="login"  placeholder="Введите ваш e-mail" style="margin: 0" required type="text">
+                            </div>
+                            <div class="input-block pass">
+                                <div class="confirmButton" (click)="enterMode('sendKey'); get_users()">Получить пароль</div>
+                                <input class="number" (click)="inputToCenter($event)" placeholder="Введите пароль" title="пароль" (keypress)="checkKey('pass_reg')" [(ngModel)]="pass_reg" style="margin: 0" type="text">
+                            </div>
+                            <div class="check-block font">
+                                <div class="input" (click)="check=!check"><img *ngIf="check" src="../../../assets/check-mark-white.png" height="20px" width="20px"></div>
+                                <span>Регистрируясь на сайте, я согласен с условиями использования и политикой конфиденциальности.</span>
+                            </div>
+                            <div class="font" id="res1" style="color: #FF9365;    margin: 20px 0 15px 0;height: 35px">После регистрации доступен Бесплатный период </div>
+                            <div class="button-next" (click)="enterMode('checkAccessKey');get_users()">
+                                <span>ЗАРЕГИСТРИРОВАТЬСЯ</span>
+                                <div class="arrowBars">
+                                    <div class="arrowBar1"></div>
+                                    <div class="arrowBar2"></div>
+                                </div>
+                            </div>
+                            <div style="outline: none;text-decoration: none;margin-top: 20px;margin-left: 0;    font-size: 12px;"
+                                 class="mobileBlock">
+                                <div class="mobUl active" style="color: #8A9092">КОНТАКТНЫЕ ДАННЫЕ</div>
+                            </div>
+                            <div class="input-block" style="border-top: 1px solid #72727D">
+                                <a (click)="setFocus('reg_fio')">ФИО</a>
+                                <input (click)="inputToCenter($event)" id="reg_fio" class="reg" title="fio"  [(ngModel)]="model_name" style="margin: 0" type="text">
+                            </div>
+                            <div class="input-block">
+                                <a (click)="setFocus('reg_whatsapp')">WhatsApp</a>
+                                <input (click)="inputToCenter($event)" id="reg_whatsapp" class="reg number" title="whatsapp" [(ngModel)]="model_whatsapp" style="margin: 0" type="text">
+                            </div>
+                            <div class="input-block">
+                                <a (click)="setFocus('reg_vk')">Вконтакте</a>
+                                <input (click)="inputToCenter($event)" id="reg_vk" class="reg" title="vk" [(ngModel)]="model_vk" style="margin: 0" type="text">
+                            </div>
+                            <div class="input-block">
+                                <a class="ok" (click)="setFocus('reg_ok')">Одноклассники</a>
+                                <input (click)="inputToCenter($event)" id="reg_ok" title="ok" [(ngModel)]="model_ok" style="margin: 0" type="text">
+                            </div>
+                            <div class="input-block">
+                                <a (click)="setFocus('reg_insta')">Инстаграм</a>
+                                <input (click)="inputToCenter($event)" id="reg_insta" class="reg" title="instagram" [(ngModel)]="model_instagram" style="margin: 0" type="text">
+                            </div>
+                            <div class="input-block description">
+                                <a (click)="setFocus('reg_info')" class="description">Дополнительная информация (будет видна всем)</a>
+                                <textarea matInput
+                                          cdkTextareaAutosize
+                                    #autosize="cdkTextareaAutosize" id="reg_info" (click)="inputToCenter($event)" title="description" [(ngModel)]="model_description"></textarea>
+                            </div>
+                        </div>
+<!--                        <div class="sub-line" *ngIf="register"></div>-->
+                    </li>
+                    <li *ngIf="person?.phoneBlock?.main != undefined">
+                        <div style="outline: none;text-decoration: none"
+                             class="mobileBlock">
+                            <div class="mobUl" [class.active]="update" (click)="update = !update;clearInfo()">ИЗМЕНИТЬ ПРОФИЛЬ</div>
+                            <!--                        <div class="close-sub" [class.open]="update" (click)="update = false;clearInfo()">Закрыть</div>-->
+                        </div>
+                        <div class="sub-block" [class.open]="update">
+                            <div class="input-block">
+                                <a (click)="setFocus('change_fio')">ФИО</a>
+                                <input (click)="inputToCenter($event)" id="change_fio" class="reg" title="fio"  [(ngModel)]="person.name" style="margin: 0" type="text">
+                            </div>
+                            <div class="input-block">
+                                <a (click)="setFocus('change_whatsapp')">WhatsApp</a>
+                                <input (click)="inputToCenter($event)" id="change_whatsapp" class="reg number" title="whatsapp" [(ngModel)]="person.messengerBlock.whatsapp" style="margin: 0" type="text">
+                            </div>
+                            <div class="input-block">
+                                <a (click)="setFocus('change_vk')">Вконтакте</a>
+                                <input (click)="inputToCenter($event)" id="change_vk" class="reg" title="vk" [(ngModel)]="person.socialBlock.vk" style="margin: 0" type="text">
+                            </div>
+                            <div class="input-block">
+                                <a class="ok" (click)="setFocus('change_ok')">Одноклассники</a>
+                                <input (click)="inputToCenter($event)" id="change_ok" title="ok" [(ngModel)]="person.socialBlock.ok" style="margin: 0" type="text">
+                            </div>
+                            <div class="input-block">
+                                <a (click)="setFocus('change_insta')">Инстаграм</a>
+                                <input (click)="inputToCenter($event)" id="change_insta" class="reg" title="instagram" [(ngModel)]="person.socialBlock.instagram" style="margin: 0" type="text">
+                            </div>
+                            <div class="input-block description">
+                                <a class="description" (click)="setFocus('change_desc')">Дополнительная информация (будет видна всем)</a>
+                                <textarea matInput
+                                          cdkTextareaAutosize
+                                    #autosize="cdkTextareaAutosize" (click)="inputToCenter($event)" id="change_desc" title="description" [(ngModel)]="person.description"></textarea>
+                            </div>
+                            <div class="font" id="res2" style="color: white;margin: 20px 0 10px 0;height: 35px; width: 315px"></div>
+                            <div class="button-next" (click)="updatePerson()">
+                                <span>СОХРАНИТЬ</span>
+                                <div class="arrowBars">
+                                    <div class="arrowBar1"></div>
+                                    <div class="arrowBar2"></div>
+                                </div>
+                            </div>
+                        </div>
+<!--                        <div class="sub-line" *ngIf="update"></div>-->
+                    </li>
+                    <li>
+                        <div style="outline: none;text-decoration: none"
+                             class="mobileBlock" >
+                            <div class="mobUl" [class.active]="payblock" (click)="payblock = !payblock; pay_button = 0">ОПЛАТА</div>
+                            <!--                        <div class="close-sub" [class.open]="payblock" (click)="payblock = false">Закрыть</div>-->
+                        </div>
+                        <div class="line-pay" *ngIf="payblock"></div>
+                        <div class="pays" *ngIf="payblock" id="outerPay">
+                            <div class="pay-menu" id="innerPay">
+                                <div class="pay-item" [class.active]="payitem == 1" (click)="payitem = 1; payCarouselMargin = 0; scrollXCarousel(0, $event)">Доступ к контактам</div>
+                                <div class="pay-item" [class.active]="payitem == 2" (click)="payitem = 2; payCarouselMargin = -(payCarouselBlock); scrollXCarousel(1, $event)">Нанять менеджера</div>
+                                <div class="pay-item" [class.active]="payitem == 3" (click)="payitem = 3; payCarouselMargin = -(payCarouselBlock*2); scrollXCarousel(2, $event)">Опубликовать объявление</div>
+                                <div class="pay-item" [class.active]="payitem == 4" (click)="payitem = 4; payCarouselMargin = -(payCarouselBlock*3); scrollXCarousel(3, $event)">Сервис Умный маклер</div>
+                            </div>
+                        </div>
+                        <div class="subs" *ngIf="payblock" id="paySubBlocks">
+                            <div class="sub-blocks">
+                                <div class="sub-block pay open">
+                                    <div class="title">ОПИСАНИЕ УСЛУГИ</div>
+                                    <div class="description">Реальные объекты;</div>
+                                    <div class="description">Объявления без комиссии;</div>
+                                    <div class="description">Гибкий выбор тарифов, оплачивайте только тот период, который необходим для поиска объекта;</div>
+
+                                    <div class="pay-buttons">
+                                        <div class="button" style="    border-top: 1px solid #3b444b;" [class.active]="pay_button == 1" (click)="pay_button = 1;payment('1-0', 'type_one', '15000')">
+                                            <div class="price-button">
+                                                <div class="type">1 день</div>
+                                                <div class="price">150 р</div>
+                                            </div>
+                                            <div class="pay-line"></div>
+                                            <div class="pay-description" [class.active]="pay_button == 1">
+                                                <span style="color: #BDC0C1;font-size: 14px">Доступ к контактам на один день</span>
+                                            </div>
+                                        </div>
+                                        <div class="button" [class.active]="pay_button == 2" (click)="pay_button = 2;payment('1-0', 'type_one', '30000')">
+                                            <div class="price-button">
+                                                <div class="type">3 дня</div>
+                                                <div class="price">300 р</div>
+                                            </div>
+                                            <div class="pay-line"></div>
+                                            <div class="pay-description" [class.active]="pay_button == 2">
+                                                <span>Доступ к контактам на три дня</span>
+                                                <span>Стоимость одного дня 100 Р</span>
+                                            </div>
+                                        </div>
+                                        <div class="button" [class.active]="pay_button == 3" (click)="pay_button = 3;payment('1-0', 'type_one', '56000')">
+                                            <div class="price-button">
+                                                <div class="type">Неделя</div>
+                                                <div class="price">560 р</div>
+                                            </div>
+                                            <div class="pay-line"></div>
+                                            <div class="pay-description" [class.active]="pay_button == 3">
+                                                <span>Доступ к контактам на неделю</span>
+                                                <span>Стоимость одного дня 80 Р</span>
+                                            </div>
+                                        </div>
+                                        <div class="button" [class.active]="pay_button == 4" (click)="pay_button = 4;payment('1-0', 'type_one', '156000')">
+                                            <div class="price-button">
+                                                <div class="type">Месяц</div>
+                                                <div class="price">1560 р</div>
+                                            </div>
+                                            <div class="pay-line"></div>
+                                            <div class="pay-description" [class.active]="pay_button == 4">
+                                                <span>Доступ к контактам на месяц</span>
+                                                <span>Стоимость одного дня 50 Р</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="pay-info">
+                                        ВНИМАНИЕ!   Оплата происходит через  ПАО СБЕРБАНК с использованием банковских карт. Все оплаты происходят официально и через защищенные от мошенников банковские страницы, согласно 54 Федеральному закону после оплаты Вы получаете электронный чек.
+                                    </div>
+                                </div>
+                                <div class="sub-block pay open">
+                                    <div class="title">ОПИСАНИЕ УСЛУГИ</div>
+                                </div>
+                                <div class="sub-block pay open">
+                                    <div class="title">ОПИСАНИЕ УСЛУГИ</div>
+                                </div>
+                                <div class="sub-block pay open">
+                                    <div class="title">ОПИСАНИЕ УСЛУГИ</div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <div class="line"></div>
+                <ul>
+                    <li>
+                        <div style="outline: none;text-decoration: none"
+                             class="mobileBlock">
+                            <div class="mobUl" (click)="ymFunc('main-menu-mobile');redirectFunc('m',false)">ГЛАВНАЯ</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="mobileBlock">
+                            <div class="mobUl" [class.active]="objectMenu" (click)="objectMenu = !objectMenu">ПРЕДЛОЖЕНИЯ</div>
+                        </div>
+                        <ul class="innerUL" *ngIf="objectMenu">
+                            <li>
+                                <div style="display: flex">
+                                    <div style="flex-grow: 1" (click)="ymFunc('offer-menu-mobile');redirectFunc('m/objects/list',true)">
+                                        <a style="outline: none;text-decoration: none"
+                                           class="innerMenu">Все предложения
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div style="display: flex">
+                                    <div style="flex-grow: 1">
+                                        <a style="outline: none;text-decoration: none"
+                                           class="innerMenu">Избранное
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div style="display: flex">
+                                    <div style="flex-grow: 1">
+                                        <a style="outline: none;text-decoration: none"
+                                           class="innerMenu">Мои предложения
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div style="display: flex">
+                                    <div style="flex-grow: 1" >
+                                        <a style="outline: none;text-decoration: none;color: #FF9365"
+                                           class="innerMenu">Добавить предложение
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div style="outline: none;text-decoration: none"
+                           class="mobileBlock">
+                            <div class="mobUl" [class.active]="requestMenu" (click)="requestMenu = !requestMenu">ЗАЯВКИ</div>
+                        </div>
+                        <ul class="innerUL" *ngIf="requestMenu">
+                            <li>
+                                <div style="display: flex">
+                                    <div style="flex-grow: 1">
+                                        <a style="outline: none;text-decoration: none"
+                                           class="innerMenu">Все заявки
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div style="display: flex">
+                                    <div style="flex-grow: 1">
+                                        <a style="outline: none;text-decoration: none"
+                                           class="innerMenu">Мои заявки
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div style="display: flex">
+                                    <div style="flex-grow: 1" >
+                                        <a style="outline: none;text-decoration: none;color: #FF9365"
+                                           class="innerMenu">Добавить заявку
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a style="outline: none;text-decoration: none"
+                           class="mobileBlock">
+                            <div class="mobUl">СООБЩЕНИЯ</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
 </div>
 <div class="add-block-menu" [class.open]="blockOpenInput == 'open_login' || innerBlockOpen == 'login'" >
     <app-login [otherComponent]="false" [itemOpen]="true" (userLoggedIn)="checklogin()" (blockClose)="closeFunc($event)" (loggingMode)="Logging.emit($event)"

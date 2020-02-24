@@ -18,7 +18,7 @@ import {ActivatedRoute} from '@angular/router';
 import {OfferService} from '../../../services/offer.service';
 import {AccountService} from '../../../services/account.service';
 import {ConfigService} from "../../../services/config.service";
-
+import {NgxMetrikaService} from '@kolkov/ngx-metrika';
 
 @Component({
     selector: 'app-item',
@@ -26,7 +26,7 @@ import {ConfigService} from "../../../services/config.service";
     styleUrls: ['./item.component.css']
 })
 export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
-    constructor(@Inject(WINDOW) private window: Window, @Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute,config: ConfigService,
+    constructor(private ym: NgxMetrikaService,@Inject(WINDOW) private window: Window, @Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute,config: ConfigService,
                 private _offer_service: OfferService,
                 private _account_service: AccountService) {
         this.siteUrl = config.getConfig('siteUrl');
@@ -155,6 +155,9 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
         }
         // this.changeSize();
     }
+    ymFunc(target) {
+        this.ym.reachGoal.next({target: target});
+    }
     checkParams() {
         this.conveniencesShort = '';
         this.conditions = '';
@@ -229,7 +232,9 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                 let spArray = this.item.name.split(" ");
                 let ret = spArray[0].toUpperCase();
                 if (spArray.length > 1) {
-                    ret += " " + spArray[1];
+                    for (let i = 1; i < spArray.length; i++) {
+                        ret += " " + spArray[i];
+                    }
                 }
                 this.item.name = ret;
             }
@@ -360,13 +365,27 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
             this.positionPhoto = 0;
             this.countPhoto = 1;
             this.number = 1;
+            // setTimeout(() => {
+            //     let listElems = document.getElementsByClassName('galPhoto') as HTMLCollectionOf<HTMLElement>;
+            //     for (let i = 0; i < listElems.length; i++) {
+            //         if (listElems.item(i).classList.value.indexOf('avito') != -1) {
+            //             listElems.item(i).style.setProperty('height', (listElems.item(i).offsetHeight - 50) + 'px');
+            //         }
+            //         listElems.item(i).style.setProperty('opacity', '1');
+            //     }
+            // },600);
+
         }
     }
-
-    galleryClose() {
-        if (this.mode === 'full') {
-            this.photoBlockOpen = false;
+    changePhotoBlock(event, index) {
+        let listElems = document.getElementsByClassName('galPhoto') as HTMLCollectionOf<HTMLElement>;
+        if (listElems.item(index).classList.value.indexOf('avito') != -1) {
+            listElems.item(index).style.setProperty('height', (listElems.item(index).offsetHeight - 50) + 'px');
         }
+        listElems.item(index).style.setProperty('opacity', '1');
+    }
+    galleryClose() {
+            this.photoBlockOpen = false;
     }
 
     prev() {

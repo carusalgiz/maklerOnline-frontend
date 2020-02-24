@@ -2,74 +2,126 @@
           (blockClosed)="blockOpen = 'open_menu'"></app-menu>
 <!--[class.openMain]="!menuOpen" [class.closeMain]="menuOpen"-->
 <div class="mainHome" [style.margin-top.px]="mainMargin"
-     (touchstart)="touchstart($event)" (touchend)="touchend($event)">
+     (touchstart)="touchstart($event)" (touchend)="touchend($event)" *ngIf="blockOpen == 'close_menu'">
     <div class="inner-main">
-        <div class="picture">
-            <div class="title" id="title">
-                <div class="logoTitle3"><span>НЕДВИЖИМОСТЬ</span><span class="special">БЕЗ КОМИССИИ</span></div>
-                <!--<div class="infoText">-->
-                <!--Cервис для аренды недвижимости без комиссии. Проверенные объявления в реальном времени.-->
-                <!--</div>-->
-                <div class="logoTitle2"><span>ZAVRUS PRESENT</span></div>
+        <div class="city-picture"></div>
+        <div class="titles">
+            <div class="logoTitle1">РЕШИТЕ ВОПРОС АРЕНДЫ ЖИЛЬЯ САМЫМ РАЗУМНЫМ СПОСОБОМ</div>
+            <div class="logoTitle2">ОНЛАЙН.</div>
+            <div class="logoTitle3">Поиск недвижимости -это всегда сложно. Вот почему мы создали этот сервис. С помощью простого онлайн-процесса наша команда экспертов будет направлять Вас на каждом шагу этого пути.</div>
+        </div>
+        <div class="gray-block">
+            <div class="title" style="margin-bottom: 10px">
+                СЕРВИС АРЕНДА НЕДВИЖИМОСТИ
+            </div>
+            <div class="description">
+                Все предложения в реальном времени и сдаются без комиссии. Только собственники.
             </div>
         </div>
-        <div class="howItWorks">
-            <div class="rentDescription" style="margin-bottom: 15px"><span
-                style="font-weight: bold;    letter-spacing: 0.01em;">СЕРВИС АРЕНДЫ</span> недвижимости. Проверенные
-                объявления в реальном времени. 
+        <div class="picture-block" [style.background-image]="'url(../../../../assets/operator.jpg)'"></div>
+        <div class="gray-block" style="background-color: #EAEBEC">
+            <div class="title">
+                САМОСТОЯТЕЛЬНЫЙ ПОИСК
             </div>
-            <div class="rentDescription"><span style="font-weight: bold; letter-spacing: 0.01em">БЕЗ КОМИССИИ</span> мы
-                проверяем каждое объявление и гарантируем, что объект сдается без комиссии 
+            <div class="sub-title">
+                Проверенная база объектов
+            </div>
+            <div style="display: flex;margin: 20px 0 10px;align-items: baseline;"><span style="font-size: 40px;margin-right: 10px">100%</span><span style="font-size: 30px">гарантия</span></div>
+            <div class="description">
+                Каждый день у нас появляются новые объекты.Объявления проходят трехступенчатую проверку. Наши менеджеры тщательно проверяют каждое объявление и мы гарантируем, что объект сдается без комиссии. Вы ощутимо экономите!
+            </div>
+            <div class="button" (click)="redirectFunc('m/objects/list')">Начать</div>
+        </div>
+        <div class="white-block item" style="    overflow-x: hidden;" *ngIf="items.length != 0">
+            <div class="title">НЕДАВНО ДОБАВЛЕHНЫЕ ПРЕДЛОЖЕНИЯ</div>
+            <div class="carousel open" id="items_carousel">
+                <div class="arrow left round" (click)="prev_items()">
+                    <div class="arrowFull">
+                        <div class="barArrow1-left-round"></div>
+                        <div class="barArrow2-left-round"></div>
+                    </div>
+                </div>
+                <div class="items" style="overflow: unset;    margin-left: -70px;">
+                    <ul id="items_carousel-ul">
+                        <li class="items_carousel-li" *ngFor="let item of items; let i = index">
+                            <item-middle [mode]="'main_page'" [index]="i" [item]="item" [loggingMode]="false" [payingMode]="false"></item-middle>
+                        </li>
+                    </ul>
+                </div>
+                <div class="arrow right round" (click)="next_items()">
+                    <div class="arrowFull">
+                        <div class="barArrow1-right-round"></div>
+                        <div class="barArrow2-right-round"></div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="countLine mobile">
-            <div class="add" style="    letter-spacing: 0.02em;">ДОБАВЛЕНО СЕГОДНЯ</div>
-            <div style="display: flex; width: 100vw">
-                <div id="num1">
-                    <span class="countLineNumber">{{countTodayObjects}} <span
-                        class="countLineWord">Объектов</span></span>
-                </div>
-                <div id="num2">
-                    <span class="countLineNumber">417 <span class="countLineWord">Заявок</span></span>
-                </div>
-                <div id="num3">
-           <span class="countLineNumber">{{countObjects}}
-               <span class="countLineWord">В прайсе</span>
-           </span>
-                </div>
-            </div>
+        <div class="picture-block" [style.background-image]="'url(../../../../assets/operator.jpg)'"></div>
+        <div class="white-block">
+            <div style="color: #6B6B6B;font-size: 20px;font-family: Cadillac, sans-serif">ОСТАВИТЬ ЗАЯВКУ</div>
+            <div style="color: #6B6B6B;font-size: 20px;font-family: Cadillac, sans-serif">ВАШ ПЕРСОНАЛЬНЫЙ МЕНЕДЖЕР</div>
+            <div style="color: #414141;font-size: 30px;font-family: Cadillac, sans-serif">НОВЫЙ УРОВЕНЬ</div>
+            <div style="color: #414141;font-size: 25px;margin-top: 10px;font-family: Cadillac, sans-serif">СЕРВИСА</div>
+            <div style="font-size: 14px;color: #414141;margin-top: 20px">Теперь не нужно мониторить все сайты недвижимости. Вы задаете параметры, а наши менеджеры делают ежедневную подборку. К нам стекаются все предложения.  Мы обладаем полной базой объектов в реальном времени.мы знаем Все. Так же Вы получите отчет о проделанной работе, на Вашу почту и в личный кабинет сайта. Результат гарантирован!</div>
+            <div class="button" style="background-color: #ED5829"  (click)="redirectFunc('m/objects/request')">Начать</div>
         </div>
-        <div class="howItWorks">
-            <div class="titleWorks" style="    letter-spacing: 0.02em;">КАК ЭТО РАБОТАЕТ</div>
-            <div class="step">
-                <div class="stepNum">1</div>
-                <div class="stepDescription">
-                    Выберите недвижимость, воспользуйтесь
-                    фильтрами, картой...
-                </div>
+        <div class="gray-block">
+            <div class="title" style="margin-bottom: 10px">
+                АРЕНДУЙТЕ С УВЕРЕННОСТЬЮ.
             </div>
-            <div class="step">
-                <div class="stepNum">2</div>
-                <div class="stepDescription">
-                    Зарегистрируйтесь в системе, или
-                    войдите под своей учетной записью
-                </div>
+            <div class="description">
+                Мы помогаем многим арендаторам безопасно снимать жилье уже более пяти лет, и мы уверены,что можем сделать то же самое для Вас.
             </div>
-            <div class="step">
-                <div class="stepNum">3</div>
-                <div class="stepDescription">
-                    Приобрести доступ к проверенным объявлениям. Стоимость доступа на одни сутки от 50 рублей.
-                </div>
-            </div>
-            <div class="textRent" style="    letter-spacing: 0.02em;">АРЕНДУЙТЕ С УВЕРЕННОСТЬЮ</div>
-            <div class="rentDescription">Мы помогаем многим арендаторам безопасно снимать жилье уже более четырех лет, и
-                мы уверены, что можем сделать то же самое для Вас.
-            </div>
+            <div class="footer-text">Команда МаклерОнлайн</div>
         </div>
-        <div class="countLine word" style="background-color: #F6F6F6;    padding: 25px 0 10px;">
-            <h2 class="wordOne">ОТЗЫВЫ НАШИХ КЛИЕНТОВ</h2>
+<!--        <div class="countLine mobile">-->
+<!--            <div class="add" style="    letter-spacing: 0.02em;">ДОБАВЛЕНО СЕГОДНЯ</div>-->
+<!--            <div style="display: flex; width: 100vw">-->
+<!--                <div id="num1">-->
+<!--                    <span class="countLineNumber">{{countTodayObjects}} <span-->
+<!--                        class="countLineWord">Объектов</span></span>-->
+<!--                </div>-->
+<!--                <div id="num2">-->
+<!--                    <span class="countLineNumber">417 <span class="countLineWord">Заявок</span></span>-->
+<!--                </div>-->
+<!--                <div id="num3">-->
+<!--           <span class="countLineNumber">{{countObjects}}-->
+<!--               <span class="countLineWord">В прайсе</span>-->
+<!--           </span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="howItWorks">-->
+<!--            <div class="titleWorks" style="    letter-spacing: 0.02em;">КАК ЭТО РАБОТАЕТ</div>-->
+<!--            <div class="step">-->
+<!--                <div class="stepNum">1</div>-->
+<!--                <div class="stepDescription">-->
+<!--                    Выберите недвижимость, воспользуйтесь-->
+<!--                    фильтрами, картой...-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="step">-->
+<!--                <div class="stepNum">2</div>-->
+<!--                <div class="stepDescription">-->
+<!--                    Зарегистрируйтесь в системе, или-->
+<!--                    войдите под своей учетной записью-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="step">-->
+<!--                <div class="stepNum">3</div>-->
+<!--                <div class="stepDescription">-->
+<!--                    Приобрести доступ к проверенным объявлениям. Стоимость доступа на одни сутки от 50 рублей.-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="textRent" style="    letter-spacing: 0.02em;">АРЕНДУЙТЕ С УВЕРЕННОСТЬЮ</div>-->
+<!--            <div class="rentDescription">Мы помогаем многим арендаторам безопасно снимать жилье уже более четырех лет, и-->
+<!--                мы уверены, что можем сделать то же самое для Вас.-->
+<!--            </div>-->
+<!--        </div>-->
+        <div class="countLine word">
+            <h2 class="wordOne">ОТЗЫВЫ</h2>
         </div>
-        <div class="reviewsBottom"  style="background-color: #F6F6F6">
+        <div class="reviewsBottom"  style="background-color: white">
             <h3 class="compDescription">Мнения,и рекомендации других пользоватей – безусловно самое оптимальное социальное доказательство качества услуги</h3>
             <div class="carousel open" id="carousel">
                 <div class="arrow left" (click)="prev()">
@@ -85,13 +137,12 @@
                                 <div class="reviewBlock" >
                                     <img class="iconUser" alt="фотография автора отзыва" title="фотография автора отзыва" [src]="review.photo">
                                     <div class="name">{{review.name}}</div>
-                                    <div class="ratingTest">
-                                        <span></span><span></span><span></span><span></span><span></span>
-                                    </div>
+<!--                                    <div class="ratingTest">-->
+<!--                                        <span></span><span></span><span></span><span></span><span></span>-->
+<!--                                    </div>-->
                                     <div class="reviewBlockInfo">
                                         <div class="reviewText">
                                             {{review.text}}
-                                            <!--     <span class="more">Написать вопрос</span>-->
                                         </div>
                                         <div class="author">{{review.job}}</div>
                                     </div>
@@ -108,14 +159,40 @@
                 </div>
             </div>
         </div>
-        <div class="uselessLineHome">
-            <div class="companyName">МАКЛЕРОНЛАЙН</div>
-            <div class="hideMenu" (click)="openMobileMenu()">
-                <div class="bar1"></div>
-                <div class="bar2"></div>
-                <div class="bar3"></div>
-            </div>
+        <div class="picture-block" [style.background-image]="'url(../../../../assets/operator.jpg)'"></div>
+        <div class="gray-block" style="background-color: #EAEBEC">
+            <div style="color: #6B6B6B;font-size: 20px;font-family: Cadillac, sans-serif">РЕКЛАМИРОВАТЬ СВОЮ НЕДВИЖИМОСТЬ</div>
+            <div style="color: #6B6B6B;font-size: 20px;font-family: Cadillac, sans-serif">ВАШ ПЕРСОНАЛЬНЫЙ МЕНЕДЖЕР</div>
+            <div style="color: #414141;font-size: 30px;font-family: Cadillac, sans-serif">НОВЫЙ УРОВЕНЬ</div>
+            <div style="color: #414141;font-size: 25px;margin-top: 10px;font-family: Cadillac, sans-serif">СЕРВИСА</div>
+            <div style="font-size: 14px;color: #414141;margin-top: 20px">Теперь не нужно мониторить все сайты недвижимости. Вы задаете параметры, а наши менеджеры делают ежедневную подборку. К нам стекаются все предложения.  Мы обладаем полной базой объектов в реальном времени.мы знаем Все. Так же Вы получите отчет о проделанной работе, на Вашу почту и в личный кабинет сайта. Результат гарантирован!</div>
+            <a class="button" style="background-color: #ED5829" >Начать</a>
         </div>
+        <div class="gray-block" style="background-color: #252F32">
+            <div class="title" style="font-size: 26px; color: white">О НАС</div>
+            <div class="footer-text" style="margin: 20px 0;">Представьте, Вы открываете страницу Сервиса, выбираете квартиру,комнату, звоните, и Вам отвечает - Собственник!</div>
+            <div class="description" style="color: #F6F6F6;margin-bottom: 15px;">Поиск недвижимости от собственников это всегда сложно. Вот почему мы создали этот сервис. Мы помогаем нашим клиентам, арендовать жилье напрямую, от собственника, и занимаемся этим с 2013 года.</div>
+            <div class="description" style="color: #F6F6F6;margin-bottom: 15px">
+                К нам стекается информация по аренде недвижимости, мы ее проверяем и добавляем на наш сервис. После регистрации — один час бесплатно, это поможет Вам убедиться, и начать доверять опубликованной информации. </div>
+            <div class="description" style="color: #F6F6F6;margin-bottom: 15px">
+                Наши клиенты это люди которые уже обращались к нам за нашей услугой ранее, а так же те кто хочет арендовать напрямую, у собственника. Они не видят смысла искать её где-то в другом месте. Все уже здесь. Отзывы о нас говорят сами за себя.
+            </div>
+            <div class="description" style="color: #F6F6F6;margin-bottom: 15px">
+                Мы не агентство, и будем рады помочь Вам, найти Вашу будущую недвижимость.
+            </div>
+            <div class="footer-text">
+                Команда MaklerOnline
+            </div>
+            <div class="button" style="background-color: #DB5151" (click)="openMobileMenu()">Начать</div>
+        </div>
+<!--        <div class="uselessLineHome">-->
+<!--            <div class="companyName">МАКЛЕРОНЛАЙН</div>-->
+<!--            <div class="hideMenu" (click)="openMobileMenu()">-->
+<!--                <div class="bar1"></div>-->
+<!--                <div class="bar2"></div>-->
+<!--                <div class="bar3"></div>-->
+<!--            </div>-->
+<!--        </div>-->
         <div class="countLine yearBlock" style="justify-content: center">
             <div class="anniversaryYear">5</div>
             <div class="year">ЛЕТ</div>
@@ -156,8 +233,8 @@
                     <img class="icon" src="../assets/instagram1.png"/> -->
                 </div>
                 <div class="login-block">
-                    <div class="button-login" (click)="openBlock('login')">
-                        ВОЙТИ
+                    <div class="button-login" (click)="openMobileMenu()">
+                        НАЧАТЬ
                     </div>
                 </div>
             </div>

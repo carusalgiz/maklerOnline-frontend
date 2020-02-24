@@ -55,22 +55,15 @@
         <!--<div class="input" (click)="checkNews=!checkNews"><img *ngIf="checkNews" src="../../../../assets/check-mark.png" height="20px" width="20px"> </div>-->
         <!--<span>​ Я даю согласие на подписку на обновления и новостную рассылку.</span>-->
       <!--</div>-->
-      <div class="button-next register" style="background-color: #232f32" *ngIf="register && check" (click)="enterMode('checkAccessKey');get_users()">
+      <div class="button-next register" style="background-color: #232f32" *ngIf="register" (click)="ymFunc('registration-login-mobile');enterMode('checkAccessKey');get_users()">
         <span>ЗАРЕГИСТРИРОВАТЬСЯ</span>
         <div class="arrowBars">
           <div class="arrowBar1"></div>
           <div class="arrowBar2"></div>
         </div>
       </div>
-  <div class="button-next non-register" style="background-color: #232f32" *ngIf="register && !check">
-    <span>ЗАРЕГИСТРИРОВАТЬСЯ</span>
-    <div class="arrowBars">
-      <div class="arrowBar1"></div>
-      <div class="arrowBar2"></div>
-    </div>
-  </div>
       <!--<div class="button-next" *ngIf="register && access_code" (click)="enterMode('savePass'); get_users()">ЗАРЕГИСТРИРОВАТЬСЯ</div>-->
-      <div class="button-next loginButton" *ngIf="log_in" (click)="enterMode('log in'); get_users()">
+      <div class="button-next loginButton" *ngIf="log_in" (click)="ymFunc('login-login-mobile');enterMode('log in'); get_users()">
         <span>ВОЙТИ</span>
         <div class="arrowBars">
           <div class="arrowBar1"></div>

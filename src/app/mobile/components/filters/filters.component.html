@@ -1,7 +1,7 @@
 <div class="filters-inner">
     <div>
         <div class="filtersBoxes" id="fil-top">
-            <div class="add-button" (click)="cityButton = !cityButton">
+            <div class="add-button" (click)="ymFunc('city-filter-mobile');cityButton = !cityButton">
                 <span class="filterButton">НАСЕЛЕННЫЙ ПУНКТ</span>
                 <div class="choosen" style="display: none">
                     <span class="choosen-type">Населенный пункт</span>
@@ -19,7 +19,7 @@
                         style="padding-right: 20px">{{kna}}</span></div>
                 </div>
             </div>
-            <div class="add-button" (click)="offer = !offer">
+            <div class="add-button" (click)="ymFunc('typeOffer-filter-mobile');offer = !offer">
                 <span class="filterButton">ТИП ПРЕДЛОЖЕНИЯ</span>
                 <div class="choosen" style="display: none">
                     <span class="choosen-type">Тип предложения</span>
@@ -35,7 +35,7 @@
                     <div class="buttonOption" (click)="selectOption(1,2, 'ВСЕ', '', '')"><span>Все</span></div>
                 </div>
             </div>
-            <div class="add-button" (click)="typeOfObject = !typeOfObject">
+            <div class="add-button" (click)="ymFunc('typeObject-filter-mobile');typeOfObject = !typeOfObject">
                 <span class="filterButton">ТИП ОБЪЕКТА</span>
                 <div class="choosen" style="display: none">
                     <span class="choosen-type">Тип объекта</span>
@@ -53,7 +53,7 @@
                     </div>
                 </div>
             </div>
-            <div class="add-button" (click)="countOfRooms = !countOfRooms">
+            <div class="add-button" (click)="ymFunc('rooms-filter-mobile');countOfRooms = !countOfRooms">
                 <span class="filterButton">КОЛИЧЕСТВО КОМНАТ</span>
                 <div class="choosen" style="display: none">
                     <span class="choosen-type">Количество комнат</span>
@@ -72,7 +72,7 @@
                         <span>4 комн.</span></div>
                 </div>
             </div>
-            <div class="add-button" (click)="cost = !cost">
+            <div class="add-button" (click)="ymFunc('cost-filter-mobile');cost = !cost">
                 <span class="filterButton" *ngIf="!costChosen">СТОИМОСТЬ</span>
                 <div class="choosen" *ngIf="costChosen">
                     <span class="choosen-type">Стоимость</span>
@@ -87,7 +87,7 @@
                     <div class="buttonOption" (click)="selectOption(4,3, '40000', 'cost', '')"><span>40000</span></div>
                 </div>
             </div>
-            <div class="add-button" (click)="equipment = !equipment">
+            <div class="add-button" (click)="ymFunc('equipment-filter-mobile');equipment = !equipment">
                 <span>КОМПЛЕКТАЦИЯ</span>
                 <div class="choosen" style="display: none">
                     <span class="choosen-type">Комплектация</span>
@@ -122,7 +122,7 @@
                         <span>Телевизор</span></div>
                 </div>
             </div>
-            <div class="add-button" (click)="conditions = !conditions">
+            <div class="add-button" (click)="ymFunc('conditions-filter-mobile');conditions = !conditions">
                 <span>УСЛОВИЯ НАЙМА</span>
                 <div class="choosen" style="display: none">
                     <span class="choosen-type">Условия найма</span>
@@ -141,7 +141,7 @@
                     </div>
                 </div>
             </div>
-            <div class="add-button" style="border: none" (click)="sort = !sort">
+            <div class="add-button" style="border: none" (click)="ymFunc('sort-filter-mobile');sort = !sort">
                 <span class="filterButton">СОРТИРОВАТЬ ПО</span>
                 <div class="choosen" style="display: none">
                     <span class="choosen-type">Сортировать по</span>
@@ -158,7 +158,7 @@
                         <span>Рейтингу</span></div>
                 </div>
             </div>
-            <div class="add-button" style="border: none" (click)="period = !period">
+            <div class="add-button" style="border: none" (click)="ymFunc('period-filter-mobile');period = !period">
                 <span class="filterButton">ПЕРИОД</span>
                 <div class="choosen" style="display: none">
                     <span class="choosen-type">Период</span>

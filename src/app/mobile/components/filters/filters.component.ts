@@ -5,7 +5,7 @@ import ymaps from 'ymaps';
 import {ActivatedRoute} from '@angular/router';
 import {OfferService} from '../../../services/offer.service';
 import {AccountService} from '../../../services/account.service';
-
+import {NgxMetrikaService} from '@kolkov/ngx-metrika';
 
 @Component({
     selector: 'app-filters-mobile',
@@ -134,7 +134,7 @@ export class FiltersComponent implements OnInit, AfterViewInit {
     lat = 48.4862268;
     lng = 135.0826369;
 
-    constructor(@Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute,
+    constructor(private ym: NgxMetrikaService,@Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute,
                 private _offer_service: OfferService,
                 private _account_service: AccountService) {
     }
@@ -155,7 +155,9 @@ export class FiltersComponent implements OnInit, AfterViewInit {
         }).catch(error => console.log('Failed to load Yandex Maps', error));
 
     }
-
+    ymFunc(target) {
+        this.ym.reachGoal.next({target: target});
+    }
     reset() {
         let buttonBox = document.getElementsByClassName('filters-options-box') as HTMLCollectionOf<HTMLElement>;
         for (let i = 0; i < buttonBox.length; i++) {

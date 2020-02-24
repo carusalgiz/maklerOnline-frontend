@@ -1,4 +1,4 @@
-<div class="catalog-item full" >
+<div class="catalog-item full" [class.close]="photoBlockOpen">
     <div class="top-block">
         <a class="itemArrowBack" (click)="closeItemBlock()"><img
             src="../../../../assets/arrow-item.png" class="iconImg" width="30px"><div style="line-height: 16px;font-size: 14px;">Назад</div></a>
@@ -10,7 +10,7 @@
         <img class="img"
              [title]="'makleronline снять ' + item?.roomsCount + ' комнатную квартиру в хабаровске без посредников'"
              [alt]="'makleronline аренда ' + item?.roomsCount + ' комнатной квартиры в хабаровске без посредников'"
-             [src]="src">
+             [src]="src" [class.avito]="src.indexOf('avito') != -1">
         <div class="no-photo">{{photo_no_title}}</div>
     </div>
     <div *ngIf="imgLen != 0" class="photoBlock" style="    background-size: 100% 100%;"
@@ -19,7 +19,7 @@
         <img class="img"
              [title]="'makleronline снять ' + item?.roomsCount + ' комнатную квартиру в хабаровске без посредников'"
              [alt]="'makleronline аренда ' + item?.roomsCount + ' комнатной квартиры в хабаровске без посредников'"
-             [src]="src">
+             [src]="src" [class.avito]="src.indexOf('avito') != -1">
         <div class="no-photo">{{photo_no_title}}</div>
     </div>
     <div class="phone-block">
@@ -112,31 +112,47 @@
 
 <!--блок с галереей-->
 <div class="bigGalleryBlock" *ngIf="photoBlockOpen" (window:resize)="onResize()">
-    <div class="photoMenuTop">
-        <div class="arrow photo-left" (click)="prevImg()">
-            <div class="barArrowLeft1"></div>
-            <div class="barArrowLeft2"></div>
-        </div>
-        <div class="arrow photo-right" (click)="nextImg()">
-            <div class="barArrowRight1"></div>
-            <div class="barArrowRight2"></div>
-        </div>
-        <div class="exitButton" (click)="galleryClose()">
-            <div class="barMenu1"></div>
-            <div class="barMenu2"></div>
-        </div>
+    <div class="top-block">
+        <a class="itemArrowBack" (click)="galleryClose()"><img
+            src="../../../../assets/arrow-item.png" class="iconImg" width="30px"><div style="line-height: 16px;font-size: 14px;">Назад</div></a>
     </div>
-    <div class="photo-block">
-        <div class="photoGallery" id="anchor">
-            <div class="photos">
-                <ul id="photoGallery-ul">
-                    <li class="photoGallery-li" *ngFor="let img of item?.photos">
-                        <div class="photo-img">
-                            <img class="inner-img" src="{{img?.href}}"/>
-                        </div>
-                    </li>
-                </ul>
+    <div class="photoBlockGallery" style="    background-size: 100% 100%;"
+          [class.watched]="watched == true" >
+<!--        <div class="photoWrapper">-->
+            <div class="photoBlock gallery galPhoto" *ngFor="let img of item?.photos, let i = index" [class.avito]="img?.href.indexOf('avito') != -1">
+                <img class="img" (load)="changePhotoBlock($event, i)"
+                     [title]="'makleronline снять ' + item?.roomsCount + ' комнатную квартиру в хабаровске без посредников'"
+                     [alt]="'makleronline аренда ' + item?.roomsCount + ' комнатной квартиры в хабаровске без посредников'"
+                     [src]="img?.href" [class.avito]="img?.href.indexOf('avito') != -1">
             </div>
-        </div>
+<!--        </div>-->
+
     </div>
+<!--    <div class="photoMenuTop">-->
+<!--        <div class="arrow photo-left" (click)="prevImg()">-->
+<!--            <div class="barArrowLeft1"></div>-->
+<!--            <div class="barArrowLeft2"></div>-->
+<!--        </div>-->
+<!--        <div class="arrow photo-right" (click)="nextImg()">-->
+<!--            <div class="barArrowRight1"></div>-->
+<!--            <div class="barArrowRight2"></div>-->
+<!--        </div>-->
+<!--        <div class="exitButton" (click)="galleryClose()">-->
+<!--            <div class="barMenu1"></div>-->
+<!--            <div class="barMenu2"></div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="photo-block">-->
+<!--        <div class="photoGallery" id="anchor">-->
+<!--            <div class="photos">-->
+<!--                <ul id="photoGallery-ul">-->
+<!--                    <li class="photoGallery-li" *ngFor="let img of item?.photos">-->
+<!--                        <div class="photo-img">-->
+<!--                            <img class="inner-img" src="{{img?.href}}"/>-->
+<!--                        </div>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 </div>

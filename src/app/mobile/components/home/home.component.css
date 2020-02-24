@@ -242,12 +242,6 @@ a.social-link{
   font-family: Cadillac, sans-serif;
   color: #d3d5d6;
 }
-.title{
-  font-family: Cadillac, sans-serif;
-  letter-spacing: 0.09em;
-  display: flex;
-  flex-direction: column;
-}
 .uselessLineHome{
   align-items: center;
   height: 50px;
@@ -256,9 +250,88 @@ a.social-link{
   display: flex;
   transition: 0.3s;
 }
+.gray-block, .white-block{
+    height: fit-content;
+    width: calc(100% - 40px);
+    padding: 30px 20px;
+    font-family: OpenSans, sans-serif;
+}
+.gray-block{
+    background-color: #f6f6f6;
+}
+.gray-block > .title{
+    font-size: 18px;
+    font-weight: bold;
+}
+.gray-block > .sub-title{
+    font-size: 17px;
+}
+.gray-block > .description{
+    font-size: 14px;
+}
+.gray-block > .button, .white-block > .button{
+    background-color: #252F32;
+    color: white;
+    height: 80px;
+    width: 80px;
+    border-radius: 40px;
+    margin: 30px 0 10px calc(50% - 40px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+
+}
+.gray-block > .button:active, .white-block > .button:active,.gray-block > .button:focus, .white-block > .button:focus{
+    outline: none;
+}
+.gray-block > .footer-text{
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    color: #999997;
+    font-size: 12px;
+    font-style: italic;
+}
+.white-block{
+    background-color: white;
+}
+.white-block.item{
+    padding-right: 0;
+    width: calc(100% - 20px);
+}
+.white-block > .title{
+    font-size: 16px;
+}
+.picture-block{
+    width: 100%;
+    height: 300px;
+    background-size: auto 300px;
+}
+.titles{
+    height: 400px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-top: 80px;
+}
+.logoTitle1,.logoTitle2, .logoTitle3{
+    font-family: OpenSans, sans-serif;
+    color: white;
+    width: calc(100% - 40px);
+    padding: 0 20px;
+}
 .logoTitle1{
-  font-size: 26px;
-  margin-top: 80px;
+    font-size: 24px;
+    font-weight: bold;
+}
+.logoTitle2{
+    font-size: 36px;
+    font-weight: bold;
+}
+.logoTitle3{
+    font-size: 17px;
+    margin-top: 15px;
 }
 .infoText{
   color: #4b4b4b;
@@ -272,31 +345,6 @@ a.social-link{
   justify-content: center;
   letter-spacing: 0;
 }
-.logoTitle2{
-  letter-spacing: 0.10em;
-  color: white;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  top: 60vh;
-  font-size: 16px;
-}
-.logoTitle3{
-  font-size: 50px;
-  position: relative;
-  font-weight: bold;
-  display: flex;
-  flex-direction: column;
-  color: white;
-  top: 37px;
-  left: 20px;
-  margin: 0;
-  max-width: calc(100vw - 20px);
-}
-.picture{
-  height: 100vh;
-  overflow: hidden;
-}
 .mainHome{
   /*height: max-content;*/
   /*transition: 0.3s;*/
@@ -305,11 +353,21 @@ a.social-link{
   /*align-items: center;*/
   background-size: auto calc(100vh - 65px);
   margin-top: 90px;
-  /*min-height: 100vh;*/
   background: unset;
   background: url('../../../../assets/background-main1.jpg');
   background-position-x: 80%;
   background-size: auto 100vh;
+}
+.city-picture{
+    width: 100vw;
+    height: 400px;
+    background-size: auto calc(100vh - 65px);
+    margin-top: 90px;
+    background: unset;
+    background: url('../../../../assets/background-main1.jpg');
+    background-position-x: 80%;
+    background-size: auto 100vh;
+    margin-bottom: -400px;
 }
 .inner-main{
   height: 100%;
@@ -330,12 +388,15 @@ a.social-link{
 }
 .countLine.word{
     font-family: Cadillac, sans-serif;
-    flex-direction: column;
-    justify-content: center;
-    background-color: white;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-box-pack: center;
     color: #252f32;
     height: auto;
-    padding: 50px 0 45px;
+    font-size: 20px;
+    background-color: white;
+    padding: 25px 0 10px 20px;
+    width: calc(100% - 20px);
 }
 .author{
     display: flex;
@@ -344,9 +405,10 @@ a.social-link{
     color: #677578;
 }
 .wordOne{
-    font-size: 20px;
+    font-size: 24px;
     max-width: 730px;
     text-align: center;
+    font-weight: bold;
 }
 .reviewsBottom{
     display: flex;
@@ -392,6 +454,15 @@ a.social-link{
     display: block;
     background-color: #f6f6f6;
 }
+.arrow.round{
+    width: 70px !important;
+    height: 70px !important;
+    min-width: 70px;
+    min-height: 70px;
+    border-radius: 35px !important;
+    justify-content: center;
+    top: 200px !important;
+}
 .arrow.left {
     width: 40px;
     height: 160px;
@@ -407,6 +478,13 @@ a.social-link{
     margin-left: -40px;
     flex: 0 0 100%;
 }
+.items{
+    overflow: hidden;
+    margin-left: -70px;
+    -webkit-box-flex: 0;
+    flex: 0 0 100%;
+    width: calc(100vw - 20px);
+}
 
 .arrow.right {
     width: 40px;
@@ -418,16 +496,24 @@ a.social-link{
     display: flex;
     align-items: center;
 }
-
+.arrow.right.round{
+    right: 90px;
+}
 .arrow:focus {
     outline: none;
 }
-.barArrow1-left, .barArrow2-left{
-    width: 35px;
+.barArrow1-left, .barArrow2-left, .barArrow1-left-round, .barArrow2-left-round, .barArrow1-right, .barArrow2-right
+, .barArrow1-right-round, .barArrow2-right-round{
     height: 2px;
     border-radius: 5px;
     background-color: #252f32;
     margin: 3px 0;
+}
+.barArrow1-left, .barArrow2-left,.barArrow1-right, .barArrow2-right{
+    width: 35px;
+}
+.barArrow1-left-round, .barArrow2-left-round, .barArrow1-right-round, .barArrow2-right-round{
+    width: 25px;
 }
 .barArrow1-left{
     transform: rotate(-55deg) translate(-13px,13px);
@@ -435,19 +521,26 @@ a.social-link{
 .barArrow2-left{
     transform: rotate(55deg) translate(35px,21px);
 }
-.barArrow1-right, .barArrow2-right{
-    width: 35px;
-    height: 2px;
-    border-radius: 5px;
-    background-color: #252f32;
-    margin: 3px 0;
-}
 .barArrow1-right{
     transform: rotate(55deg) translate(17px,10px);
 }
 .barArrow2-right{
     transform: rotate(-55deg) translate(-35px,26px);
 }
+
+.barArrow1-left-round{
+    transform: rotate(-55deg) translate(-16px,19px);
+}
+.barArrow2-left-round{
+    transform: rotate(55deg) translate(36px,17px);
+}
+.barArrow1-right-round{
+    transform: rotate(55deg) translate(22px,6px);
+}
+.barArrow2-right-round{
+    transform: rotate(-55deg) translate(-27px,27px);
+}
+
 .arrowFull{
     height: 73px;
     width: 40px;
@@ -519,13 +612,4 @@ a.social-link{
 }
 #num2{
   flex: 0 0 30%;
-}
-
-@media all and (max-width: 450px){
-  .logoTitle3{
-    font-size: 24px;
-  }
-  .logoTitle3 .special{
-    font-size: 34px;
-  }
 }

@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {OfferService} from '../../../services/offer.service';
 import {AccountService} from '../../../services/account.service';
 import {ConfigService} from "../../../services/config.service";
-
+import {NgxMetrikaService} from '@kolkov/ngx-metrika';
 @Component({
     selector: 'app-menu',
     templateUrl: './menu.component.html',
@@ -32,7 +32,7 @@ export class MenuComponent implements OnInit {
     @Output() Paying = new EventEmitter();
     @Input() homePage: boolean;
 
-    constructor(@Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, config: ConfigService,
+    constructor(private ym: NgxMetrikaService,@Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, config: ConfigService,
                 private _offer_service: OfferService,
                 private _account_service: AccountService) {
         this.siteUrl = config.getConfig('siteUrl');
@@ -189,7 +189,9 @@ export class MenuComponent implements OnInit {
     timeUpdate() {
         this.redirect = true;
     }
-
+    ymFunc(target) {
+        this.ym.reachGoal.next({target: target});
+    }
     openBlock(page) {
         let slide = document.getElementsByClassName('right-slide-box') as HTMLCollectionOf<HTMLElement>;
         let useless = document.getElementsByClassName('uselessLine') as HTMLCollectionOf<HTMLElement>;

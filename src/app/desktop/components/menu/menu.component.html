@@ -18,24 +18,24 @@
     <ul>
       <li>
         <div class="ext">
-          <a class="menuBlock" (mousedown)="timeUpdate()" href="//{{siteUrl}}/#/d" routerLinkActive="active">ГЛАВНАЯ</a>
+          <a class="menuBlock" (click)="ymFunc('main-menu');" (mousedown)="timeUpdate()" href="//{{siteUrl}}/#/d" routerLinkActive="active">ГЛАВНАЯ</a>
         </div>
       </li>
       <li>
         <div class="ext">
-          <a class="menuBlock" (mousedown)="timeUpdate()" (click)=" update()" href="//{{siteUrl}}/#/d/objects/list"
+          <a class="menuBlock" (mousedown)="timeUpdate()" (click)="ymFunc('offer-menu'); update()" href="//{{siteUrl}}/#/d/objects/list"
                routerLinkActive="active">ПРЕДЛОЖЕНИЯ
           </a>
         </div>
       </li>
       <li>
         <div class="ext">
-          <a class="menuBlock" (click)="mode = 'pay';openBlock('pay')">ОПЛАТА</a>
+          <a class="menuBlock" (click)="ymFunc('pay-menu');mode = 'pay';openBlock('pay')">ОПЛАТА</a>
         </div>
       </li>
       <li *ngIf="userEmail == 'email'">
         <div class="ext">
-          <a class="menuBlock" (click)="openBlock('login')">ВОЙТИ</a>
+          <a class="menuBlock" (click)="ymFunc('login-menu');openBlock('login')">ВОЙТИ</a>
         </div>
       </li>
       <li *ngIf="userEmail != 'email'">

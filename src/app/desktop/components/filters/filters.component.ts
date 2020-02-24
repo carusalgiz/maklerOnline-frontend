@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {NgxMetrikaService} from '@kolkov/ngx-metrika';
 
 @Component({
     selector: 'app-filters',
@@ -6,7 +7,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
     styleUrls: ['./filters.component.css']
 })
 export class FiltersComponent implements OnInit {
-    constructor() {
+    constructor(private ym: NgxMetrikaService,) {
     }
 
     city = 'Хабаровск';
@@ -90,7 +91,9 @@ export class FiltersComponent implements OnInit {
     closeFunc(name) {
         this.closeFilters.emit(name);
     }
-
+    ymFunc(target) {
+        this.ym.reachGoal.next({target: target});
+    }
     openLeftFunc(name) {
         this.openLeft.emit(name);
     }

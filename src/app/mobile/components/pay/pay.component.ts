@@ -1,7 +1,7 @@
 import { LOCAL_STORAGE , WINDOW} from '@ng-toolkit/universal';
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, Inject} from '@angular/core';
 import {AccountService} from '../../../services/account.service';
-
+import {NgxMetrikaService} from '@kolkov/ngx-metrika';
 
 @Component({
   selector: 'app-pay',
@@ -13,7 +13,7 @@ import {AccountService} from '../../../services/account.service';
 
 export class PayComponent implements OnInit, OnChanges {
 
-  constructor(@Inject(WINDOW) private window: Window, @Inject(LOCAL_STORAGE) private localStorage: any, private _account_service: AccountService) { }
+  constructor(private ym: NgxMetrikaService,@Inject(WINDOW) private window: Window, @Inject(LOCAL_STORAGE) private localStorage: any, private _account_service: AccountService) { }
 
   @Input() otherComponent: boolean;
   @Input() updateBalance: boolean;
@@ -79,6 +79,9 @@ export class PayComponent implements OnInit, OnChanges {
     //         }
     //     });
     // }
+    ymFunc(target) {
+        this.ym.reachGoal.next({target: target});
+    }
   log_out() {
     clearInterval(this.timer);
     this.localStorage.removeItem('time');
@@ -97,7 +100,7 @@ export class PayComponent implements OnInit, OnChanges {
         this.selectedButton.push({block: block});
 
         // this.checklogin();
-        if (this.user != null) {
+        if (sessionStorage.getItem('useremail') != null) {
             this._account_service.payment(type, cost).subscribe((res) => {
                 console.log(res);
                 if (res == "Такого пользователя не существует, либо вход не был произведен") {

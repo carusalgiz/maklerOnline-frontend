@@ -44,7 +44,7 @@
       </div>
     </div>
     <!--<span class="font" style="font-size: 16px;">ВЫБЕРИТЕ КАТЕГОРИЮ</span>-->
-    <div class="add-button" [class.open]="access" (click)="access = !access" style="margin-top: 30px;">
+    <div class="add-button" [class.open]="access" (click)="ymFunc('one-pay-mobile');access = !access" style="margin-top: 30px;">
       <span>ДОСТУП К КОНТАКТАМ</span>
       <div class="bottomWordInButton">
         <span class="button-bottom">ПЛАТИТЕ ТОЛЬКО ЗА АРЕНДУ</span>
@@ -59,7 +59,7 @@
             <div [class.selected]="selectedButton[0]?.block == '0-3'" (click)="payment('0-3', 'type_four', '150000')"><p>МЕСЯЦ</p><span>1500 Р</span></div>
         </div>
     </div>
-    <div class="add-button" [class.open]="publish">
+    <div class="add-button" [class.open]="publish" (click)="ymFunc('two-pay-mobile');">
       <span>НАНЯТЬ МЕНЕДЖЕРА</span>
       <div class="bottomWordInButton">
         <span class="button-bottom">ВКЛЮЧИТЬ ПОЛНЫЙ ПАКЕТ УСЛУГ</span>
@@ -74,7 +74,7 @@
         <div><p>МЕСЯЦ</p><span>1500 Р</span></div>
       </div>
     </div>
-    <div class="add-button"  [class.open]="makler">
+    <div class="add-button"  [class.open]="makler" (click)="ymFunc('three-pay-mobile');">
       <span>ОПУБЛИКОВАТЬ ОБЪЯВЛЕНИЕ</span>
       <div class="bottomWordInButton">
         <SPAN class="button-bottom">БЫСТРО СДАТЬ НЕДВИЖИМОСТЬ</SPAN>
@@ -89,7 +89,7 @@
         <div><p>МЕСЯЦ</p><span>1500 Р</span></div>
       </div>
     </div>
-    <div class="add-button" [class.open]="manager" style="border-bottom: 1px solid #a2a0a0">
+    <div class="add-button" [class.open]="manager" style="border-bottom: 1px solid #a2a0a0" (click)="ymFunc('four-pay-mobile');">
       <span>СЕРВИС УМНЫЙ МАКЛЕР</span>
       <div class="bottomWordInButton">
         <span class="button-bottom">ИНСТРУМЕНТ ДЛЯ РАБОТЫ МАКЛЕРА</span>

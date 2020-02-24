@@ -27,27 +27,27 @@ import * as moment from 'moment';
 
 @Component({
     selector: 'item-middle',
-    inputs: ['item', 'loggingMode', 'payingMode', 'index'],
+    inputs: ['item', 'loggingMode', 'payingMode', 'index', 'mode'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        <div class="catalog-item" id="{{item.id}}" [style.margin-top.px]="index == 0 || index == '0' ? 0 : 20">
+        <div class="catalog-item" [class.main-page]="mode=='main_page'" id="{{item.id}}" [style.margin-top.px]="index == 0 || index == '0' ? 0 : 20">
             <ng-container >
                 <div>
                     <div *ngIf="imgLen == 0" class="photoBlock"
-                         style="background-size: 100% 100%;background-image: url('../../../assets/noph.png')"
+                         style="background-size: 100% 100%;background-image: url('../../../assets/noph.png')"  [class.main-page]="mode=='main_page'"
                          [class.watched]="watched == true">
                         <img class="img"
                              [title]="'makleronline снять ' + item?.roomsCount + ' комнатную квартиру в хабаровске без посредников'"
                              [alt]="'makleronline аренда ' + item?.roomsCount + ' комнатной квартиры в хабаровске без посредников'"
-                             [src]="src">
+                             [src]="src" [class.avito]="src.indexOf('avito') != -1">
                         <div class="no-photo">{{photo_no_title}}</div>
                     </div>
-                    <div *ngIf="imgLen != 0" class="photoBlock" [class.watched]="watched == true"
+                    <div *ngIf="imgLen != 0" class="photoBlock" [class.watched]="watched == true" [class.main-page]="mode=='main_page'"
                          style="    background-size: 100% 100%;">
                         <img class="img"
                              [title]="'makleronline снять ' + item?.roomsCount + ' комнатную квартиру в хабаровске без посредников'"
                              [alt]="'makleronline аренда ' + item?.roomsCount + ' комнатной квартиры в хабаровске без посредников'"
-                             [src]="src">
+                             [src]="src" [class.avito]="src.indexOf('avito') != -1">
                         <div class="no-photo">{{photo_no_title}}</div>
                     </div>
                     <div class="contact-line">
@@ -63,7 +63,7 @@ import * as moment from 'moment';
                              src="../../../../assets/4-4%20watched.png" width="24px">
                     </div>
                     <div class="bottom-block">
-                        <div class="info">
+                        <div class="info"  [class.main-page]="mode=='main_page'">
                             <div class="apart-type" *ngIf="item?.typeCode == 'room'"><span class="one">КОМНАТА</span></div>
                             <div class="apart-type" *ngIf="item?.typeCode == 'apartment'"><span class="one">КВАРТИРА</span></div>
                             <div class="apart-type" *ngIf="item?.typeCode == 'house'"><span class="one">ДОМ</span></div>
@@ -80,24 +80,24 @@ import * as moment from 'moment';
                                     <span class="typename">{{item?.roomsCount}}</span>
                                     <span class="type">Комнат</span>
                                 </div>
-                                <div class="desc-divider full"></div>
+                                <div class="desc-divider full"  [class.main-page]="mode=='main_page'"></div>
                                 <div class="flex-col" style="    align-items: center;flex-grow: 1;">
                                     <span class="typename">{{item?.floor}}/{{item?.floorsCount}}</span>
                                     <span class="type">Этаж</span>
                                 </div>
-                                <div class="desc-divider full"></div>
+                                <div class="desc-divider full"  [class.main-page]="mode=='main_page'"></div>
                                 <div class="flex-col" style="    align-items: center;flex-grow: 1;">
                                 <span class="typename"
                             *ngIf="(item?.typeCode == 'apartment' || item?.typeCode == 'house' || item?.typeCode == 'dacha' || item?.typeCode == 'cottage')">{{item?.squareTotal}}</span>
                                     <span class="typename" *ngIf="item?.typeCode == 'room'">{{item?.squareLiving}}</span>
                                     <span class="type">Площадь</span>
                                 </div>
-                                <div class="desc-divider full"></div>
+                                <div class="desc-divider full" [class.main-page]="mode=='main_page'"></div>
                                 <div class="flex-col" style="    align-items: center;flex-grow: 1;">
                                     <span class="typename">Балкон</span>
                                     <span class="type">{{ item.loggia || item.balcony ? 'Да' : 'Нет'}}</span>
                                 </div>
-                                <div class="desc-divider full"></div>
+                                <div class="desc-divider full" [class.main-page]="mode=='main_page'"></div>
                                 <div class="flex-col" style="    align-items: center;">
                                     <span class="typename">Залог</span>
                                     <span class="type">{{item?.prepayment ? 'Да' : 'Нет'}}</span>
@@ -119,6 +119,7 @@ export class ItemMiddle implements AfterViewInit, OnChanges, OnInit {
     @Input() loggingMode: any;
     @Input() payingMode: any;
     @Input() index: any;
+    @Input() mode: any;
 
     formattedPrice = '0';
     commission = 0;
@@ -167,7 +168,9 @@ export class ItemMiddle implements AfterViewInit, OnChanges, OnInit {
             let spArray = this.item.name.split(" ");
             let ret = spArray[0].toUpperCase();
             if (spArray.length > 1) {
-                ret += " " + spArray[1];
+                for (let i = 1; i < spArray.length; i++) {
+                    ret += " " + spArray[i];
+                }
             }
             this.item.name = ret;
         }

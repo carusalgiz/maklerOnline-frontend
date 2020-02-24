@@ -5,6 +5,7 @@ import {map} from 'rxjs/operators';
 import {Item} from '../item';
 import {PaymentResult} from "../desktop/components/class/main_classes";
 import {ConfigService} from "./config.service";
+import {Person} from '../class/person';
 
 
 @Injectable()
@@ -147,8 +148,40 @@ export class AccountService {
         console.log(ret_subj);
         return ret_subj;
     }
-  saveUser(accountId: any, email_block: any, phone_block: any) {
-    const body = {accountId: accountId, emailBlock: email_block, phoneBlock: phone_block, sourceCode: "internet"};
+    updateUser(person: Person) {
+        let ret_subj = new AsyncSubject() as AsyncSubject<Person>;
+        let _resourceUrl =  this.servUrl + '/person/update';
+
+        let data_str = JSON.stringify(person);
+
+        this._http.post(_resourceUrl, data_str, {withCredentials: true}).pipe(
+            map((res: Response) => res)).subscribe(
+            raw => {
+                 let data = JSON.parse(JSON.stringify(raw));
+                // let p: Person;
+                // if (data.code) {
+                //     p = data.obj;
+                // } else
+                //     p = data.result;
+                ret_subj.next(data);
+                ret_subj.complete();
+            }
+        );
+        return ret_subj;
+    }
+
+  saveUser(accountId: any, email_block: any, phone_block: any, messengerBlock: any, socialBlock: any, organisation: any, fio: any, description: any, isMiddleman: any ) {
+    const body = {accountId: accountId,
+        emailBlock: email_block,
+        phoneBlock: phone_block,
+        name: fio,
+        messengerBlock: messengerBlock,
+        socialBlock: socialBlock,
+        organisation: organisation,
+        description: description,
+        isMiddleman: isMiddleman,
+        sourceCode: "internet"};
+
     let _resourceUrl =  this.servUrl + '/person/save';
     console.log(_resourceUrl + JSON.stringify(body));
 
@@ -158,14 +191,6 @@ export class AccountService {
       map((res: Response) => res)).subscribe(
 
       data => {
-        // let obj: any;
-        // if (data.result) {
-        //   // obj.hitsCount = data.result.hitsCount;
-        //   obj = data.result;
-        //  // console.log(obj);
-        //   ret_subj.next(obj);
-        //   ret_subj.complete();
-        // }
         ret_subj.next(data);
         ret_subj.complete();
       },
@@ -235,8 +260,6 @@ export class AccountService {
           'user_id': data.user_id,
           'email' : data.email
         };
-        // console.log(data);
-        // console.log("res: ", data.result, " user: ", data.user_id, " email: ", data.email);
         if (data.result) {
           ret_subj.next(struct);
         }
@@ -246,6 +269,27 @@ export class AccountService {
     );
     return ret_subj;
   }
+    personInfo() {
+        let ret_subj = <AsyncSubject<any>>new AsyncSubject();
+        let _resourceUrl =  this.servUrl + '/person/getPersonInfo';
+        this._http.get(_resourceUrl, {withCredentials: true}).pipe(
+            map((res: Response) => res)).subscribe(
+            raw => {
+                let data = JSON.parse(JSON.stringify(raw));
+                console.log(data);
+                let struct = {
+                    'name': data.name,
+                    'email' : data.email
+                };
+
+                    ret_subj.next(data);
+
+                ret_subj.complete();
+            },
+            err => console.log(err)
+        );
+        return ret_subj;
+    }
   logout() {
     let _resourceUrl =  this.servUrl + '/person/logout';
     // , responseType: 'text'
