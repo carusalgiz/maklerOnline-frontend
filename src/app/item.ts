@@ -1,6 +1,7 @@
 import {UploadFile} from "./class/UploadFile";
 import {ConditionsBlock} from "./class/conditionsBlock";
 import {PhoneBlock} from './class/phoneBlock';
+import {Person} from './class/person';
 
 export class Item {
     bus_stop: any;
@@ -48,6 +49,8 @@ export class Item {
     IsMiddleman: boolean;
     busStop: string;
     commission: number;
+    commisionType: string;           //Тип комиссии
+    person: Person;
 
     constructor(id?: number,
                 admArea?: string,
@@ -87,7 +90,9 @@ export class Item {
                 IsMiddleman?: boolean,
                 phoneBlock?: PhoneBlock,
                 busStop?: string,
-                commission?: number
+                commission?: number,
+                commisionType?: string,
+                person?: Person
     ) {
         this.id = id;
         this.admArea = admArea;
@@ -103,6 +108,7 @@ export class Item {
         this.squareLiving = squareLiving;
         this.busStop = busStop;
         this.commission = commission;
+        this.commisionType = commisionType;
         this.name = name;
         this.photos = [];
         this.photos.push(photos);
@@ -130,6 +136,7 @@ export class Item {
         this.deposit = deposit;
         this.IsMiddleman = IsMiddleman;
         this.phoneBlock = phoneBlock;
+        this.person = person;
     }
 
 

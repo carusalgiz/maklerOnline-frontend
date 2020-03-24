@@ -10,6 +10,7 @@ import {AppComponent} from './app.component';
 import {Location, LocationStrategy} from '@angular/common';
 import {HttpModule} from '@angular/http';
 import {OfferService} from './services/offer.service';
+// import {RequestService} from './services/request.service';
 import {AccountService} from './services/account.service';
 import {DeviceDetectorModule} from 'ngx-device-detector';
 import {NgxMaskModule} from 'ngx-mask';
@@ -19,11 +20,14 @@ import {MatInputModule} from '@angular/material/input';
 // import { NgxMetrikaService } from '@kolkov/ngx-metrika';
 import {ConfigService} from './services/config.service';
 import {UploadService} from './services/upload.service';
+import {MobileModule} from './mobile/mobile.module';
+import {DesktopModule} from './desktop/desktop.module';
+import {TabletModule} from './tablet/tablet.module';
 
 const appRoutes: Routes = [
-    {path: 'm', loadChildren: './mobile/mobile.module#MobileModule'},
-    {path: 'd', loadChildren: './desktop/desktop.module#DesktopModule'},
-    {path: 't', loadChildren: './tablet/tablet.module#TabletModule'},
+    {path: 'm', loadChildren: () => MobileModule},
+    {path: 'd', loadChildren: () => DesktopModule},
+    {path: 't', loadChildren: () => TabletModule},
 ];
 
 @NgModule({

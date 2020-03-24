@@ -8,7 +8,6 @@ import {ConfigService} from '../../services/config.service';
 import {NgxMetrikaService} from '@kolkov/ngx-metrika';
 import {Person} from '../../class/person';
 import * as $ from 'jquery';
-import 'simple-keyboard/build/css/index.css';
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 import {take} from 'rxjs/operators';
 
@@ -41,7 +40,6 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
     payCarouselMargin = 0;
     payCarouselBlock = 124;
     blocked = false;
-    menuMode = 'close';
 
     //login vars
     phone = '+7';
@@ -74,6 +72,13 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
     pay_button = 0;
     requestMenu = false;
 
+    modal_title: any;
+    modal_text: any;
+    modal_action: any;
+    modal_action_text: any;
+    modal_active = false;
+    modal_cancel = true;
+
     public customPatterns = {
         '0': {pattern: new RegExp('([\\d])')},
         '1': {pattern: new RegExp('[\+]?')}
@@ -84,6 +89,8 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
     @Input() headerPos: number;
     @Output() openMenu = new EventEmitter();
     @Output() blockClosed = new EventEmitter();
+    @Output() personInfo = new EventEmitter();
+
     @ViewChild('autosize', {static: false}) autosize: CdkTextareaAutosize;
     constructor(private _ngZone: NgZone, private ym: NgxMetrikaService,@Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, config: ConfigService,
                 private _offer_service: OfferService,
@@ -109,6 +116,14 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
     ngAfterViewInit() {
         window.scrollTo(0, 0);
         document.body.style.removeProperty('overflow-y');
+    }
+    modal_info(title, text, action_text, action, cancel) {
+        this.modal_title = title;
+        this.modal_text = text;
+        this.modal_action_text = action_text;
+        this.modal_action = action;
+        this.modal_active = true;
+        this.modal_cancel = cancel;
     }
     triggerResize() {
         // Wait for changes to be applied, then trigger textarea resize.
@@ -148,6 +163,7 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
             let result = JSON.parse(JSON.stringify(res));
             if (result.person){
                 this.person = result.person;
+                this.personInfo.emit(this.person);
                 if (this.person.name != undefined) {
                     let spArray = this.person.name.split(" ");
                     let ret = spArray[0].toUpperCase();
@@ -159,7 +175,7 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
                     this.person_name = ret;
                 }
                 sessionStorage.setItem('useremail', this.person.emailBlock.main);
-                document.getElementById('res2').innerHTML = 'Информация успешно обновлена';
+                this.modal_info('Сообщение','Информация успешно обновлена','Продолжить','continue',true);
             }
         });
     }
@@ -176,14 +192,12 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
     }
     enterMode(name) {
         this.mode = name;
-        if (name === 'login') {
+        if (name == 'login') {
             document.getElementById('res').innerHTML = '';
-        } else if (name === 'register') {
-            this.mode = 'register';
+        } else if (name == 'register') {
             document.getElementById('res1').innerHTML = '';
-        } else if (name === 'recoverPass') {
+        } else if (name == 'recoverPass') {
             document.getElementById('resRecover').innerHTML = this.result;
-            this.mode = 'recoverPass';
         }
     }
     get_users() {
@@ -195,61 +209,75 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
         let recoverMethod = '';
 
         if (this.mode == 'login') {
-            this._account_service.login(this.phone1, this.pass).subscribe(res => {
-                let i = 0;
-                console.log(res);
-                for (let str of Object.values(res)) {
-                    i++;
-                    this.result = str.toString();
-                    if (i == 1) {
-                        document.getElementById('res').innerHTML = this.result;
-                        if (this.result == 'Успешный вход') {
-                            this.user = this.phone1;
-                            this.logged_in = true;
-                            this.phone1 = '+7';
-                            this.pass = '';
-                            this.register = false;
-                            this.log_in = false;
-                            this.checklogin();
-                            this.Logging.emit(true);
+            if ((this.phone1 == '' || this.phone1 == undefined || this.phone1.length < 3) && (this.pass == '' || this.pass == undefined))                {
+                this.modal_info('Предупреждение','Для входа в систему, пожалуйста введите номер вашего телефона и пароль','Продолжить','continue',true);
+            }  else if ((this.phone1.length == 12) && (this.pass == '' || this.pass == undefined)) {
+                this.modal_info('Предупреждение','Для входа в систему, пожалуйста введите номер вашего телефона и пароль','Продолжить','continue',false);
+            } else if (this.phone1.length > 2 && this.phone1.length < 11) {
+                this.modal_info('Предупреждение','Некорректно введен номер телефона, пожалуйста проверьте правильность написания','Продолжить','continue',true);
+            } else if (this.pass != undefined && (this.pass.length > 0 && this.pass.length < 5)) {
+                this.modal_info('Предупреждение','Некорректно введен пароль, пожалуйста проверьте правильность написания','Продолжить','continue',false);
+            } else {
+                this._account_service.login(this.phone1, this.pass).subscribe(res => {
+                    let i = 0;
+                    console.log(res);
+                    for (let str of Object.values(res)) {
+                        i++;
+                        this.result = str.toString();
+                        if (i == 1) {
+                            this.modal_title = 'Сообщение';
+                            this.modal_text = this.result;
+                            this.modal_action_text = 'Продолжить';
+                            this.modal_action = 'continue';
+                            this.modal_cancel = false;
+                            if (this.result == 'Успешный вход') {
+                                this.modal_action = 'login_continue';
+                            }
+                            this.modal_active = true;
+                        } else if (i == 2) {
+                            this.person.name = this.result;
+                        } else if (i == 3) {
+                            this.person.emailBlock.main = this.result;
                         }
-                    } else if (i == 2) {
-                        this.person.name = this.result;
-                        // this.user_name = this.result;
-                        // this.userLoggedIn.emit(this.result);
-                    } else if (i == 3) {
-                        this.person.emailBlock.main = this.result;
-                        // this.user_email = this.result;
-                        // this.userLoggedIn.emit(this.result);
                     }
-                }
-            });
+                });
+            }
         }
 
         if (this.mode === 'register') {
-            this._account_service.data(this.login, this.pass_reg, this.phone, this.mode, recoverMethod).subscribe(res => {
-                let i = 0;
-                for (let str of Object.values(res)) {
-                    if (str.toString() == 'ok') {
-                        this.register = false;
-                        this.phone1 = '+'+this.phone;
-                        // document.getElementById('res').innerHTML = 'Учетная запись успешно создана';
-                        // this.log_in = true;
-                        setTimeout(()=> {
-                            this.enterMode('login');
-                            this.get_users();
-                        },300);
+            if (((this.login == '' || this.login == undefined ) && (this.phone == '' || this.phone == undefined || this.phone.length < 3))
+                || (this.phone.length == 11 && (this.login == '' || this.login == undefined)) ){
+                this.modal_info('Предупреждение','Для регистрации в системе, пожалуйста введите номер вашего телефона и почтовый адрес','Продолжить','continue',false);
+            } else if (this.phone.length > 2 && this.phone.length < 11) {
+                this.modal_info('Предупреждение','Некорректно введен номер телефона, пожалуйста проверьте правильность написания','Продолжить','continue',true);
+            } else if (this.login.indexOf('@') == -1) {
+                this.modal_info('Предупреждение','Некорректно введен почтовый адрес, пожалуйста проверьте правильность написания','Продолжить','continue',true);
+            } else if (this.pass_reg != undefined && (this.pass_reg.length > 0 && this.pass_reg.length < 5)) {
+                this.modal_info('Предупреждение','Некорректно введен код доступа, пожалуйста проверьте правильность написания','Продолжить','continue',true);
+            } else {
+                this._account_service.data(this.login.replace(' ', ''), this.pass_reg, this.phone, this.mode, recoverMethod).subscribe(res => {
+                    let i = 0;
+                    for (let str of Object.values(res)) {
+                        if (str.toString() == 'ok') {
+
+                            this.phone1 = '+' + this.phone;
+                            setTimeout(() => {
+                                this.pass = this.pass_reg;
+                                this.enterMode('login');
+                                this.get_users();
+                            }, 300);
+                        }
+                        i++;
                     }
-                    i++;
-                }
-            });
+                });
+            }
 
         } else if (this.mode === 'recoverPass') {
             recoverMethod = 'phone';
             if (this.recoverPhone == '') {
-                alert('Поле телефона для восстановления не заполнено');
+                this.modal_info('Предупреждение','Поле телефона для восстановления не заполнено','Продолжить','continue',true);
             } else {
-                this._account_service.data(this.login, this.pass, this.recoverPhone, this.mode, recoverMethod).subscribe(res => {
+                this._account_service.data(this.login.replace(' ',''), this.pass, this.recoverPhone, this.mode, recoverMethod).subscribe(res => {
                     for (let str of Object.values(res)) {
                         if (str != 'ok')
                             this.result += str.toString();
@@ -259,37 +287,40 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
             }
         } else if (this.mode === 'sendKey') {
             recoverMethod = 'phone';
-
             let regexp = new RegExp('@');
             let test = regexp.test(this.login);
             if (this.recover == true) {
                 if (this.phone1 == '' || this.phone1 == undefined || this.phone1.length < 11) {
-                    document.getElementById('res').innerHTML = 'Для восстановления пароля пожалуйста введите номер Вашего телефона';
+                    this.modal_info('Сообщение','Для восстановления пароля пожалуйста введите номер Вашего телефона','Продолжить','continue',false);
                 } else {
                     this._account_service.data(this.login, this.pass, this.phone1, 'recoverPass', recoverMethod).subscribe(res => {
                         let i = 0;
                         for (let str of Object.values(res)) {
                             if (i == 0) {
                                 this.result += str.toString();
-                                document.getElementById('res').innerHTML = this.result;
+                                this.modal_info('Сообщение',this.result,'Продолжить','continue',false);
                             }
                             i++;
                         }
                     });
                 }
             } else {
-                if (this.login == '' || this.login == undefined || !test) {
-                    document.getElementById('res1').innerHTML = 'Некорректно введен адрес почтового ящика, пожалуйста проверьте правильность написания';
-                } else if (this.phone == '' || this.phone == undefined || this.phone.length < 11) {
-                    document.getElementById('res1').innerHTML = 'Некорректно введен номер телефона, пожалуйста проверьте правильность написания';
-                } else {
+                console.log(this.phone.length, this.login);
+                if (((this.login == '' || this.login == undefined || !test) && (this.phone == '' || this.phone == undefined || this.phone.length < 3))
+                    || (this.phone.length == 11 && (this.login == '' || this.login == undefined)) ){
+                    this.modal_info('Предупреждение','Для регистрации в системе, пожалуйста введите номер вашего телефона и почтовый адрес','Продолжить','continue',true);
+                } else if (this.phone.length > 2 && this.phone.length < 11) {
+                    this.modal_info('Предупреждение','Некорректно введен номер телефона, пожалуйста проверьте правильность написания','Продолжить','continue',true);
+                } else if (this.login.indexOf('@') == -1) {
+                    this.modal_info('Предупреждение','Некорректно введен почтовый адрес, пожалуйста проверьте правильность написания','Продолжить','continue',true);
+                }  else {
                     this._account_service.data(this.login, this.pass, this.phone, this.mode, recoverMethod).subscribe(res => {
                         document.getElementById('res1').style.setProperty('display', 'block');
                         let i = 0;
                         for (let str of Object.values(res)) {
                             if (i == 0) {
                                 this.result = str.toString();
-                                document.getElementById('res1').innerHTML = str.toString();
+                                this.modal_info('Сообщение',str.toString(),'Продолжить','continue',false);
                             }
                             i++;
                         }
@@ -298,48 +329,92 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
             }
         } else if (this.mode === 'checkAccessKey' && this.regVar == true) {
                 let i = 0;
-                this._account_service.data(this.login, this.pass_reg, this.phone, this.mode, recoverMethod).subscribe(res => {
+            if (((this.login == '' || this.login == undefined ) && (this.phone == '' || this.phone == undefined || this.phone.length < 3))
+                || (this.phone.length == 11 && (this.login == '' || this.login == undefined)) ){
+                this.modal_info('Предупреждение','Для регистрации в системе, пожалуйста введите номер вашего телефона и почтовый адрес','Продолжить','continue',false);
+            } else if (this.phone.length > 2 && this.phone.length < 11) {
+                this.modal_info('Предупреждение','Некорректно введен номер телефона, пожалуйста проверьте правильность написания','Продолжить','continue',true);
+            } else if (this.login.indexOf('@') == -1) {
+                this.modal_info('Предупреждение','Некорректно введен почтовый адрес, пожалуйста проверьте правильность написания','Продолжить','continue',true);
+            } else if (this.pass_reg != undefined && (this.pass_reg.length > 0 && this.pass_reg.length < 5)) {
+                this.modal_info('Предупреждение','Некорректно введен код доступа, пожалуйста проверьте правильность написания','Продолжить','continue',true);
+            }  else if (this.pass_reg == undefined || this.pass_reg == '') {
+                this.modal_info('Предупреждение','Необходимо получить и ввести код доступа','Продолжить','continue',false);
+            } else if (!this.check && this.phone.length == 11 && this.login.indexOf('@') != -1 && this.pass_reg.length == 5) {
+                this.modal_info('Предупреждение', 'Для регистрации в системе необходимо дать согласие на условия использования и политику конфиденциальности', 'Продолжить', 'continue', false);
+            } else {
+                this._account_service.data(this.login.replace(' ', ''), this.pass_reg, this.phone, this.mode, recoverMethod).subscribe(res => {
                     for (let str of Object.values(res)) {
                         if (i == 0) {
                             i++;
                             this.result = str.toString();
                             if (str.toString() == 'ok') {
-                                console.log('hello!');
-                                document.getElementById('res1').innerHTML = 'Учетная запись успешно создана';
                                 this.save_user();
                             } else {
-                                document.getElementById('res1').innerHTML = str.toString();
+                                this.modal_info('Предупреждение',str.toString(),'Продолжить','continue',true);
                             }
                         }
                     }
                 });
+            }
         } else if (this.mode === 'savePassRecover') {
             recoverMethod = 'phone';
             let access_code1 = (<HTMLInputElement> document.getElementById('recoverKey')).value;
-            this._account_service.data(this.login, access_code1, this.recoverPhone, this.mode, recoverMethod).subscribe(res => {
+            this._account_service.data(this.login.replace(' ',''), access_code1, this.recoverPhone, this.mode, recoverMethod).subscribe(res => {
                 console.log(res);
                 for (let str of Object.values(res)) {
                     if (str != 'ok')
                         this.result += str.toString();
-                    document.getElementById('resRecover').innerHTML = this.result;
+                    this.modal_info('Сообщение',this.result,'Продолжить','continue',true);
                 }
             });
         }
     }
-    payment(block, type, cost) {
+    modalFunc(name) {
+        switch (name) {
+            case 'cancel':
+                this.modal_active = false;
+                break;
+            case 'action':
+                this.modal_active = false;
+                switch (this.modal_action) {
+                    case 'login':
+                        this.log_in = true;
+                        this.clearInfo();
+                        document.getElementById('login_block').scrollIntoView({'block': 'center', 'behavior': 'smooth'});
+                        break;
+                    case 'continue':
+                        break;
+                    case 'login_continue':
+                        this.register = false;
+                        this.user = this.phone1;
+                        this.logged_in = true;
+                        this.phone1 = '+7';
+                        this.pass = '';
+                        this.register = false;
+                        this.log_in = false;
+                        this.checklogin();
+                        this.Logging.emit(true);
+                        break;
+                }
+                break;
+        }
+        this.pay_button = 0;
+    }
+    payment(type, cost) {
         if (sessionStorage.getItem('useremail')!= undefined && sessionStorage.getItem('useremail') != 'email') {
             this._account_service.payment(type, cost).subscribe((res) => {
                 console.log(res);
                 if (res == "Такого пользователя не существует, либо вход не был произведен") {
-                    alert(res);
+                    this.modal_info('Сообщение',res,'Продолжить','continue',false);
                 } else if (res.indexOf("http") != -1) {
                     window.location.href = res;
                 } else {
-                    alert(res);
+                    this.modal_info('Предупреждение',res,'Продолжить','continue',false);
                 }
             });
         } else {
-            alert("Вход не был произведен, войдите пожалуйста в систему перед совершением оплаты");
+            this.modal_info('Предупреждение','Вход не был произведен, войдите пожалуйста в систему перед совершением оплаты','Войти','login',false);
         }
     }
     save_user() {
@@ -348,7 +423,7 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
             'main': this.phone.slice(1, this.phone.length)
         };
         let emails = {
-            'main': this.login
+            'main': this.login.replace(' ','')
         };
         let messengers = {
             'whatsapp': this.model_whatsapp
@@ -366,7 +441,7 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
                 this.enterMode('register');
                 this.get_users();
             } else {
-                document.getElementById('res1').innerHTML = 'Произошла ошибка в системе. Регистрация на данный момент невозможна';
+                this.modal_info('Предупреждение','Произошла ошибка в системе. Регистрация на данный момент невозможна','Продолжить','continue',true);
             }
         });
     }
@@ -409,19 +484,37 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
     setFocus(name){
         document.getElementById(name).focus();
     }
-    menuOpen(mode) {
-        this.blockOpenInput = mode;
 
-        if (mode == 'open_menu') {
+    menuOpen(mode) {
+        this.log_in = false;
+        this.register = false;
+        this.payblock = false;
+        this.blockOpenInput = mode;
+        if (mode == 'open_menu' || mode == 'open_login' || mode == 'open_pay') {
             this.blocked = false;
             document.body.style.setProperty('height', '100vh');
-            document.body.style.setProperty('background-color', '#1c2628');
-            setTimeout(ev => {
-                document.getElementById('menuTop').scrollIntoView({'block': 'center', 'behavior':'smooth'});
-            },200);
+            document.body.style.setProperty('background-color', '#12181A');
         } else {
             // document.body.style.removeProperty('height');
             document.body.style.removeProperty( 'background-color');
+        }
+
+        if( mode == 'open_menu') {
+            setTimeout(ev => {
+                document.getElementById('menuTop').scrollIntoView({'block': 'center', 'behavior':'smooth'});
+            },100);
+        }
+        if (mode == 'open_login') {
+            this.log_in = true;
+            setTimeout( () => {
+                document.getElementById('login_block').scrollIntoView({'block': 'center', 'behavior': 'smooth'});
+            },100);
+        }
+        if (mode == 'open_pay') {
+            this.payblock = true;
+            setTimeout( () => {
+                document.getElementById('pay_block').scrollIntoView({'block': 'center', 'behavior': 'smooth'});
+            },100);
         }
             this.openMenu.emit(mode);
 
@@ -560,6 +653,7 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
                         let result = JSON.parse(JSON.stringify(res1));
                         if (result.person){
                             this.person = result.person;
+                            this.personInfo.emit(this.person);
                             if (this.person.name != undefined) {
                                 let spArray = this.person.name.split(" ");
                                 let ret = spArray[0].toUpperCase();

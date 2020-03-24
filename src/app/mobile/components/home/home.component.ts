@@ -84,9 +84,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
         let picture = document.getElementsByClassName('picture') as HTMLCollectionOf<HTMLElement>;
         let mainHome = document.getElementsByClassName('mainHome') as HTMLCollectionOf<HTMLElement>;
         let logotitle2 = document.getElementsByClassName('logoTitle2') as HTMLCollectionOf<HTMLElement>;
-        picture.item(0).style.setProperty('height', (document.documentElement.clientHeight - 10) + 'px');
-        logotitle2.item(0).style.setProperty('top', (document.documentElement.clientHeight * 0.6) + 25 + 'px');
-        mainHome.item(0).style.setProperty('background-size', 'auto ' + (document.documentElement.clientHeight + 100) + 'px');
+        // picture.item(0).style.setProperty('height', (document.documentElement.clientHeight - 10) + 'px');
+        // logotitle2.item(0).style.setProperty('top', (document.documentElement.clientHeight * 0.6) + 25 + 'px');
+        // mainHome.item(0).style.setProperty('background-size', 'auto ' + (document.documentElement.clientHeight + 100) + 'px');
         let header = document.documentElement.getElementsByClassName('header') as HTMLCollectionOf<HTMLElement>;
         header.item(0).style.setProperty('top', '0');
     }
@@ -131,6 +131,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
         this.blockOpen = mode;
         console.log('blockopen: ', this.blockOpen);
+    }
+    redirSocial(href){
+        document.location.href = href;
     }
     redirectFunc(href){
         let hostname = window.location.href.substr(0, window.location.href.indexOf('#/')+2);
@@ -194,12 +197,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
                 let time = new Date(offer.changeDate * 1000);
                 if (Math.floor((new Date()).getTime() / 1000) - offer.changeDate < 84600) {
                     // console.log('time: ' + time + ' cur: ' + data);
-                    if (data.getDay() == time.getDay()) {
+                    if (data.getDay() == time.getDay() && this.items.indexOf(offer) == -1) {
                         this.countTodayObjects++;
                         this.items.push(offer);
                     }
                 }
             }
         });
+        console.log(this.items);
     }
 }

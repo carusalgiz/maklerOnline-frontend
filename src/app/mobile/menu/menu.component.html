@@ -1,7 +1,7 @@
 <!--The content below is only a placeholder and can be replaced.  || innerBlockOpen == 'menu'-->
-<div  [class.openMain]="blockOpenInput == 'open_menu'" style="-webkit-overflow-scrolling: touch;"
-    [class.closeMain]="blockOpenInput != 'open_menu'" class="inner-left">
-        <header class="header" [style.top.px]="headerPos" [class.open]="blockOpenInput != 'open_menu'">
+<div  [class.openMain]="blockOpenInput == 'open_menu' || blockOpenInput == 'open_login' || blockOpenInput == 'open_pay'" style="-webkit-overflow-scrolling: touch;"
+    [class.closeMain]="blockOpenInput != 'open_menu'" class="inner-left" [class.modal]="modal_active">
+        <header class="header forBlur" [style.top.px]="headerPos" [class.open]="blockOpenInput != 'open_menu' && blockOpenInput != 'open_login' && blockOpenInput != 'open_pay'">
             <div class="top-logo-block">
                 <a class="logo-mobile" style="outline: none;text-decoration: none"
                     href="//{{siteUrl}}/#/m">
@@ -20,7 +20,7 @@
             </div>
         </header>
 
-        <div class="filters" id="menuMobile" [class.open]="blockOpenInput == 'open_menu'">
+        <div class="filters forBlur" id="menuMobile" [class.open]="blockOpenInput == 'open_menu' || blockOpenInput == 'open_login' || blockOpenInput == 'open_pay'">
             <div class="scroll-items">
                 <div style="display: flex;margin-bottom: 25px;    margin-top: 40px;" id="menuTop">
                     <a class="logo-mobile contact-menu-info"
@@ -63,32 +63,33 @@
                         </div>
                     </div>
                     <div class="contact-info" *ngIf="person?.phoneBlock?.main != undefined && freeAccess">
-                        <div style="width: 125px;min-width: 125px;display: flex;align-items: center">
+                        <div style="margin-right: 20px;;display: flex;align-items: center">
                             <span style="color: #FF9365; font-size: 14px;height: 16px">БЕСПЛАТНЫЙ ПЕРИОД</span>
                         </div>
-                        <div>
+                        <div style="min-width: unset">
                             <span style="color: #FF9365;font-size: 18px; font-family: Stolzl, sans-serif;display: flex"><a style="font-weight: bold;margin-right: 5px">{{resTime}}</a>ч</span>
                         </div>
                     </div>
                 </div>
                 <ul>
-                    <li>
+                    <li id="login_block">
                         <div style="outline: none;text-decoration: none"
                              class="mobileBlock exit"  [class.close]="!logged_in" *ngIf="logged_in" >
                             <div class="mobUl" (click)=" log_out(); homePageOpen(false);">ВЫЙТИ</div>
                         </div>
                         <div style="outline: none;text-decoration: none"
                              class="mobileBlock" *ngIf="!logged_in">
-                            <div class="mobUl" [class.active]="log_in" (click)="log_in = !log_in;clearInfo()">ВХОД</div>
+                            <div class="mobUl" [class.active]="log_in" (click)="log_in = !log_in;clearInfo();phone1='+7';pass = ''">ВХОД</div>
                             <!--                        <div class="close-sub" [class.open]="log_in" (click)="log_in = false;clearInfo()">Закрыть</div>-->
                         </div>
                         <div class="sub-block" [class.open]="log_in">
                             <div class="input-block">
                                 <span (click)="setFocus('phone_login')">Телефон</span>
-                                <input class="number" id="phone_login" (click)="inputToCenter($event)" type="text"  [(ngModel)]="phone1" [patterns]="customPatterns" mask="10 (000) 000-00-00" (keypress)="checkKey('phone1')"  style="margin: 0">
+                                <input class="number" id="phone_login" (click)="inputToCenter($event)" type="text"
+                                    [(ngModel)]="phone1" [patterns]="customPatterns" mask="10 (000) 000-00-00" (keypress)="checkKey('phone1')"  style="margin: 0">
                             </div>
                             <div class="input-block">
-                                <span (click)="setFocus('pass_login')">Введите пароль</span>
+                                <span (click)="setFocus('pass_login')">Пароль</span>
                                 <input class="number" id="pass_login" (click)="inputToCenter($event)" title="пароль"
                                     (keypress)="checkKey('pass')" [(ngModel)]="pass" style="margin: 0;width: calc(100% - 230px);" type="text">
                                 <div class="recover" (click)="recover = true;enterMode('sendKey'); get_users();">Забыли пароль</div>
@@ -104,10 +105,11 @@
                         </div>
 <!--                        <div class="sub-line" *ngIf="log_in"></div>-->
                     </li>
-                    <li *ngIf="person?.phoneBlock?.main == undefined">
+                    <li *ngIf="person?.phoneBlock?.main == undefined" id="register_block">
                         <div style="outline: none;text-decoration: none"
                              class="mobileBlock">
-                            <div class="mobUl" [class.active]="register" (click)="register = !register;clearInfo()">РЕГИСТРАЦИЯ</div>
+                            <div class="mobUl" [class.active]="register" (click)="register = !register;clearInfo();phone='+7';login='';pass_reg='';
+                            model_name='';model_whatsapp='';model_vk='';model_ok='';model_instagram='';model_description=''">РЕГИСТРАЦИЯ</div>
                             <!--                        <div class="close-sub" [class.open]="register" (click)="register = false;clearInfo()">Закрыть</div>-->
                         </div>
                         <div class="sub-block" [class.open]="register">
@@ -161,9 +163,7 @@
                             </div>
                             <div class="input-block description">
                                 <a (click)="setFocus('reg_info')" class="description">Дополнительная информация (будет видна всем)</a>
-                                <textarea matInput
-                                          cdkTextareaAutosize
-                                    #autosize="cdkTextareaAutosize" id="reg_info" (click)="inputToCenter($event)" title="description" [(ngModel)]="model_description"></textarea>
+                                <textarea autosize id="reg_info" (click)="inputToCenter($event)" title="description" [(ngModel)]="model_description"></textarea>
                             </div>
                         </div>
 <!--                        <div class="sub-line" *ngIf="register"></div>-->
@@ -197,9 +197,7 @@
                             </div>
                             <div class="input-block description">
                                 <a class="description" (click)="setFocus('change_desc')">Дополнительная информация (будет видна всем)</a>
-                                <textarea matInput
-                                          cdkTextareaAutosize
-                                    #autosize="cdkTextareaAutosize" (click)="inputToCenter($event)" id="change_desc" title="description" [(ngModel)]="person.description"></textarea>
+                                <textarea autosize (click)="inputToCenter($event)" id="change_desc" title="description" [(ngModel)]="person.description"></textarea>
                             </div>
                             <div class="font" id="res2" style="color: white;margin: 20px 0 10px 0;height: 35px; width: 315px"></div>
                             <div class="button-next" (click)="updatePerson()">
@@ -212,7 +210,7 @@
                         </div>
 <!--                        <div class="sub-line" *ngIf="update"></div>-->
                     </li>
-                    <li>
+                    <li id="pay_block">
                         <div style="outline: none;text-decoration: none"
                              class="mobileBlock" >
                             <div class="mobUl" [class.active]="payblock" (click)="payblock = !payblock; pay_button = 0">ОПЛАТА</div>
@@ -236,7 +234,7 @@
                                     <div class="description">Гибкий выбор тарифов, оплачивайте только тот период, который необходим для поиска объекта;</div>
 
                                     <div class="pay-buttons">
-                                        <div class="button" style="    border-top: 1px solid #3b444b;" [class.active]="pay_button == 1" (click)="pay_button = 1;payment('1-0', 'type_one', '15000')">
+                                        <div class="button pay-button" style="    border-top: 1px solid #3b444b;" [class.active]="pay_button == 1" (click)="pay_button = 1;payment( 'type_one', '15000')">
                                             <div class="price-button">
                                                 <div class="type">1 день</div>
                                                 <div class="price">150 р</div>
@@ -246,7 +244,7 @@
                                                 <span style="color: #BDC0C1;font-size: 14px">Доступ к контактам на один день</span>
                                             </div>
                                         </div>
-                                        <div class="button" [class.active]="pay_button == 2" (click)="pay_button = 2;payment('1-0', 'type_one', '30000')">
+                                        <div class="button  pay-button" [class.active]="pay_button == 2" (click)="pay_button = 2;payment( 'type_two', '30000')">
                                             <div class="price-button">
                                                 <div class="type">3 дня</div>
                                                 <div class="price">300 р</div>
@@ -257,7 +255,7 @@
                                                 <span>Стоимость одного дня 100 Р</span>
                                             </div>
                                         </div>
-                                        <div class="button" [class.active]="pay_button == 3" (click)="pay_button = 3;payment('1-0', 'type_one', '56000')">
+                                        <div class="button pay-button" [class.active]="pay_button == 3" (click)="pay_button = 3;payment( 'type_three', '56000')">
                                             <div class="price-button">
                                                 <div class="type">Неделя</div>
                                                 <div class="price">560 р</div>
@@ -268,10 +266,10 @@
                                                 <span>Стоимость одного дня 80 Р</span>
                                             </div>
                                         </div>
-                                        <div class="button" [class.active]="pay_button == 4" (click)="pay_button = 4;payment('1-0', 'type_one', '156000')">
+                                        <div class="button pay-button" [class.active]="pay_button == 4" (click)="pay_button = 4;payment( 'type_four', '150000')">
                                             <div class="price-button">
                                                 <div class="type">Месяц</div>
-                                                <div class="price">1560 р</div>
+                                                <div class="price">1500 р</div>
                                             </div>
                                             <div class="pay-line"></div>
                                             <div class="pay-description" [class.active]="pay_button == 4">
@@ -376,7 +374,7 @@
                                 <div style="display: flex">
                                     <div style="flex-grow: 1" >
                                         <a style="outline: none;text-decoration: none;color: #FF9365"
-                                           class="innerMenu">Добавить заявку
+                                           class="innerMenu" (click)="redirectFunc('m/objects/request', false)">Добавить заявку
                                         </a>
                                     </div>
                                 </div>
@@ -393,14 +391,14 @@
             </div>
         </div>
 </div>
-<div class="add-block-menu" [class.open]="blockOpenInput == 'open_login' || innerBlockOpen == 'login'" >
-    <app-login [otherComponent]="false" [itemOpen]="true" (userLoggedIn)="checklogin()" (blockClose)="closeFunc($event)" (loggingMode)="Logging.emit($event)"
-    ></app-login>
-</div>
-<div class="add-block-menu open" *ngIf="blockOpenInput == 'open_pay' || innerBlockOpen == 'pay'">
-    <app-pay [inpDay]="resDay" [inpTime]="resTime"  (payingMode)="Paying.emit($event)" [otherComponent]="false" [updateBalance]="logged_in" [itemOpen]="true" [redirect]="redirect" (days)="days = $event" (time)="time = $event" (blockClose)="closeFunc($event)">
-    </app-pay>
-</div>
+<!--<div class="add-block-menu" [class.open]="blockOpenInput == 'open_login' || innerBlockOpen == 'login'" >-->
+<!--    <app-login [otherComponent]="false" [itemOpen]="true" (userLoggedIn)="checklogin()" (blockClose)="closeFunc($event)" (loggingMode)="Logging.emit($event)"-->
+<!--    ></app-login>-->
+<!--</div>-->
+<!--<div class="add-block-menu open" *ngIf="blockOpenInput == 'open_pay' || innerBlockOpen == 'pay'">-->
+<!--    <app-pay [inpDay]="resDay" [inpTime]="resTime"  (payingMode)="Paying.emit($event)" [otherComponent]="false" [updateBalance]="logged_in" [itemOpen]="true" [redirect]="redirect" (days)="days = $event" (time)="time = $event" (blockClose)="closeFunc($event)">-->
+<!--    </app-pay>-->
+<!--</div>-->
 <div class="add-block-menu" [class.open]="blockOpenInput == 'open_proposal' || innerBlockOpen == 'proposal'">
     <app-proposal (blockClose)="closeFunc($event)" (checkOutput)="closeFunc($event); addFunc($event); openBlock($event)"></app-proposal>
 </div>
@@ -410,4 +408,5 @@
 <div class="add-block-menu" [class.open]="blockOpenInput == 'open_agreement_add' || innerBlockOpen == 'agreement_add'">
     <app-agreement (blockClose)="closeFunc($event)" [mode]="'addition'"></app-agreement>
 </div>
+<ui-modal-window *ngIf="modal_active" [title]="modal_title" [message]="modal_text" [cancel]="modal_cancel" [button]="modal_action_text" (buttonClicked)="modalFunc($event)"></ui-modal-window>
 

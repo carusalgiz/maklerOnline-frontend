@@ -119,7 +119,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 if (this.item != undefined) {
                     this.openMarker(this.item);
                 }
-                let mapContainer = document.getElementsByClassName('ymaps-2-1-75-map') as HTMLCollectionOf<HTMLElement>;
+                let mapContainer = document.getElementsByClassName('ymaps-2-1-76-map') as HTMLCollectionOf<HTMLElement>;
                 for (let i = 0; i < mapContainer.length; i++) {
                     mapContainer.item(i).style.setProperty('width', '100% !important');
                     mapContainer.item(i).style.setProperty('height', '100% !important');
@@ -192,7 +192,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
 
     listActive() {
         setTimeout(() => {
-            let mapContainer = document.getElementsByClassName('ymaps-2-1-75-map') as HTMLCollectionOf<HTMLElement>;
+            let mapContainer = document.getElementsByClassName('ymaps-2-1-76-map') as HTMLCollectionOf<HTMLElement>;
             for (let i = 0; i < mapContainer.length; i++) {
                 mapContainer.item(i).style.setProperty('width', '100% !important');
                 mapContainer.item(i).style.setProperty('height', '100% !important');
@@ -292,7 +292,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 controls: ['geolocationControl']
             }, {suppressMapOpenBlock: true}
         );
-        let mapStyle = document.getElementsByClassName('ymaps-2-1-75-ground-pane') as HTMLCollectionOf<HTMLElement>;
+        let mapStyle = document.getElementsByClassName('ymaps-2-1-76-ground-pane') as HTMLCollectionOf<HTMLElement>;
         if (mapStyle.length != 0) {
             mapStyle.item(0).style.setProperty('filter', 'grayscale(.9)');
         }
@@ -452,11 +452,11 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         this.markerFocus(item.id);
 
         this.selectedMarker.events.add('balloonopen', () => {
-            let custertab = document.getElementsByClassName('ymaps-2-1-75-b-cluster-tabs__section') as HTMLCollectionOf<HTMLElement>;
-            let baloon_content = document.getElementsByClassName('ymaps-2-1-75-balloon__content') as HTMLCollectionOf<HTMLElement>;
-            let baloonlayout = document.getElementsByClassName('ymaps-2-1-75-balloon__layout') as HTMLCollectionOf<HTMLElement>;
-            let baloonmenu = document.getElementsByClassName('ymaps-2-1-75-b-cluster-tabs__menu') as HTMLCollectionOf<HTMLElement>;
-            let mainBaloon = document.getElementsByClassName('ymaps-2-1-75-balloon') as HTMLCollectionOf<HTMLElement>;
+            let custertab = document.getElementsByClassName('ymaps-2-1-76-b-cluster-tabs__section') as HTMLCollectionOf<HTMLElement>;
+            let baloon_content = document.getElementsByClassName('ymaps-2-1-76-balloon__content') as HTMLCollectionOf<HTMLElement>;
+            let baloonlayout = document.getElementsByClassName('ymaps-2-1-76-balloon__layout') as HTMLCollectionOf<HTMLElement>;
+            let baloonmenu = document.getElementsByClassName('ymaps-2-1-76-b-cluster-tabs__menu') as HTMLCollectionOf<HTMLElement>;
+            let mainBaloon = document.getElementsByClassName('ymaps-2-1-76-balloon') as HTMLCollectionOf<HTMLElement>;
             for (let k = 0; k < mainBaloon.length; k++) {
                 mainBaloon.item(k).style.setProperty('top', '-150px');
                 mainBaloon.item(k).style.setProperty('max-width', '465px');
@@ -539,9 +539,9 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 });
                 baloon.events.add("balloonopen", () => {
                     this.activeBalloon = baloon;
-                    let baloonlayout = document.getElementsByClassName('ymaps-2-1-75-balloon__layout') as HTMLCollectionOf<HTMLElement>;
-                    let baloon_content = document.getElementsByClassName('ymaps-2-1-75-balloon__content') as HTMLCollectionOf<HTMLElement>;
-                    let mainBaloon = document.getElementsByClassName('ymaps-2-1-75-balloon') as HTMLCollectionOf<HTMLElement>;
+                    let baloonlayout = document.getElementsByClassName('ymaps-2-1-76-balloon__layout') as HTMLCollectionOf<HTMLElement>;
+                    let baloon_content = document.getElementsByClassName('ymaps-2-1-76-balloon__content') as HTMLCollectionOf<HTMLElement>;
+                    let mainBaloon = document.getElementsByClassName('ymaps-2-1-76-balloon') as HTMLCollectionOf<HTMLElement>;
 
                     for (let k = 0; k < mainBaloon.length; k++) {
                         mainBaloon.item(k).style.setProperty('top', '-150px');
@@ -555,7 +555,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                     for (let k = 0; k < baloonlayout.length; k++) {
                         baloonlayout.item(k).style.setProperty('height', '120px');
                     }
-                    let cross =  document.getElementsByClassName('ymaps-2-1-75-balloon__close-button') as HTMLCollectionOf<HTMLElement>;
+                    let cross =  document.getElementsByClassName('ymaps-2-1-76-balloon__close-button') as HTMLCollectionOf<HTMLElement>;
                     for (let k = 0; k < cross.length; k++) {
                         cross.item(k).style.setProperty('width', '16px');
                         cross.item(k).style.setProperty('height', '16px');
@@ -888,11 +888,11 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
 
 
         this.clusterer.events.add('balloonopen', () => {
-            let custertab = document.getElementsByClassName('ymaps-2-1-75-b-cluster-tabs__section') as HTMLCollectionOf<HTMLElement>;
-            let baloon_content = document.getElementsByClassName('ymaps-2-1-75-balloon__content') as HTMLCollectionOf<HTMLElement>;
-            let baloonlayout = document.getElementsByClassName('ymaps-2-1-75-balloon__layout') as HTMLCollectionOf<HTMLElement>;
-            let baloonmenu = document.getElementsByClassName('ymaps-2-1-75-b-cluster-tabs__menu') as HTMLCollectionOf<HTMLElement>;
-            let mainBaloon = document.getElementsByClassName('ymaps-2-1-75-balloon') as HTMLCollectionOf<HTMLElement>;
+            let custertab = document.getElementsByClassName('ymaps-2-1-76-b-cluster-tabs__section') as HTMLCollectionOf<HTMLElement>;
+            let baloon_content = document.getElementsByClassName('ymaps-2-1-76-balloon__content') as HTMLCollectionOf<HTMLElement>;
+            let baloonlayout = document.getElementsByClassName('ymaps-2-1-76-balloon__layout') as HTMLCollectionOf<HTMLElement>;
+            let baloonmenu = document.getElementsByClassName('ymaps-2-1-76-b-cluster-tabs__menu') as HTMLCollectionOf<HTMLElement>;
+            let mainBaloon = document.getElementsByClassName('ymaps-2-1-76-balloon') as HTMLCollectionOf<HTMLElement>;
             for (let k = 0; k < mainBaloon.length; k++) {
                 mainBaloon.item(k).style.setProperty('top', '-150px');
                 mainBaloon.item(k).style.setProperty('max-width', '465px');
@@ -901,7 +901,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             for (let i = 0; i < custertab.length; i++) {
                 custertab.item(i).style.setProperty('max-height', '135px');
             }
-            let cross =  document.getElementsByClassName('ymaps-2-1-75-balloon__close-button') as HTMLCollectionOf<HTMLElement>;
+            let cross =  document.getElementsByClassName('ymaps-2-1-76-balloon__close-button') as HTMLCollectionOf<HTMLElement>;
             for (let k = 0; k < cross.length; k++) {
                 cross.item(k).style.setProperty('width', '16px');
                 cross.item(k).style.setProperty('height', '16px');
@@ -982,9 +982,9 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             });
             baloon.events.add("balloonopen", () => {
                 this.activeBalloon = baloon;
-                let baloonlayout = document.getElementsByClassName('ymaps-2-1-75-balloon__layout') as HTMLCollectionOf<HTMLElement>;
-                let baloon_content = document.getElementsByClassName('ymaps-2-1-75-balloon__content') as HTMLCollectionOf<HTMLElement>;
-                let mainBaloon = document.getElementsByClassName('ymaps-2-1-75-balloon') as HTMLCollectionOf<HTMLElement>;
+                let baloonlayout = document.getElementsByClassName('ymaps-2-1-76-balloon__layout') as HTMLCollectionOf<HTMLElement>;
+                let baloon_content = document.getElementsByClassName('ymaps-2-1-76-balloon__content') as HTMLCollectionOf<HTMLElement>;
+                let mainBaloon = document.getElementsByClassName('ymaps-2-1-76-balloon') as HTMLCollectionOf<HTMLElement>;
                 for (let k = 0; k < mainBaloon.length; k++) {
                     mainBaloon.item(k).style.setProperty('top', '-150px');
                 }
@@ -994,7 +994,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                     let inner = baloon_content[k].children[0] as HTMLElement;
                     inner.style.setProperty('height', '100%');
                 }
-                let cross =  document.getElementsByClassName('ymaps-2-1-75-balloon__close-button') as HTMLCollectionOf<HTMLElement>;
+                let cross =  document.getElementsByClassName('ymaps-2-1-76-balloon__close-button') as HTMLCollectionOf<HTMLElement>;
                 for (let k = 0; k < cross.length; k++) {
                     cross.item(k).style.setProperty('width', '16px');
                     cross.item(k).style.setProperty('height', '16px');
@@ -1390,7 +1390,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     }
 
     onResize() {
-      let mapContainer = document.getElementsByClassName('ymaps-2-1-75-map') as HTMLCollectionOf<HTMLElement>;
+      let mapContainer = document.getElementsByClassName('ymaps-2-1-76-map') as HTMLCollectionOf<HTMLElement>;
         for (let i = 0; i < mapContainer.length; i++) {
             mapContainer.item(i).style.setProperty('width', '100%');
             mapContainer.item(i).style.setProperty('height', '100%');

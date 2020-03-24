@@ -22,6 +22,9 @@ import {ItemMiddle} from './components/item-middle';
 import { UIUploadFile} from './ui/ui-upload-file.component';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { TextareaAutosizeModule } from 'ngx-textarea-autosize';
+import {UiModalWindow} from '../ui/ui-modal-window';
+import {InputRangeComponent} from '../ui/input-range';
+import {RequestService} from '../services/request.service';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -55,8 +58,10 @@ const routes: Routes = [
     EgrnComponent,
     ProposalComponent,
     AgreementComponent,
-      UIUploadFile
+      UIUploadFile,
+      UiModalWindow,
+      InputRangeComponent
   ],
-    providers: [ {provide: LocationStrategy, useClass: PathLocationStrategy} ]
+    providers: [ {provide: LocationStrategy, useClass: PathLocationStrategy} , RequestService]
 })
 export class MobileModule { }

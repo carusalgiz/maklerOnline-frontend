@@ -24,6 +24,7 @@ import {
 import {Item} from '../../item';
 import {AccountService} from '../../services/account.service';
 import * as moment from 'moment';
+import {Person} from '../../class/person';
 
 @Component({
     selector: 'item-middle',
@@ -39,7 +40,7 @@ import * as moment from 'moment';
                         <img class="img"
                              [title]="'makleronline снять ' + item?.roomsCount + ' комнатную квартиру в хабаровске без посредников'"
                              [alt]="'makleronline аренда ' + item?.roomsCount + ' комнатной квартиры в хабаровске без посредников'"
-                             [src]="src" [class.avito]="src.indexOf('avito') != -1">
+                             [src]="src" [class.avito]="src.indexOf('avito') != -1"  [style.object-fit]="src.indexOf('assets/noph') != -1 ? 'unset' : 'cover'">
                         <div class="no-photo">{{photo_no_title}}</div>
                     </div>
                     <div *ngIf="imgLen != 0" class="photoBlock" [class.watched]="watched == true" [class.main-page]="mode=='main_page'"
@@ -47,14 +48,14 @@ import * as moment from 'moment';
                         <img class="img"
                              [title]="'makleronline снять ' + item?.roomsCount + ' комнатную квартиру в хабаровске без посредников'"
                              [alt]="'makleronline аренда ' + item?.roomsCount + ' комнатной квартиры в хабаровске без посредников'"
-                             [src]="src" [class.avito]="src.indexOf('avito') != -1">
+                             [src]="src" [class.avito]="src.indexOf('avito') != -1" [style.object-fit]="src.indexOf('assets/noph') != -1 ? 'unset' : 'cover'">
                         <div class="no-photo">{{photo_no_title}}</div>
                     </div>
-                    <div class="contact-line">
-                        <div class="contact-photo" [ngStyle]="{'background-image': (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true') && item?.photo != undefined ? 'url('+item?.photo+')' : 'url(../../../../assets/user-icon.png)', 'background-size': (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')  && item?.photo != undefined  ? 'cover':'125% 125%' }"></div>
+                    <div class="contact-line" *ngIf="mode != 'main_page'">
+                        <div class="contact-photo" [ngStyle]="{'background-image': item?.person?.photoMini != undefined ? 'url('+item?.person?.photoMini+')' : 'url(../../../../assets/user-icon.png)', 'background-size': item?.person?.photoMini != undefined  ? 'cover':'125% 125%' }"></div>
                         <div class="name" >{{item.name}}</div>
                     </div>
-                    <div class="starFav" *ngIf="item != undefined">
+                    <div class="starFav" *ngIf="item != undefined && mode != 'main_page'">
                         <img (click)="addFavObject()" class="starImg {{item.id}}"
                              [class.open]="!item.is_fav"
                              src="../../../../assets/4-4.png" width="24px">
@@ -64,18 +65,44 @@ import * as moment from 'moment';
                     </div>
                     <div class="bottom-block">
                         <div class="info"  [class.main-page]="mode=='main_page'">
-                            <div class="apart-type" *ngIf="item?.typeCode == 'room'"><span class="one">КОМНАТА</span></div>
-                            <div class="apart-type" *ngIf="item?.typeCode == 'apartment'"><span class="one">КВАРТИРА</span></div>
-                            <div class="apart-type" *ngIf="item?.typeCode == 'house'"><span class="one">ДОМ</span></div>
-                            <div class="apart-type" *ngIf="item?.typeCode == 'dacha'"><span class="one">ДАЧА</span></div>
-                            <div class="apart-type" *ngIf="item?.typeCode == 'cottage'"><span class="one">КОТТЕДЖ</span></div>
-                            <div class="price" style="    margin-bottom: 5px;">{{formattedPrice}}<span style="margin-left: 8px">₽</span><span style="font-size: 12px;margin-left: 20px;;color:#62626D;font-weight: normal" *ngIf="commission != 0">Комиссия {{commission}}%</span></div>
-                            <div class="address">
-                                <span *ngIf="!item.address.includes('ул.')">ул.</span><span class="special">{{item?.address}}<span style="font-weight: bold; text-transform: lowercase"> {{item?.house_num}}</span></span>
+                            <div class="apart-type" *ngIf="item?.typeCode == 'room' && mode != 'main_page'"><span class="one">КОМНАТА</span></div>
+                            <div class="apart-type" *ngIf="item?.typeCode == 'apartment' && mode != 'main_page'"><span class="one">КВАРТИРА</span></div>
+                            <div class="apart-type" *ngIf="item?.typeCode == 'house' && mode != 'main_page'"><span class="one">ДОМ</span></div>
+                            <div class="apart-type" *ngIf="item?.typeCode == 'dacha' && mode != 'main_page'"><span class="one">ДАЧА</span></div>
+                            <div class="apart-type" *ngIf="item?.typeCode == 'cottage' && mode != 'main_page'"><span class="one">КОТТЕДЖ</span></div>
+                            <div class="price" *ngIf="mode != 'main_page'" style="margin-bottom: 5px;"><span>{{formattedPrice}}<span style="margin-left: 8px">₽</span></span>
+                                <span style="font-size: 14px;color:#62626D;font-weight: normal;line-height: 18px;" *ngIf="commission != 0">Комиссия {{commission}} {{item?.commisionType == 'fix' ? 'Р' : '%'}}</span>
+                                <span style="font-size: 14px;color:#62626D;font-weight: normal;line-height: 18px;" *ngIf="commission == 0">Без комиссии</span></div>
+                            <div class="price-block-main-page" *ngIf="mode == 'main_page'">
+                                <div class="apart-type" [class.main-page]="mode=='main_page'" *ngIf="item?.typeCode == 'room'"><span class="one">КОМНАТА</span></div>
+                                <div class="apart-type" [class.main-page]="mode=='main_page'" *ngIf="item?.typeCode == 'apartment'"><span class="one">КВАРТИРА</span></div>
+                                <div class="apart-type" [class.main-page]="mode=='main_page'" *ngIf="item?.typeCode == 'house'"><span class="one">ДОМ</span></div>
+                                <div class="apart-type" [class.main-page]="mode=='main_page'" *ngIf="item?.typeCode == 'dacha'"><span class="one">ДАЧА</span></div>
+                                <div class="apart-type" [class.main-page]="mode=='main_page'" *ngIf="item?.typeCode == 'cottage'"><span class="one">КОТТЕДЖ</span></div>
+<!--                                <div class="price" style="margin-bottom: 5px;    font-size: 16px;">{{formattedPrice}}<span style="margin-left: 8px">₽</span></div>-->
                             </div>
-                            <div class="bus">{{item?.admArea}}</div>
-                            <div class="bus"  style="margin-bottom: 15px;">Остановка {{item?.busStop}}</div>
-                            <div class="bottom-desc">
+                            <div class="price" *ngIf="mode == 'main_page'" style="font-size: 16px;"><span>{{formattedPrice}}<span style="margin-left: 4px">₽</span></span>
+                                <span style="font-size: 14px;color:#62626D;font-weight: normal;line-height: 18px;" *ngIf="commission != 0">Комиссия {{commission}} {{item?.commisionType == 'fix' ? 'Р' : '%'}}</span>
+                                <span style="font-size: 14px;color:#62626D;font-weight: normal;line-height: 18px;" *ngIf="commission == 0">Без комиссии</span>
+                            </div>
+                            <div class="bus" *ngIf="mode != 'main_page'">{{item?.city}}</div>
+                            <div class="address"  style="margin-bottom: 5px;font-size: 15px;" [class.main-page]="mode=='main_page'">
+                                <span class="special"><span style="text-transform: lowercase" *ngIf="!item.address.includes('ул.')">ул.</span>{{item?.address}}<span style="font-weight: bold; text-transform: lowercase"> {{item?.house_num}}</span></span>
+                            </div>
+                            <div class="bus" *ngIf="mode != 'main_page'">{{item?.admArea}}</div>
+                            <div class="bus" *ngIf="mode != 'main_page'" style="margin-bottom: 15px;">Остановка {{item?.busStop}}</div>
+                            <div class="bottom-desc" *ngIf="mode == 'main_page'" [class.main-page]="mode=='main_page'" >
+                                <div class="flex-col" style="    align-items: center;">
+                                    <span class="type">Комнат {{item?.roomsCount}}</span>
+                                </div>
+                                <div class="flex-col" style="    align-items: center;">
+                                    <span class="type">Этаж {{item?.floor}}/{{item?.floorsCount}}</span>
+                                </div>
+                                <div class="flex-col" style="    align-items: center;">
+                                    <span class="type">Залог {{item?.prepayment ? 'Да' : 'Нет'}}</span>
+                                </div>
+                            </div>
+                            <div class="bottom-desc" *ngIf="mode != 'main_page'">
                                 <div class="flex-col" style="    align-items: center;">
                                     <span class="typename">{{item?.roomsCount}}</span>
                                     <span class="type">Комнат</span>
@@ -105,7 +132,7 @@ import * as moment from 'moment';
                             </div>
                         </div>
                     </div>
-                    <div class="addDate">Добавлено: {{addDate}}</div>
+                    <div class="addDate" *ngIf="mode != 'main_page'">Добавлено: {{addDate}}</div>
                 </div>
             </ng-container>
         </div>
@@ -127,12 +154,16 @@ export class ItemMiddle implements AfterViewInit, OnChanges, OnInit {
     photo_no_title: any;
     src = 'https://makleronline.net/assets/noph.png';
     addDate: any;
+    name_first: any;
+    name_second: any;
+    person: Person = new Person();
 
     @Output() favItemMode = new EventEmitter();
 
     constructor(private _account_service: AccountService) {  }
 
     ngOnInit(): void {
+
         let date = this.item.addDate;
         let day = moment.unix(this.item.addDate);
         let curDate = new Date();
@@ -140,11 +171,23 @@ export class ItemMiddle implements AfterViewInit, OnChanges, OnInit {
         let timeHasCome = secs - date;
         let dayDiff = moment.unix(curDate.getTime() / 1000).day() - moment.unix(this.item.addDate).day();
         if (dayDiff == 0) {
-            this.addDate = 'сегодня, ' + day.format("dddd") + ' в ' + day.hours() + ':' + day.minutes();
+            if (day.minutes() < 10) {
+                this.addDate = 'сегодня, ' + day.format("dddd") + ' в ' + day.hours() + ':0' + day.minutes();
+            } else {
+                this.addDate = 'сегодня, ' + day.format("dddd") + ' в ' + day.hours() + ':' + day.minutes();
+            }
         } else if (dayDiff == 1) {
-            this.addDate = 'вчера, ' + day.format("dddd") + ' в ' + day.hours() + ':' + day.minutes();
+            if (day.minutes() < 10) {
+                this.addDate = 'вчера, ' + day.format("dddd") + ' в ' + day.hours() + ':0' + day.minutes();
+            } else {
+                this.addDate = 'вчера, ' + day.format("dddd") + ' в ' + day.hours() + ':' + day.minutes();
+            }
         } else if (dayDiff == 2) {
-            this.addDate = 'позавчера, ' + day.format("dddd") + ' в ' + day.hours() + ':' + day.minutes();
+            if (day.minutes() < 10) {
+                this.addDate = 'позавчера, ' + day.format("dddd") + ' в ' + day.hours() + ':0' + day.minutes();
+            } else {
+                this.addDate = 'позавчера, ' + day.format("dddd") + ' в ' + day.hours() + ':' + day.minutes();
+            }
         } else {
             let hour = '';
             if (Math.floor(timeHasCome / 60 / 60 / 24) < 4) {
@@ -152,7 +195,11 @@ export class ItemMiddle implements AfterViewInit, OnChanges, OnInit {
             } else {
                 hour = Math.floor(timeHasCome / 60 / 60 / 24) + ' дней ';
             }
-            this.addDate = hour + 'назад, ' + day.format("dddd") + ' в ' + day.hours() + ':' + day.minutes();
+            if (day.minutes() < 10) {
+                this.addDate = hour + 'назад, ' + day.format("dddd") + ' в ' + day.hours() + ':0' + day.minutes();
+            } else {
+                this.addDate = hour + 'назад, ' + day.format("dddd") + ' в ' + day.hours() + ':' + day.minutes();
+            }
         }
         if (this.item.photos == undefined) {
             this.imgLen = 0;
@@ -174,14 +221,43 @@ export class ItemMiddle implements AfterViewInit, OnChanges, OnInit {
             }
             this.item.name = ret;
         }
+        // this._account_service.contactInfo(this.item.person.id).subscribe(res1 => {
+        //     let result = JSON.parse(JSON.stringify(res1));
+        //     if (result.person){
+        //         this.person = result.person;
+        //         if (this.person.name != undefined) {
+        //             let spArray = this.item.name.split(" ");
+        //             this.name_first = spArray[0].toUpperCase();
+        //             if (spArray.length > 1) {
+        //                 for (let i = 1; i < spArray.length; i++) {
+        //                     this.name_second += spArray[i] + " " ;
+        //                 }
+        //             }
+        //         }
+        //     }
+        // });
         this.formattedPrice = this.item.price.toString();
         this.formattedPrice = this.formattedPrice.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
-        let one_percent = this.item.price / 100;
-        if (this.item.commission != undefined) {
-            this.commission = this.item.commission / one_percent;
+        if (this.item.commisionType != undefined) {
+            if (this.item.commisionType == 'percent') {
+                let one_percent = this.item.price / 100;
+                if (this.item.commission != undefined) {
+                    this.commission = this.item.commission;
+                } else {
+                    this.commission = 0;
+                }
+            }
+            if (this.item.commisionType == 'fix') {
+                if (this.item.commission != undefined) {
+                    this.commission = this.item.commission;
+                } else {
+                    this.commission = 0;
+                }
+            }
         } else {
             this.commission = 0;
         }
+
         let its = document.documentElement.getElementsByClassName(this.item.id.toString()) as HTMLCollectionOf<HTMLElement>;
         if (this.item.is_fav == true) {
             if (its.length != 0) {

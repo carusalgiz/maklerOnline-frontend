@@ -1,16 +1,21 @@
 <app-menu (Logging)="changeLog($event)" (Paying)="changePay($event)" [headerPos]="headerPos"
           (openMenu)="menuMode($event)" [blockOpenInput]="blockInputOpen"
-          [class.close]="blockMode == 'item' && blockInputOpen != 'open_login' && blockInputOpen != 'open_pay'"
+          [class.close]="blockMode == 'item' && blockInputOpen != 'open_login' && blockInputOpen != 'open_pay'" (personInfo)="person = $event"
           ></app-menu>
 <!--(blockInputOpen != 'open_item' && blockMode != 'item') || (blockInputOpen != 'open_menu' && blockMode == 'item')-->
 <ng-container *ngIf="menuOpen == false">
-    <div class="find-block fil" [style.top.px]="findPadding" *ngIf=" blockMode == 'filters'">{{filterText}}</div>
-    <div class="find-block"  [style.top.px]="findPadding"
+    <div class="find-block fil forBlur" id="find_filter" [style.top.px]="findPadding" *ngIf=" blockMode == 'filters' && blockInputOpen != 'open_login'
+     && blockInputOpen != 'open_pay' && blockInputOpen != 'open_menu'">{{filterText}}</div>
+    <div class="find-block forBlur"  [style.top.px]="findPadding" style="    padding-left: 0;width: 100%;"
          *ngIf="!historyActive && (activeButton == 'items' || activeButton == 'obj') && !itemOpen && blockMode != 'filters' && !menuOpen">
-        <input type="text" class="input_line" placeholder="Введите поисковый запрос" (click)="ymFunc('find-offer-mobile');"
-               [(ngModel)]="searchQuery" (keyup)="searchStringChanged($event)">
-        <div class="find_icon_block">
+        <div class="find_icon_block" (click)="setFocus('find_input_filter')">
             <div class="find_icon"></div>
+        </div>
+        <input type="text" id="find_input_filter" class="input_line"  (click)="ymFunc('find-offer-mobile');"
+               [(ngModel)]="searchQuery" (keyup)="searchStringChanged($event)">
+
+        <div class="starFav filter" style="margin-right: 15px">
+            <img src="../../../../assets/list-button1.png" width="30" height="30" (click)="ymFunc('filter-offer-mobile');this.blockMode = 'filters';openBlock('filters')">
         </div>
         <div class="starFav" >
             <img (click)="blockMode = 'items'" class="starImg full"
@@ -21,53 +26,54 @@
                  src="../../../../assets/4-4.png" width="24px">
         </div>
     </div>
-    <div>
-        <div class="bottom-buttons1" *ngIf="blockMode == 'item' && (logged_in == 'false' || logged_in == false)" (click)="ymFunc('contacts-offer-mobile');blockInputOpen = 'open_login'">
-            <a class="show-contact-button" style=" text-decoration: none">
-                <span>КОНТАКТЫ</span>
+    <div class="forBlur">
+        <div class="bottom-buttons1" *ngIf="blockMode == 'item' && (logged_in == 'false' || logged_in == false) && blockInputOpen.indexOf('open') == -1" (click)="ymFunc('contacts-offer-mobile');showContact()">
+                <a class="show-contact-button" style=" text-decoration: none;background-color: #24780A;color: white">
+                <span>ПОКАЗАТЬ КОНТАКТЫ</span>
             </a>
         </div>
-        <div class="bottom-buttons1" *ngIf="blockMode == 'item' && (logged_in == 'true' || logged_in == true) && (payed == 'false' || payed == false)"
-             (click)="ymFunc('contacts-offer-mobile');blockInputOpen = 'open_pay'">
-            <a class="show-contact-button" style=" text-decoration: none">
-                <span>КОНТАКТЫ</span>
+        <div class="bottom-buttons1" *ngIf="blockMode == 'item' && (logged_in == 'true' || logged_in == true) && (payed == 'false' || payed == false) && blockInputOpen.indexOf('open') == -1"
+             (click)="ymFunc('contacts-offer-mobile');showContact()">
+            <a class="show-contact-button" style=" text-decoration: none;background-color: #24780A;color: white">
+                <span>ПОКАЗАТЬ КОНТАКТЫ</span>
             </a>
         </div>
-        <div class="bottom-buttons1" *ngIf="blockMode == 'item' && (logged_in == 'true' || logged_in == true) && (payed == 'true' || payed == true)">
+        <div class="bottom-buttons1" *ngIf="blockMode == 'item' && (logged_in == 'true' || logged_in == true) && (payed == 'true' || payed == true)
+                             && blockInputOpen.indexOf('open') == -1">
             <a class="show-contact-button" style=" text-decoration: none;color: white;background-color: #00695C"
-               [href]="'tel:7' + item?.phoneBlock?.main">
+               [href]="'tel:7' + telephone">
                 <img src="../../../../assets/phone-white.png" width="30px" height="30px">
-                <span style="margin-left: 20px;">+7 {{item?.phoneBlock?.main | mask: '(000) 000-0000'}}</span>
+                <span style="margin-left: 20px;font-family: Stolzl, sans-serif !important;font-size: 16px !important;font-weight: bold;">+7 {{telephone | mask: '(000) 000-0000'}}</span>
             </a>
         </div>
-        <div class="bottom-buttons1" *ngIf="blockMode == 'filters' && filtersChosen == 'empty' && activeButton != 'request'" (click)="ymFunc('show-offer-mobile');get_list(countOfItems, 'filter');this.blockMode = 'items';activeButton = 'items'">
+        <div class="bottom-buttons1" *ngIf="blockMode == 'filters' && !changedBound && filtersChosen == 'empty' && activeButton != 'request'" (click)="ymFunc('show-offer-mobile');get_list(20, 'init');this.blockMode = 'items';activeButton = 'items'">
             <div class="show-contact-button" style="background-color: #252f32">
                 <span>ПЕРЕЙТИ В СПИСОК</span>
             </div>
         </div>
-        <div class="bottom-buttons1" *ngIf="blockMode == 'filters' && filtersChosen == 'chose' && activeButton != 'request'" (click)="ymFunc('show-offer-mobile');get_list(countOfItems, 'filter');this.blockMode = 'items';activeButton = 'items'">
+        <div class="bottom-buttons1" *ngIf="blockMode == 'filters' && !changedBound  && filtersChosen == 'chose' && activeButton != 'request'" (click)="ymFunc('show-offer-mobile');get_list(countOfItems, 'filter');this.blockMode = 'items';activeButton = 'items'">
             <div class="show-contact-button" style="background-color: #252f32">
-                <span>ПОКАЗАТЬ <span class="numObj" id="numObj">{{countOfItems}}</span> ПРЕДЛОЖЕНИЙ</span>
+                <span style="display: flex;align-items: center;"><span style="line-height: 11px">ПОКАЗАТЬ </span><span class="numObj" id="numObj">{{countOfItems}}</span><span style="line-height: 11px"> ПРЕДЛОЖЕНИЙ</span></span>
             </div>
         </div>
-        <div class="bottom-buttons1" *ngIf="blockMode == 'filters' && activeButton == 'request'">
+        <div class="bottom-buttons1" *ngIf="blockMode == 'filters' && !changedBound  && activeButton == 'request' && blockInputOpen != 'open_login' && blockInputOpen != 'open_pay' && blockInputOpen != 'open_menu'" (click)="saveRequest()">
             <div class="show-contact-button" style="background-color: #252f32">
                 <span>СОХРАНИТЬ ЗАЯВКУ</span>
             </div>
         </div>
-        <a class="bottom-buttons1 hideFilterButton" *ngIf="blockMode == 'items'" (click)="ymFunc('filter-offer-mobile');this.blockMode = 'filters';openBlock('filters')"
-           [style.bottom.px]="bottomPxButton">
-            <div class="show-contact-button" style="background-color: #252f32">
-                <span>ПЕРЕЙТИ К ФИЛЬТРАМ</span>
-                <div class="exitButton">
-                    <div class="barMenu1"></div>
-                    <div class="barMenu2"></div>
-                </div>
-            </div>
-        </a>
+<!--        <a class="bottom-buttons1 hideFilterButton" *ngIf="blockMode == 'items'" (click)="ymFunc('filter-offer-mobile');this.blockMode = 'filters';openBlock('filters')"-->
+<!--           [style.bottom.px]="bottomPxButton">-->
+<!--            <div class="show-contact-button" style="background-color: #252f32">-->
+<!--                <span>ПЕРЕЙТИ К ФИЛЬТРАМ</span>-->
+<!--                <div class="exitButton">-->
+<!--                    <div class="barMenu1"></div>-->
+<!--                    <div class="barMenu2"></div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </a>-->
         <div class="main-objects"  [class.item-full-open]=" blockMode == 'item'"  [style.padding-top.px]="mainObjectsPadding"
              *ngIf="blockInputOpen != 'open_login' && blockInputOpen != 'open_pay'">
-            <div class="inner-left">
+            <div class="inner-left" [class.contact]="item_mode == 'contact'">
                 <div class="map" [class.open]="mapOpen"
                      *ngIf="this.blockMode == 'map';">
                     <agm-map class="map-inner" [latitude]="lat" [longitude]="lng" [zoom]="15" [disableDefaultUI]="true"
@@ -82,17 +88,31 @@
                           (similarItem)="similarObj($event)" (showInfoEvent)="info($event)" [loggingMode]="logged_in"
                           [payingMode]="payed"
                           (favouriteItemEvent)="addFav($event)" (contactPos)="setContactPos($event)" [item]="item"
-                          [mode]="'full'"
-                          [similarOpen]="false">
+                          [mode]="item_mode"
+                          [similarOpen]="false"
+                          (changePhone)="telephone = $event">
                 </app-item>
 
-                <div class="filters open" *ngIf="this.blockMode != 'map'" (touchstart)="touchstart($event)"
+                <div class="filters open" id="filters_open" *ngIf="this.blockMode != 'map'" (touchstart)="touchstart($event)"
                      (touchend)="touchend($event)">
+                    <ng-container *ngIf="this.blockMode == 'items' && activeButton == 'items' && countOfItems == 0">
+                        <div style="color: #BDC0C1;
+                                    width: calc(100% - 40px);
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    font-family: Helvetica, sans-serif;
+                                    flex-direction: column;
+                                    position: fixed;
+                                    top: calc(50vh - 45px);
+                                    padding: 20px;"><div style="font-size: 26px">Объекты не найдены</div><div style="font-size: 20px">Измените условия поиска</div></div>
+                    </ng-container>
                     <div class="scroll-items open" (touchend)="listScroll($event)"
                          *ngIf="blockMode == 'items'">
                         <item-middle *ngFor="let obj of items, let i = index" [index]="i" [item]="obj" [loggingMode]="logged_in" [payingMode]="payed" [watched]="watchedItems.indexOf(i) != -1"
                                      (favItemMode)="changeFav($event, obj)" (click)="checkClick(i,obj, $event, 'list')"></item-middle>
                     </div>
+
                     <div class="scroll-items open blur fav-list"
                          *ngIf="blockMode == 'fav'">
                         <ng-container *ngFor="let obj of favItems, let i = index">
@@ -102,6 +122,8 @@
                     </div>
                     <div [style.height]="blockMode == 'filters' ? 'max-content' : '0'" [style.max-height]="blockMode == 'filters' ? 'max-content' : '0'" [style.overflow]="blockMode == 'filters' ? 'auto' : 'hidden'">
                         <app-filters-mobile class="filters-box" (coordsPol)="getCoords($event)"
+                                            [blockMode]="blockMode"
+                                            [activeButton]="activeButton"
                                             [initCoords]="initCoords" [initZoom]="initZoom"
                                             [class.open]="blockMode == 'filters'" (sendFilters)="setFilters($event)"
                                             (sendSort)="setSort($event)" (sendEquipment)="setEquipment($event)"
@@ -109,7 +131,9 @@
                                             (sendMainButtonActive)="getFiltersClicked($event)"
                                             (changedCenter)="initCoords = $event"
                                             (changedZoom)="initZoom = $event"
-                                            (filtersChosen)="filtersChosen = $event"></app-filters-mobile>
+                                            (filtersChosen)="filtersChosenFunc($event)"
+                                            (changedBound)="changedBound = $event"
+                                            (requestUpdate)="updateRequest($event)"></app-filters-mobile>
                     </div>
 
                     <div *ngIf="blockMode == 'contact'">
@@ -145,3 +169,4 @@
         </div>
     </div>
 </ng-container>
+<ui-modal-window *ngIf="modal_active" [title]="modal_title" [message]="modal_text" [cancel]="modal_cancel" [button]="modal_action_text" (buttonClicked)="modalFunc($event)"></ui-modal-window>

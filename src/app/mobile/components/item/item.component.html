@@ -1,4 +1,4 @@
-<div class="catalog-item full" [class.close]="photoBlockOpen">
+<div class="catalog-item full" [class.close]="photoBlockOpen || mode != 'item'">
     <div class="top-block">
         <a class="itemArrowBack" (click)="closeItemBlock()"><img
             src="../../../../assets/arrow-item.png" class="iconImg" width="30px"><div style="line-height: 16px;font-size: 14px;">Назад</div></a>
@@ -6,25 +6,29 @@
     <div id="canv" style="height: 55px; width: 100%">
 
     </div>
-    <div *ngIf="imgLen == 0" class="photoBlock" style="background-size: 100% 100%;background-image: url('../../../../assets/noph.png')" [class.watched]="watched == true" (click)="galleryOpen()">
+    <div *ngIf="imgLen == 0" class="photoBlock" style="background-size: 100% 100%;background-image: url('../../../assets/noph.png')"
+         [class.watched]="watched == true"  [class.main-page]="mode=='main_page'" (click)="galleryOpen()">
         <img class="img"
              [title]="'makleronline снять ' + item?.roomsCount + ' комнатную квартиру в хабаровске без посредников'"
              [alt]="'makleronline аренда ' + item?.roomsCount + ' комнатной квартиры в хабаровске без посредников'"
-             [src]="src" [class.avito]="src.indexOf('avito') != -1">
+             [src]="src" [class.avito]="src.indexOf('avito') != -1" [style.object-fit]="src.indexOf('assets/noph') != -1 ? 'unset' : 'cover'">
         <div class="no-photo">{{photo_no_title}}</div>
     </div>
     <div *ngIf="imgLen != 0" class="photoBlock" style="    background-size: 100% 100%;"
-         [ngStyle]="{'background-image': 'url('+imgSrc+')'}" [class.watched]="watched == true"
-         (click)="galleryOpen()">
+         [ngStyle]="{'background-image': 'url('+imgSrc+')'}"  [class.main-page]="mode=='main_page'" [class.watched]="watched == true"
+         >
+        <div class="magnifier" (click)="galleryOpen()"><img style="filter: grayscale(1);" src="../../../../assets/лупа.png" width="40" height="40"></div>
         <img class="img"
              [title]="'makleronline снять ' + item?.roomsCount + ' комнатную квартиру в хабаровске без посредников'"
              [alt]="'makleronline аренда ' + item?.roomsCount + ' комнатной квартиры в хабаровске без посредников'"
-             [src]="src" [class.avito]="src.indexOf('avito') != -1">
+             [src]="src" [class.avito]="src.indexOf('avito') != -1" [style.object-fit]="src.indexOf('assets/noph') != -1 ? 'unset' : 'cover'">
         <div class="no-photo">{{photo_no_title}}</div>
+    </div>
+    <div class="contact-line">
+        <div class="contact-photo" [ngStyle]="{'background-image': item?.person?.photoMini != undefined ? 'url('+item?.person?.photoMini+')' : 'url(../../../../assets/user-icon.png)', 'background-size': item?.person?.photoMini != undefined  ? 'cover':'125% 125%' }"></div>
     </div>
     <div class="phone-block">
         <div class="phone-part-one">
-            <div class="contact-photo full" [ngStyle]="{'background-image': (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true') && item?.photo != undefined ? 'url('+item?.photo+')' : 'url(../../../../assets/user-icon.png)', 'background-size': (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')  && item?.photo != undefined  ? 'cover':'125% 125%' }"></div>
             <div class="flex-col">
                 <div class="name full">{{item.name}}</div>
                 <div class="middleman">{{item.IsMiddleman ? 'Посредник' : 'Частное лицо'}}</div>
@@ -33,6 +37,7 @@
         <div class="desc-divider contact" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')"></div>
         <div class="phone-part-two">
             <div class="flex-col" style="justify-content: center;" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
+                <div class="phone">Контакты:</div>
                 <div class="phone" *ngIf="item?.phoneBlock?.main != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.main | mask: ' (000) 000-0000'}}</div>
                 <div class="phone" *ngIf="item?.phoneBlock?.other != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.other | mask: ' (000) 000-0000'}}</div>
                 <div class="phone" *ngIf="item?.phoneBlock?.home != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.home | mask: ' (000) 000-0000'}}</div>
@@ -58,14 +63,15 @@
             <div class="apart-type" *ngIf="item?.typeCode == 'house'"><span class="one">ДОМ</span></div>
             <div class="apart-type" *ngIf="item?.typeCode == 'dacha'"><span class="one">ДАЧА</span></div>
             <div class="apart-type" *ngIf="item?.typeCode == 'cottage'"><span class="one">КОТТЕДЖ</span></div>
-            <div class="price full" style="    margin-bottom: 5px;">{{formattedPrice}}<span style="margin-left: 8px">₽</span><span style="font-size: 12px;margin-left: 20px;color:#62626D;font-weight: normal" *ngIf="commission != 0">Комиссия {{commission}}%</span>
-            </div>
-            <div class="address">
-                <span *ngIf="!item.address.includes('ул.')">ул.</span><span class="special">{{item?.address}}<span
-                style="font-weight: bold; text-transform: lowercase"> {{item?.house_num}}</span></span>
+            <div class="price" style="margin-bottom: 5px;"><span>{{formattedPrice}}<span style="margin-left: 8px">₽</span></span>
+                <span style="font-size: 12px;color:#62626D;font-weight: normal;line-height: 18px;" *ngIf="commission != 0">Комиссия {{commission}} {{item?.commisionType == 'fix' ? 'Р' : '%'}}</span>
+                <span style="font-size: 12px;color:#62626D;font-weight: normal;line-height: 18px;" *ngIf="commission == 0">Без комиссии</span></div>
+            <div class="bus">{{item?.city}}</div>
+            <div class="address"  style="margin-bottom: 5px;">
+                <span *ngIf="!item.address.includes('ул.')">ул.</span><span class="special">{{item?.address}}<span style="font-weight: bold; text-transform: lowercase"> {{item?.house_num}}</span></span>
             </div>
             <div class="bus">{{item?.admArea}}</div>
-            <div class="bus" style="margin-bottom: 15px;">Остановка {{item?.busStop}}</div>
+            <div class="bus"  style="margin-bottom: 15px;">Остановка {{item?.busStop}}</div>
             <div class="bottom-desc">
                 <div class="flex-col" style="    align-items: center;">
                     <span class="typename">{{item?.roomsCount}}</span>
@@ -96,7 +102,7 @@
             </div>
         </div>
     </div>
-
+    <div class="addDate" style="border-bottom: 1px solid #EAEBEC;padding-top: 7px;">Добавлено: {{addDate}}</div>
     <div class="topic"><span>Комплектация объекта</span></div>
     <div class="lineFull"></div>
     <div class="description">{{conveniences}}</div>
@@ -109,7 +115,53 @@
     <div class="description">{{item?.description}}</div>
 </div>
 
-
+<div class="catalog-item full contact" style="width: 100vw" [class.close]="mode != 'contact'">
+    <div class="top-block contact">
+        <a class="itemArrowBack" (click)="closeItemBlock()"><div style="line-height: 16px;font-size: 14px;color: #d3d5d6">Назад</div></a>
+    </div>
+    <div class="user-photo-block contact">
+        <div class="user-photo-full" [ngStyle]="{'background-image': item?.person?.photoMini != undefined ? 'url('+item?.person?.photoMini+')' : 'url(../../../../assets/user-icon.png)', 'background-size': item?.person?.photoMini != undefined  ? 'cover':'100% 100%' }"></div>
+        <div class="name contact first">{{name_first}}</div>
+        <div class="name contact" style="margin-bottom: 30px;">{{name_second}}</div>
+        <div class="phone-part-two contact">
+            <div class="input-block" *ngIf="(item?.phoneBlock?.main == null && item?.phoneBlock?.other == null && item?.phoneBlock?.home == null && item?.phoneBlock?.cellphone == null
+                                             && item?.phoneBlock?.fax == null && item?.phoneBlock?.ip == null) || (payingMode == false || payingMode == 'false')">
+                <a>Телефон</a>
+            </div>
+            <div class="input-block" *ngIf="item?.phoneBlock?.main != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
+                <a>Телефон</a>
+                <div class="phone" (click)="changePhone.emit(item?.phoneBlock?.main)">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.main | mask: ' (000) 000-0000'}}</div>
+            </div>
+            <div class="input-block" *ngIf="item?.phoneBlock?.other != null && (payingMode == true || payingMode == 'true') &&
+            (loggingMode == true || loggingMode == 'true') && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
+                <a>Телефон</a>
+                <div class="phone" (click)="changePhone.emit(item?.phoneBlock?.other)">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.other | mask: ' (000) 000-0000'}}</div>
+            </div>
+            <div class="input-block" *ngIf="item?.phoneBlock?.home != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
+                <a>Телефон</a>
+                <div class="phone" (click)="changePhone.emit(item?.phoneBlock?.home)">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.home | mask: ' (000) 000-0000'}}</div>
+            </div>
+            <div class="input-block" *ngIf="item?.phoneBlock?.cellphone != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
+                <a>Телефон</a>
+                <div class="phone" (click)="changePhone.emit(item?.phoneBlock?.cellphone)">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.cellphone | mask: ' (000) 000-0000'}}</div>
+            </div>
+            <div class="input-block" *ngIf="item?.phoneBlock?.fax != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
+                <a>Телефон</a>
+                <div class="phone" (click)="changePhone.emit(item?.phoneBlock?.fax)">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.fax | mask: ' (000) 000-0000'}}</div>
+            </div>
+            <div class="input-block" *ngIf="item?.phoneBlock?.ip != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
+                <a>Телефон</a>
+                <div class="phone" (click)="changePhone.emit(item?.phoneBlock?.ip)">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.ip | mask: ' (000) 000-0000'}}</div>
+            </div>
+            <div class="input-block"><a>E-mail</a><div *ngIf="item?.person?.emailBlock?.main != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">{{item.person.emailBlock.main}}</div></div>
+            <div class="input-block"><a>WhatsApp</a><div class="phone" *ngIf="item?.person?.messengerBlock?.whatsapp != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">{{person.messengerBlock.whatsapp}}</div></div>
+<!--            <div class="input-block"><a>Вконтакте</a><div class="phone" *ngIf="item?.person?.socialBlock?.vk != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">{{person.socialBlock.vk}}</div></div>-->
+<!--            <div class="input-block"><a>Одноклассники</a><div class="phone" *ngIf="item?.person?.socialBlock?.ok != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">{{person.socialBlock.ok}}</div></div>-->
+<!--            <div class="input-block"><a>Инстаграм</a><div class="phone" *ngIf="item?.person?.socialBlock?.instagram != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">{{person.socialBlock.instagram}}</div></div>-->
+<!--            <div class="input-block"><a>Дополнительная информация</a><div class="phone" *ngIf="item?.person?.description != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">{{person.description}}</div></div>-->
+        </div>
+    </div>
+</div>
 <!--блок с галереей-->
 <div class="bigGalleryBlock" *ngIf="photoBlockOpen" (window:resize)="onResize()">
     <div class="top-block">
@@ -118,41 +170,12 @@
     </div>
     <div class="photoBlockGallery" style="    background-size: 100% 100%;"
           [class.watched]="watched == true" >
-<!--        <div class="photoWrapper">-->
             <div class="photoBlock gallery galPhoto" *ngFor="let img of item?.photos, let i = index" [class.avito]="img?.href.indexOf('avito') != -1">
                 <img class="img" (load)="changePhotoBlock($event, i)"
                      [title]="'makleronline снять ' + item?.roomsCount + ' комнатную квартиру в хабаровске без посредников'"
                      [alt]="'makleronline аренда ' + item?.roomsCount + ' комнатной квартиры в хабаровске без посредников'"
                      [src]="img?.href" [class.avito]="img?.href.indexOf('avito') != -1">
             </div>
-<!--        </div>-->
 
     </div>
-<!--    <div class="photoMenuTop">-->
-<!--        <div class="arrow photo-left" (click)="prevImg()">-->
-<!--            <div class="barArrowLeft1"></div>-->
-<!--            <div class="barArrowLeft2"></div>-->
-<!--        </div>-->
-<!--        <div class="arrow photo-right" (click)="nextImg()">-->
-<!--            <div class="barArrowRight1"></div>-->
-<!--            <div class="barArrowRight2"></div>-->
-<!--        </div>-->
-<!--        <div class="exitButton" (click)="galleryClose()">-->
-<!--            <div class="barMenu1"></div>-->
-<!--            <div class="barMenu2"></div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <div class="photo-block">-->
-<!--        <div class="photoGallery" id="anchor">-->
-<!--            <div class="photos">-->
-<!--                <ul id="photoGallery-ul">-->
-<!--                    <li class="photoGallery-li" *ngFor="let img of item?.photos">-->
-<!--                        <div class="photo-img">-->
-<!--                            <img class="inner-img" src="{{img?.href}}"/>-->
-<!--                        </div>-->
-<!--                    </li>-->
-<!--                </ul>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
 </div>

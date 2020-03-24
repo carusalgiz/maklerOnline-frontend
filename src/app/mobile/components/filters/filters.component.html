@@ -1,3 +1,13 @@
+<div class="bottom-buttons1" *ngIf="bound_changed && blockMode == 'filters'" (click)="find_map_request();">
+    <div class="show-contact-button" style="background-color: #24780A">
+        <span>ИСКАТЬ В ЭТОЙ ОБЛАСТИ</span>
+    </div>
+</div>
+<div class="bottom-buttons1" [style.display]="load == true? 'flex' : 'none'">
+    <div class="show-contact-button" style="background-color: #24780A">
+        <img src="../../../../assets/ajax-loader%20(1).gif" width="30" height="30" style="margin-right: 20px"><span style="height: 15px;">ИДЕТ ПОИСК</span>
+    </div>
+</div>
 <div class="filters-inner">
     <div>
         <div class="filtersBoxes" id="fil-top">
@@ -9,7 +19,7 @@
                 </div>
             </div>
             <div class="additional-block" [class.open]="cityButton">
-                <div class="button-box filters-options-box">
+                <div class="button-box filters-options-box" id="filters-options-box0">
                     <div class="buttonOption" (click)="selectOption(0,0, 'Хабаровск', 'cityButton', '')"><span
                         style="flex-grow: 1">Хабаровск</span><span style="padding-right: 20px">{{khv}}</span></div>
                     <div class="buttonOption" (click)="selectOption(0,1, 'Владивосток', 'cityButton', '');"><span
@@ -17,6 +27,21 @@
                     <div class="buttonOption" (click)="selectOption(0,2, 'Комсомольск-на-Амуре', 'cityButton', '')">
                         <span style="flex-grow: 1">Комсомольск-на-Амуре</span><span
                         style="padding-right: 20px">{{kna}}</span></div>
+                </div>
+            </div>
+            <div class="add-button" (click)="ymFunc('rentType-filter-mobile');rentType = !rentType">
+                <span class="filterButton">ТИП АРЕНДЫ</span>
+                <div class="choosen" style="display: none">
+                    <span class="choosen-type">Тип аренды</span>
+                    <span class="choosen-option"></span>
+                </div>
+            </div>
+            <div class="additional-block" [class.open]="rentType">
+                <div class="button-box filters-options-box" id="filters-options-box7">
+                    <div class="buttonOption" (click)="selectOption(7,0, 'short', 'rentType', '')">
+                        <span>Краткосрочная</span></div>
+                    <div class="buttonOption" (click)="selectOption(7,1, 'long', 'rentType', '');">
+                        <span>Долгосрочная</span></div>
                 </div>
             </div>
             <div class="add-button" (click)="ymFunc('typeOffer-filter-mobile');offer = !offer">
@@ -27,7 +52,7 @@
                 </div>
             </div>
             <div class="additional-block" [class.open]="offer">
-                <div class="button-box filters-options-box">
+                <div class="button-box filters-options-box" id="filters-options-box1">
                     <div class="buttonOption" (click)="selectOption(1,0, 'БЕЗ КОМИССИИ', '', '')"><span>Без комиссии</span>
                     </div>
                     <div class="buttonOption" (click)="selectOption(1,1, 'С КОМИССИЕЙ', '', '')"><span>С комиссией</span>
@@ -43,7 +68,7 @@
                 </div>
             </div>
             <div class="additional-block" [class.open]="typeOfObject">
-                <div class="button-box filters-options-box">
+                <div class="button-box filters-options-box" id="filters-options-box2">
                     <div class="buttonOption" (click)="selectOption(2,0, 'комната', 'typeOfObject','КОМНАТА')"><span>Комната</span>
                     </div>
                     <div class="buttonOption" (click)="selectOption(2,1, 'квартира', 'typeOfObject', 'КВАРТИРА')"><span>Квартира</span>
@@ -53,6 +78,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="add-button" (click)="ymFunc('rooms-filter-mobile');countOfRooms = !countOfRooms">
                 <span class="filterButton">КОЛИЧЕСТВО КОМНАТ</span>
                 <div class="choosen" style="display: none">
@@ -61,7 +87,7 @@
                 </div>
             </div>
             <div class="additional-block" [class.open]="countOfRooms">
-                <div class="button-box filters-options-box">
+                <div class="button-box filters-options-box" id="filters-options-box3">
                     <div class="buttonOption" (click)="selectOption(3,0, '1 комн', 'countOfRooms', '')">
                         <span>1 комн.</span></div>
                     <div class="buttonOption" (click)="selectOption(3,1, '2 комн', 'countOfRooms', '')">
@@ -80,11 +106,13 @@
                 </div>
             </div>
             <div class="additional-block" [class.open]="cost">
-                <div class="button-box filters-options-box">
-                    <div class="buttonOption" (click)="selectOption(4,0, '10000', 'cost', '')"><span>10000</span></div>
-                    <div class="buttonOption" (click)="selectOption(4,1, '20000', 'cost', '')"><span>20000</span></div>
-                    <div class="buttonOption" (click)="selectOption(4,2, '30000', 'cost', '')"><span>30000</span></div>
-                    <div class="buttonOption" (click)="selectOption(4,3, '40000', 'cost', '')"><span>40000</span></div>
+                <div class="button-box filters-options-box" id="filters-options-box4">
+                    <input-range [name]="'Стоимость'" [valueMin]="priceMin" [valueMax]="priceMax" [min]="0" [max]="200" [step]="1"
+                                 (newValue)="request.ownerPrice = $event.max; priceMin = $event.min; priceMax = $event.max; selectOption(4,0, $event.min, 'cost', '')"></input-range>
+<!--                    <div class="buttonOption" (click)="selectOption(4,0, '10000', 'cost', '')"><span>10000</span></div>-->
+<!--                    <div class="buttonOption" (click)="selectOption(4,1, '20000', 'cost', '')"><span>20000</span></div>-->
+<!--                    <div class="buttonOption" (click)="selectOption(4,2, '30000', 'cost', '')"><span>30000</span></div>-->
+<!--                    <div class="buttonOption" (click)="selectOption(4,3, '40000', 'cost', '')"><span>40000</span></div>-->
                 </div>
             </div>
             <div class="add-button" (click)="ymFunc('equipment-filter-mobile');equipment = !equipment">
@@ -95,7 +123,7 @@
                 </div>
             </div>
             <div class="additional-block" [class.open]="equipment">
-                <div class="button-box filters-options-box">
+                <div class="button-box filters-options-box" id="filters-options-box5">
                     <div class="buttonOption" (click)="selectOption(5,0, 'Укомплектован полностью', 'equipment', '')">
                         <span>Укомплектован полностью</span></div>
                     <div class="buttonOption" (click)="selectOption(5,1, 'Гостиная мебель', 'equipment', '')"><span>Гостиная мебель</span>
@@ -130,7 +158,7 @@
                 </div>
             </div>
             <div class="additional-block" [class.open]="conditions">
-                <div class="button-box filters-options-box">
+                <div class="button-box filters-options-box" id="filters-options-box6">
                     <div class="buttonOption" (click)="selectOption(6,0, 'Животные', 'conditions', '')">
                         <span>Животные</span></div>
                     <div class="buttonOption" (click)="selectOption(6,1, 'Дети', 'conditions', '')"><span>Дети</span>
@@ -141,46 +169,46 @@
                     </div>
                 </div>
             </div>
-            <div class="add-button" style="border: none" (click)="ymFunc('sort-filter-mobile');sort = !sort">
-                <span class="filterButton">СОРТИРОВАТЬ ПО</span>
-                <div class="choosen" style="display: none">
-                    <span class="choosen-type">Сортировать по</span>
-                    <span class="choosen-option"></span>
-                </div>
-            </div>
-            <div class="additional-block" [class.open]="sort">
-                <div class="button-box filters-options-box">
-                    <div class="buttonOption" (click)="selectOption(7,0, 'дате', 'sort', 'DESC')">
-                        <span>Дате добавления</span></div>
-                    <div class="buttonOption" (click)="selectOption(7,1, 'цене', 'sort', 'ASC')"><span>Стоимости</span>
-                    </div>
-                    <div class="buttonOption" (click)="selectOption(7,2, 'рейтингу', 'sort', 'DESC')">
-                        <span>Рейтингу</span></div>
-                </div>
-            </div>
-            <div class="add-button" style="border: none" (click)="ymFunc('period-filter-mobile');period = !period">
-                <span class="filterButton">ПЕРИОД</span>
-                <div class="choosen" style="display: none">
-                    <span class="choosen-type">Период</span>
-                    <span class="choosen-option"></span>
-                </div>
-            </div>
-            <div class="additional-block" [class.open]="period">
-                <div class="button-box filters-options-box">
-                    <div class="buttonOption" (click)="selectOption(8,0, '1 день', 'period', '')"><span>1 день</span>
-                    </div>
-                    <div class="buttonOption" (click)="selectOption(8,1, '3 дня', 'period', '')"><span>3 дня</span>
-                    </div>
-                    <div class="buttonOption" (click)="selectOption(8,2, 'Неделя', 'period', '')"><span>Неделя</span>
-                    </div>
-                    <div class="buttonOption" (click)="selectOption(8,3, '2 недели', 'period', '')">
-                        <span>2 недели</span></div>
-                    <div class="buttonOption" (click)="selectOption(8,4, 'Месяц', 'period', '')"><span>Месяц</span>
-                    </div>
-                    <div class="buttonOption" (click)="selectOption(8,5, '3 месяца', 'period', '')">
-                        <span>3 месяца</span></div>
-                </div>
-            </div>
+<!--            <div class="add-button" style="border: none" (click)="ymFunc('sort-filter-mobile');sort = !sort">-->
+<!--                <span class="filterButton">СОРТИРОВАТЬ ПО</span>-->
+<!--                <div class="choosen" style="display: none">-->
+<!--                    <span class="choosen-type">Сортировать по</span>-->
+<!--                    <span class="choosen-option"></span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="additional-block" [class.open]="sort">-->
+<!--                <div class="button-box filters-options-box">-->
+<!--                    <div class="buttonOption" (click)="selectOption(7,0, 'дате', 'sort', 'DESC')">-->
+<!--                        <span>Дате добавления</span></div>-->
+<!--                    <div class="buttonOption" (click)="selectOption(7,1, 'цене', 'sort', 'ASC')"><span>Стоимости</span>-->
+<!--                    </div>-->
+<!--                    <div class="buttonOption" (click)="selectOption(7,2, 'рейтингу', 'sort', 'DESC')">-->
+<!--                        <span>Рейтингу</span></div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="add-button" style="border: none" (click)="ymFunc('period-filter-mobile');period = !period">-->
+<!--                <span class="filterButton">ПЕРИОД</span>-->
+<!--                <div class="choosen" style="display: none">-->
+<!--                    <span class="choosen-type">Период</span>-->
+<!--                    <span class="choosen-option"></span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="additional-block" [class.open]="period">-->
+<!--                <div class="button-box filters-options-box">-->
+<!--                    <div class="buttonOption" (click)="selectOption(8,0, '1 день', 'period', '')"><span>1 день</span>-->
+<!--                    </div>-->
+<!--                    <div class="buttonOption" (click)="selectOption(8,1, '3 дня', 'period', '')"><span>3 дня</span>-->
+<!--                    </div>-->
+<!--                    <div class="buttonOption" (click)="selectOption(8,2, 'Неделя', 'period', '')"><span>Неделя</span>-->
+<!--                    </div>-->
+<!--                    <div class="buttonOption" (click)="selectOption(8,3, '2 недели', 'period', '')">-->
+<!--                        <span>2 недели</span></div>-->
+<!--                    <div class="buttonOption" (click)="selectOption(8,4, 'Месяц', 'period', '')"><span>Месяц</span>-->
+<!--                    </div>-->
+<!--                    <div class="buttonOption" (click)="selectOption(8,5, '3 месяца', 'period', '')">-->
+<!--                        <span>3 месяца</span></div>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
         <div style="display: flex; justify-content: center">
             <div class="brownLine"></div>

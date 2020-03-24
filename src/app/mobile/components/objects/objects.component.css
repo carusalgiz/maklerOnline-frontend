@@ -20,9 +20,9 @@ app-menu.close{
 .input_line{
     height: 35px;
     width: 100%;
-    border: 1px solid #D3D5D6;
+    border: none;
     color: #252F32;
-    font-size: 12px;
+    font-size: 16px;
     padding-left: 15px;
 }
 .counter {
@@ -63,8 +63,7 @@ input:focus, input:active{
     outline: none;
 }
 .find_icon_block{
-    position: relative;
-    right: 30px;
+    padding-left: 20px;
 }
 .find-block{
     -webkit-overflow-scrolling: touch;
@@ -129,6 +128,7 @@ input:focus, input:active{
   font-family: Stolzl, cursive;
   font-size: 24px;
   margin: 0 5px;
+    line-height: 20px;
 }
 .starFav {
     height: 40px;
@@ -140,7 +140,10 @@ input:focus, input:active{
     align-items: center;
     justify-content: center;
 }
-
+.starFav.filter:active, .starFav.filter:focus,.starFav.filter:hover{
+    border-radius: 20px;
+    background-color: #d3d5d6;
+}
 .starFav.inner {
     top: unset;
     right: unset;
@@ -153,11 +156,12 @@ input:focus, input:active{
 
 .starImg.open {
     display: block;
-    width: 35px;
+    position: relative;
+    top: -1px;
 }
 
 .starImg.full {
-    width: 26px;
+    width: 28px;
 }
 .show-items-button {
   display: flex;
@@ -289,10 +293,15 @@ input:focus, input:active{
   -webkit-overflow-scrolling: touch;
   width: 100vw;
 }
+.inner-left.contact{
+    background-color: #12181A;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+}
 .main-objects {
     -webkit-overflow-scrolling: touch;
   display: flex;
-  transition: 0.3s;
   padding-top: 85px;
 }
 .main-objects.item-full-open{
@@ -317,7 +326,7 @@ input:focus, input:active{
   flex-direction: column;
   /*overflow-y: auto;*/
   -webkit-overflow-scrolling: touch;
-  transition: 0.3s;
+  /*transition: 0.3s;*/
   z-index: 5;
   width: 100vw;
   max-width: unset;

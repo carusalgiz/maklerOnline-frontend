@@ -269,6 +269,22 @@ export class AccountService {
     );
     return ret_subj;
   }
+    contactInfo(id) {
+        let query = [];
+        query.push('id=' + id);
+        let ret_subj = <AsyncSubject<any>>new AsyncSubject();
+        let _resourceUrl =  this.servUrl + '/person/getPersonInfo?' + query.join('&');
+        this._http.get(_resourceUrl, {withCredentials: true}).pipe(
+            map((res: Response) => res)).subscribe(
+            raw => {
+                let data = JSON.parse(JSON.stringify(raw));
+                ret_subj.next(data);
+                ret_subj.complete();
+            },
+            err => console.log(err)
+        );
+        return ret_subj;
+    }
     personInfo() {
         let ret_subj = <AsyncSubject<any>>new AsyncSubject();
         let _resourceUrl =  this.servUrl + '/person/getPersonInfo';

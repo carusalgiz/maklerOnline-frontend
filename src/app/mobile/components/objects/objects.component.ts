@@ -6,6 +6,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {OfferService} from '../../../services/offer.service';
 import {AccountService} from '../../../services/account.service';
 import {NgxMetrikaService} from '@kolkov/ngx-metrika';
+import {RequestService} from '../../../services/request.service';
+import {Request} from '../../../class/Request';
+import {Person} from '../../../class/person';
 @Component({
     selector: 'app-objects',
     templateUrl: './objects.component.html',
@@ -18,6 +21,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     tempItems: Item[] = [];
     initZoom = 15;
     mapBig = false;
+    item_mode: any;
     public map: any;
     mainHeight: any;
     blockMode = 'items';
@@ -53,7 +57,8 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     equipment: any;
     coordsPolygon: any[] = [];
     filtersChosen = 'empty';
-    countOfItems: any;
+    changedBound = false;
+    countOfItems = 20;
     blockInputOpen = 'close_menu';
     current = 0;
     y: number;
@@ -77,7 +82,20 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     sgList: string[] = [];
     favItems: Item[] = [];
     findPadding = 90;
+    filterScroll = 'top';
     filterText = 'ВЫБЕРИТЕ ФИЛЬТРЫ ДЛЯ ПОИСКА';
+    telephone: any;
+
+    modal_title: any;
+    modal_text: any;
+    modal_action: any;
+    modal_action_text: any;
+    modal_active = false;
+    modal_cancel = true;
+
+    request: Request = new Request();
+    person: Person = new Person();
+
     styles = [
         {
             'featureType': 'landscape',
@@ -116,9 +134,11 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
 
     constructor(private ym: NgxMetrikaService,@Inject(WINDOW) private window: Window, @Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, private router: Router,
                 private _offer_service: OfferService,
-                private _account_service: AccountService) {
+                private _account_service: AccountService,
+                private _request_service: RequestService) {
         this.subscription = route.params.subscribe((urlParams) => {
             if (urlParams['mode'] === 'list') {
+                this.blockInputOpen = 'close_menu';
                 this.blockMode = 'items';
                 this.activeButton = 'items';
                 this.itemOpen = false;
@@ -130,6 +150,17 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 }
             } else if (urlParams['mode'] === 'request') {
                 this.activeButton = 'request';
+                this.itemOpen = false;
+                window.scrollTo(0, 0);
+                this.filtersInnerActive = false;
+                let filters = document.documentElement.getElementsByClassName('filters') as HTMLCollectionOf<HTMLElement>;
+                if (filters.length !== 0) {
+                    filters.item(0).style.setProperty('display', 'flex');
+                }
+                this.blockMode = 'filters';
+                this.openBlock('filters');
+            } else if (urlParams['mode'] === 'filters') {
+                this.activeButton = 'filters';
                 this.itemOpen = false;
                 window.scrollTo(0, 0);
                 this.filtersInnerActive = false;
@@ -157,13 +188,13 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 this.activeButton = 'obj';
                 let str = '';
                 str = urlParams['mode'];
-                this._offer_service.list(0, 1000, '', '', '', '', '').subscribe(offers => {
-                    for (let offer of offers.list) {
-                        if (Number.parseInt(str.substring(0, 13)) == offer.id) {
-                            this.item = offer;
-                        }
-                    }
-                });
+                // this._offer_service.list(0, 1000, '', '', '', '', '').subscribe(offers => {
+                //     for (let offer of offers.list) {
+                //         if (Number.parseInt(str.substring(0, 13)) == offer.id) {
+                //             this.item = offer;
+                //         }
+                //     }
+                // });
             }
         });
     }
@@ -223,6 +254,56 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     }
     changeFav(mode, item) {
         this.get_favObjects();
+    }
+    modalFunc(name) {
+        switch (name) {
+            case 'cancel':
+                this.modal_active = false;
+                break;
+            case 'action':
+                this.modal_active = false;
+                switch (this.modal_action) {
+                    case 'login':
+                        this.blockInputOpen = 'open_login';
+                        break;
+                    case 'pay':
+                        this.blockInputOpen = 'open_pay';
+                        break;
+                    case 'request':
+                        break;
+                    case 'continue':
+                        break;
+                }
+                break;
+        }
+    }
+    modal_info(title, text, action_text, action, cancel) {
+        this.modal_title = title;
+        this.modal_text = text;
+        this.modal_action_text = action_text;
+        this.modal_action = action;
+        this.modal_active = true;
+        this.modal_cancel = cancel;
+    }
+    updateRequest(request){
+        this.request = request;
+    }
+    saveRequest(){
+        if (this.logged_in == 'false' || this.logged_in == false) {
+            this.modal_info('Предупреждение','Для сохранения заявки необходимо войти или зарегистрироваться в системе','Продолжить','login',true);
+        } else {
+            this.request.person = this.person;
+            this.request.personId = this.person.id;
+            this.request.searchArea = this.coordsPolygon;
+            this.request.categoryCode = "rezidential";
+            console.log(this.request);
+            this._request_service.save(this.request).subscribe(request => {
+                setTimeout(() => {
+                    this.request = request;
+                    this.modal_info('Сообщение','Заявка сохранена успешно. В ближайшее время с Вами свяжется наш специалист.','Продолжить','continue',true);
+                });
+            });
+        }
     }
     get_favObjects() {
         this.favItems = [];
@@ -295,22 +376,28 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             this.findPadding = 90;
         }
         setTimeout( () => {
-            if (document.getElementById('fil')!= undefined) {
-                if (document.getElementById('fil').getBoundingClientRect().top < 200) {
+            if (document.getElementById('find_filter')!= undefined) {
+                if (document.getElementById('find_filter').getBoundingClientRect().top < 200) {
                     this.filterText = 'ОПРЕДЕЛИТЕ ОБЛАСТЬ ПОИСКА';
+                    this.filterScroll = 'map';
                 } else {
                     this.filterText = 'ВЫБЕРИТЕ ФИЛЬТРЫ ДЛЯ ПОИСКА';
+                    this.filterScroll = 'top';
                 }
             }
 
-        }, 200);
+        }, 150);
         // console.log(event.changedTouches);
     }
     openBlock(type) {
         setTimeout( () => {
             if (type == 'filters') {
+                if (this.filterScroll == 'map') {
+                    document.getElementById('ymapsContainer').scrollIntoView({'block': 'center'});
+                } else {
                     document.getElementById('fil-top').scrollIntoView({'block': 'center'});
-                    this.get_list(1000,'filters');
+                }
+                    // this.get_list(1000,'filters');
             }
         }, 100);
     }
@@ -347,7 +434,9 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         //         break;
         // }
         console.log(this.headerPos);
-        if (!event.target.classList.contains('starFav') && !event.target.classList.contains('starImg')) {
+        if (!event.target.classList.contains('starFav') && !event.target.classList.contains('starImg') && !event.target.classList.contains('contact-line')
+            && !event.target.classList.contains('contact-photo')&& !event.target.classList.contains('name')) {
+            this.item_mode = 'item';
             this.mainHeight = '100vh';
             this.blockMode = 'item';
             this.checklogin();
@@ -355,6 +444,20 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             this.blockInputOpen = 'close_menu';
             this.getObj(index ,flag);
             this.item = obj;
+            this.telephone = this.item.phoneBlock.main;
+            this.mobileItemFunc();
+            document.documentElement.scrollTo(0, 0);
+        } else if (event.target.classList.contains('contact-line')
+            || event.target.classList.contains('contact-photo') || event.target.classList.contains('name')){
+            this.item_mode = 'contact';
+            this.mainHeight = '100vh';
+            this.blockMode = 'item';
+            this.checklogin();
+            // console.log('blockMode:' + this.blockMode + ' logged_in:' + this.logged_in + ' timeAdd:' + this.timeAdd);
+            this.blockInputOpen = 'close_menu';
+            this.getObj(index ,flag);
+            this.item = obj;
+            this.telephone = this.item.phoneBlock.main;
             this.mobileItemFunc();
             document.documentElement.scrollTo(0, 0);
         }
@@ -394,8 +497,11 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     }
 
     showContact() {
-        console.log('contact ' + this.y);
-        this.window.scrollTo(0, this.y - 165);
+        if (this.logged_in == 'false' || this.logged_in == false) {
+            this.modal_info('Предупреждение','Для просмотра контактов необходимо войти или зарегистрироваться в системе','Продолжить','login',true);
+        } else if (this.payed == 'false' || this.payed == false){
+            this.modal_info('Предупреждение','Для просмотра контактов необходимо оплатить доступ','Продолжить','pay',true);
+        }
     }
 
     mobileItemFunc() {
@@ -444,9 +550,15 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         this.sort = sort;
     }
 
-    setEquipment(equipment) {
+    setEquipment(equipment)  {
         this.equipment = equipment;
-        // this.get_list();
+    }
+    filtersChosenFunc(event) {
+        this._offer_service.list(0, 1, this.filters, this.sort, this.equipment, this.coordsPolygon, this.searchQuery).subscribe(data => {
+            this.countOfItems = data.hitsCount;
+            this.filtersChosen = event;
+            console.log(this.countOfItems, this.filtersChosen);
+        });
     }
 
     close(name, id) {
@@ -490,10 +602,14 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 this.blockMode = 'items';
                 this.activeButton = 'items';
                 this.itemOpen = false;
+                this.item_mode = 'none';
+                let filt = document.getElementById('filters_open') as HTMLElement;
+                filt.style.setProperty('opacity','0');
                 setTimeout( () => {
                     let it = document.getElementById(id) as HTMLElement;
                     it.scrollIntoView({block: "center"});
-                }, 200);
+                    filt.style.setProperty('opacity','1');
+                }, 100);
                 console.log(this.headerPos);
 
             }
@@ -851,7 +967,9 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     getCoords(coords) {
         this.coordsPolygon = coords;
     }
-
+    setFocus(name){
+        document.getElementById(name).focus();
+    }
     get_list(objsOnPage, flag) {
         let coords = this.coordsPolygon;
         this.get_favObjects();
@@ -871,8 +989,12 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         if (flag == 'find') {
             coords = [];
         }
+
         this._offer_service.list(this.pagecounter, objsOnPage, this.filters, this.sort, this.equipment, coords, this.searchQuery).subscribe(data => {
-            // this.countOfItems = data.hitsCount;
+            this.countOfItems = data.hitsCount;
+            if (flag == 'chose' || flag == 'empty') {
+                this.filtersChosen = flag;
+            }
             this.canLoad = 0;
             if (sessionStorage.getItem('useremail') == undefined) {
                 this.favItems = [];

@@ -160,7 +160,7 @@ export class MenuComponent implements OnInit {
     }
 
     log_out() {
-        console.log("logout")
+        console.log("logout");
         clearInterval(this.timer);
         this.userEmail = "email";
         this.loggedIn = false;

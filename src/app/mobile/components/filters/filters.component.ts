@@ -6,6 +6,7 @@ import {ActivatedRoute} from '@angular/router';
 import {OfferService} from '../../../services/offer.service';
 import {AccountService} from '../../../services/account.service';
 import {NgxMetrikaService} from '@kolkov/ngx-metrika';
+import {Request} from '../../../class/Request';
 
 @Component({
     selector: 'app-filters-mobile',
@@ -16,6 +17,8 @@ export class FiltersComponent implements OnInit, AfterViewInit {
     filtersNum = 0;
     public map: any;
     maps: any;
+    priceMin = 0;
+    priceMax = 200;
     city = 'Хабаровск';
     manager = false;
     additional = false;
@@ -36,52 +39,17 @@ export class FiltersComponent implements OnInit, AfterViewInit {
     period = false;
     equipment = false;
     conditions = false;
-    parking = false;
-    parkingArr: any[] = [];
     costChosen = false;
+    rentType = false;
     food = false;
-    education = false;
-    fitness = false;
-    medicine = false;
-    entertainment = false;
     khv: any;
     vld: any;
-    geoObject: any;
     kna: any;
     paintProcess: any;
-    cafe: any;
-    procukty: any;
-    supermarket: any;
-    market: any;
-    restaurant: any;
-    canteen: any;
-    // type == 'Детские сады' || type == 'Школы' || type == 'Гимназии' || type == 'Техникумы' || type == 'Институты' || type == 'Университеты'
-    kindergarten: any;
-    school: any;
-    gymnasy: any;
-    technikum: any;
-    institute: any;
-    univer: any;
-    // type == 'Тренажерные залы' || type == 'Фитнес клубы'
-    trenazher: any;
-    fitnessClubs: any;
-    //type == 'Аптеки' || type == 'Поликлиники' || type == 'Больницы' || type == 'Ветеринарные аптеки' || type == 'Ветеринарные клиники'
-    apteka: any;
-    poliklinika: any;
-    hospital: any;
-    vetapteka: any;
-    vetklinika: any;
-    //  type == 'Кинотеатры' || type == 'Театры' || type == 'Ночной клубы'
-    kino: any;
-    theater: any;
-    nightclub: any;
-    circus: any;
     park: any;
-    // парковки
-    free_parking: any;
-    paid_parking: any;
-    all_parking: any;
+    bound_changed = false;
     public clusterer: any;
+    map_timer: any;
     filters = {
         'city': undefined,
         'contactType': 'private',                      // тип предложения (комиссия, без комиссии, все)
@@ -90,7 +58,8 @@ export class FiltersComponent implements OnInit, AfterViewInit {
         'price': String,
         'isMiddleman': String,
         'addDate': undefined,
-        'commission': undefined
+        'commission': undefined,
+        'rentType': undefined
     };
     equipmentFilters = {
         'complete': undefined,
@@ -116,9 +85,15 @@ export class FiltersComponent implements OnInit, AfterViewInit {
         'ownerPrice': String
     };
     filtersChoseCount = 0;
+    load = false;
     width = document.documentElement.clientWidth;
+    request: Request = new Request();
+
     @Input() initCoords: any;
     @Input() initZoom: Number;
+    @Input() scrollPlace: any;
+    @Input() blockMode: any;
+    @Input() activeButton: any;
 
 
     @Output() sendFilters = new EventEmitter();
@@ -131,16 +106,37 @@ export class FiltersComponent implements OnInit, AfterViewInit {
     @Output() filtersChosen = new EventEmitter();
     @Output() changedCenter = new EventEmitter();
     @Output() changedZoom = new EventEmitter();
+    @Output() changedBound = new EventEmitter();
+    @Output() requestUpdate = new EventEmitter();
     lat = 48.4862268;
     lng = 135.0826369;
 
-    constructor(private ym: NgxMetrikaService,@Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute,
+    constructor(private ym: NgxMetrikaService, @Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute,
                 private _offer_service: OfferService,
                 private _account_service: AccountService) {
     }
 
     ngOnInit() {
         this.drawActive = false;
+        document.addEventListener('touchstart', (event) => {
+
+           let target = event.target as HTMLElement;
+           if (target.tagName == 'YMAPS') {
+               let coordsArray = this.map.getBounds();
+               this.changedCenter.emit(this.map.getCenter());
+               this.changedZoom.emit(this.map.getZoom());
+               this.coordsPolygon = [{lat: coordsArray[0][0], lon: coordsArray[0][1]}, {
+                   lat: coordsArray[0][0],
+                   lon: coordsArray[1][1]
+               }, {lat: coordsArray[1][0], lon: coordsArray[1][1]}, {lat: coordsArray[1][0], lon: coordsArray[0][1]}];
+               this.coordsPol.emit(this.coordsPolygon);
+               // if (this.activeButton != 'request') {
+                   this.bound_changed = true;
+                   this.boundChanged();
+               // }
+
+           }
+        });
         // this.get_count_cities('Хабаровск', this.khv);
         // this.get_count_cities('Владивосток', this.vld);
         // this.get_count_cities('Комсомольск-на-Амуре', this.kna);
@@ -153,11 +149,12 @@ export class FiltersComponent implements OnInit, AfterViewInit {
         ymaps.load('https://api-maps.yandex.ru/2.1/?apikey=ADRpG1wBAAAAtIMIVgMAmOY9C0gOo4fhnAstjIg7y39Ls-0AAAAAAAAAAAAbBvdv4mKDz9rc97s4oi4IuoAq6g==&lang=ru_RU&amp;load=package.full').then(maps => {
             this.initMap(maps);
         }).catch(error => console.log('Failed to load Yandex Maps', error));
-
     }
+
     ymFunc(target) {
         this.ym.reachGoal.next({target: target});
     }
+
     reset() {
         let buttonBox = document.getElementsByClassName('filters-options-box') as HTMLCollectionOf<HTMLElement>;
         for (let i = 0; i < buttonBox.length; i++) {
@@ -175,6 +172,7 @@ export class FiltersComponent implements OnInit, AfterViewInit {
         this.filters.price = undefined;
         this.filters.addDate = undefined;
         this.filters.commission = undefined;
+        this.filters.rentType = undefined;
         this.equipmentFilters.complete = undefined;
         this.equipmentFilters.living_room_furniture = undefined;
         this.equipmentFilters.kitchen_furniture = undefined;
@@ -197,6 +195,7 @@ export class FiltersComponent implements OnInit, AfterViewInit {
 
         this.cityButton = false;
         this.offer = false;
+        this.rentType = false;
         this.typeOfObject = false;
         this.countOfRooms = false;
         this.cost = false;
@@ -208,50 +207,75 @@ export class FiltersComponent implements OnInit, AfterViewInit {
         this.coordsPol.emit(this.coordsPolygon);
         this.filtersChoseCount = 0;
         this.filtersChosen.emit('empty');
+        this.request = new Request();
+        this.priceMin = 0;
+        this.priceMax = 200;
+        this.bound_changed = false;
+        this.load = false;
+        this.boundChanged();
         this.sendSortFunc();
         this.sendFiltersFunc();
-        this.sendEquipmentFunc();
-        this.get_list();
+        this.sendEquipmentFunc(0);
+        this.map.geoObjects.removeAll();
     }
-
+    find_map_request() {
+        if (this.activeButton == 'request') {
+            this.bound_changed = false;
+            this.boundChanged();
+        } else {
+            this.bound_changed = false; this.load = true; this.get_list();
+        }
+    }
     get_list() {
         console.log('get_list filters');
-        this.map.geoObjects.removeAll();
-        this.items = [];
+
         if (this.filtersChoseCount == 0) {
             this.filtersChosen.emit('empty');
         } else {
-            this.filtersChosen.emit('chose')
+            this.filtersChosen.emit('chose');
         }
-        this._offer_service.list(0, 1000, this.filters, this.sort, this.equipmentFilters, this.coordsPolygon, '').subscribe(offers => {
-            for (let offer of offers.list) {
-                this.items.push(offer);
-            }
+        clearTimeout(this.map_timer);
+        this.map_timer = setTimeout(() => {
+            this._offer_service.list(0, 1000, this.filters, this.sort, this.equipmentFilters, this.coordsPolygon, '').subscribe(offers => {
+                // console.log('timeout filter');
 
-            this.countOfItems.emit(this.items.length);
+                this.items = [];
+                for (let offer of offers.list) {
+                    if (this.items.indexOf(offer)) {
+                        this.items.push(offer);
+                    }
+                }
 
-            if (this.clusterer != undefined) {
-                this.map.geoObjects.remove(this.clusterer);
-            }
+                this.countOfItems.emit(this.items.length);
 
-            this.clusterer = new this.maps.Clusterer({
-                preset: 'islands#invertedRedClusterIcons',
-                clusterIconColor: '#c50101',
-                groupByCoordinates: true,
-                clusterDisableClickZoom: true,
-                clusterHideIconOnBalloonOpen: false,
-                geoObjectHideIconOnBalloonOpen: false
-            });
-            for (let i = 0; i < this.items.length; i++) {
-                let baloon = new this.maps.Placemark([this.items[i].lat, this.items[i].lon], {}, {
-                    preset: 'islands#icon',
-                    iconColor: '#c50101',
+                if (this.clusterer != undefined) {
+                    this.map.geoObjects.remove(this.clusterer);
+                }
+
+                this.clusterer = new this.maps.Clusterer({
+                    preset: 'islands#invertedRedClusterIcons',
+                    clusterIconColor: '#c50101',
+                    groupByCoordinates: true,
+                    clusterDisableClickZoom: true,
+                    clusterHideIconOnBalloonOpen: false,
+                    geoObjectHideIconOnBalloonOpen: false,
+                    clusterOpenBalloonOnClick: false
                 });
-                this.clusterer.add(baloon);
-            }
-            this.map.geoObjects.add(this.clusterer);
-            this.countOfItems.emit(this.items.length);
-        });
+                // console.log(this.items);
+                for (let i = 0; i < this.items.length; i++) {
+                    let baloon = new this.maps.Placemark([this.items[i].lat, this.items[i].lon], {}, {
+                        preset: 'islands#icon',
+                        iconColor: '#c50101',
+                    });
+                    this.clusterer.add(baloon);
+                }
+                this.map.geoObjects.removeAll();
+                this.map.geoObjects.add(this.clusterer);
+                this.countOfItems.emit(this.items.length);
+                this.load = false;
+                this.boundChanged();
+            });
+        }, 1000);
     }
 
     initMap(maps) {
@@ -262,7 +286,7 @@ export class FiltersComponent implements OnInit, AfterViewInit {
                 controls: ['geolocationControl', 'zoomControl']
             }, {suppressMapOpenBlock: true}
         );
-        let mapStyle = document.getElementsByClassName('ymaps-2-1-75-ground-pane') as HTMLCollectionOf<HTMLElement>;
+        let mapStyle = document.getElementsByClassName('ymaps-2-1-76-ground-pane') as HTMLCollectionOf<HTMLElement>;
         if (mapStyle.length != 0) {
             mapStyle.item(0).style.setProperty('filter', 'grayscale(.9)');
         }
@@ -285,7 +309,10 @@ export class FiltersComponent implements OnInit, AfterViewInit {
         }, false);
         let coordsArray;
         this.map.events.add('boundschange', e => {
-            if (this.filtersChoseCount == 0) this.filtersChoseCount++;
+            console.log(this.activeButton);
+            if (this.filtersChoseCount == 0) {
+                this.filtersChoseCount++;
+            }
             coordsArray = this.map.getBounds();
             this.changedCenter.emit(this.map.getCenter());
             this.changedZoom.emit(this.map.getZoom());
@@ -294,11 +321,17 @@ export class FiltersComponent implements OnInit, AfterViewInit {
                 lon: coordsArray[1][1]
             }, {lat: coordsArray[1][0], lon: coordsArray[1][1]}, {lat: coordsArray[1][0], lon: coordsArray[0][1]}];
             this.coordsPol.emit(this.coordsPolygon);
-            this.get_list();
+            // if (this.activeButton != 'request') {
+                this.bound_changed = true;
+                this.boundChanged();
+            // }
         });
-        this.get_list();
+        // this.get_list();
     }
 
+    boundChanged(){
+        this.changedBound.emit(this.bound_changed);
+    }
     clearMap() {
         this.clearActive = false;
         let canvas = <HTMLCanvasElement> document.getElementById('canvas');
@@ -311,22 +344,79 @@ export class FiltersComponent implements OnInit, AfterViewInit {
     }
 
     selectOption(blockId, optionId, name, varToChange, param) {
-        let buttonBox = document.getElementsByClassName('filters-options-box') as HTMLCollectionOf<HTMLElement>;
-        if (buttonBox.item(blockId).children[optionId].classList.contains('selected')) {
-            buttonBox.item(blockId).children[optionId].classList.remove('selected');
+        this.bound_changed = false;
+        this.load = false;
+        this.boundChanged();
+        this.coordsPolygon = [];
+        this.coordsPol.emit(this.coordsPolygon);
+        this.map.geoObjects.removeAll();
+        console.log('selectopt', blockId, optionId, name, varToChange, param);
+        let buttonBox = document.getElementById('filters-options-box' + blockId) as HTMLElement;
+        if (buttonBox.children[optionId].classList.contains('selected')) {
+            buttonBox.children[optionId].classList.remove('selected');
             let selected = [];
-            for (let i = 0; i < buttonBox.item(blockId).childNodes.length; i++) {
-                if (buttonBox.item(blockId).children[i].classList.contains('selected')) {
-                    if (buttonBox.item(blockId).children[i].children[0].innerHTML == 'Дом/Коттедж/Дача') {
-                        selected.push('Дом Коттедж Дача');
-                    } else {
-                        selected.push(buttonBox.item(blockId).children[i].children[0].innerHTML);
+            if (blockId != 2) {
+                for (let i = 0; i < buttonBox.childNodes.length; i++) {
+                    if (buttonBox.children[i].classList.contains('selected')) {
+                        selected.push(buttonBox.children[i].children[0].innerHTML);
                     }
                 }
             }
+
             if (blockId == 1) {
                 this.filters.commission = undefined;
+                this.request.commission = undefined;
+            } else if (blockId == 2) {
+                this.request.offerTypeCode = [];
+                this.request.buildingType = [];
+                this.request.buildingClass = [];
+                name = '';
+                for (let i = 0; i < buttonBox.childNodes.length; i++) {
+                    if (buttonBox.children[i].classList.contains('selected')) {
+                        if (buttonBox.children[i].children[0].innerHTML == 'Дом/Коттедж/Дача') {
+                            selected.push('Дом Коттедж Дача');
+                            name += ' Дом Коттедж Дача';
+                            this.request.offerTypeCode.push('single_house', 'cottage', 'dacha');
+                            this.request.buildingType.push('lowrise_house');
+                            this.request.buildingClass.push('single_house', 'cottage', 'dacha');
+                        }
+                        if (buttonBox.children[i].children[0].innerHTML == 'Комната')  {
+                            selected.push(buttonBox.children[i].children[0].innerHTML);
+                            this.request.offerTypeCode.push('room');
+                            name += ' Комната';
+                        }
+                        if (buttonBox.children[i].children[0].innerHTML == 'Квартира') {
+                            selected.push(buttonBox.children[i].children[0].innerHTML);
+                            this.request.offerTypeCode.push('apartment');
+                            name += ' Квартира';
+                        }
+                        if (buttonBox.children[i].children[0].innerHTML == 'Комната' || buttonBox.children[i].children[0].innerHTML == 'Квартира') {
+                            if (this.request.buildingType.indexOf('multisection_house') == -1) {
+                                this.request.buildingType.push("multisection_house", "singlesection_house", "corridor_house", "galary_house", "lowrise_house");
+                                this.request.buildingClass.push("business", "elite", "economy", "new", "improved", "khrushchev", "brezhnev", "stalin", "old_fund",
+                                    "small_apartm","dormitory","gostinka","individual");
+                            }
+                        }
+                    }
+                }
+                console.log(this.request.offerTypeCode);
             } else if (blockId == 3) {
+                if (this.activeButton == 'request') {
+                    selected = [];
+                    for (let i = 0; i < buttonBox.childNodes.length; i++) {
+                        buttonBox.children[i].classList.remove('selected');
+                    }
+                    buttonBox.children[optionId].classList.add('selected');
+                    selected.push(buttonBox.children[optionId].children[0].innerHTML);
+                    if (buttonBox.childNodes.length != 0) {
+                        if (optionId == 0){ this.request.roomsCount = 1}
+                        if (optionId == 1){ this.request.roomsCount = 2}
+                        if (optionId == 2){ this.request.roomsCount = 3}
+                        if (optionId == 3){ this.request.roomsCount = 4}
+                    } else {
+                        this.request.roomsCount = undefined;
+                    }
+                }
                 if (selected.length == 1) {
                     name = selected[0];
                 }
@@ -337,61 +427,99 @@ export class FiltersComponent implements OnInit, AfterViewInit {
                     name = '';
                 }
             } else if (blockId == 4) {
-                if (selected.length == 1) {
-                    name = 'до ' + selected[0] + ' рублей';
+                // if (this.activeButton == 'request') {
+                //     selected = [];
+                //     for (let i = 0; i < buttonBox.childNodes.length; i++) {
+                //         buttonBox.children[i].classList.remove('selected');
+                //     }
+                //     buttonBox.children[optionId].classList.add('selected');
+                //     selected.push(buttonBox.children[optionId].children[0].innerHTML);
+                //     if (buttonBox.childNodes.length != 0) {
+                //         if (optionId == 0){ this.request.ownerPrice = 10}
+                //         if (optionId == 1){ this.request.ownerPrice = 20}
+                //         if (optionId == 2){ this.request.ownerPrice = 30}
+                //         if (optionId == 3){ this.request.ownerPrice = 40}
+                //     } else {
+                //         this.request.ownerPrice = undefined;
+                //     }
+                // }
+                if (this.priceMin == 0) {
+                    name = 'до ' + (this.priceMax * 1000).toString() + ' рублей';
                 }
-                if (selected.length > 1) {
-                    name = 'от ' + selected[0] + ' до ' + selected[selected.length - 1] + ' рублей';
+                if (this.priceMin > 0) {
+                    name = 'от ' + (this.priceMin * 1000).toString() + ' до ' + (this.priceMax * 1000).toString() + ' рублей';
                 }
-                if (selected.length == 0) {
-                    name = '';
-                }
+                // console.log(this.request.ownerPrice);
+                // if (selected.length == 1) {
+                //     name = 'до ' + selected[0] + ' рублей';
+                // }
+                // if (selected.length > 1) {
+                //     name = 'от ' + selected[0] + ' до ' + selected[selected.length - 1] + ' рублей';
+                // }
+                // if (selected.length == 0) {
+                //     name = '';
+                // }
+                // console.log(name);
             } else if (blockId == 5) {
                 switch (optionId) {
                     case 0:
                         this.equipmentFilters.complete = undefined;
+                        this.request.conditions.complete = undefined;
                         break;
                     case 1:
                         this.equipmentFilters.living_room_furniture = undefined;
+                        this.request.conditions.living_room_furniture = undefined;
                         break;
                     case 2:
                         this.equipmentFilters.kitchen_furniture = undefined;
+                        this.request.conditions.kitchen_furniture = undefined;
                         break;
                     case 3:
                         this.equipmentFilters.couchette = undefined;
+                        this.request.conditions.couchette = undefined;
                         break;
                     case 4:
                         this.equipmentFilters.bedding = undefined;
+                        this.request.conditions.bedding = undefined;
                         break;
                     case 5:
                         this.equipmentFilters.dishes = undefined;
+                        this.request.conditions.dishes = undefined;
                         break;
                     case 6:
                         this.equipmentFilters.refrigerator = undefined;
+                        this.request.conditions.refrigerator = undefined;
                         break;
                     case 7:
                         this.equipmentFilters.washer = undefined;
+                        this.request.conditions.washer = undefined;
                         break;
                     case 8:
                         this.equipmentFilters.microwave_oven = undefined;
+                        this.request.conditions.microwave_oven = undefined;
                         break;
                     case 9:
                         this.equipmentFilters.air_conditioning = undefined;
+                        this.request.conditions.air_conditioning = undefined;
                         break;
                     case 10:
                         this.equipmentFilters.dishwasher = undefined;
+                        this.request.conditions.dishwasher = undefined;
                         break;
                     case 11:
                         this.equipmentFilters.tv = undefined;
+                        this.request.conditions.tv = undefined;
                         break;
                 }
             } else if (blockId == 6) {
                 switch (optionId) {
                     case 0:
                         this.equipmentFilters.with_animals = undefined;
+                        this.request.conditions.with_animals = undefined;
                         break;
                     case 1:
                         this.equipmentFilters.with_children = undefined;
+                        this.request.conditions.with_children = undefined;
                         break;
                     case 2:
                         this.equipmentFilters.can_smoke = undefined;
@@ -401,12 +529,12 @@ export class FiltersComponent implements OnInit, AfterViewInit {
                         break;
                 }
             } else if (blockId == 7) {
-                if (name == 'дате') {
-                    this.sortArray.addDate = undefined;
-                } else if (name == 'цене') {
-                    this.sortArray.ownerPrice = undefined;
-                } else if (name == 'рейтингу') {
-                    this.sortArray.finalRaiting = undefined;
+                if (name == 'short') {
+                    this.filters.rentType = undefined;
+                    this.request.rentType = undefined;
+                } else if (name == 'long') {
+                    this.filters.rentType = undefined;
+                    this.request.rentType = undefined;
                 }
             } else if (blockId == 8) {
                 this.filters.addDate = undefined;
@@ -419,32 +547,81 @@ export class FiltersComponent implements OnInit, AfterViewInit {
             this.filtersChoseCount--;
             this.changeNameButton(blockId, name, varToChange, '');
         } else {
-            buttonBox.item(blockId).children[optionId].classList.add('selected');
+            buttonBox.children[optionId].classList.add('selected');
             let selected = [];
-            for (let i = 0; i < buttonBox.item(blockId).childNodes.length; i++) {
-                if (buttonBox.item(blockId).children[i].classList.contains('selected')) {
-                    if (buttonBox.item(blockId).children[i].children[0].innerHTML == 'Дом/Коттедж/Дача') {
-                        selected.push('Дом Коттедж Дача');
-                    } else {
-                        selected.push(buttonBox.item(blockId).children[i].children[0].innerHTML);
+            if (blockId != 2) {
+                for (let i = 0; i < buttonBox.childNodes.length; i++) {
+                    if (buttonBox.children[i].classList.contains('selected')) {
+                        selected.push(buttonBox.children[i].children[0].innerHTML);
                     }
-
                 }
             }
 
             if (blockId == 1) {
-                for (let i = 0; i < buttonBox.item(blockId).childNodes.length; i++) {
-                    buttonBox.item(blockId).children[i].classList.remove('selected');
+                for (let i = 0; i < buttonBox.childNodes.length; i++) {
+                    buttonBox.children[i].classList.remove('selected');
                 }
-                buttonBox.item(blockId).children[optionId].classList.add('selected');
+                buttonBox.children[optionId].classList.add('selected');
                 if (optionId == 0) {
                     this.filters.commission = 0;
+                    this.request.commission = 0;
                 } else if (optionId == 1) {
                     this.filters.commission = 0.00001;
+                    this.request.commission = 1;
                 } else {
                     this.filters.commission = undefined;
+                    this.request.commission = undefined;
                 }
+            } else if (blockId == 2) {
+                this.request.offerTypeCode = [];
+                this.request.buildingType = [];
+                this.request.buildingClass = [];
+                name = '';
+                for (let i = 0; i < buttonBox.childNodes.length; i++) {
+                    if (buttonBox.children[i].classList.contains('selected')) {
+                        if (buttonBox.children[i].children[0].innerHTML == 'Дом/Коттедж/Дача') {
+                            selected.push(' Дом Коттедж Дача');
+                            name += 'Дом Коттедж Дача';
+                            this.request.offerTypeCode.push('single_house', 'cottage', 'dacha');
+                            this.request.buildingType.push('lowrise_house');
+                            this.request.buildingClass.push('single_house', 'cottage', 'dacha');
+                        }
+                        if (buttonBox.children[i].children[0].innerHTML == 'Комната')  {
+                            selected.push(buttonBox.children[i].children[0].innerHTML);
+                            this.request.offerTypeCode.push('room');
+                            name += ' Комната';
+                        }
+                        if (buttonBox.children[i].children[0].innerHTML == 'Квартира') {
+                            selected.push(buttonBox.children[i].children[0].innerHTML);
+                            this.request.offerTypeCode.push('apartment');
+                            name += ' Квартира';
+                        }
+                        if (buttonBox.children[i].children[0].innerHTML == 'Комната' || buttonBox.children[i].children[0].innerHTML == 'Квартира') {
+                            if (this.request.buildingType.indexOf('multisection_house') == -1) {
+                                this.request.buildingType.push("multisection_house", "singlesection_house", "corridor_house", "galary_house", "lowrise_house");
+                                this.request.buildingClass.push("business", "elite", "economy", "new", "improved", "khrushchev", "brezhnev", "stalin", "old_fund",
+                                    "small_apartm","dormitory","gostinka","individual");
+                            }
+                        }
+                    }
+                }
+                // console.log(this.request.offerTypeCode);
             } else if (blockId == 3) {
+                if (this.activeButton == 'request') {
+                    selected = [];
+                    for (let i = 0; i < buttonBox.childNodes.length; i++) {
+                        buttonBox.children[i].classList.remove('selected');
+                    }
+                    buttonBox.children[optionId].classList.add('selected');
+                    selected.push(buttonBox.children[optionId].children[0].innerHTML);
+                    if (buttonBox.childNodes.length != 0) {
+                        if (optionId == 0){ this.request.roomsCount = 1}
+                        if (optionId == 1){ this.request.roomsCount = 2}
+                        if (optionId == 2){ this.request.roomsCount = 3}
+                        if (optionId == 3){ this.request.roomsCount = 4}
+                    }
+                }
+
                 if (selected.length == 1) {
                     name = selected[0];
                 }
@@ -455,52 +632,86 @@ export class FiltersComponent implements OnInit, AfterViewInit {
                     name = '';
                 }
             } else if (blockId == 4) {
-                if (selected.length == 1) {
-                    name = 'до ' + selected[0] + ' рублей';
+                // if (this.activeButton == 'request') {
+                //     selected = [];
+                //     for (let i = 0; i < buttonBox.childNodes.length; i++) {
+                //         buttonBox.children[i].classList.remove('selected');
+                //     }
+                //     buttonBox.children[optionId].classList.add('selected');
+                //     selected.push(buttonBox.children[optionId].children[0].innerHTML);
+                //     if (buttonBox.childNodes.length != 0) {
+                //         if (optionId == 0){ this.request.ownerPrice = 10}
+                //         if (optionId == 1){ this.request.ownerPrice = 20}
+                //         if (optionId == 2){ this.request.ownerPrice = 30}
+                //         if (optionId == 3){ this.request.ownerPrice = 40}
+                //     } else {
+                //         this.request.ownerPrice = undefined;
+                //     }
+                // }
+                if (this.priceMin == 0) {
+                    name = 'до ' + (this.priceMax * 1000).toString() + ' рублей';
                 }
-                if (selected.length > 1) {
-                    name = 'от ' + selected[0] + ' до ' + selected[selected.length - 1] + ' рублей';
+                if (this.priceMin > 0) {
+                    name = 'от ' + (this.priceMin * 1000).toString() + ' до ' + (this.priceMax * 1000).toString() + ' рублей';
                 }
-                if (selected.length == 0) {
-                    name = '';
-                }
+                // if (selected.length == 1) {
+                //     name = 'до ' + selected[0] + ' рублей';
+                // }
+                // if (selected.length > 1) {
+                //     name = 'от ' + selected[0] + ' до ' + selected[selected.length - 1] + ' рублей';
+                // }
+                // if (selected.length == 0) {
+                //     name = '';
+                // }
             } else if (blockId == 5) {
                 switch (optionId) {
                     case 0:
                         this.equipmentFilters.complete = 1;
+                        this.request.conditions.complete = true;
                         break;
                     case 1:
                         this.equipmentFilters.living_room_furniture = 1;
+                        this.request.conditions.living_room_furniture = true;
                         break;
                     case 2:
                         this.equipmentFilters.kitchen_furniture = 1;
+                        this.request.conditions.kitchen_furniture = true;
                         break;
                     case 3:
                         this.equipmentFilters.couchette = 1;
+                        this.request.conditions.couchette = true;
                         break;
                     case 4:
                         this.equipmentFilters.bedding = 1;
+                        this.request.conditions.bedding = true;
                         break;
                     case 5:
                         this.equipmentFilters.dishes = 1;
+                        this.request.conditions.dishes = true;
                         break;
                     case 6:
                         this.equipmentFilters.refrigerator = 1;
+                        this.request.conditions.refrigerator = true;
                         break;
                     case 7:
                         this.equipmentFilters.washer = 1;
+                        this.request.conditions.washer = true;
                         break;
                     case 8:
                         this.equipmentFilters.microwave_oven = 1;
+                        this.request.conditions.microwave_oven = true;
                         break;
                     case 9:
                         this.equipmentFilters.air_conditioning = 1;
+                        this.request.conditions.air_conditioning = true;
                         break;
                     case 10:
                         this.equipmentFilters.dishwasher = 1;
+                        this.request.conditions.dishwasher = true;
                         break;
                     case 11:
                         this.equipmentFilters.tv = 1;
+                        this.request.conditions.tv = true;
                         break;
                 }
 
@@ -508,15 +719,28 @@ export class FiltersComponent implements OnInit, AfterViewInit {
                 switch (optionId) {
                     case 0:
                         this.equipmentFilters.with_animals = 1;
+                        this.request.conditions.with_animals = true;
                         break;
                     case 1:
                         this.equipmentFilters.with_children = 1;
+                        this.request.conditions.with_children = true;
                         break;
                     case 2:
                         this.equipmentFilters.can_smoke = 1;
                         break;
                     case 3:
                         this.equipmentFilters.activities = 1;
+                        break;
+                }
+            } else if (blockId == 7) {
+                switch (optionId) {
+                    case 0:
+                        this.filters.rentType = 'short';
+                        this.request.rentType = 'short';
+                        break;
+                    case 1:
+                        this.filters.rentType = 'long';
+                        this.request.rentType = 'long';
                         break;
                 }
             } else if (blockId == 8) {
@@ -553,6 +777,10 @@ export class FiltersComponent implements OnInit, AfterViewInit {
             this.filtersChoseCount++;
             this.changeNameButton(blockId, name, varToChange, param);
         }
+        // console.log(this.request.offerTypeCode);
+        this.request.searchArea = this.coordsPolygon;
+        this.requestUpdate.emit(this.request);
+
     }
 
     changeNameButton(id, name, varToChange, param) {
@@ -592,17 +820,26 @@ export class FiltersComponent implements OnInit, AfterViewInit {
 
         this.sendSortFunc();
         this.sendFiltersFunc();
-        this.sendEquipmentFunc();
-        this.get_list();
-        console.log(this.filtersChoseCount);
+        this.sendEquipmentFunc(id);
+
+        // this.get_list();
+        // console.log(this.filtersChoseCount);
     }
 
     sendFiltersFunc() {
         this.sendFilters.emit(this.filters);
     }
 
-    sendEquipmentFunc() {
+    sendEquipmentFunc(id) {
         this.sendEquipment.emit(this.equipmentFilters);
+        setTimeout(() => {
+            if (this.filtersChoseCount == 0 && id != 4) {
+                this.filtersChosen.emit('empty');
+            } else {
+                this.filtersChosen.emit('chose');
+            }
+        }, 200);
+
     }
 
     sendSortFunc() {
