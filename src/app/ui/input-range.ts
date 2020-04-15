@@ -45,7 +45,7 @@ import {takeWhile, tap} from 'rxjs/operators';
         }
     `],
     template: `
-        <div><span class="label">{{name}}</span><span>{{valueMin > 0 ? "от " + valueMin : ""}} {{valueMax < max ? "до " + valueMax : ""}}</span></div>
+        <div><span class="label">{{name}}</span><span>{{valueMin > 0 ? "от " + valueMin + " 000 Р" : ""}} {{valueMax < max ? "до " + valueMax  + " 000 Р" : ""}}</span></div>
         <input [min]="min" [max]="max" [step]="step" type="range" [(ngModel)]="valueMin" (ngModelChange)="change()" (change)="emitChange()">
         <input [min]="min" [max]="max" [step]="step" type="range" [(ngModel)]="valueMax" (ngModelChange)="change()" (change)="emitChange()"
                [style.background]="'linear-gradient(90deg, #c7c7c7 ' + (valueMin || 0) * 100/(max-min) + '%, #3f51b5 ' + (valueMin || 0) * 100/(max-min) + '%, #3f51b5 ' + (valueMax || 0) * 100/(max-min) +'%, #c7c7c7 0%)'"

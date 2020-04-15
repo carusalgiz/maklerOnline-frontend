@@ -141,7 +141,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
         let emails = {
             'main': this.login
         };
-            this._account_service.saveUser('1545092165300', emails, phones,'','','','','','').subscribe(res => {
+            this._account_service.saveUser( emails, phones,'','','','','','').subscribe(res => {
                 if (res != undefined) {
                     this.enterMode('register');
                     this.get_users();

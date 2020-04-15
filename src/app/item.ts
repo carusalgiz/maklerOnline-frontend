@@ -19,14 +19,13 @@ export class Item {
     roomsCount: number;
     floor: number;
     floorsCount: number;
-    phoneBlock: PhoneBlock;
     squareTotal: number;
     squareLiving: number;
+    squareKitchen: number;
     photos: UploadFile[];
     documents: UploadFile[];
     addDate: number;
     changeDate: number;
-    phone: string;
     photo: string;
     photoMini: string;
     email: string;
@@ -51,8 +50,12 @@ export class Item {
     commission: number;
     commisionType: string;           //Тип комиссии
     person: Person;
+    buildingType: string;           //тип дома
+    buildingClass: string;          //тип недвижимости
 
     constructor(id?: number,
+                buildingType?: string,
+                buildingClass?: string,
                 admArea?: string,
                 region?: string,
                 address?: string,
@@ -95,6 +98,8 @@ export class Item {
                 person?: Person
     ) {
         this.id = id;
+        this.buildingClass = buildingClass;
+        this.buildingType = buildingType;
         this.admArea = admArea;
         this.region = region;
         this.address = address;
@@ -115,7 +120,6 @@ export class Item {
         this.documents = [];
         this.documents.push(documents);
         this.addDate = addDate;
-        this.phone = phone;
         this.photo = photo;
         this.photoMini = photoMini;
         this.conditions = conditions;
@@ -135,7 +139,6 @@ export class Item {
         this.description = description;
         this.deposit = deposit;
         this.IsMiddleman = IsMiddleman;
-        this.phoneBlock = phoneBlock;
         this.person = person;
     }
 

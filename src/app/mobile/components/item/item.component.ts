@@ -35,7 +35,6 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
 
     @Input() item: Item;
     @Input() mode: string;
-    @Input() similarOpen: any;
     @Input() watched: boolean;
     @Input() historyOpen: boolean;
     @Input() id: number;
@@ -79,10 +78,6 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     name_second = '';
     person: Person = new Person();
 
-    @Output() similarItem = new EventEmitter<Item>();
-    @Output() showInfoEvent = new EventEmitter();
-    @Output() favouriteItemEvent = new EventEmitter();
-    @Output() contactPos = new EventEmitter();
     @Output() closeItem = new EventEmitter();
     @Output() changePhone = new EventEmitter();
 
@@ -101,25 +96,28 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
         }
         let desk = document.getElementsByClassName('desk') as HTMLCollectionOf<HTMLElement>;
         this.length = desk.length !== 0;
-        if (this.mode == 'item') {
+        if (this.mode == 'item' || this.mode == 'item_request') {
             // this.checklogin();
             this.time = this.localStorage.getItem("timeAdd");
         }
     }
     ngOnChanges(changes: SimpleChanges): void {
-        if (this.item != undefined) {
-            if (changes.item.currentValue != changes.item.previousValue) {
-                this.checkParams();
-            }
-        }
-        if (this.mode != undefined) {
-            if (changes.mode.currentValue != changes.mode.previousValue && changes.mode.currentValue == 'contact') {
-                this.checkParams();
-            }
-        }
+        this.checkParams();
+        // if (changes.item != undefined) {
+        //     if (changes.item.currentValue != undefined && changes.item.previousValue != undefined) {
+        //         if (changes.item.currentValue != changes.item.previousValue) {
+        //             this.checkParams();
+        //         }
+        //     }
+        // }
+        // if (changes.mode != undefined) {
+        //     if (changes.mode.currentValue != changes.mode.previousValue && changes.mode.currentValue == 'contact') {
+        //         this.checkParams();
+        //     }
+        // }
     }
     ngAfterViewInit() {
-        if (this.mode == "item") {
+        if (this.mode == "item" || this.mode == 'item_request') {
             document.getElementById('filters-map-map').style.setProperty('height', '300px');
 
             ymaps.load('https://api-maps.yandex.ru/2.1/?apikey=<ADRpG1wBAAAAtIMIVgMAmOY9C0gOo4fhnAstjIg7y39Ls-0AAAAAAAAAAAAbBvdv4mKDz9rc97s4oi4IuoAq6g==>&lang=ru_RU&amp;load=package.full').then(maps => {
@@ -140,42 +138,42 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
                 let mapStyle = document.getElementsByClassName('ymaps-2-1-75-ground-pane') as HTMLCollectionOf<HTMLElement>;
                 mapStyle.item(0).style.setProperty('filter', 'grayscale(.9)');
             }).catch(error => console.log('Failed to load Yandex Maps', error));
-            let date = this.item.addDate;
-            let day = moment.unix(this.item.addDate);
-            let curDate = new Date();
-            let secs = curDate.getTime() / 1000;
-            let timeHasCome = secs - date;
-            if (timeHasCome < 86400) {
-                if (day.minutes() < 10) {
-                    this.addDate = 'сегодня, ' + day.format("dddd") + ' в ' + day.hours() + ':0' + day.minutes();
-                } else {
-                    this.addDate = 'сегодня, ' + day.format("dddd") + ' в ' + day.hours() + ':' + day.minutes();
-                }
-            } else if (timeHasCome > 86400 && timeHasCome < 86400 * 2) {
-                if (day.minutes() < 10) {
-                    this.addDate = 'вчера, ' + day.format("dddd") + ' в ' + day.hours() + ':0' + day.minutes();
-                } else {
-                    this.addDate = 'вчера, ' + day.format("dddd") + ' в ' + day.hours() + ':' + day.minutes();
-                }
-            } else if (timeHasCome > 86400 * 2 && timeHasCome < 86400 * 3) {
-                if (day.minutes() < 10) {
-                    this.addDate = 'позавчера, ' + day.format("dddd") + ' в ' + day.hours() + ':0' + day.minutes();
-                } else {
-                    this.addDate = 'позавчера, ' + day.format("dddd") + ' в ' + day.hours() + ':' + day.minutes();
-                }
-            } else {
-                let hour = '';
-                if (Math.floor(timeHasCome / 60 / 60 / 24) < 4) {
-                    hour = Math.floor(timeHasCome / 60 / 60 / 24) + ' дня ';
-                } else {
-                    hour = Math.floor(timeHasCome / 60 / 60 / 24) + ' дней ';
-                }
-                if (day.minutes() < 10) {
-                    this.addDate = hour + 'назад, ' + day.format("dddd") + ' в ' + day.hours() + ':0' + day.minutes();
-                } else {
-                    this.addDate = hour + 'назад, ' + day.format("dddd") + ' в ' + day.hours() + ':' + day.minutes();
-                }
-            }
+            // let date = this.item.addDate;
+            // let day = moment.unix(this.item.addDate);
+            // let curDate = new Date();
+            // let secs = curDate.getTime() / 1000;
+            // let timeHasCome = secs - date;
+            // if (timeHasCome < 86400) {
+            //     if (day.minutes() < 10) {
+            //         this.addDate = 'сегодня, ' + day.format("dddd") + ' в ' + day.hours() + ':0' + day.minutes();
+            //     } else {
+            //         this.addDate = 'сегодня, ' + day.format("dddd") + ' в ' + day.hours() + ':' + day.minutes();
+            //     }
+            // } else if (timeHasCome > 86400 && timeHasCome < 86400 * 2) {
+            //     if (day.minutes() < 10) {
+            //         this.addDate = 'вчера, ' + day.format("dddd") + ' в ' + day.hours() + ':0' + day.minutes();
+            //     } else {
+            //         this.addDate = 'вчера, ' + day.format("dddd") + ' в ' + day.hours() + ':' + day.minutes();
+            //     }
+            // } else if (timeHasCome > 86400 * 2 && timeHasCome < 86400 * 3) {
+            //     if (day.minutes() < 10) {
+            //         this.addDate = 'позавчера, ' + day.format("dddd") + ' в ' + day.hours() + ':0' + day.minutes();
+            //     } else {
+            //         this.addDate = 'позавчера, ' + day.format("dddd") + ' в ' + day.hours() + ':' + day.minutes();
+            //     }
+            // } else {
+            //     let hour = '';
+            //     if (Math.floor(timeHasCome / 60 / 60 / 24) < 4) {
+            //         hour = Math.floor(timeHasCome / 60 / 60 / 24) + ' дня ';
+            //     } else {
+            //         hour = Math.floor(timeHasCome / 60 / 60 / 24) + ' дней ';
+            //     }
+            //     if (day.minutes() < 10) {
+            //         this.addDate = hour + 'назад, ' + day.format("dddd") + ' в ' + day.hours() + ':0' + day.minutes();
+            //     } else {
+            //         this.addDate = hour + 'назад, ' + day.format("dddd") + ' в ' + day.hours() + ':' + day.minutes();
+            //     }
+            // }
             // this.getPlaces(this.item.lon, this.item.lat, [this.item.lon, this.item.lat]);
             this.window.scrollTo(0, 0);
         }
@@ -298,7 +296,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
         this.getNumWithDellimet();
         // this.checklogin();
 
-        if (this.mode == 'item' && this.item != undefined) {
+        if ((this.mode == 'item' || this.mode == 'request_item') && this.item != undefined) {
             this.time = this.localStorage.getItem("timeAdd");
 
             let date = this.item.addDate;
@@ -430,7 +428,7 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     galleryOpen() {
-        if (this.mode === 'item') {
+        if (this.mode == 'item' || this.mode == 'item_request') {
             console.log('work gal!');
             this.photoBlockOpen = true;
             this.positionPhoto = 0;
@@ -490,10 +488,6 @@ export class ItemComponent implements OnInit, AfterViewInit, OnChanges {
         if (this.number < this.photos.length) {
             this.number++;
         }
-    }
-
-    similarItemOpen(item) {
-        this.similarItem.emit(item);
     }
 
     selected(el: MouseEvent) {

@@ -1,5 +1,5 @@
 import {LOCAL_STORAGE, WINDOW} from '@ng-toolkit/universal';
-import {AfterViewInit, Component, OnInit, Inject} from '@angular/core';
+import {AfterViewInit, Component, OnInit, Inject, SimpleChanges} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {Item} from '../../../item';
 import {ActivatedRoute} from '@angular/router';
@@ -105,6 +105,8 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
+        let item = document.getElementsByClassName('total-padding').item(0) as HTMLElement;
+        item.style.setProperty('width', '460px');
         let items = document.getElementsByClassName('menuBlock') as HTMLCollectionOf<HTMLElement>;
         items.item(1).style.setProperty('border-top', '5px solid #821529');
         items.item(1).style.setProperty('font-weight', 'bold');
@@ -150,6 +152,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }
         }
     }
+
     ymFunc(target) {
         this.ym.reachGoal.next({target: target});
     }
@@ -355,7 +358,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }
             this.drawActive = false;
         });
-        this.get_list(100000, 'initmap');
+        this.get_list(1000, 'initmap');
     }
 
     clearMap() {

@@ -1,10 +1,10 @@
-import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {NgModule} from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
-import { MenuComponent} from './menu/menu.component';
-import { HomeComponent} from './components/home/home.component';
-import { ObjectsComponent} from './components/objects/objects.component';
+import {MenuComponent} from './menu/menu.component';
+import {HomeComponent} from './components/home/home.component';
+import {ObjectsComponent} from './components/objects/objects.component';
 import {ItemComponent} from './components/item/item.component';
 import {AgmCoreModule} from '@agm/core';
 import {FiltersComponent} from './components/filters/filters.component';
@@ -16,21 +16,22 @@ import {EgrnComponent} from './components/egrn/egrn.component';
 import {NgxMaskModule} from 'ngx-mask';
 import {ProposalComponent} from './components/proposal/proposal.component';
 import {AgreementComponent} from './components/agreement/agreement.component';
-import { VirtualScrollerModule } from 'ngx-virtual-scroller';
+import {VirtualScrollerModule} from 'ngx-virtual-scroller';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {ItemMiddle} from './components/item-middle';
-import { UIUploadFile} from './ui/ui-upload-file.component';
-import { ImageCropperModule } from 'ngx-image-cropper';
-import { TextareaAutosizeModule } from 'ngx-textarea-autosize';
+import {UIUploadFile} from './ui/ui-upload-file.component';
+import {ImageCropperModule} from 'ngx-image-cropper';
+import {TextareaAutosizeModule} from 'ngx-textarea-autosize';
 import {UiModalWindow} from '../ui/ui-modal-window';
 import {InputRangeComponent} from '../ui/input-range';
 import {RequestService} from '../services/request.service';
+import {RequestMiddleComponent} from './components/request-middle';
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
-  {path: 'objects/:mode', component: ObjectsComponent},
-  {path: 'login', component: LoginComponent},
-  {path: 'pay', component: PayComponent},
+    {path: '', component: HomeComponent},
+    {path: 'objects/:mode', component: ObjectsComponent},
+    {path: 'login', component: LoginComponent},
+    {path: 'pay', component: PayComponent},
     {path: 'polzovatelskoe-soglashenie', component: AgreementComponent}
 ];
 
@@ -44,24 +45,26 @@ const routes: Routes = [
         }),
         ImageCropperModule
     ],
-  declarations: [
-      ItemMiddle,
-    MenuComponent,
-    HomeComponent,
-    ObjectsComponent,
-    ItemComponent,
-    FiltersComponent,
-    LoginComponent,
-    PayComponent,
-    RatingComponent,
-    ContactComponent,
-    EgrnComponent,
-    ProposalComponent,
-    AgreementComponent,
-      UIUploadFile,
-      UiModalWindow,
-      InputRangeComponent
-  ],
-    providers: [ {provide: LocationStrategy, useClass: PathLocationStrategy} , RequestService]
+    declarations: [
+        ItemMiddle,
+        MenuComponent,
+        HomeComponent,
+        ObjectsComponent,
+        ItemComponent,
+        FiltersComponent,
+        LoginComponent,
+        PayComponent,
+        RatingComponent,
+        ContactComponent,
+        EgrnComponent,
+        ProposalComponent,
+        AgreementComponent,
+        UIUploadFile,
+        UiModalWindow,
+        InputRangeComponent,
+        RequestMiddleComponent
+    ],
+    providers: [{provide: LocationStrategy, useClass: PathLocationStrategy}, RequestService]
 })
-export class MobileModule { }
+export class MobileModule {
+}

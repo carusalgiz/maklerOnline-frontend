@@ -15,19 +15,9 @@ export class Person {
     emailBlock: EmailBlock;
     socialBlock: SocialBlock;
     messengerBlock: MessengerBlock;
-    organisationId: number;
-    organisation: Organisation;
     typeCode: string;
     stateCode: string;
     stageCode: string;
-    loyalty: string;
-    tag: string;
-    rate: number;
-    sourceCode: number;
-    photo: string;
     photoMini: string;
     isMiddleman: boolean;
-    type: string;
-    photos: UploadFile[];         //url фото
-    documents: UploadFile[];
 }

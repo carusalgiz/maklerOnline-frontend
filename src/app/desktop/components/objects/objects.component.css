@@ -219,12 +219,9 @@ body {
 }
 
 .filters {
+    background-color: #FAFAFA;
     height: calc(100vh - 200px);
-    width: 31vw;
-    min-width: 400px;
-    max-width: 605px;
     padding-left: 10px;
-    padding-right: 10px;
     display: flex;
     flex-direction: column;
     overflow-y: hidden;
@@ -232,11 +229,13 @@ body {
     -webkit-overflow-scrolling: touch;
     transition: 0.3s;
     z-index: 5;
-    /*box-shadow: #677578 0 2px 10px 0;*/
     position: fixed;
     right: 0;
-    background-color: white;
     top: 200px;
+    font-family: OpenSans, sans-serif;
+}
+.total-padding{
+    width: 455px;
 }
 
 .filters:hover {
@@ -622,6 +621,7 @@ body {
     color: #252F32;
     font-size: 12px;
     padding-left: 15px;
+    background-color: #FAFAFA;
 }
 input{
     font-family: Cadillac, sans-serif;

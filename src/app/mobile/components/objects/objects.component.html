@@ -1,23 +1,23 @@
 <app-menu (Logging)="changeLog($event)" (Paying)="changePay($event)" [headerPos]="headerPos"
           (openMenu)="menuMode($event)" [blockOpenInput]="blockInputOpen"
-          [class.close]="blockMode == 'item' && blockInputOpen != 'open_login' && blockInputOpen != 'open_pay'" (personInfo)="person = $event"
+          [class.close]="(blockMode == 'item' || blockMode == 'request_items') && blockInputOpen != 'open_login' && blockInputOpen != 'open_pay'" (personInfo)="person = $event"
           ></app-menu>
 <!--(blockInputOpen != 'open_item' && blockMode != 'item') || (blockInputOpen != 'open_menu' && blockMode == 'item')-->
-<ng-container *ngIf="menuOpen == false">
+<ng-container *ngIf="blockInputOpen == 'close_menu'">
     <div class="find-block fil forBlur" id="find_filter" [style.top.px]="findPadding" *ngIf=" blockMode == 'filters' && blockInputOpen != 'open_login'
      && blockInputOpen != 'open_pay' && blockInputOpen != 'open_menu'">{{filterText}}</div>
     <div class="find-block forBlur"  [style.top.px]="findPadding" style="    padding-left: 0;width: 100%;"
-         *ngIf="!historyActive && (activeButton == 'items' || activeButton == 'obj') && !itemOpen && blockMode != 'filters' && !menuOpen">
+         *ngIf="(activeButton == 'items' || activeButton == 'obj' || blockMode == 'request_list' || blockMode == 'request_items') && blockMode != 'filters' && blockMode != 'item' && blockMode != 'item_request'">
         <div class="find_icon_block" (click)="setFocus('find_input_filter')">
             <div class="find_icon"></div>
         </div>
         <input type="text" id="find_input_filter" class="input_line"  (click)="ymFunc('find-offer-mobile');"
                [(ngModel)]="searchQuery" (keyup)="searchStringChanged($event)">
 
-        <div class="starFav filter" style="margin-right: 15px">
+        <div class="starFav filter" style="margin-right: 15px" *ngIf="blockMode != 'request_list' && blockMode != 'request_items'">
             <img src="../../../../assets/list-button1.png" width="30" height="30" (click)="ymFunc('filter-offer-mobile');this.blockMode = 'filters';openBlock('filters')">
         </div>
-        <div class="starFav" >
+        <div class="starFav"  *ngIf="blockMode != 'request_list' && blockMode != 'request_items'">
             <img (click)="blockMode = 'items'" class="starImg full"
                  [class.open]="blockMode == 'fav'"
                  src="../../../../assets/4-4%20watched.png"  width="24px">
@@ -61,42 +61,33 @@
                 <span>СОХРАНИТЬ ЗАЯВКУ</span>
             </div>
         </div>
-<!--        <a class="bottom-buttons1 hideFilterButton" *ngIf="blockMode == 'items'" (click)="ymFunc('filter-offer-mobile');this.blockMode = 'filters';openBlock('filters')"-->
-<!--           [style.bottom.px]="bottomPxButton">-->
-<!--            <div class="show-contact-button" style="background-color: #252f32">-->
-<!--                <span>ПЕРЕЙТИ К ФИЛЬТРАМ</span>-->
-<!--                <div class="exitButton">-->
-<!--                    <div class="barMenu1"></div>-->
-<!--                    <div class="barMenu2"></div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </a>-->
-        <div class="main-objects"  [class.item-full-open]=" blockMode == 'item'"  [style.padding-top.px]="mainObjectsPadding"
+        <div class="main-objects"  [class.item-full-open]=" blockMode == 'item' || blockMode == 'request_items'"  [style.padding-top.px]="mainObjectsPadding"
              *ngIf="blockInputOpen != 'open_login' && blockInputOpen != 'open_pay'">
             <div class="inner-left" [class.contact]="item_mode == 'contact'">
-                <div class="map" [class.open]="mapOpen"
-                     *ngIf="this.blockMode == 'map';">
-                    <agm-map class="map-inner" [latitude]="lat" [longitude]="lng" [zoom]="15" [disableDefaultUI]="true"
-                             [styles]="styles">
-                        <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
-                    </agm-map>
-                </div>
-                <app-item (closeItem)="close('item', item.id)"
+                <app-item (closeItem)="close(item_mode, item.id)"
                           [class.open]="blockMode == 'item' && (blockInputOpen =='open_menu' || blockInputOpen == 'close_menu')"
                           *ngIf="blockMode == 'item' && (blockInputOpen =='open_menu' || blockInputOpen == 'close_menu')"
-                          [id]="item.id"
-                          (similarItem)="similarObj($event)" (showInfoEvent)="info($event)" [loggingMode]="logged_in"
-                          [payingMode]="payed"
-                          (favouriteItemEvent)="addFav($event)" (contactPos)="setContactPos($event)" [item]="item"
+                          [id]="item.id" [loggingMode]="logged_in"
+                          [payingMode]="payed" [item]="item"
                           [mode]="item_mode"
                           [similarOpen]="false"
                           (changePhone)="telephone = $event">
                 </app-item>
-
+                <div class="catalog-item full" style="margin-bottom: 0" *ngIf="blockMode == 'request_items'">
+                    <div class="top-block" [style.top.px]="headerPos" style="border-bottom: unset">
+                        <a class="itemArrowBack" (click)="blockMode = 'request_list';headerPos = 0;mainObjectsPadding = 90;findPadding=90;mainHeight = 'calc(100vh - 155px)'"><img
+                            src="../../../../assets/arrow-item.png" class="iconImg" width="30px"><div style="letter-spacing: 0.05rem;line-height: 16px;font-size: 14px;">Назад</div></a>
+                    </div>
+                    <div class="scroll-items open" (touchend)="listScroll($event)" (touchstart)="touchstart($event)"
+                         (touchend)="touchend($event)">
+                        <item-middle *ngFor="let obj of request_items, let i = index" [index]="i" [item]="obj" [loggingMode]="logged_in" [payingMode]="payed" [watched]="watchedItems.indexOf(i) != -1"
+                                     (favItemMode)="changeFav($event, obj)" (click)="checkClick(i,obj, $event, 'request_item')"></item-middle>
+                    </div>
+                </div>
                 <div class="filters open" id="filters_open" *ngIf="this.blockMode != 'map'" (touchstart)="touchstart($event)"
                      (touchend)="touchend($event)">
-                    <ng-container *ngIf="this.blockMode == 'items' && activeButton == 'items' && countOfItems == 0">
-                        <div style="color: #BDC0C1;
+
+                        <div *ngIf="this.blockMode == 'items' && activeButton == 'items' && items.length == 0 && countOfItems == 0" style="color: #BDC0C1;
                                     width: calc(100% - 40px);
                                     display: flex;
                                     align-items: center;
@@ -106,11 +97,16 @@
                                     position: fixed;
                                     top: calc(50vh - 45px);
                                     padding: 20px;"><div style="font-size: 26px">Объекты не найдены</div><div style="font-size: 20px">Измените условия поиска</div></div>
-                    </ng-container>
+
                     <div class="scroll-items open" (touchend)="listScroll($event)"
                          *ngIf="blockMode == 'items'">
                         <item-middle *ngFor="let obj of items, let i = index" [index]="i" [item]="obj" [loggingMode]="logged_in" [payingMode]="payed" [watched]="watchedItems.indexOf(i) != -1"
                                      (favItemMode)="changeFav($event, obj)" (click)="checkClick(i,obj, $event, 'list')"></item-middle>
+                    </div>
+
+                    <div class="scroll-items open" (touchend)="listScrollRequests($event)"
+                         *ngIf="blockMode == 'request_list'">
+                        <request-middle *ngFor="let obj of requests, let i = index" [request]="obj" (click)="requestClick(obj, $event)"></request-middle>
                     </div>
 
                     <div class="scroll-items open blur fav-list"
@@ -124,45 +120,15 @@
                         <app-filters-mobile class="filters-box" (coordsPol)="getCoords($event)"
                                             [blockMode]="blockMode"
                                             [activeButton]="activeButton"
-                                            [initCoords]="initCoords" [initZoom]="initZoom"
+                                            [initCoords]="initCoords"
                                             [class.open]="blockMode == 'filters'" (sendFilters)="setFilters($event)"
                                             (sendSort)="setSort($event)" (sendEquipment)="setEquipment($event)"
                                             (countOfItems)="changeCount($event)"
-                                            (sendMainButtonActive)="getFiltersClicked($event)"
                                             (changedCenter)="initCoords = $event"
-                                            (changedZoom)="initZoom = $event"
                                             (filtersChosen)="filtersChosenFunc($event)"
                                             (changedBound)="changedBound = $event"
-                                            (requestUpdate)="updateRequest($event)"></app-filters-mobile>
-                    </div>
-
-                    <div *ngIf="blockMode == 'contact'">
-                        <app-contact [itemOpen]="true" (checkPay)="info($event)" (blockClose)="close($event,'')"></app-contact>
-                    </div>
-                    <div *ngIf="blockMode == 'egrn'">
-                        <app-egrn [item]="item" [itemOpen]="true" (blockClose)="close($event,'')"></app-egrn>
-                    </div>
-
-                    <div class="history" *ngIf="blockMode == 'history'">
-                        <div class="inner-history-objects">
-                            <div class="scroll-items open">
-                                <div style="display: flex;justify-content: center;    margin-top: 10px;">
-                                    <div class="history-obj"
-                                         style="font-size: 15px;margin-top: 5px;margin-bottom: 10px;text-align: center;padding: 0;">
-                                        CЕГОДНЯ
-                                    </div>
-                                </div>
-                                <div
-                                    style="border-bottom:1px solid #9d8c6c;width: calc(100% - 50px);margin: 10px 25px;"></div>
-                                <app-item *ngFor="let it of historyItems, let i = index"
-                                          style="border-bottom: 1px solid #d3d5d6" [historyOpen]="true"
-                                          [loggingMode]="logged_in" [payingMode]="payed" [historyId]="i" [id]="it.id"
-                                          [routerLink]="['../../objects', 'item']" [item]="it" [mode]="'middle'">
-                                </app-item>
-                                <div class="button-history">ЗА ВСЕ ВРЕМЯ</div>
-                            </div>
-                        </div>
-
+                                            (requestUpdate)="updateRequest($event)"
+                                            *ngIf="blockMode == 'filters'"></app-filters-mobile>
                     </div>
                 </div>
             </div>

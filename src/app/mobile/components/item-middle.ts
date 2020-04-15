@@ -35,7 +35,8 @@ import {Person} from '../../class/person';
             <ng-container >
                 <div>
                     <div *ngIf="imgLen == 0" class="photoBlock"
-                         style="background-size: 100% 100%;background-image: url('../../../assets/noph.png')"  [class.main-page]="mode=='main_page'"
+                         style="background-size: 100% 100%;background-image: url('../../../assets/noph.png')"  
+                         [class.main-page]="mode=='main_page'"
                          [class.watched]="watched == true">
                         <img class="img"
                              [title]="'makleronline снять ' + item?.roomsCount + ' комнатную квартиру в хабаровске без посредников'"
@@ -65,20 +66,16 @@ import {Person} from '../../class/person';
                     </div>
                     <div class="bottom-block">
                         <div class="info"  [class.main-page]="mode=='main_page'">
-                            <div class="apart-type" *ngIf="item?.typeCode == 'room' && mode != 'main_page'"><span class="one">КОМНАТА</span></div>
-                            <div class="apart-type" *ngIf="item?.typeCode == 'apartment' && mode != 'main_page'"><span class="one">КВАРТИРА</span></div>
-                            <div class="apart-type" *ngIf="item?.typeCode == 'house' && mode != 'main_page'"><span class="one">ДОМ</span></div>
-                            <div class="apart-type" *ngIf="item?.typeCode == 'dacha' && mode != 'main_page'"><span class="one">ДАЧА</span></div>
-                            <div class="apart-type" *ngIf="item?.typeCode == 'cottage' && mode != 'main_page'"><span class="one">КОТТЕДЖ</span></div>
+                            <div class="apart-type" *ngIf="mode != 'main_page'"><span class="one">{{ itemType }}</span></div>
                             <div class="price" *ngIf="mode != 'main_page'" style="margin-bottom: 5px;"><span>{{formattedPrice}}<span style="margin-left: 8px">₽</span></span>
                                 <span style="font-size: 14px;color:#62626D;font-weight: normal;line-height: 18px;" *ngIf="commission != 0">Комиссия {{commission}} {{item?.commisionType == 'fix' ? 'Р' : '%'}}</span>
                                 <span style="font-size: 14px;color:#62626D;font-weight: normal;line-height: 18px;" *ngIf="commission == 0">Без комиссии</span></div>
                             <div class="price-block-main-page" *ngIf="mode == 'main_page'">
-                                <div class="apart-type" [class.main-page]="mode=='main_page'" *ngIf="item?.typeCode == 'room'"><span class="one">КОМНАТА</span></div>
-                                <div class="apart-type" [class.main-page]="mode=='main_page'" *ngIf="item?.typeCode == 'apartment'"><span class="one">КВАРТИРА</span></div>
-                                <div class="apart-type" [class.main-page]="mode=='main_page'" *ngIf="item?.typeCode == 'house'"><span class="one">ДОМ</span></div>
-                                <div class="apart-type" [class.main-page]="mode=='main_page'" *ngIf="item?.typeCode == 'dacha'"><span class="one">ДАЧА</span></div>
-                                <div class="apart-type" [class.main-page]="mode=='main_page'" *ngIf="item?.typeCode == 'cottage'"><span class="one">КОТТЕДЖ</span></div>
+                                <div class="apart-type" [class.main-page]="mode=='main_page'"><span class="one">{{ itemType }}</span></div>
+<!--                                <div class="apart-type" [class.main-page]="mode=='main_page'" *ngIf="item?.typeCode == 'apartment'"><span class="one">КВАРТИРА</span></div>-->
+<!--                                <div class="apart-type" [class.main-page]="mode=='main_page'" *ngIf="item?.typeCode == 'house'"><span class="one">ДОМ</span></div>-->
+<!--                                <div class="apart-type" [class.main-page]="mode=='main_page'" *ngIf="item?.typeCode == 'dacha'"><span class="one">ДАЧА</span></div>-->
+<!--                                <div class="apart-type" [class.main-page]="mode=='main_page'" *ngIf="item?.typeCode == 'cottage'"><span class="one">КОТТЕДЖ</span></div>-->
 <!--                                <div class="price" style="margin-bottom: 5px;    font-size: 16px;">{{formattedPrice}}<span style="margin-left: 8px">₽</span></div>-->
                             </div>
                             <div class="price" *ngIf="mode == 'main_page'" style="font-size: 16px;"><span>{{formattedPrice}}<span style="margin-left: 4px">₽</span></span>
@@ -149,13 +146,12 @@ export class ItemMiddle implements AfterViewInit, OnChanges, OnInit {
     @Input() mode: any;
 
     formattedPrice = '0';
+    itemType: any;
     commission = 0;
     imgLen = 0;
     photo_no_title: any;
     src = 'https://makleronline.net/assets/noph.png';
     addDate: any;
-    name_first: any;
-    name_second: any;
     person: Person = new Person();
 
     @Output() favItemMode = new EventEmitter();
@@ -221,26 +217,10 @@ export class ItemMiddle implements AfterViewInit, OnChanges, OnInit {
             }
             this.item.name = ret;
         }
-        // this._account_service.contactInfo(this.item.person.id).subscribe(res1 => {
-        //     let result = JSON.parse(JSON.stringify(res1));
-        //     if (result.person){
-        //         this.person = result.person;
-        //         if (this.person.name != undefined) {
-        //             let spArray = this.item.name.split(" ");
-        //             this.name_first = spArray[0].toUpperCase();
-        //             if (spArray.length > 1) {
-        //                 for (let i = 1; i < spArray.length; i++) {
-        //                     this.name_second += spArray[i] + " " ;
-        //                 }
-        //             }
-        //         }
-        //     }
-        // });
         this.formattedPrice = this.item.price.toString();
         this.formattedPrice = this.formattedPrice.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
         if (this.item.commisionType != undefined) {
             if (this.item.commisionType == 'percent') {
-                let one_percent = this.item.price / 100;
                 if (this.item.commission != undefined) {
                     this.commission = this.item.commission;
                 } else {
@@ -309,6 +289,51 @@ export class ItemMiddle implements AfterViewInit, OnChanges, OnInit {
     }
     checkParams() {
         if (this.item != undefined) {
+            if (this.item.typeCode != undefined) {
+                switch (this.item.typeCode) {
+                    case 'room':
+                        if (this.item.buildingClass == 'dormitory') {
+                            this.itemType = 'КОМНАТА В ОБЩЕЖИТИИ';
+                        }
+                        if (this.item.buildingClass == 'single_house') {
+                            this.itemType = 'КОМНАТА В ДОМЕ';
+                        }
+                        if (this.item.buildingClass == 'cottage') {
+                            this.itemType = 'КОМНАТА В КОТТЕДЖЕ';
+                        }
+                        if (this.item.buildingClass == 'dacha') {
+                            this.itemType = 'КОМНАТА НА ДАЧЕ';
+                        }
+                        if (this.item.buildingClass == 'duplex') {
+                            this.itemType = 'КОМНАТА В ДУПЛЕКСЕ';
+                        }
+                        if (this.item.buildingClass == 'townhouse') {
+                            this.itemType = 'КОМНАТА В ТАУНХАУСЕ';
+                        }
+                        if (this.item.buildingClass == 'barrack') {
+                            this.itemType = 'КОМНАТА В БАРАКЕ';
+                        }
+                        // "business", "elite", "economy", "new", "improved", "khrushchev", "brezhnev", "stalin", "old_fund"
+                        if (this.item.buildingClass == 'business' || this.item.buildingClass == 'elite'|| this.item.buildingClass == 'economy' || this.item.buildingClass == 'new'
+                            || this.item.buildingClass == 'improved' || this.item.buildingClass == 'khrushchev' || this.item.buildingClass == 'brezhnev' || this.item.buildingClass == 'stalin'
+                            || this.item.buildingClass == 'old_fund') {
+                            this.itemType = 'КОМНАТА В КВАРТИРЕ';
+                        }
+                        break;
+                    case 'apartment':
+                        this.itemType = 'КВАРТИРА';
+                        break;
+                    case 'house':
+                        this.itemType = 'ДОМ';
+                        break;
+                    case 'cottage':
+                        this.itemType = 'КОТТЕДЖ';
+                        break;
+                    case 'dacha':
+                        this.itemType = 'ДАЧА';
+                        break;
+                }
+            }
             if (this.item.photos != undefined) {
                 if (this.item.photos[0] != undefined) {
                     this.src = this.item.photos[0].href;
@@ -333,8 +358,24 @@ export class ItemMiddle implements AfterViewInit, OnChanges, OnInit {
                     this.item.address = this.item.address.slice(this.item.address.indexOf('ул.') + 3, this.item.address.length);
                 }
             }
-            let one_percent = this.item.price / 100;
-            this.commission = this.item.commission / one_percent;
+            if (this.item.commisionType != undefined) {
+                if (this.item.commisionType == 'percent') {
+                    if (this.item.commission != undefined) {
+                        this.commission = this.item.commission;
+                    } else {
+                        this.commission = 0;
+                    }
+                }
+                if (this.item.commisionType == 'fix') {
+                    if (this.item.commission != undefined) {
+                        this.commission = this.item.commission;
+                    } else {
+                        this.commission = 0;
+                    }
+                }
+            } else {
+                this.commission = 0;
+            }
             if (this.item.photos == undefined) {
                 this.imgLen = 0;
             } else {

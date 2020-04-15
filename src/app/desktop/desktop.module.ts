@@ -25,7 +25,7 @@ const routes: Routes = [
     {path: 'pay', component: PayComponent},
     {path: 'objects/:mode', component: ObjectsComponent},
   {path: '', component: HomeComponent},
-  {path: 'login', component: LoginComponent} 
+  {path: 'login', component: LoginComponent}
 ];
 
 @NgModule({
@@ -37,6 +37,7 @@ const routes: Routes = [
         //     accurateTrackBounce:true,
         //     webvisor:true
         // }),
+
         VirtualScrollerModule,
         CommonModule, FormsModule, ReactiveFormsModule,
         RouterModule.forChild(routes),

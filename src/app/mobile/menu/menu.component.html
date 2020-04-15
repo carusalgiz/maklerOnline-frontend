@@ -20,7 +20,7 @@
             </div>
         </header>
 
-        <div class="filters forBlur" id="menuMobile" [class.open]="blockOpenInput == 'open_menu' || blockOpenInput == 'open_login' || blockOpenInput == 'open_pay'">
+        <div class="filters-menu forBlur" id="menuMobile" [class.open]="blockOpenInput == 'open_menu' || blockOpenInput == 'open_login' || blockOpenInput == 'open_pay'">
             <div class="scroll-items">
                 <div style="display: flex;margin-bottom: 25px;    margin-top: 40px;" id="menuTop">
                     <a class="logo-mobile contact-menu-info"
@@ -365,7 +365,7 @@
                                 <div style="display: flex">
                                     <div style="flex-grow: 1">
                                         <a style="outline: none;text-decoration: none"
-                                           class="innerMenu">Мои заявки
+                                           class="innerMenu" (click)="redirectFunc('m/objects/request_list', false)">Мои заявки
                                         </a>
                                     </div>
                                 </div>

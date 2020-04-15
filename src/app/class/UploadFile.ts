@@ -1,13 +1,12 @@
 export class UploadFile {
     name: string;
-    fileName: string;
+    fullName: string;
     ext: string;
     href: string;
     hrefMini: string;
     addDate: number;
     type: number;
     isTemp: boolean;
-    userId: number;
 
     constructor(
         href? : string

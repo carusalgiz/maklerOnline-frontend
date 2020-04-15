@@ -1,4 +1,4 @@
-<div class="catalog-item full" [class.close]="photoBlockOpen || mode != 'item'">
+<div class="catalog-item full" [class.close]="photoBlockOpen || (mode != 'item' && mode != 'item_request')">
     <div class="top-block">
         <a class="itemArrowBack" (click)="closeItemBlock()"><img
             src="../../../../assets/arrow-item.png" class="iconImg" width="30px"><div style="line-height: 16px;font-size: 14px;">Назад</div></a>
@@ -38,12 +38,12 @@
         <div class="phone-part-two">
             <div class="flex-col" style="justify-content: center;" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
                 <div class="phone">Контакты:</div>
-                <div class="phone" *ngIf="item?.phoneBlock?.main != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.main | mask: ' (000) 000-0000'}}</div>
-                <div class="phone" *ngIf="item?.phoneBlock?.other != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.other | mask: ' (000) 000-0000'}}</div>
-                <div class="phone" *ngIf="item?.phoneBlock?.home != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.home | mask: ' (000) 000-0000'}}</div>
-                <div class="phone" *ngIf="item?.phoneBlock?.cellphone != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.cellphone | mask: ' (000) 000-0000'}}</div>
-                <div class="phone" *ngIf="item?.phoneBlock?.fax != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.fax | mask: ' (000) 000-0000'}}</div>
-                <div class="phone" *ngIf="item?.phoneBlock?.ip != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.ip | mask: ' (000) 000-0000'}}</div>
+                <div class="phone" *ngIf="item?.person.phoneBlock?.main != null">{{item.person.phoneBlock != null ? '+7':''}}{{item?.person.phoneBlock?.main | mask: ' (000) 000-0000'}}</div>
+                <div class="phone" *ngIf="item?.person.phoneBlock?.other != null">{{item.person.phoneBlock != null ? '+7':''}}{{item?.person.phoneBlock?.other | mask: ' (000) 000-0000'}}</div>
+                <div class="phone" *ngIf="item?.person.phoneBlock?.home != null">{{item.person.phoneBlock != null ? '+7':''}}{{item?.person.phoneBlock?.home | mask: ' (000) 000-0000'}}</div>
+                <div class="phone" *ngIf="item?.person.phoneBlock?.cellphone != null">{{item.person.phoneBlock != null ? '+7':''}}{{item?.person.phoneBlock?.cellphone | mask: ' (000) 000-0000'}}</div>
+                <div class="phone" *ngIf="item?.person.phoneBlock?.fax != null">{{item.person.phoneBlock != null ? '+7':''}}{{item?.person.phoneBlock?.fax | mask: ' (000) 000-0000'}}</div>
+                <div class="phone" *ngIf="item?.person.phoneBlock?.ip != null">{{item.person.phoneBlock != null ? '+7':''}}{{item?.person.phoneBlock?.ip | mask: ' (000) 000-0000'}}</div>
             </div>
         </div>
     </div>
@@ -124,34 +124,34 @@
         <div class="name contact first">{{name_first}}</div>
         <div class="name contact" style="margin-bottom: 30px;">{{name_second}}</div>
         <div class="phone-part-two contact">
-            <div class="input-block" *ngIf="(item?.phoneBlock?.main == null && item?.phoneBlock?.other == null && item?.phoneBlock?.home == null && item?.phoneBlock?.cellphone == null
-                                             && item?.phoneBlock?.fax == null && item?.phoneBlock?.ip == null) || (payingMode == false || payingMode == 'false')">
+            <div class="input-block" *ngIf="(item?.person.phoneBlock?.main == null && item?.person.phoneBlock?.other == null && item?.person.phoneBlock?.home == null && item?.person.phoneBlock?.cellphone == null
+                                             && item?.person.phoneBlock?.fax == null && item?.person.phoneBlock?.ip == null) || (payingMode == false || payingMode == 'false')">
                 <a>Телефон</a>
             </div>
-            <div class="input-block" *ngIf="item?.phoneBlock?.main != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
+            <div class="input-block" *ngIf="item?.person.phoneBlock?.main != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
                 <a>Телефон</a>
-                <div class="phone" (click)="changePhone.emit(item?.phoneBlock?.main)">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.main | mask: ' (000) 000-0000'}}</div>
+                <div class="phone" (click)="changePhone.emit(item?.person.phoneBlock?.main)">{{item.person.phoneBlock != null ? '+7':''}}{{item?.person.phoneBlock?.main | mask: ' (000) 000-0000'}}</div>
             </div>
-            <div class="input-block" *ngIf="item?.phoneBlock?.other != null && (payingMode == true || payingMode == 'true') &&
+            <div class="input-block" *ngIf="item?.person.phoneBlock?.other != null && (payingMode == true || payingMode == 'true') &&
             (loggingMode == true || loggingMode == 'true') && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
                 <a>Телефон</a>
-                <div class="phone" (click)="changePhone.emit(item?.phoneBlock?.other)">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.other | mask: ' (000) 000-0000'}}</div>
+                <div class="phone" (click)="changePhone.emit(item?.person.phoneBlock?.other)">{{item.person.phoneBlock != null ? '+7':''}}{{item?.person.phoneBlock?.other | mask: ' (000) 000-0000'}}</div>
             </div>
-            <div class="input-block" *ngIf="item?.phoneBlock?.home != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
+            <div class="input-block" *ngIf="item?.person.phoneBlock?.home != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
                 <a>Телефон</a>
-                <div class="phone" (click)="changePhone.emit(item?.phoneBlock?.home)">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.home | mask: ' (000) 000-0000'}}</div>
+                <div class="phone" (click)="changePhone.emit(item?.person.phoneBlock?.home)">{{item.person.phoneBlock != null ? '+7':''}}{{item?.person.phoneBlock?.home | mask: ' (000) 000-0000'}}</div>
             </div>
-            <div class="input-block" *ngIf="item?.phoneBlock?.cellphone != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
+            <div class="input-block" *ngIf="item?.person.phoneBlock?.cellphone != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
                 <a>Телефон</a>
-                <div class="phone" (click)="changePhone.emit(item?.phoneBlock?.cellphone)">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.cellphone | mask: ' (000) 000-0000'}}</div>
+                <div class="phone" (click)="changePhone.emit(item?.person.phoneBlock?.cellphone)">{{item.person.phoneBlock != null ? '+7':''}}{{item?.person.phoneBlock?.cellphone | mask: ' (000) 000-0000'}}</div>
             </div>
-            <div class="input-block" *ngIf="item?.phoneBlock?.fax != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
+            <div class="input-block" *ngIf="item?.person.phoneBlock?.fax != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
                 <a>Телефон</a>
-                <div class="phone" (click)="changePhone.emit(item?.phoneBlock?.fax)">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.fax | mask: ' (000) 000-0000'}}</div>
+                <div class="phone" (click)="changePhone.emit(item?.person.phoneBlock?.fax)">{{item.person.phoneBlock != null ? '+7':''}}{{item?.person.phoneBlock?.fax | mask: ' (000) 000-0000'}}</div>
             </div>
-            <div class="input-block" *ngIf="item?.phoneBlock?.ip != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
+            <div class="input-block" *ngIf="item?.person.phoneBlock?.ip != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
                 <a>Телефон</a>
-                <div class="phone" (click)="changePhone.emit(item?.phoneBlock?.ip)">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.ip | mask: ' (000) 000-0000'}}</div>
+                <div class="phone" (click)="changePhone.emit(item?.person.phoneBlock?.ip)">{{item.person.phoneBlock != null ? '+7':''}}{{item?.person.phoneBlock?.ip | mask: ' (000) 000-0000'}}</div>
             </div>
             <div class="input-block"><a>E-mail</a><div *ngIf="item?.person?.emailBlock?.main != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">{{item.person.emailBlock.main}}</div></div>
             <div class="input-block"><a>WhatsApp</a><div class="phone" *ngIf="item?.person?.messengerBlock?.whatsapp != null && (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">{{person.messengerBlock.whatsapp}}</div></div>

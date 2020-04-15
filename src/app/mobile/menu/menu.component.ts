@@ -180,7 +180,6 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
         });
     }
     addFile(event){
-        this.person.photo = event[0].href;
         this.person.photoMini = event[0].href;
         this.updatePerson();
     }
@@ -436,7 +435,7 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
         let organisation = {
             'name' : this.model_company
         };
-        this._account_service.saveUser('1545092165300', emails, phones, messengers, socials, undefined, this.model_name, this.model_description, false).subscribe(res => {
+        this._account_service.saveUser(emails, phones, messengers, socials, undefined, this.model_name, this.model_description, false).subscribe(res => {
             if (res != undefined) {
                 this.enterMode('register');
                 this.get_users();
@@ -492,10 +491,10 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
         this.blockOpenInput = mode;
         if (mode == 'open_menu' || mode == 'open_login' || mode == 'open_pay') {
             this.blocked = false;
-            document.body.style.setProperty('height', '100vh');
+            // document.body.style.setProperty('height', '100vh');
             document.body.style.setProperty('background-color', '#12181A');
         } else {
-            // document.body.style.removeProperty('height');
+            document.body.style.removeProperty('height');
             document.body.style.removeProperty( 'background-color');
         }
 
@@ -649,7 +648,7 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
                 if (data.result == 'success') {
                     this._account_service.personInfo().subscribe(res1 => {
                         // console.log("checkbalance");
-                        console.log('pesronInfo:', res1);
+                        // console.log('pesronInfo:', res1);
                         let result = JSON.parse(JSON.stringify(res1));
                         if (result.person){
                             this.person = result.person;
@@ -683,7 +682,7 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
                     this._account_service.checkBalance().subscribe(res => {
                         // console.log("checkbalance");
                         let result = JSON.parse(JSON.stringify(res));
-                         console.log(result);
+                         // console.log(result);
                         this.timeT = parseInt(result.time, 10);
                         this.freeAccess = result.freeAccess;
                         clearInterval(this.timer);
@@ -770,13 +769,22 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
     redirectFunc(href, home: boolean){
         let hostname = window.location.href.substr(0, window.location.href.indexOf('#/')+2);
         let newhref = hostname + href;
-        console.log(newhref, window.location.href);
         if (newhref != window.location.href) {
-            document.location.href = newhref;
+            if (newhref.indexOf('request_list') != -1) {
+                if (this.logged_in == true) {
+                    document.location.href = newhref;
+                } else {
+                    this.modal_info('Предупреждение','Вход не был произведен, войдите пожалуйста в систему для просмотра списка заявок','Войти','login',false);
+                }
+            } else {
+                document.location.href = newhref;
+            }
+
         } else {
-            this.closeButtons();
-            this.homePageOpen(home);
-            this.menuOpen('close_menu')
+            window.location.reload();
+            // this.closeButtons();
+            // this.homePageOpen(home);
+            // this.menuOpen('close_menu')
         }
     }
     openBlock(pay: string) {

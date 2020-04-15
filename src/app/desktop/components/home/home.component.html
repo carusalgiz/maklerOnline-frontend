@@ -1,392 +1,343 @@
 <app-menu [homePage]="true"></app-menu>
-<div class="mainHome" (window:resize) = resize()>
-  <div class="inner-main">
-    <div class="picture">
-      <div class="title">
-        <h1 class="logoTitle3"><span>НЕДВИЖИМОСТЬ</span><span class="special">БЕЗ КОМИССИИ</span></h1>
-        <div class="logoTitle2"><span>ZAVRUS PRESENT</span></div>
-        <h2 class="infoText">Cервис, создан для аренды недвижимости без комиссии. Проверенные объявления в реальном времени.</h2>
-      </div>
-    </div>
-    <div class="countLine">
-      <div style="display: flex; width: 100vw">
-        <div id="num1">
-          <span class="countLineNumber">{{countTodayObjects}} <span class="countLineWord">Объектов</span></span>
-          <span class="countSubWord">Добавлено за сегодня</span>
-        </div>
-        <div id="num2">
-          <span class="countLineNumber">417 <span class="countLineWord">Заявок</span></span>
-          <span class="countSubWord">Добавлено за сегодня</span>
-        </div>
-        <div id="num3">
-           <span class="countLineNumber">{{countObjects}}
-              <span class="countLineWord">Объектов</span>
-           </span>
-          <span class="countSubWord">Проверено нашими модераторами</span>
-        </div>
-      </div>
-    </div>
-    <div class="countLine word">
-      <span class="wordOne">Makleronline. Каждый найдёт свой дом.</span>
-      <span class="wordTwo">Искать легче, когда есть такой помощник.</span>
-    </div>
-    <div class="twoTextLines">
-      <div class="textBlocksLine">
-        <div class="textBlock">
-          <h2 class="lineTitle">Все объявления о сдаче</h2>
-          <div class="redLine"></div>
-          <h3 class="textLine">Максимальный охват всех баз аренды жилья. Самая полная база предложений недвижимости.  Не беспокойтесь, Вы увидите Все.
-            Мы знаем, что сдается в каждую минуту !</h3>
-        </div>
-        <div class="textBlock">
-          <h2 class="lineTitle">Только актуальные объекты</h2>
-          <div class="redLine"></div>
-          <h3 class="textLine"> У Вас нет желания делать пустые звонки? Это сделают для Вас наши менеджеры — достаточно выбрать тариф
-            "Особые условия". Вам на почту будут поступать только актуальные объекты.</h3>
-          <h3 class="textLine"> Прозванивайте с комфортом ! </h3>
-        </div>
-        <div class="textBlock">
-          <h2 class="lineTitle">Лучший способ найти</h2>
-          <div class="redLine"></div>
-          <h3 class="textLine">Функция "Подписка" поможет не отвлекаться от важных дел в течение дня.  На основе ваших предпочтений makleronline сформирует подборки объектов и пришлет Вам лучшие предложения.</h3>
-          <h3 class="textLine">Это позволит вам экономить свое время !</h3>
-        </div>
-      </div>
-      <div class="textBlocksLine">
-        <div class="textBlock">
-          <h2 class="lineTitle">Без комиссии</h2>
-          <div class="redLine"></div>
-          <h3 class="textLine">Наши менеджеры проверяют каждое поступившее объявление. Мы гарантируем что объект сдается без комиссии. Полная защита от комиссионных платежей.</h3>
-          <h3 class="textLine">Платите только за недвижимость !</h3>
-        </div>
-        <div class="textBlock">
-          <h2 class="lineTitle">Я вижу все</h2>
-          <div class="redLine"></div>
-          <h3 class="textLine">Карточка объекта дает полное представление о будущем месте проживания. Можно с лёгкостью посмотреть  наличие инфраструктуры, сравнить похожие предложения, 
-            оставить отзыв... </h3>
-          <h3 class="textLine">Возможности безграничны !</h3>
-        </div>
-        <div class="textBlock">
-          <h2 class="lineTitle">Не дороже чем нужно</h2>
-          <div class="redLine"></div>
-          <h3 class="textLine">Ваша экономия от использования сервиса реально составит от 10 000 рублей.
-            Нет необходимости оплачивать комиссионные риелтору.
-            Все объекты сдаются без комиссии.</h3>
-          <h3 class="textLine">Платите только за недвижимость !</h3>
-        </div>
-      </div>
-    </div>
-
-    <div class="countLine word" style="    padding: 60px 0 0 0; background-color: #F6F6F6">
-      <span class="wordOne" style="margin-bottom: 10px;">Как это работает</span>
-      <span class="wordTwo">Это отличный способ найти желаемое.</span>
-    </div>
-    <div class="countLine word" style="align-items: baseline;flex-direction: row;background-color: #F6F6F6">
-      <div class="step">
-        <div class="stepNum">1</div>
-        <div class="stepDescription" style="    max-width: 340px;">
-          <h2>Выберите недвижимость, воспользуйтесь фильтрами, картой, панорамой . Посмотрите, как далеко будет Ваша новая недвижимость от мест, где чаще бываете.</h2>
-        </div>
-      </div>
-      <div class="step">
-        <div class="stepNum">2</div>
-        <div class="stepDescription" style="max-width: 310px;">
-            <h2>Зарегистрируйтесь в системе или войдите под своей учетной записью. После регистрации будут  доступны подборки объектов, возможность оставить отзыв...</h2></div>
-      </div>
-      <div class="step">
-        <div class="stepNum">3</div>
-        <div class="stepDescription">
-          <h2>Выберите комфортный пакет услуг.  Все оплаты происходят официально. Согласно 54 Федеральному закону после оплаты Вы получаете электронный чек.</h2>
-        </div>
-      </div>
-    </div>
-    <div class="countLine word">
-      <span class="wordOne">ВЫБРАТЬ ТАРИФ</span>
-    </div>
-    <div class="plan">
-      <div class="planExt exist">
-        <div class="planBlock">
-          <img alt="изображение для тарифа я сам" class="inner-img" src="../../../../assets/moskva-stolica-moskva-siti.jpg" width="420px" height="250px">
-          <span class="planTitle">Я САМ</span>
-          <div class="planLine"></div>
-          <div class="planText">
-            <h3>- Самостоятельный поиск объектов</h3>
-            <h3>- Доступ к базе проверенных объявлений</h3>
-            <h3>- Полная свобода действий</h3>
-          </div>
-          <!--<div class="planButton">НАЧАТЬ</div>-->
-        </div>
-        <div class="additionalPlan">
-          <span class="planTitle" style="font-size: 20px;margin: 30px 0 15px;">Я САМ</span>
-          <div class="planLine"></div>
-          <div class="planText title-add">
-            <span>ДОСТУП К БАЗЕ ПРОВЕРЕННЫХ ОБЪЯВЛЕНИЙ</span>
-          </div>
-          <div class="planText add">
-            <div class="add-text"><span style="margin-right: 3px">1.</span><h3>Проверенная база объявлений без комиссии;</h3></div>
-            <div class="add-text"><span style="margin-right: 3px">2.</span><h3>Экономию от 10 000 рублей.  Нет необходимости
-              оплачивать комиссию риэлтору. Все объекты сдаются без комиссии;</h3></div>
-            <div class="add-text"><span style="margin-right: 3px">3.</span><h3>Вам будут приходить новые объявления на
-              почту и в раздел меню Ваши заявки (функция действительна в период действия подписки);</h3></div>
-            <div class="add-text"><span style="margin-right: 3px">4.</span><h3>Гибкий выбор тарифов, оплачивайте только тот
-               период, который необходим для поиска объекта;</h3></div>
-          </div>
-          <div class="planText title-add">
-            <h3>Только проверенные  объявления</h3>
-          </div>
-          <div class="planButton" (click)="ymFunc('ya-sam-main');openLogin('')">ПРОДОЛЖИТЬ</div>
-        </div>
-      </div>
-      <div class="planExt">
-        <div class="planBlock">
-          <img alt="изображение для тарифа особые условия" class="inner-img" src="../../../../assets/call_center.jpg" width="420px" height="250px">
-          <img class="lenta" src="../../../../assets/lenta.png">
-          <div class="soon">СКОРО</div>
-          <h2 class="planTitle">ОСОБЫЕ УСЛОВИЯ</h2>
-          <div class="planLine"></div>
-          <div class="planText">
-            <h3>-  Персональный подход </h3>
-            <h3>-  Проверка объектов на актуальность</h3>
-            <h3>-  Доступ к базе проверенных объявлений</h3>
-          </div>
-          <!--<div class="planButton">НАЧАТЬ</div>-->
-        </div>
-        <div class="additionalPlan">
-          <h2 class="planTitle" style="font-size: 20px;margin: 30px 0 15px;">ОСОБЫЕ УСЛОВИЯ</h2>
-          <div class="planLine"></div>
-          <div class="planText title-add">
-            <h3>МЫ САМИ ПРОВЕРИМ ОБЪЯВЛЕНИЯ НА АКТУАЛЬНОСТЬ</h3>
-            <h3>Результат в течении часа гарантирован!</h3>
-          </div>
-          <div class="planText add">
-            <div class="add-text"><span style="margin-right: 3px">1.</span><h3>Вы выбираете пакет ОСОБЫЕ УСЛОВИЯ. Наш менеджер связывается с Вами. Уточняет детали;</h3></div>
-            <div class="add-text"><span style="margin-right: 3px">2.</span><h3>Система подбирает подходящие объекты;</h3></div>
-            <div class="add-text"><span style="margin-right: 3px">3.</span><h3>Отдел качества проверяет эти объекты на предмет актуальности, и безопасности;</h3></div>
-            <div class="add-text"><span style="margin-right: 3px">4.</span><h3>Система высылает актуальные объекты на Вашу почту, а также они будут сохранены в  Ваши заявки. (пункт раздела меню сайта);</h3></div>
-          </div>
-          <div class="planText title-add">
-            <span>​Только актуальные объявления</span>
-          </div>
-          <div class="planButton" (click)="ymFunc('special-main');openLogin('')">ПРОДОЛЖИТЬ</div>
-        </div>
-      </div>
-      <div class="planExt">
-        <div class="planBlock">
-          <img alt="изображение для тарифа премиум" class="inner-img" src="../../../../assets/depositphotos_171491966-stock-photo-businessman-offer-hand-to-shake.jpg" width="420px" height="250px">
-          <img class="lenta" src="../../../../assets/lenta.png">
-          <div class="soon">СКОРО</div>
-          <span class="planTitle">ПРЕМИУМ</span>
-          <div class="planLine"></div>
-          <div class="planText">
-            <h3>- Персональный менеджер</h3>
-            <h3>- Полный цикл услуг</h3>
-            <h3>- Личное консультирование</h3>
-            <!--<span class="more">Еще...</span>-->
-          </div>
-          <!--<div class="planButton">НАЧАТЬ</div>-->
-        </div>
-        <div class="additionalPlan">
-          <h2 class="planTitle" style="font-size: 20px;margin: 30px 0 15px;">ПРЕМИУМ</h2>
-          <div class="planLine"></div>
-          <div class="planText title-add">
-            <h3>СОВЕРШЕННО НОВЫЙ УРОВЕНЬ СЕРВИСА</h3>
-            <h3>Найдем любую недвижимость!</h3>
-          </div>
-          <div class="planText add">
-            <div class="add-text"><span style="margin-right: 3px">1.</span><h3>Ваш персональный менеджер свяжется с Вами, и поможет согласовать  Вашу заявку;</h3></div>
-            <div class="add-text"><span style="margin-right: 3px">2.</span><h3>Система формирует  подборку подходящих объектов;</h3></div>
-            <div class="add-text"><span style="margin-right: 3px">3.</span><h3>Отдел качества проверяет эти объекты на предмет актуальности и безопастности;</h3></div>
-            <div class="add-text"><span style="margin-right: 3px">4.</span><h3>Ваш персональный менеджер прорабатывает условия сдачи объекта и сообщает Вам  время просмотра;</h3></div>
-            <div class="add-text"><span style="margin-right: 3px">5.</span><h3>Отчет о проделанной работе будет выслан на 
-              Вашу почту, а также он будет сохранен в Сообщениях. (пункт раздела меню сайта)</h3></div>
-          </div>
-          <div class="planButton" (click)="ymFunc('premium-main');openLogin('')">ПРОДОЛЖИТЬ</div>
-        </div>
-      </div>
-
-    </div>
-    <div class="countLine word" style="background-color: #F6F6F6;padding: 50px 0 0;">
-      <h2 class="wordOne">ОТЗЫВЫ НАШИХ КЛИЕНТОВ</h2>
-    </div>
-    <div class="reviewsBottom"  style="background-color: #F6F6F6">
-      <h3 class="compDescription">Мнения,и рекомендации других пользоватей – безусловно самое оптимальное социальное доказательство качества услуги</h3>
-      <div class="carousel open" id="carousel">
-        <div class="arrow left" (click)="prev()">
-          <div class="arrowFull">
-            <div class="barArrow1-left"></div>
-            <div class="barArrow2-left"></div>
-          </div>
-        </div>
-        <div class="objects">
-          <ul id="carousel-ul">
-            <li class="carousel-li" *ngFor="let review of reviews">
-              <div class="reviews">
-                <div class="reviewBlock" >
-                  <img class="iconUser" alt="фотография автора отзыва" title="фотография автора отзыва" [src]="review.photo">
-                  <div class="name">{{review.name}}</div>
-                  <div class="ratingTest">
-                    <span></span><span></span><span></span><span></span><span></span>
-                  </div>
-                  <div class="reviewBlockInfo">
-                    <div class="reviewText">
-                      {{review.text}}
-                      <!--     <span class="more">Написать вопрос</span>-->
+<div class="mainHome" (window:resize)=resize()>
+    <div class="inner-main">
+        <div class="picture">
+            <div class="titles">
+                <div class="text-block-titles">
+                    <div class="logoTitle1">Решите вопрос аренды жилья самым разумным способом. Онлайн.</div>
+                    <div class="logoTitle3">Поиск недвижимости -это всегда сложно. Вот почему мы создали этот сервис.
+                        С помощью простого онлайн-процесса наша команда экспертов будет направлять Вас на каждом шаге
+                        этого пути.
                     </div>
-                    <div class="author">{{review.job}}</div>
-                  </div>
                 </div>
-              </div>
-            </li>
-          </ul>
+                <div class="logoTitle2">ZAVRUS PRESENT</div>
+            </div>
         </div>
-        <div class="arrow right" (click)="next()">
-          <div class="arrowFull">
-            <div class="barArrow1-right"></div>
-            <div class="barArrow2-right"></div>
-          </div>
+        <div class="gray-block" style="height:auto;justify-content: center;    align-items: center;">
+            <div class="title" style="margin-bottom: 10px;">
+                СЕРВИС АРЕНДА НЕДВИЖИМОСТИ
+            </div>
+            <div class="description" style="font-size: 20px">
+                Все предложения в реальном времени и сдаются без комиссии. Только собственники.
+            </div>
         </div>
-      </div>
+        <div class="white-block" style="    overflow-x: hidden;padding: 40px 0 50px;width: 100%;    height: auto;">
+            <div class="title" style="font-weight: bold;padding: 0 50px;">НЕДАВНО ДОБАВЛЕННЫЕ ПРЕДЛОЖЕНИЯ</div>
+            <div class="carousel open" id="items_carousel" style="margin-bottom: 0;" *ngIf="items.length != 0">
+                <div class="arrow left img" (click)="prev()" style="top: 95px;">
+                    <div class="arrowFull">
+                        <div class="barArrow1-left"></div>
+                        <div class="barArrow2-left"></div>
+                    </div>
+                </div>
+                <div class="items" style="overflow: hidden;width: 100%;">
+                    <ul id="items_carousel-ul" style="width: max-content;" [style.left.px]="items.length < 5 ? 0 : -382">
+                        <li class="items_carousel-li" *ngFor="let item of items; let i = index">
+                            <item-middle [mode]="'main_page'" [index]="i" [item]="item" [loggingMode]="false"
+                                         [payingMode]="false"></item-middle>
+                        </li>
+                    </ul>
+                </div>
+                <div class="arrow right img" (click)="next()" style="top: 95px;">
+                    <div class="arrowFull">
+                        <div class="barArrow1-right"></div>
+                        <div class="barArrow2-right"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="display: flex">
+            <div class="picture-block" [style.background-image]="'url(../../../../assets/woman1.jpg)'"></div>
+            <div class="yellow-block">
+                <div class="title">
+                    ПОИСК ПРЕДЛОЖЕНИЯ
+                </div>
+                <div class="footer-text">
+                    Найдите свою новую недвижимость с Маклеронлайн
+                </div>
+                <div class="description top">
+                    К нам стекается информация по аренде недвижимости  со всех рекламных площадок, и напрямую от
+                    собственников, мы ее проверяем и публикуем.
+                </div>
+                <div class="description">
+                    Отзывы наших клиентов говорят о хорошем качестве 
+                    информации на сервисе, убедитесь сами! 
+                </div>
+                <div class="description">
+                    После регистрация на сервисе, первый час поиска, мы Вам, предоставляем бесплатно.
+                </div>
+                <div class="description">
+                    Мы помогаем многим арендаторам безопасно снимать жилье уже более пяти лет, и мы уверены,что можем
+                    сделать то же самое для Вас.
+                </div>
+                <div class="description bottom">
+                    Возникнут вопросы звоните или пишите, консультируем бесплатно.
+                </div>
+                <div class="button" (click)="redirectFunc('m/objects/list')">
+                    <div class="border"></div>
+                    Начать
+                </div>
+            </div>
+        </div>
+        <div class="countLine word">
+            <h2 class="wordOne">ОТЗЫВЫ</h2>
+        </div>
+        <div class="reviewsBottom" style="background-color: white">
+            <h3 class="compDescription">Мнения,и рекомендации других пользователей – безусловно самое оптимальное
+                социальное доказательство качества услуги</h3>
+            <div class="carousel open" id="carousel">
+                <div class="arrow left img" (click)="prevReview()">
+                    <div class="arrowFull">
+                        <div class="barArrow1-left"></div>
+                        <div class="barArrow2-left"></div>
+                    </div>
+                </div>
+                <div class="objects">
+                    <ul id="carousel-ul">
+                        <li class="carousel-li" *ngFor="let review of reviews">
+                            <div class="reviews">
+                                <div class="reviewBlock">
+                                    <img class="iconUser" alt="фотография автора отзыва"
+                                         title="фотография автора отзыва" [src]="review.photo">
+                                    <div class="name">{{review.name}}</div>
+                                    <div class="reviewBlockInfo">
+                                        <div class="reviewText">
+                                            {{review.text}}
+                                        </div>
+                                        <div class="author">{{review.job}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="arrow right img" (click)="nextReview()">
+                    <div class="arrowFull">
+                        <div class="barArrow1-right"></div>
+                        <div class="barArrow2-right"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="display:flex;">
+            <div class="picture-block" [style.background-image]="'url(../../../../assets/woman2.jpg)'"></div>
+            <div class="yellow-block">
+                <div class="title">
+                    ОСТАВИТЬ ЗАЯВКУ
+                </div>
+                <div class="footer-text">Не тратьте время на поиск, Мы найдем для Вас то,что Вам нужно</div>
+                <div class="description top">
+                    Создайте свою заявку в МаклерОнлайн, учтите места где чаще всего бываете, Вашу работу, места обучения,
+                    детские учреждения и.т.д. 
+                </div>
+                <div class="description">
+                    Теперь к Вам, персональный подход. Ваши интересы, становятся нашими, с Вашей заявкой будет работать
+                    один из наших квалифицированных менеджеров. 
+                </div>
+                <div class="description">
+                    Рассматривайте  поступившие предложения и выбираете самое лучшее. (Предложения поступят на Вашу почту)
+                </div>
+                <div class="description">
+                    Создание заявки - бесплатно.
+                </div>
+                <div class="description">
+                    Возникнут вопросы звоните или пишите, консультируем  
+                    бесплатно. 
+                </div>
+                <div class="button" (click)="redirectFunc('m/objects/request')">
+                    <div class="border"></div>
+                    Начать
+                </div>
+            </div>
+        </div>
+        <div style="display:flex;">
+            <div class="yellow-block">
+                <div class="title">
+                    РАЗМЕСТИТЬ ОБЪЯВЛЕНИЕ
+                </div>
+                <div class="description top">
+                    Продемонстрируйте свою собственность с помощью МаклерОнлайн и получите большой охват арендаторов.
+                </div>
+                <div class="description">
+                    Это просто! Создайте свое объявление в МаклерОнлайн сейчас, это займет считанные минуты.
+                    Покажите  преимущества вашей собственности.
+                </div>
+                <div class="description">
+                    МаклерОнлайн предоставит вам доступ к целевой аудитории, которая ежемесячно генерирует тысячи запросов
+                    по поиску недвижимости для аренды.
+                </div>
+                <div class="description">
+                    Сдавайте уверено!
+                </div>
+                <div class="description">
+                    Возникнут вопросы звоните или пишите, консультируем  
+                    бесплатно. 
+                </div>
+                <div class="description">
+                    Добавить свое объявление на сервис - бесплатно (Для собственников недвижимости)
+                </div>
+                <div class="button" (click)="redirectFunc('m/objects/request')">
+                    <div class="border"></div>
+                    Начать
+                </div>
+            </div>
+            <div class="picture-block" [style.background-image]="'url(../../../../assets/man1.jpg)'"></div>
+        </div>
+        <div class="gray-block blue">
+            <div class="gray-block blue inner">
+                <div class="title" style="color: white">О НАС</div>
+                <div class="footer-text" style="margin: 20px 0;">Представьте, Вы открываете страницу Сервиса, выбираете
+                    квартиру,комнату, звоните, и Вам отвечает - Собственник!
+                </div>
+                <div class="description" style="color: #F6F6F6;margin-bottom: 15px;">Поиск недвижимости от собственников это
+                    всегда сложно. Вот почему мы создали этот сервис. Мы помогаем нашим клиентам, арендовать жилье напрямую,
+                    от собственника, и занимаемся этим с 2013 года.
+                </div>
+                <div class="description" style="color: #F6F6F6;margin-bottom: 15px">
+                    К нам стекается информация по аренде недвижимости, мы ее проверяем и добавляем на наш сервис. После
+                    регистрации — один час бесплатно, это поможет Вам убедиться, и начать доверять
+                    опубликованной информации.
+                </div>
+                <div class="description" style="color: #F6F6F6;margin-bottom: 15px">
+                    Наши клиенты это люди которые уже обращались к нам за нашей услугой ранее, а так же те кто хочет
+                    арендовать напрямую, у собственника. Они не видят смысла искать её где-то в другом месте. Все уже здесь.
+                    Отзывы о нас говорят сами за себя.
+                </div>
+                <div class="description" style="color: #F6F6F6;margin-bottom: 15px">
+                    Мы не агентство, и будем рады помочь Вам, найти Вашу будущую недвижимость.
+                </div>
+                <div class="footer-text">
+                    Команда MaklerOnline
+                </div>
+            </div>
+
+        </div>
+        <div class="countLine yearBlock" style="justify-content: center;height: 160px;">
+            <div class="anniversaryYear">7</div>
+            <div class="year">ЛЕТ</div>
+            <div class="anniversaryDate">
+                <div>Всегда с Вами</div>
+                <div>2013 • 2020</div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="footer-top">
+                <div class="social-icons">
+                    <!-- инстаграм, фейсбук, вконтакте, одноклассники-->
+                    <a href="https://www.facebook.com/makleronlinekhv/"
+                       (mouseenter)="facebook = true" (mouseleave)="facebook = false">
+                        <img alt="ссылка на страницу сайта в социальной сети facebook"
+                             title="ссылка на страницу сайта в социальной сети facebook"
+                             class="icon" src="../../../../assets/icons8-facebook-circled-100.png"
+                             [class.imgnondisp]="facebook">
+                        <img alt="ссылка на страницу сайта в социальной сети facebook"
+                             title="ссылка на страницу сайта в социальной сети facebook"
+                             class="icon" src="../../../../assets/icons8-facebook-circled-filled-100.png"
+                             [class.imgnondisp]="!facebook">
+                    </a>
+                    <a href="https://vk.com/club82992253" (mouseenter)="vk = true"
+                       (mouseleave)="vk = false">
+                        <img alt="ссылка на страницу сайта в социальной сети вконтакте"
+                             title="ссылка на страницу сайта в социальной сети вконтакте"
+                             class="icon" src="../../../../assets/icons8-vk-circled-100.png" [class.imgnondisp]="vk"/>
+                        <img alt="ссылка на страницу сайта в социальной сети вконтакте"
+                             title="ссылка на страницу сайта в социальной сети вконтакте"
+                             class="icon" src="../../../../assets/icons8-vk-circled-filled-100.png"
+                             [class.imgnondisp]="!vk"/>
+                    </a>
+                    <a href="https://ok.ru/makleronline"
+                       (mouseenter)="odnokl = true" (mouseleave)="odnokl = false">
+                        <img alt="ссылка на страницу сайта в социальной сети одноклассники"
+                             title="ссылка на страницу сайта в социальной сети одноклассники"
+                             class="icon" src="../../../../assets/icons8-odnoklassniki-circled-100-non-hover.png"
+                             [class.imgnondisp]="odnokl"/>
+                        <img alt="ссылка на страницу сайта в социальной сети одноклассники"
+                             title="ссылка на страницу сайта в социальной сети одноклассники"
+                             class="icon" src="../../../../assets/icons8-odnoklassniki-circled-filled-100.png"
+                             [class.imgnondisp]="!odnokl"/>
+                    </a>
+                </div>
+            </div>
+            <div class="line"></div>
+            <div class="footer-center">
+                <div class="contacts">
+                    <div class="footer-title">НАШИ КОНТАКТЫ</div>
+                    <div style="display: flex">
+                        <div class="contacts-left">
+                            <div>Телефон</div>
+                            <div>WhatsApp</div>
+                            <div>E-mail</div>
+                        </div>
+                        <div class="contacts-right">
+                            <div>+7 (924) 309-00-30</div>
+                            <a href="https://wa.me/79243090030" class="social-link">https://wa.me/79243090030</a>
+                            <a href="mailto:info@makleronline.net" class="social-link">info@makleronline.net</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="partnership">
+                    <div class="footer-title" style="margin-bottom: 5px">ИП Завьялов С.Д.</div>
+                    <div class="footer-title">ИНН 272326913070</div>
+                    <div class="partnership-list">
+                        <div title="Расчетный счет">Р/счет 40802810570000017690</div>
+                        <div title="ИНН">ИНН 7707083893</div>
+                        <div title="БИК">БИК 040813608</div>
+                        <div title="Корреспондентский счет">Кор.Счет 30101810600000000608</div>
+                        <div>ПАО Сбербанк</div>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column;     width: 50%;">
+                    <div style="display: flex;">
+                        <div class="partnership">
+                            <div class="footer-title">СОТРУДНИЧЕСТВО</div>
+                            <div class="partnership-list">
+                                <div>Партнерская программа</div>
+                                <div>Частным лицам</div>
+                                <div>Организациям</div>
+                            </div>
+                        </div>
+                        <div class="payMethod">
+                            <div class="footer-title">ОПЛАТА ИСПОЛЬЗОВАНИЯ САЙТА ПРОИЗВОДИТСЯ</div>
+                            <div class="methods">
+                                <img alt="поддержка банковской карты mastercard" title="mastercard"
+                                     src="../../../../assets/mastercard-mini.jpg" width="60px" height="35px">
+                                <img alt="поддержка банковской карты visa" title="visa"
+                                     src="../../../../assets/visa-mini.jpg" width="60px" height="35px">
+                                <img alt="поддержка банковской карты мир" title="мир"
+                                     src="../../../../assets/mir-mini.jpg" width="60px" height="35px">
+                                <img alt="поддержка банковской карты jcb" title="jcb" src="../../../../assets/jcb.jpg"
+                                     width="60px" height="35px">
+                            </div>
+                            <div class="methods">
+                                <div>Язык интерфейса</div>
+                                <div>Русский</div>
+                                <img src="../assets/rusflag.webp"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: flex-end">
+                        <div class="footer-bottom">
+                            <div class="agreement" style="margin-bottom: 10px;" (click)="openLogin('agreement')">
+                                Пользовательское соглашение
+                            </div>
+                            <div class="agreement" style="margin-bottom: 10px;" (click)="openLogin('addition')">Способы
+                                оплаты и возврата денежных средств
+                            </div>
+                            <div style="margin-bottom: 10px;">Использование сайта, в том числе подача объявлений,
+                                означает согласие с пользовательским соглашением.
+                            </div>
+                            <div>© 2013-2018 г. Makleronline.net Использование материалов Makleronline.net возможно
+                                только с согласия
+                                правообладателя.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </footer>
     </div>
-    <div class="uselessLineHome">
-      <a class="uselessLineMenuObj firstMenuObj" href="{{siteUrl}}/#/d">
-        ГЛАВНАЯ
-      </a>
-      <a class="uselessLineMenuObj innerObj"  href="{{siteUrl}}/#/d/objects/list">
-        ПРЕДЛОЖЕНИЯ
-      </a>
-      <a class="uselessLineMenuObj innerObj">
-        ЗАЯВКИ
-      </a>
-      <a class="uselessLineMenuObj innerObj">
-        ОТЗЫВЫ
-      </a>
-      <a class="uselessLineMenuObj innerObj">
-        СООБЩЕНИЯ
-      </a>
-      <a class="uselessLineMenuObj innerObj " (click)="openLogin('pay')">
-        ОПЛАТА
-      </a>
-      <a class="uselessLineMenuObj lastMenuObj" (click)="openLogin('login')" *ngIf="!loggedIn">
-        ВОЙТИ
-      </a>
-      <a class="uselessLineMenuObj lastMenuObj" (click)="log_out()" *ngIf="loggedIn">
-        ВЫЙТИ
-      </a>
-    </div>
-    <div class="countLine yearBlock" style="justify-content: center;height: 160px;">
-      <div class="anniversaryYear">5</div>
-      <div class="year">ЛЕТ</div>
-      <div class="anniversaryDate">
-        <div>ЮБИЛЕЙНЫЙ ГОД</div>
-        <div>2013 • 2018</div>
-      </div>
-    </div>
-
-    <footer class="footer">
-      <div class="footer-top">
-        <div class="social-icons">
-          <!-- инстаграм, фейсбук, вконтакте, одноклассники-->
-          <a  href="https://www.facebook.com/sharer.php?u=https://makleronline.net/&amp;t=MaklerOnline" (mouseenter)="facebook = true" (mouseleave)="facebook = false">
-            <img alt="ссылка на страницу сайта в социальной сети facebook" title="ссылка на страницу сайта в социальной сети facebook"
-                 class="icon" src="../../../../assets/icons8-facebook-circled-100.png" [class.imgnondisp]="facebook">
-            <img alt="ссылка на страницу сайта в социальной сети facebook" title="ссылка на страницу сайта в социальной сети facebook"
-                class="icon" src="../../../../assets/icons8-facebook-circled-filled-100.png" [class.imgnondisp]="!facebook">
-          </a>
-          <a  href="https://vk.com/share.php?url=https://makleronline.net/"  (mouseenter)="vk = true" (mouseleave)="vk = false">
-            <img alt="ссылка на страницу сайта в социальной сети вконтакте" title="ссылка на страницу сайта в социальной сети вконтакте"
-                 class="icon" src="../../../../assets/icons8-vk-circled-100.png" [class.imgnondisp]="vk"/>
-            <img alt="ссылка на страницу сайта в социальной сети вконтакте" title="ссылка на страницу сайта в социальной сети вконтакте"
-                class="icon" src="../../../../assets/icons8-vk-circled-filled-100.png" [class.imgnondisp]="!vk"/>
-          </a>
-          <a  href="https://connect.ok.ru/offer?url=https://makleronline.net/&title=MaklerOnline"
-              (mouseenter)="odnokl = true" (mouseleave)="odnokl = false">
-            <img alt="ссылка на страницу сайта в социальной сети одноклассники" title="ссылка на страницу сайта в социальной сети одноклассники"
-                class="icon" src="../../../../assets/icons8-odnoklassniki-circled-100-non-hover.png" [class.imgnondisp]="odnokl"/>
-            <img alt="ссылка на страницу сайта в социальной сети одноклассники" title="ссылка на страницу сайта в социальной сети одноклассники"
-                class="icon" src="../../../../assets/icons8-odnoklassniki-circled-filled-100.png" [class.imgnondisp]="!odnokl"/>
-          </a>
-
-          <!--<img class="icon" src="../assets/youtube1.png"/>-->
-          <!--<img class="icon" src="../assets/pinterest1.png"/>-->
-          <!--<img class="icon" src="../assets/instagram.png"/>-->
-        </div>
-        <div class="login-block" >
-          <div class="button-login" (click)="openLogin('')">
-            ВХОД
-          </div>
-        </div>
-      </div>
-      <div class="line"></div>
-      <div class="footer-center">
-        <div class="contacts">
-          <div class="footer-title">НАШИ КОНТАКТЫ</div>
-          <div style="display: flex">
-            <div class="contacts-left">
-              <div>Телефон</div>
-              <div>WhatsApp</div>
-              <div>E-mail</div>
-              <div>Вконтакте</div>
-              <div>В инстаграме</div>
-            </div>
-            <div class="contacts-right">
-              <div>+7 (924) 30-900-30</div>
-              <a href="https://wa.me/79243090030"  class="social-link">https://wa.me/79243090030</a>
-              <a href="mailto:info@makleronline.net"  class="social-link">info@makleronline.net</a>
-              <a href="https://vk.com/club82992253" class="social-link">https://vk.com/club82992253</a>
-              <a href="https://www.instagram.com/makleronlinekhv/" class="social-link">https://www.instagram.com/ makleronlinekhv/</a>
-            </div>
-          </div>
-        </div>
-        <div class="partnership">
-          <div class="footer-title" style="margin-bottom: 5px">ИП Завьялов С.Д.</div>
-          <div class="footer-title">ИНН 272326913070</div>
-          <div class="partnership-list">
-            <div title="Расчетный счет">Р/счет 40802810570000017690</div>
-            <div title="ИНН">ИНН 7707083893</div>
-            <div title="БИК">БИК 040813608</div>
-            <div title="Корреспондентский счет">Кор.Счет 30101810600000000608</div>
-            <div>ПАО Сбербанк</div>
-          </div>
-        </div>
-        <div style="display: flex; flex-direction: column;     width: 50%;">
-          <div style="display: flex;">
-            <div class="partnership">
-              <div class="footer-title">СОТРУДНИЧЕСТВО</div>
-              <div class="partnership-list">
-                <div>Партнерская программа</div>
-                <div>Частным лицам</div>
-                <div>Организациям</div>
-              </div>
-            </div>
-            <div class="payMethod">
-              <div class="footer-title">ОПЛАТА ИСПОЛЬЗОВАНИЯ САЙТА ПРОИЗВОДИТСЯ</div>
-              <div class="methods">
-                <img alt="поддержка банковской карты mastercard" title="mastercard" src="../../../../assets/mastercard-mini.jpg" width="80px" height="40px">
-                <img alt="поддержка банковской карты visa" title="visa" src="../../../../assets/visa-mini.jpg" width="80px" height="40px">
-                <img alt="поддержка банковской карты мир" title="мир" src="../../../../assets/mir-mini.jpg" width="80px" height="40px">
-                <img alt="поддержка банковской карты jcb" title="jcb" src="../../../../assets/jcb.jpg" width="80px" height="40px">
-              </div>
-              <div class="methods">
-                <div>Язык интерфейса</div>
-                <div>Русский</div>
-                <img src="../assets/rusflag.webp"/>
-              </div>
-            </div>
-          </div>
-          <div style="display: flex; align-items: flex-end">
-            <div class="footer-bottom">
-              <div class="agreement" style="margin-bottom: 10px;" (click)="openLogin('agreement')">Пользовательское соглашение</div>
-              <div class="agreement" style="margin-bottom: 10px;" (click)="openLogin('addition')">Способы оплаты и возврата денежных средств</div>
-              <div style="margin-bottom: 10px;">Использование сайта, в том числе подача объявлений, означает согласие с пользовательским соглашением.</div>
-              <div>© 2013-2018 г.  Makleronline.net  Использование материалов Makleronline.net возможно только с согласия
-                правообладателя.</div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-
-    </footer>
-  </div>
 </div>

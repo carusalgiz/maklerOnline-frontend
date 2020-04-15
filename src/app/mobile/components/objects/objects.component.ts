@@ -1,5 +1,5 @@
 import {LOCAL_STORAGE, WINDOW} from '@ng-toolkit/universal';
-import {Component, OnInit, AfterViewInit, Inject} from '@angular/core';
+import {Component, OnInit, AfterViewInit, Inject, OnChanges, SimpleChanges} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {Item} from '../../../item';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -9,6 +9,7 @@ import {NgxMetrikaService} from '@kolkov/ngx-metrika';
 import {RequestService} from '../../../services/request.service';
 import {Request} from '../../../class/Request';
 import {Person} from '../../../class/person';
+
 @Component({
     selector: 'app-objects',
     templateUrl: './objects.component.html',
@@ -19,67 +20,37 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     private subscription: Subscription;
     initCoords = [48.4862268, 135.0826369];
     tempItems: Item[] = [];
-    initZoom = 15;
     mapBig = false;
     item_mode: any;
-    public map: any;
     mainHeight: any;
     blockMode = 'items';
-    desktopOpen = false;
     items: Item[] = [];
+    request_items: Item[] = [];
+    requests: Request[] = [];
     item: Item;
     filters: any;
     sort: any;
-    pages: any[] = [];
-    historyItems: any[] = [];
-    itemsActive: boolean;
-    filtersInnerActive: boolean;
-    itemOpen = false;
     watched: boolean;
-    filtersMenuActive: boolean;
-    timeAdd: any;
-    filtersActive = true;
-    mapActive = true;
-    mobile = false;
     watchedItems: any[] = [];
-    time: any[] = [];
-    favouriteList: any[] = [];
-    loginActive = false;
-    contactActive = false;
-    payActive = false;
-    mapOpen = false;
-    historyActive = false;
-    ergnActive = false;
-    shortversion = false;
-    historyPrev: string;
-    sendMailButton = false;
-    food: any[] = [];
     equipment: any;
     coordsPolygon: any[] = [];
     filtersChosen = 'empty';
     changedBound = false;
     countOfItems = 20;
     blockInputOpen = 'close_menu';
-    current = 0;
-    y: number;
-    width: number;
-    mobileItemOpen = false;
     lat = 48.4862268;
     lng = 135.0826369;
     activeButton: string;
-    menuOpen = false;
     logged_in: any;
     payed: any;
-    bottomPxButton: any;
     headerPos: any;
     touchStartPos: any;
     mainObjectsPadding: any;
     pagecounter = 0;
     hitsCount: number = 0;
     canLoad: number = 0;
-    searchQuery: string = "";
+    searchQuery: string = '';
     suggestionTo: any;
-    sgList: string[] = [];
     favItems: Item[] = [];
     findPadding = 90;
     filterScroll = 'top';
@@ -96,43 +67,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     request: Request = new Request();
     person: Person = new Person();
 
-    styles = [
-        {
-            'featureType': 'landscape',
-            'stylers': [
-                {
-                    'color': '#f0f0f0'
-                }
-            ]
-        },
-        {
-            'featureType': 'poi.park',
-            'elementType': 'geometry.fill',
-            'stylers': [
-                {
-                    'color': '#cceab0'
-                }
-            ]
-        },
-        {
-            'featureType': 'road.local',
-            'stylers': [
-                {
-                    'color': '#ffffff'
-                }
-            ]
-        },
-        {
-            'featureType': 'water',
-            'stylers': [
-                {
-                    'color': '#87c2f8'
-                }
-            ]
-        }
-    ];
-
-    constructor(private ym: NgxMetrikaService,@Inject(WINDOW) private window: Window, @Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, private router: Router,
+    constructor(private ym: NgxMetrikaService, @Inject(WINDOW) private window: Window, @Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, private router: Router,
                 private _offer_service: OfferService,
                 private _account_service: AccountService,
                 private _request_service: RequestService) {
@@ -141,18 +76,15 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 this.blockInputOpen = 'close_menu';
                 this.blockMode = 'items';
                 this.activeButton = 'items';
-                this.itemOpen = false;
                 window.scrollTo(0, 0);
-                this.filtersInnerActive = false;
                 let filters = document.documentElement.getElementsByClassName('filters') as HTMLCollectionOf<HTMLElement>;
                 if (filters.length !== 0) {
                     filters.item(0).style.setProperty('display', 'flex');
                 }
             } else if (urlParams['mode'] === 'request') {
+                this.blockInputOpen = 'close_menu';
                 this.activeButton = 'request';
-                this.itemOpen = false;
                 window.scrollTo(0, 0);
-                this.filtersInnerActive = false;
                 let filters = document.documentElement.getElementsByClassName('filters') as HTMLCollectionOf<HTMLElement>;
                 if (filters.length !== 0) {
                     filters.item(0).style.setProperty('display', 'flex');
@@ -160,55 +92,48 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 this.blockMode = 'filters';
                 this.openBlock('filters');
             } else if (urlParams['mode'] === 'filters') {
+                this.blockInputOpen = 'close_menu';
                 this.activeButton = 'filters';
-                this.itemOpen = false;
                 window.scrollTo(0, 0);
-                this.filtersInnerActive = false;
                 let filters = document.documentElement.getElementsByClassName('filters') as HTMLCollectionOf<HTMLElement>;
                 if (filters.length !== 0) {
                     filters.item(0).style.setProperty('display', 'flex');
                 }
                 this.blockMode = 'filters';
                 this.openBlock('filters');
+            } else if (urlParams['mode'] == 'request_list') {
+                this.blockInputOpen = 'close_menu';
+                this.activeButton = 'request_list';
+                window.scrollTo(0, 0);
+                let filters = document.documentElement.getElementsByClassName('filters') as HTMLCollectionOf<HTMLElement>;
+                if (filters.length !== 0) {
+                    filters.item(0).style.setProperty('display', 'flex');
+                }
+                this.blockMode = 'request_list';
             } else if (urlParams['mode'] === 'fav') {
+                this.blockInputOpen = 'close_menu';
                 this.blockMode = 'items';
                 this.activeButton = 'fav';
-                this.itemOpen = false;
                 window.scrollTo(0, 0);
-                this.filtersInnerActive = false;
                 let filters = document.documentElement.getElementsByClassName('filters') as HTMLCollectionOf<HTMLElement>;
                 if (filters.length !== 0) {
                     filters.item(0).style.setProperty('display', 'flex');
                 }
             } else {
-                this.itemsActive = false;
-                this.itemOpen = true;
                 this.blockMode = 'item';
                 this.blockInputOpen = 'close_menu';
                 this.activeButton = 'obj';
-                let str = '';
-                str = urlParams['mode'];
-                // this._offer_service.list(0, 1000, '', '', '', '', '').subscribe(offers => {
-                //     for (let offer of offers.list) {
-                //         if (Number.parseInt(str.substring(0, 13)) == offer.id) {
-                //             this.item = offer;
-                //         }
-                //     }
-                // });
+            }
+            if (document.location.href.indexOf('request_list') != -1) {
+                this.get_requests(20, 'request_test');
+            } else {
+                this.get_list(20, 'init');
             }
         });
     }
 
     ngOnInit() {
-        this.get_favObjects();
         this.checklogin();
-        if ((this.item === undefined || this.item === null) && this.itemOpen === true) {
-            this.itemOpen = false;
-            this.filtersInnerActive = true;
-            this.filtersActive = true;
-        }
-        this.pages = [];
-        this.width = document.documentElement.clientWidth;
         const heightMobile = document.documentElement.clientHeight;
         let scrollItems = document.getElementsByClassName('scroll-items open') as HTMLCollectionOf<HTMLElement>;
         let filtersBox = document.getElementsByClassName('app-filters-box') as HTMLCollectionOf<HTMLElement>;
@@ -223,25 +148,10 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         document.body.style.removeProperty('height');
         document.body.style.removeProperty('background-color');
-        this.get_list(20, 'init');
+
         let header = document.getElementsByClassName('header') as HTMLCollectionOf<HTMLElement>;
         header.item(0).style.setProperty('z-index', '8');
-        if ((this.item === undefined || this.item === null) && this.itemOpen === true) {
-            this.filtersInnerActive = true;
-        }
         header.item(0).style.setProperty('top', '0');
-        if (this.itemsActive || this.filtersInnerActive) {
-            let filters = document.documentElement.getElementsByClassName('filters') as HTMLCollectionOf<HTMLElement>;
-            filters.item(0).style.setProperty('display', 'flex');
-        }
-        if (this.itemsActive) {
-            this.chooseMenuButton(0);
-        } else if (this.filtersInnerActive) {
-            this.chooseMenuButton(1);
-        } else if (this.historyActive) {
-            this.chooseMenuButton(2);
-        }
-        // this.changeSize();
         if (sessionStorage.length !== 0) {
             this.watchedItems = [];
             for (let i = 0; i < sessionStorage.length; i++) {
@@ -249,12 +159,15 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }
         }
     }
+
     ymFunc(target) {
         this.ym.reachGoal.next({target: target});
     }
+
     changeFav(mode, item) {
         this.get_favObjects();
     }
+
     modalFunc(name) {
         switch (name) {
             case 'cancel':
@@ -277,6 +190,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 break;
         }
     }
+
     modal_info(title, text, action_text, action, cancel) {
         this.modal_title = title;
         this.modal_text = text;
@@ -285,26 +199,29 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         this.modal_active = true;
         this.modal_cancel = cancel;
     }
-    updateRequest(request){
+
+    updateRequest(request) {
         this.request = request;
     }
-    saveRequest(){
+
+    saveRequest() {
         if (this.logged_in == 'false' || this.logged_in == false) {
-            this.modal_info('Предупреждение','Для сохранения заявки необходимо войти или зарегистрироваться в системе','Продолжить','login',true);
+            this.modal_info('Предупреждение', 'Для сохранения заявки необходимо войти или зарегистрироваться в системе', 'Продолжить', 'login', true);
         } else {
             this.request.person = this.person;
             this.request.personId = this.person.id;
             this.request.searchArea = this.coordsPolygon;
-            this.request.categoryCode = "rezidential";
+            this.request.categoryCode = 'rezidential';
             console.log(this.request);
             this._request_service.save(this.request).subscribe(request => {
                 setTimeout(() => {
                     this.request = request;
-                    this.modal_info('Сообщение','Заявка сохранена успешно. В ближайшее время с Вами свяжется наш специалист.','Продолжить','continue',true);
+                    this.modal_info('Сообщение', 'Заявка сохранена успешно. В ближайшее время с Вами свяжется наш специалист.', 'Продолжить', 'continue', true);
                 });
             });
         }
     }
+
     get_favObjects() {
         this.favItems = [];
         this._account_service.getFavObjects().subscribe(offers => {
@@ -335,12 +252,15 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             if (this.items.length != 0) {
                 this.favItems = [];
                 for (let j = 0; j < this.items.length; j++) {
-                    if (this.items[j].is_fav == true) {this.favItems.push(this.items[j]);}
+                    if (this.items[j].is_fav == true) {
+                        this.favItems.push(this.items[j]);
+                    }
                 }
             }
 
         });
     }
+
     changeLog(ev: any) {
         this.logged_in = ev;
     }
@@ -348,6 +268,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     changePay(ev: any) {
         this.payed = ev;
     }
+
     changeCount(count) {
         this.countOfItems = count;
         if (document.getElementById('numObj') != undefined) {
@@ -355,28 +276,32 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         }
 
     }
+
     touchstart(event: TouchEvent) {
         this.touchStartPos = event.changedTouches[0].clientY;
     }
 
     touchend(event: TouchEvent) {
         let num = this.touchStartPos - event.changedTouches[0].clientY;
-        this.bottomPxButton = num > 0 ? -80 : 30;
-        let targ = event.target as HTMLElement;
-       // if (num == 0 && !targ.classList.contains('catalog-item'))
         if (num > 2) {
-            this.headerPos = -90;
+            if (this.blockMode == 'request_items')
+                this.headerPos = -55;
+            else
+                this.headerPos = -90;
             this.mainObjectsPadding = 0;
             this.mainHeight = 'calc(100vh - 65px)';
             this.findPadding = 0;
-        } else if (num < -2){
+        } else if (num < -2) {
             this.headerPos = 0;
             this.mainObjectsPadding = 90;
             this.mainHeight = 'calc(100vh - 155px)';
-            this.findPadding = 90;
+            if (this.blockMode == 'request_items')
+                this.findPadding = 55;
+            else
+                this.findPadding = 90;
         }
-        setTimeout( () => {
-            if (document.getElementById('find_filter')!= undefined) {
+        setTimeout(() => {
+            if (document.getElementById('find_filter') != undefined) {
                 if (document.getElementById('find_filter').getBoundingClientRect().top < 200) {
                     this.filterText = 'ОПРЕДЕЛИТЕ ОБЛАСТЬ ПОИСКА';
                     this.filterScroll = 'map';
@@ -389,80 +314,50 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         }, 150);
         // console.log(event.changedTouches);
     }
+
     openBlock(type) {
-        setTimeout( () => {
+        setTimeout(() => {
             if (type == 'filters') {
-                if (this.filterScroll == 'map') {
-                    document.getElementById('ymapsContainer').scrollIntoView({'block': 'center'});
-                } else {
-                    document.getElementById('fil-top').scrollIntoView({'block': 'center'});
-                }
-                    // this.get_list(1000,'filters');
+                document.getElementById('fil-top').scrollIntoView({'block': 'center'});
             }
         }, 100);
     }
+
     checkClick(index, obj, event, flag) {
-        // let komn = '';
-        // if (obj.roomsCount != undefined) {
-        //     komn = '-' + obj.roomsCount + '-komn';
-        // }
-        // switch (obj.typeCode) {
-        //     case 'room':
-        //         this.router.navigate(['./m/objects', obj.id + '-arenda-komnaty-bez-posrednikov']).then(() => {
-        //             console.log('redirect to ' + obj.id);
-        //         });
-        //         break;
-        //     case 'apartment':
-        //         this.router.navigate(['./m/objects', obj.id + '-arenda' + komn + '-kvartiry-bez-posrednikov']).then(() => {
-        //             console.log('redirect to ' + obj.id);
-        //         });
-        //         break;
-        //     case 'house':
-        //         this.router.navigate(['./m/objects', obj.id + '-arenda' + komn + '-doma-bez-posrednikov']).then(() => {
-        //             console.log('redirect to ' + obj.id);
-        //         });
-        //         break;
-        //     case 'dacha':
-        //         this.router.navigate(['./m/objects', obj.id + '-arenda' + komn + '-dachi-bez-posrednikov']).then(() => {
-        //             console.log('redirect to ' + obj.id);
-        //         });
-        //         break;
-        //     case 'cottage':
-        //         this.router.navigate(['./m/objects', obj.id + '-arenda' + komn + '-kottedzha-bez-posrednikov']).then(() => {
-        //             console.log('redirect to ' + obj.id);
-        //         });
-        //         break;
-        // }
-        console.log(this.headerPos);
         if (!event.target.classList.contains('starFav') && !event.target.classList.contains('starImg') && !event.target.classList.contains('contact-line')
-            && !event.target.classList.contains('contact-photo')&& !event.target.classList.contains('name')) {
-            this.item_mode = 'item';
+            && !event.target.classList.contains('contact-photo') && !event.target.classList.contains('name')) {
+            if (flag == 'request_item')
+                this.item_mode = 'item_request';
+            else
+                this.item_mode = 'item';
             this.mainHeight = '100vh';
             this.blockMode = 'item';
             this.checklogin();
-            // console.log('blockMode:' + this.blockMode + ' logged_in:' + this.logged_in + ' timeAdd:' + this.timeAdd);
             this.blockInputOpen = 'close_menu';
-            this.getObj(index ,flag);
+            this.getObj(index, flag);
             this.item = obj;
-            this.telephone = this.item.phoneBlock.main;
-            this.mobileItemFunc();
+            this.telephone = this.item.person.phoneBlock.main;
             document.documentElement.scrollTo(0, 0);
         } else if (event.target.classList.contains('contact-line')
-            || event.target.classList.contains('contact-photo') || event.target.classList.contains('name')){
+            || event.target.classList.contains('contact-photo') || event.target.classList.contains('name')) {
             this.item_mode = 'contact';
             this.mainHeight = '100vh';
             this.blockMode = 'item';
             this.checklogin();
-            // console.log('blockMode:' + this.blockMode + ' logged_in:' + this.logged_in + ' timeAdd:' + this.timeAdd);
             this.blockInputOpen = 'close_menu';
-            this.getObj(index ,flag);
+            this.getObj(index, flag);
             this.item = obj;
-            this.telephone = this.item.phoneBlock.main;
-            this.mobileItemFunc();
+            this.telephone = this.item.person.phoneBlock.main;
             document.documentElement.scrollTo(0, 0);
         }
-
     }
+
+    requestClick(obj, event) {
+        this.findPadding = 55;
+        this.get_list(20, 'request_items');
+        this.blockMode = 'request_items';
+    }
+
     searchStringChanged(e) {
         let c = this;
         clearTimeout(this.suggestionTo);
@@ -470,76 +365,23 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             c.searchParamChanged();
         }, 500);
     }
-    searchParamChanged() {
-        if (this.searchQuery.length > 0) {
-            let sq = this.searchQuery.split(" ");
-            let lp = sq.pop()
-            let q = sq.join(" ");
-            this.sgList = [];
-            if (lp.length > 0) {
-                // запросить варианты
-                this._offer_service.listKeywords(this.searchQuery).subscribe(sgs => {
-                    sgs.forEach(ev => {
-                        this.sgList.push(ev);
-                    });
-                });
-            }
-        }
-        this.pagecounter = 0;
-        this.get_list(10000, 'find');
-    }
-    setContactPos(e) {
-        this.y = e;
-    }
 
-    getFiltersClicked(e) {
-        this.sendMailButton = e > 1;
+    searchParamChanged() {
+        this.pagecounter = 0;
+        if (this.blockMode == 'items') {
+            this.get_list(20, 'find');
+        }
+        if (this.blockMode == 'request_list') {
+            this.get_requests(20, 'find');
+        }
     }
 
     showContact() {
         if (this.logged_in == 'false' || this.logged_in == false) {
-            this.modal_info('Предупреждение','Для просмотра контактов необходимо войти или зарегистрироваться в системе','Продолжить','login',true);
-        } else if (this.payed == 'false' || this.payed == false){
-            this.modal_info('Предупреждение','Для просмотра контактов необходимо оплатить доступ','Продолжить','pay',true);
+            this.modal_info('Предупреждение', 'Для просмотра контактов необходимо войти или зарегистрироваться в системе', 'Продолжить', 'login', true);
+        } else if (this.payed == 'false' || this.payed == false) {
+            this.modal_info('Предупреждение', 'Для просмотра контактов необходимо оплатить доступ', 'Продолжить', 'pay', true);
         }
-    }
-
-    mobileItemFunc() {
-        this.activeButton = 'item';
-        this.shortversion = true;
-        this.mapActive = false;
-        this.mobileItemOpen = true;
-        this.itemOpen = true;
-        this.historyActive = false;
-        let TopMenuButton = document.getElementsByClassName('TopMenu-button-tablet') as HTMLCollectionOf<HTMLElement>;
-        let TopMenuWord = document.getElementsByClassName('TopMenu-button-word-tablet') as HTMLCollectionOf<HTMLElement>;
-        for (let i = 0; i < TopMenuButton.length; i++) {
-            TopMenuButton.item(i).style.removeProperty('background-color');
-            TopMenuButton.item(i).style.removeProperty('color');
-            TopMenuButton.item(i).style.removeProperty('border-top');
-            TopMenuWord.item(i).style.removeProperty('border-bottom');
-        }
-    }
-
-    chooseMenuButton(index) {
-//    let TopMenuWord =  document.getElementsByClassName('TopMenu-button-word-tablet') as HTMLCollectionOf<HTMLElement>;
-//     let iconImg = document.getElementsByClassName('iconImg') as HTMLCollectionOf<HTMLElement>;
-//     for (let i = 0; i < iconImg.length; i++) {
-        // iconImg.item(i).style.removeProperty('background');
-//      TopMenuWord.item(i).style.removeProperty('border-bottom');
-
-        // }
-        // iconImg.item(index).style.setProperty('background', 'white');
-//    TopMenuWord.item(index).style.setProperty('border-bottom', '1px solid white');
-    }
-
-    openHeaderAfterPage() {
-        let header = document.getElementsByClassName('header') as HTMLCollectionOf<HTMLElement>;
-        header.item(0).style.setProperty('z-index', '8');
-        // let uselessLine = document.documentElement.getElementsByClassName('uselessLine') as HTMLCollectionOf<HTMLElement>;
-        // uselessLine.item(0).style.setProperty('display', 'block');
-        let arrows = document.documentElement.getElementsByClassName('arrows-mobile ') as HTMLCollectionOf<HTMLElement>;
-        arrows.item(0).style.setProperty('display', 'flex');
     }
 
     setFilters(filters) {
@@ -550,9 +392,10 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         this.sort = sort;
     }
 
-    setEquipment(equipment)  {
+    setEquipment(equipment) {
         this.equipment = equipment;
     }
+
     filtersChosenFunc(event) {
         this._offer_service.list(0, 1, this.filters, this.sort, this.equipment, this.coordsPolygon, this.searchQuery).subscribe(data => {
             this.countOfItems = data.hitsCount;
@@ -562,56 +405,55 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     }
 
     close(name, id) {
-        console.log('func work ' + name);
+        console.log('func work ' + name, ' id: ', id);
         switch (name) {
-            case 'login': {
-                this.loginActive = false;
-                this.mobileItemOpen = true;
-                this.itemOpen = true;
-                this.desktopOpen = true;
-                this.openHeaderAfterPage();
-                break;
-            }
-            case 'contact': {
-                this.contactActive = false;
-                this.mobileItemOpen = true;
-                this.itemOpen = true;
-                this.desktopOpen = true;
-                this.openHeaderAfterPage();
-                break;
-            }
-            case 'pay': {
-                this.payActive = false;
-                this.mobileItemOpen = true;
-                this.itemOpen = true;
-                this.desktopOpen = true;
-                this.openHeaderAfterPage();
-                break;
-            }
-            case 'egrn': {
-                this.ergnActive = false;
-                this.mobileItemOpen = true;
-                this.itemOpen = true;
-                this.desktopOpen = true;
-                this.openHeaderAfterPage();
-                break;
-            }
             case 'item': {
                 this.mainHeight = 'calc(100vh - 155px)';
                 this.blockInputOpen = 'close_menu';
                 this.blockMode = 'items';
                 this.activeButton = 'items';
-                this.itemOpen = false;
                 this.item_mode = 'none';
                 let filt = document.getElementById('filters_open') as HTMLElement;
-                filt.style.setProperty('opacity','0');
-                setTimeout( () => {
+                filt.style.setProperty('opacity', '0');
+                setTimeout(() => {
                     let it = document.getElementById(id) as HTMLElement;
-                    it.scrollIntoView({block: "center"});
-                    filt.style.setProperty('opacity','1');
+                    console.log(it);
+                    it.scrollIntoView({block: 'center'});
+                    filt.style.setProperty('opacity', '1');
+                }, 200);
+                break;
+            }
+            case 'contact': {
+                this.mainHeight = 'calc(100vh - 155px)';
+                this.blockInputOpen = 'close_menu';
+                this.blockMode = 'items';
+                this.activeButton = 'items';
+                this.item_mode = 'none';
+                let filt = document.getElementById('filters_open') as HTMLElement;
+                filt.style.setProperty('opacity', '0');
+                setTimeout(() => {
+                    let it = document.getElementById(id) as HTMLElement;
+                    console.log(it);
+                    it.scrollIntoView({block: 'center'});
+                    filt.style.setProperty('opacity', '1');
+                }, 200);
+                break;
+            }
+            case 'item_request': {
+                this.mainHeight = 'calc(100vh - 155px)';
+                this.blockInputOpen = 'close_menu';
+                this.blockMode = 'request_items';
+                this.activeButton = 'request_items';
+                this.item_mode = 'none';
+                let filt = document.getElementById('filters_open') as HTMLElement;
+                filt.style.setProperty('opacity', '0');
+                setTimeout(() => {
+                    let it = document.getElementById(id) as HTMLElement;
+                    console.log(it);
+                    it.scrollIntoView({block: 'center'});
+                    filt.style.setProperty('opacity', '1');
                 }, 100);
-                console.log(this.headerPos);
-
+                break;
             }
             default: {
                 console.log('default');
@@ -620,43 +462,8 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         }
     }
 
-    historyOpen() {
-        this.chooseMenuButton(2);
-        let filter = document.getElementsByClassName('filters') as HTMLCollectionOf<HTMLElement>;
-        filter.item(0).style.setProperty('display', 'flex');
-        this.mapOpen = false;
-        this.historyActive = true;
-        this.itemOpen = false;
-        if (this.itemsActive === true) {
-            this.itemsActive = false;
-            this.historyPrev = 'items';
-        }
-        if (this.filtersInnerActive === true) {
-            this.filtersInnerActive = false;
-            this.historyPrev = 'filters';
-        }
-        this.time = [];
-    }
-
     onResize() {
-        this.width = document.documentElement.clientWidth;
         this.watched = false;
-        this.filtersMenuActive = false;
-        this.mobile = true;
-        this.shortversion = true;
-        let map = document.getElementsByClassName('map') as HTMLCollectionOf<HTMLElement>;
-        let mapbuttons = document.getElementsByClassName('map-buttons') as HTMLCollectionOf<HTMLElement>;
-        let widthExt;
-        if (map.length > 1) {
-            widthExt = map.item(1).offsetWidth - 12;
-        }
-        if (mapbuttons.length !== 0) {
-            if (!this.mapActive && widthExt !== undefined && widthExt !== null) {
-                mapbuttons.item(0).style.setProperty('width', widthExt + 'px');
-            } else {
-                mapbuttons.item(0).style.setProperty('width', 'auto');
-            }
-        }
     }
 
     getObj(index, flag) {
@@ -665,9 +472,8 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             this.item = this.items[index];
         } else if (flag == 'fav') {
             this.item = this.favItems[index];
-        }
-        if (this.historyItems.indexOf(this.item) === -1) {
-            this.historyItems.push(this.item);
+        } else if (flag == 'request_item') {
+            this.item = this.request_items[index];
         }
         let data = new Date();
         let hour, minute;
@@ -682,249 +488,12 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             minute = data.getMinutes();
         }
         let time = hour + ':' + minute;
-        this.time.unshift(hour + ':' + minute);
-        //     this.favourite[this.item.id] = { value: false };
         sessionStorage.setItem(JSON.stringify(this.item.id), time);
         if (this.watchedItems.indexOf(index) === -1) {
             this.watchedItems.push(index);
         }
-        if (this.current < this.pages.length - 1 && this.pages.length > 1) {
-            let num = this.pages.length - this.current - 1;
-            this.pages.splice(this.current + 1, num);
-            this.pages.push(this.item);
-            this.current = this.pages.length - 1;
-        } else {
-            this.pages.push(this.item);
-            this.current = this.pages.length - 1;
-        }
-        this.mapActive = false;
         let filtersInner = document.getElementsByClassName('filters') as HTMLCollectionOf<HTMLElement>;
         filtersInner.item(0).style.setProperty('right', '0');
-    }
-
-    addFav(index) {
-        let item = document.getElementById('img' + index);
-        if (this.favouriteList.indexOf(index) === -1) {
-            this.favouriteList.push(index);
-            item.classList.add('favActive');
-        } else {
-            let elemIndex = this.favouriteList.indexOf(index);
-            this.favouriteList.splice(elemIndex, 1);
-            item.classList.remove('favActive');
-        }
-    }
-
-    info(check) {
-        if (this.current < this.pages.length - 1 && this.pages.length > 1) {
-            console.log('PAGES');
-            let num = this.pages.length - this.current - 1;
-            this.pages.splice(this.current + 1, num);
-            this.pages.push(check);
-            this.current = this.pages.length - 1;
-        } else {
-            this.pages.push(check);
-            this.current = this.pages.length - 1;
-        }
-        this.checkSwitch(check);
-    }
-
-    checkSwitch(check) {
-        if (typeof check !== 'string') {
-            this.item = <Item> check;
-        }
-        switch (check) {
-
-            case 'filters': {
-                this.mapBig = false;
-                this.loginActive = false;
-                this.payActive = false;
-                this.contactActive = false;
-                this.ergnActive = false;
-                this.filtersInnerActive = true;
-                this.itemOpen = true;
-                this.itemsActive = false;
-                this.mapOpen = false;
-                this.watched = false;
-                this.filtersActive = true;
-                this.mobileItemOpen = false;
-                break;
-            }
-            case 'objects': {
-                this.mapBig = false;
-                this.payActive = false;
-                this.loginActive = false;
-                this.contactActive = false;
-                this.mapOpen = false;
-                this.ergnActive = false;
-                this.filtersInnerActive = false;
-                this.itemOpen = true;
-                this.itemsActive = true;
-                this.watched = true;
-                this.filtersActive = true;
-                this.mobileItemOpen = false;
-                break;
-            }
-            case 'login': {
-                this.mapBig = false;
-                this.loginActive = true;
-                this.payActive = false;
-                this.contactActive = false;
-                this.mapOpen = false;
-                this.ergnActive = false;
-                this.filtersInnerActive = false;
-                this.itemOpen = false;
-                this.desktopOpen = false;
-                let filters = document.documentElement.getElementsByClassName('filters') as HTMLCollectionOf<HTMLElement>;
-                filters.item(0).style.setProperty('display', 'flex');
-                this.itemsActive = false;
-                this.mapActive = false;
-                this.mobileItemOpen = false;
-                break;
-            }
-            case 'pay': {
-                this.mapBig = false;
-                this.loginActive = false;
-                this.contactActive = false;
-                this.payActive = true;
-                this.mapOpen = false;
-                this.ergnActive = false;
-                this.desktopOpen = false;
-                let filters = document.documentElement.getElementsByClassName('filters') as HTMLCollectionOf<HTMLElement>;
-                filters.item(0).style.setProperty('display', 'flex');
-                this.filtersInnerActive = false;
-                this.itemOpen = false;
-                this.itemsActive = false;
-                this.mapActive = false;
-                this.mobileItemOpen = false;
-                break;
-            }
-            case 'contact': {
-                this.mapBig = false;
-                this.loginActive = false;
-                this.payActive = false;
-                this.mapOpen = false;
-                this.desktopOpen = false;
-                let filters = document.documentElement.getElementsByClassName('filters') as HTMLCollectionOf<HTMLElement>;
-                filters.item(0).style.setProperty('display', 'flex');
-                this.contactActive = true;
-                this.ergnActive = false;
-                this.filtersInnerActive = false;
-                this.itemOpen = false;
-                this.itemsActive = false;
-                this.mapActive = false;
-                this.mobileItemOpen = false;
-                break;
-            }
-            case 'test': {
-                this.mapBig = false;
-                this.loginActive = false;
-                this.contactActive = false;
-                this.payActive = false;
-                this.mapOpen = false;
-                this.ergnActive = false;
-                this.filtersInnerActive = false;
-                this.itemOpen = false;
-                this.itemsActive = false;
-                this.mapActive = false;
-                this.mobileItemOpen = false;
-                break;
-            }
-            case 'egrn' : {
-                this.mapBig = false;
-                this.loginActive = false;
-                this.contactActive = false;
-                this.mapOpen = false;
-                this.payActive = false;
-                this.ergnActive = true;
-                this.desktopOpen = false;
-                let filters = document.documentElement.getElementsByClassName('filters') as HTMLCollectionOf<HTMLElement>;
-                filters.item(0).style.setProperty('display', 'flex');
-                this.filtersInnerActive = false;
-                this.itemOpen = false;
-                this.itemsActive = false;
-                this.mapActive = false;
-                this.mobileItemOpen = false;
-                break;
-            }
-            case 'map' : {
-                this.mapBig = true;
-                this.loginActive = false;
-                this.contactActive = false;
-                this.ergnActive = false;
-                this.payActive = false;
-                this.filtersInnerActive = false;
-                this.itemOpen = false;
-                this.itemsActive = false;
-                this.mapOpen = true;
-                this.watched = false;
-                this.mapActive = true;
-                this.filtersActive = false;
-                break;
-            }
-            case 'panorama' : {
-                this.mapBig = true;
-                this.loginActive = false;
-                this.contactActive = false;
-                this.payActive = false;
-                this.ergnActive = false;
-                this.filtersInnerActive = false;
-                this.itemOpen = false;
-                this.itemsActive = false;
-                this.watched = false;
-                this.mapActive = true;
-                this.filtersActive = false;
-                break;
-            }
-            case 'routes' : {
-                this.mapBig = true;
-                this.loginActive = false;
-                this.contactActive = false;
-                this.payActive = false;
-                this.ergnActive = false;
-                this.filtersInnerActive = false;
-                this.itemOpen = false;
-                this.itemsActive = false;
-                this.watched = false;
-                this.mapActive = true;
-                this.filtersActive = false;
-                break;
-            }
-            default: {
-                this.loginActive = false;
-                this.contactActive = true;
-                this.payActive = false;
-                this.ergnActive = false;
-                this.filtersInnerActive = false;
-                this.itemOpen = true;
-                this.itemsActive = false;
-                this.mapActive = false;
-                this.shortversion = false;
-                this.mapBig = false;
-                break;
-            }
-        }
-    }
-
-    similarObj(obj: Item) {
-        console.log('hello');
-        this.item = obj;
-        let data = new Date();
-        let hour, minute;
-        if (data.getHours() < 10) {
-            hour = '0' + data.getHours();
-        } else {
-            hour = data.getHours();
-        }
-        if (data.getMinutes() < 10) {
-            minute = '0' + data.getMinutes();
-        } else {
-            minute = data.getMinutes();
-        }
-        this.time.unshift(hour + ':' + minute);
-        sessionStorage.setItem(JSON.stringify(obj.id), hour + ':' + minute);
-        if (this.watchedItems.indexOf(this.item.id) === -1) {
-            this.watchedItems.push(this.item.id);
-        }
     }
 
     menuMode(mode) {
@@ -932,19 +501,16 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         switch (mode) {
             case 'open_menu':
                 this.tempItems = this.items;
-                this.menuOpen = true;
                 this.blockInputOpen = 'open_menu';
                 break;
             case 'close_menu':
-
                 this.items = [];
-                this.menuOpen = false;
                 this.blockInputOpen = 'close_menu';
                 this.checklogin();
-                setTimeout( () => {
+                setTimeout(() => {
                     console.log(this.tempItems);
                     this.items = this.tempItems;
-                },100);
+                }, 100);
 
                 break;
             case 'close_login':
@@ -956,20 +522,48 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 this.checklogin();
                 break;
         }
-
-        // let items = document.getElementsByClassName('catalog-item') as HTMLCollectionOf<HTMLElement>;
-        // setTimeout( ev => {
-        //     items.item(0).scrollIntoView(false);
-        // }, 300);
-        // console.log('mode:' + mode + ' blockMode:' + this.blockMode + ' blockInputOpen:' + this.blockInputOpen);
     }
 
     getCoords(coords) {
         this.coordsPolygon = coords;
     }
-    setFocus(name){
+
+    setFocus(name) {
         document.getElementById(name).focus();
     }
+
+    get_requests(objsOnPage, flag) {
+        if (flag != 'listscroll') {
+            this.requests = [];
+        }
+
+        this._request_service.list(this.pagecounter, objsOnPage).subscribe(
+            data => {
+                if (this.pagecounter == 0) {
+                    for (let i = 0; i < data.hitsCount; i++) {
+                        if (this.requests.indexOf(data.list[i]) == -1 && data.list[i] != undefined) {
+                            this.requests.push(data.list[i]);
+                        }
+                    }
+                    this.canLoad = 0;
+                } else {
+                    for (let i = 0; i < data.hitsCount; i++) {
+                        if (this.requests.indexOf(data.list[i]) == -1 && data.list[i] != undefined) {
+                            this.requests.push(data.list[i]);
+                        }
+                        this.canLoad = 0;
+                    }
+                    if (~~(this.hitsCount / 20) != this.pagecounter + 1 && data.list.length < 20) {
+                        this.hitsCount -= (20 - data.list.length);
+                    }
+                }
+                console.log(this.requests);
+            },
+            err => console.log(err)
+        );
+
+    }
+
     get_list(objsOnPage, flag) {
         let coords = this.coordsPolygon;
         this.get_favObjects();
@@ -1012,7 +606,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                                 console.log('founded: ', data.list[i].id);
                             }
                         }
-                        if (flag == 'fav'){
+                        if (flag == 'fav') {
                             data.list[i].is_fav = true;
                         }
                         this.items.push(data.list[i]);
@@ -1038,7 +632,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                     }
                     this.canLoad = 0;
                 }
-                if(~~(this.hitsCount/20) != this.pagecounter+1 && data.list.length < 20){
+                if (~~(this.hitsCount / 20) != this.pagecounter + 1 && data.list.length < 20) {
                     this.hitsCount -= (20 - data.list.length);
                 }
                 for (let i = 0; i < this.favItems.length; i++) {
@@ -1054,34 +648,44 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 }
             }
             this.canLoad = 0;
+            if (flag == 'request_items') {
+                this.request_items = this.items;
+            }
+            console.log(this.items);
         }), err => {
             console.log(err);
             this.canLoad = 0;
         };
     }
+
     listScroll(event: TouchEvent) {
         let num = this.touchStartPos - event.changedTouches[0].clientY;
         let its = document.documentElement.getElementsByClassName('catalog-item') as HTMLCollectionOf<HTMLElement>;
         if (its.length != 0 && num > 2) {
-            // console.log(its.item(its.length-1).getBoundingClientRect().top, this.canLoad);
-            if (this.canLoad == 0 && its.item(its.length-1).getBoundingClientRect().top < 2000){
+            if (this.canLoad == 0 && its.item(its.length - 1).getBoundingClientRect().top < 2000) {
                 this.pagecounter += 1;
                 this.get_list(20, 'listscroll');
             }
         }
-
     }
+
+    listScrollRequests(event: TouchEvent) {
+        let num = this.touchStartPos - event.changedTouches[0].clientY;
+        let its = document.documentElement.getElementsByClassName('request-outer-block') as HTMLCollectionOf<HTMLElement>;
+        if (its.length != 0 && num > 2) {
+            if (this.canLoad == 0 && its.item(its.length - 1).getBoundingClientRect().top < 2000) {
+                this.pagecounter += 1;
+                this.get_requests(20, 'listscroll');
+            }
+        }
+    }
+
     checklogin() {
-        this.timeAdd = this.localStorage.getItem('timeAdd');
         this._account_service.checklogin().subscribe(res => {
             console.log(res);
             if (res != undefined) {
                 let data = JSON.parse(JSON.stringify(res));
-                if (data.result == 'success') {
-                    this.logged_in = true;
-                } else {
-                    this.logged_in = false;
-                }
+                this.logged_in = data.result == 'success';
             } else {
                 this.logged_in = false;
             }

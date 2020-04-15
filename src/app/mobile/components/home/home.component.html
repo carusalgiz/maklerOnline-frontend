@@ -8,7 +8,9 @@
             <div class="text-block-titles">
                 <div class="logoTitle1">Решите вопрос аренды жилья самым разумным способом. Онлайн.</div>
                 <div class="logoTitle3">Поиск недвижимости -это всегда сложно. Вот почему мы создали этот сервис.
-                    С помощью простого онлайн-процесса наша команда экспертов будет направлять Вас на каждом шагу этого пути.</div>
+                    С помощью простого онлайн-процесса наша команда экспертов будет направлять Вас на каждом шаге этого
+                    пути.
+                </div>
             </div>
             <div class="logoTitle2">ZAVRUS PRESENT</div>
         </div>
@@ -22,11 +24,12 @@
         </div>
         <div class="white-block item" style="    overflow-x: hidden;">
             <div class="title" style="font-weight: bold;">ДОБАВЛЕНО НЕДАВНО</div>
-            <div class="carousel open" id="items_carousel" style="margin-bottom: 0;height: 332px;">
+            <div class="carousel open" id="items_carousel" style="margin-bottom: 0;">
                 <div class="items" style="overflow: auto;">
                     <ul id="items_carousel-ul" style="width: max-content;">
                         <li class="items_carousel-li" *ngFor="let item of items; let i = index">
-                            <item-middle [mode]="'main_page'" [index]="i" [item]="item" [loggingMode]="false" [payingMode]="false"></item-middle>
+                            <item-middle [mode]="'main_page'" [index]="i" [item]="item" [loggingMode]="false"
+                                         [payingMode]="false"></item-middle>
                         </li>
                     </ul>
                 </div>
@@ -36,13 +39,14 @@
         <div class="picture-block" [style.background-image]="'url(../../../../assets/woman1.jpg)'"></div>
         <div class="yellow-block">
             <div class="title">
-                ПОИСК
+                ПОИСК ПРЕДЛОЖЕНИЯ
             </div>
             <div class="footer-text">
                 Найдите свою новую недвижимость с Маклеронлайн
             </div>
             <div class="description top">
-                К нам стекается информация по аренде недвижимости  со всех рекламных площадок, и напрямую от собственников, мы ее проверяем и публикуем.
+                К нам стекается информация по аренде недвижимости  со всех рекламных площадок, и напрямую от
+                собственников, мы ее проверяем и публикуем.
             </div>
             <div class="description">
                 Отзывы наших клиентов говорят о хорошем качестве 
@@ -52,29 +56,32 @@
                 После регистрация на сервисе, первый час поиска, мы Вам, предоставляем бесплатно.
             </div>
             <div class="description">
-                Мы помогаем многим арендаторам безопасно снимать жилье уже более пяти лет, и мы уверены,что можем сделать то же самое для Вас.
+                Мы помогаем многим арендаторам безопасно снимать жилье уже более пяти лет, и мы уверены,что можем
+                сделать то же самое для Вас.
             </div>
             <div class="description">
                 Возникнут вопросы звоните или пишите, консультируем бесплатно.
             </div>
-            <div class="button" (click)="redirectFunc('m/objects/list')"><div class="border"></div>Начать</div>
+            <div class="button" (click)="redirectFunc('m/objects/list')">
+                <div class="border"></div>
+                Начать
+            </div>
         </div>
         <div class="countLine word">
             <h2 class="wordOne">ОТЗЫВЫ</h2>
         </div>
-        <div class="reviewsBottom"  style="background-color: white">
-            <h3 class="compDescription">Мнения,и рекомендации других пользователей – безусловно самое оптимальное социальное доказательство качества услуги</h3>
+        <div class="reviewsBottom" style="background-color: white">
+            <h3 class="compDescription">Мнения,и рекомендации других пользователей – безусловно самое оптимальное
+                социальное доказательство качества услуги</h3>
             <div class="carousel open" id="carousel">
                 <div class="objects">
                     <ul id="carousel-ul">
                         <li class="carousel-li" *ngFor="let review of reviews">
                             <div class="reviews">
-                                <div class="reviewBlock" >
-                                    <img class="iconUser" alt="фотография автора отзыва" title="фотография автора отзыва" [src]="review.photo">
+                                <div class="reviewBlock">
+                                    <img class="iconUser" alt="фотография автора отзыва"
+                                         title="фотография автора отзыва" [src]="review.photo">
                                     <div class="name">{{review.name}}</div>
-                                    <!--                                    <div class="ratingTest">-->
-                                    <!--                                        <span></span><span></span><span></span><span></span><span></span>-->
-                                    <!--                                    </div>-->
                                     <div class="reviewBlockInfo">
                                         <div class="reviewText">
                                             {{review.text}}
@@ -91,14 +98,16 @@
         <div class="picture-block" [style.background-image]="'url(../../../../assets/woman2.jpg)'"></div>
         <div class="yellow-block">
             <div class="title">
-                ЗАЯВКА
+                ОСТАВИТЬ ЗАЯВКУ
             </div>
             <div class="footer-text">Не тратьте время на поиск, Мы найдем для Вас то,что Вам нужно</div>
             <div class="description top">
-                Создайте свою заявку в МаклерОнлайн, учтите места где чаще всего бываете, Вашу работу, места обучения, детские учреждения и.т.д. 
+                Создайте свою заявку в МаклерОнлайн, учтите места где чаще всего бываете, Вашу работу, места обучения,
+                детские учреждения и.т.д. 
             </div>
             <div class="description">
-                Теперь к Вам, персональный подход. Ваши интересы, становятся нашими, с Вашей заявкой будет работать один из наших квалифицированных менеджеров. 
+                Теперь к Вам, персональный подход. Ваши интересы, становятся нашими, с Вашей заявкой будет работать
+                один из наших квалифицированных менеджеров. 
             </div>
             <div class="description">
                 Рассматривайте  поступившие предложения и выбираете самое лучшее. (Предложения поступят на Вашу почту)
@@ -110,7 +119,10 @@
                 Возникнут вопросы звоните или пишите, консультируем  
                 бесплатно. 
             </div>
-             <div class="button" (click)="redirectFunc('m/objects/request')"><div class="border"></div>Начать</div>
+            <div class="button" (click)="redirectFunc('m/objects/request')">
+                <div class="border"></div>
+                Начать
+            </div>
         </div>
         <div class="picture-block" [style.background-image]="'url(../../../../assets/man1.jpg)'"></div>
         <div class="yellow-block">
@@ -125,7 +137,8 @@
                 Покажите  преимущества вашей собственности.
             </div>
             <div class="description">
-                МаклерОнлайн предоставит вам доступ к целевой аудитории, которая ежемесячно генерирует тысячи запросов по поиску недвижимости для аренды.
+                МаклерОнлайн предоставит вам доступ к целевой аудитории, которая ежемесячно генерирует тысячи запросов
+                по поиску недвижимости для аренды.
             </div>
             <div class="description">
                 Сдавайте уверено!
@@ -137,16 +150,29 @@
             <div class="description">
                 Добавить свое объявление на сервис - бесплатно (Для собственников недвижимости)
             </div>
-            <div class="button" (click)="redirectFunc('m/objects/request')"><div class="border"></div>Начать</div>
+            <div class="button" (click)="redirectFunc('m/objects/request')">
+                <div class="border"></div>
+                Начать
+            </div>
         </div>
         <div class="gray-block" style="background-color: #252F32">
             <div class="title" style="font-size: 26px; color: white">О НАС</div>
-            <div class="footer-text" style="margin: 20px 0;">Представьте, Вы открываете страницу Сервиса, выбираете квартиру,комнату, звоните, и Вам отвечает - Собственник!</div>
-            <div class="description" style="color: #F6F6F6;margin-bottom: 15px;">Поиск недвижимости от собственников это всегда сложно. Вот почему мы создали этот сервис. Мы помогаем нашим клиентам, арендовать жилье напрямую, от собственника, и занимаемся этим с 2013 года.</div>
+            <div class="footer-text" style="margin: 20px 0;">Представьте, Вы открываете страницу Сервиса, выбираете
+                квартиру,комнату, звоните, и Вам отвечает - Собственник!
+            </div>
+            <div class="description" style="color: #F6F6F6;margin-bottom: 15px;">Поиск недвижимости от собственников это
+                всегда сложно. Вот почему мы создали этот сервис. Мы помогаем нашим клиентам, арендовать жилье напрямую,
+                от собственника, и занимаемся этим с 2013 года.
+            </div>
             <div class="description" style="color: #F6F6F6;margin-bottom: 15px">
-                К нам стекается информация по аренде недвижимости, мы ее проверяем и добавляем на наш сервис. После регистрации — один час бесплатно, это поможет Вам убедиться, и начать доверять опубликованной информации. </div>
+                К нам стекается информация по аренде недвижимости, мы ее проверяем и добавляем на наш сервис. После
+                регистрации — один час бесплатно, это поможет Вам убедиться, и начать доверять
+                опубликованной информации.
+            </div>
             <div class="description" style="color: #F6F6F6;margin-bottom: 15px">
-                Наши клиенты это люди которые уже обращались к нам за нашей услугой ранее, а так же те кто хочет арендовать напрямую, у собственника. Они не видят смысла искать её где-то в другом месте. Все уже здесь. Отзывы о нас говорят сами за себя.
+                Наши клиенты это люди которые уже обращались к нам за нашей услугой ранее, а так же те кто хочет
+                арендовать напрямую, у собственника. Они не видят смысла искать её где-то в другом месте. Все уже здесь.
+                Отзывы о нас говорят сами за себя.
             </div>
             <div class="description" style="color: #F6F6F6;margin-bottom: 15px">
                 Мы не агентство, и будем рады помочь Вам, найти Вашу будущую недвижимость.
@@ -154,22 +180,25 @@
             <div class="footer-text">
                 Команда MaklerOnline
             </div>
-            <div class="button light" (click)="openMobileMenu()"><div class="border"></div>Начать</div>
+            <div class="button light" (click)="openMobileMenu()">
+                <div class="border"></div>
+                Начать
+            </div>
         </div>
-<!--        <div class="uselessLineHome">-->
-<!--            <div class="companyName">МАКЛЕРОНЛАЙН</div>-->
-<!--            <div class="hideMenu" (click)="openMobileMenu()">-->
-<!--                <div class="bar1"></div>-->
-<!--                <div class="bar2"></div>-->
-<!--                <div class="bar3"></div>-->
-<!--            </div>-->
-<!--        </div>-->
+        <!--        <div class="uselessLineHome">-->
+        <!--            <div class="companyName">МАКЛЕРОНЛАЙН</div>-->
+        <!--            <div class="hideMenu" (click)="openMobileMenu()">-->
+        <!--                <div class="bar1"></div>-->
+        <!--                <div class="bar2"></div>-->
+        <!--                <div class="bar3"></div>-->
+        <!--            </div>-->
+        <!--        </div>-->
         <div class="countLine yearBlock" style="justify-content: center">
-            <div class="anniversaryYear">5</div>
+            <div class="anniversaryYear">7</div>
             <div class="year">ЛЕТ</div>
             <div class="anniversaryDate">
                 <div>ЮБИЛЕЙНЫЙ ГОД</div>
-                <div>2013 • 2018</div>
+                <div>2013 • 2020</div>
             </div>
         </div>
         <!--mobile-->
@@ -177,20 +206,21 @@
             <div class="footer-top">
                 <div class="social-icons">
                     <div
-                       style="outline: none" (click)="facebook = true; redirSocial('https://www.facebook.com/makleronlinekhv/')">
+                        style="outline: none"
+                        (click)="facebook = true; redirSocial('https://www.facebook.com/makleronlinekhv/')">
                         <img src="../../../../assets/icons8-facebook-circled-100.png" [class.imgnondisp]="facebook">
                         <img src="../../../../assets/icons8-facebook-circled-filled-100.png"
                              [class.imgnondisp]="!facebook">
                     </div>
                     <div style="outline: none"
-                       (click)="vk = true;redirSocial('https://vk.com/club82992253')">
+                         (click)="vk = true;redirSocial('https://vk.com/club82992253')">
                         <img class="icon" src="../../../../assets/icons8-vk-circled-100.png" [class.imgnondisp]="vk"/>
                         <img class="icon" src="../../../../assets/icons8-vk-circled-filled-100.png"
                              [class.imgnondisp]="!vk"/>
                     </div>
                     <div
-                       style="outline: none"
-                       (click)="odnokl = true;redirSocial('https://ok.ru/makleronline')">
+                        style="outline: none"
+                        (click)="odnokl = true;redirSocial('https://ok.ru/makleronline')">
                         <img class="icon" src="../../../../assets/icons8-odnoklassniki-circled-100-non-hover.png"
                              [class.imgnondisp]="odnokl"/>
                         <img class="icon" src="../../../../assets/icons8-odnoklassniki-circled-filled-100.png"
@@ -213,14 +243,14 @@
                             <div>Телефон</div>
                             <div>WhatsApp</div>
                             <div>E-mail</div>
-<!--                            <div>Инстаграм</div>-->
+                            <!--                            <div>Инстаграм</div>-->
                         </div>
                         <div class="contacts-right">
                             <a href="tel:+79243090030" class="social-link">+7 (924) 309-00-30</a>
                             <a href="https://wa.me/79243090030" class="social-link">https://wa.me/79243090030</a>
                             <a href="mailto:info@makleronline.net" class="social-link">info@makleronline.net</a>
-<!--                            <a href="https://www.instagram.com/makleronlinekhv/" class="social-link">https://www.instagram.com/-->
-<!--                                makleronlinekhv/</a>-->
+                            <!--                            <a href="https://www.instagram.com/makleronlinekhv/" class="social-link">https://www.instagram.com/-->
+                            <!--                                makleronlinekhv/</a>-->
                         </div>
                     </div>
                 </div>

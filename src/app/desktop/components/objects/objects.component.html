@@ -23,11 +23,6 @@
         </div>
     </div>
     <div class="filter-right-buttons">
-<!--        <div class="counter">{{countOfObjects}}</div>-->
-<!--        <div class="count-filters flex-col">-->
-<!--            <span>предложений</span>-->
-<!--            <span>найдено</span>-->
-<!--        </div>-->
         <div class="plus">
             <div class="one"></div>
             <div class="two"></div>
@@ -78,12 +73,8 @@
                 <input type="text" class="input_line" placeholder="Введите поисковый запрос" (click)="ymFunc('find-offer');"
                        [(ngModel)]="searchQuery" (keyup)="searchStringChanged($event)"
                 ><div class="find_icon_block"><div class="find_icon"></div></div>
-                <div class="counter">{{countOfObjects}}</div>
-                <div class="count-filters flex-col find">
-                    <span>предложений</span>
-                    <span>всего</span>
-                </div>
             </div>
+            <div><span style="font-size: 14px;margin-right: 5px;">Найдено: </span><span style="font-size: 16px">{{countOfObjects}}</span></div>
             <div class="scroll-items open blur common-list" (mousewheel)="listScroll($event)"
                  *ngIf="!historyActive && (activeButton == 'items' || activeButton == 'obj') && !itemOpen">
 

@@ -27,16 +27,28 @@ import * as moment from 'moment';
 
 @Component({
     selector: 'item-middle',
-    inputs: ['item', 'loggingMode', 'payingMode'],
+    inputs: ['item', 'loggingMode', 'payingMode', 'mode'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        <div class="catalog-item hovered itemBlock" id="{{item?.id}}">
-            <div class="photoBlock" *ngIf="imgLen == 0" [class.watched]="item?.watched">
+        <div class="catalog-item hovered itemBlock" id="{{item?.id}}"  [class.main-page]="mode=='main_page'">
+            <div *ngIf="imgLen == 0 && mode=='main_page'" class="photoBlock"
+                 style="background-size: 100% 100%;background-image: url('../../../assets/noph.png')"
+                 [class.main-page]="mode=='main_page'">
                 <img class="img"
-                     [src]="src">
+                     [title]="'makleronline снять ' + item?.roomsCount + ' комнатную квартиру в хабаровске без посредников'"
+                     [alt]="'makleronline аренда ' + item?.roomsCount + ' комнатной квартиры в хабаровске без посредников'"
+                     [src]="src" [class.avito]="src.indexOf('avito') != -1"  [style.object-fit]="src.indexOf('assets/noph') != -1 ? 'unset' : 'cover'">
                 <div class="no-photo">{{photo_no_title}}</div>
             </div>
-            <div class="carousel open" *ngIf="imgLen > 0">
+            <div *ngIf="imgLen != 0 && mode=='main_page'" class="photoBlock" [class.main-page]="mode=='main_page'"
+                 style="    background-size: 100% 100%;">
+                <img class="img"
+                     [title]="'makleronline снять ' + item?.roomsCount + ' комнатную квартиру в хабаровске без посредников'"
+                     [alt]="'makleronline аренда ' + item?.roomsCount + ' комнатной квартиры в хабаровске без посредников'"
+                     [src]="src" [class.avito]="src.indexOf('avito') != -1" [style.object-fit]="src.indexOf('assets/noph') != -1 ? 'unset' : 'cover'">
+                <div class="no-photo">{{photo_no_title}}</div>
+            </div>
+            <div class="carousel open" *ngIf="imgLen > 0 && mode != 'main_page'">
                 <div class="arrow left img" (click)="prev()">
                     <div class="arrowFull">
                         <div class="barArrow1-left"></div>
@@ -61,73 +73,79 @@ import * as moment from 'moment';
                     </div>
                 </div>
             </div>
-            <div class="bottom-block">
-                    <div class="info">
-                        <div class="apart-type" *ngIf="item?.typeCode == 'room'"><span class="one">КОМНАТА</span></div>
-                        <div class="apart-type" *ngIf="item?.typeCode == 'apartment'"><span class="one">КВАРТИРА</span></div>
-                        <div class="apart-type" *ngIf="item?.typeCode == 'house'"><span class="one">ДОМ</span></div>
-                        <div class="apart-type" *ngIf="item?.typeCode == 'dacha'"><span class="one">ДАЧА</span></div>
-                        <div class="apart-type" *ngIf="item?.typeCode == 'cottage'"><span class="one">КОТТЕДЖ</span></div>
-                        <div class="price" style="    margin-bottom: 5px;">{{formattedPrice}}<span style="margin-left: 8px">₽</span></div>
-                        <div class="address">
-                            <span *ngIf="!item.address.includes('ул.')">ул.</span><span class="special">{{item?.address}}<span style="font-weight: bold; text-transform: lowercase"> {{item?.house_num}}</span></span>
+            <div class="photoBlock" *ngIf="imgLen == 0 && mode!='main_page'">
+                <img class="img" [src]="'../../../../assets/noph.png'">
+            </div>
+            <div class="bottom-block main-page" *ngIf="mode=='main_page'">
+                <div class="info main-page">
+                    <div style="display: flex">
+                        <div class="price-block-main-page">
+                            <div class="apart-type main-page"><span>{{ itemType }}</span></div>
+                            <div class="apart-type main-page"><span class="one">{{item?.city}}</span></div>
+                            <!--                                <div class="price" style="margin-bottom: 5px;    font-size: 16px;">{{formattedPrice}}<span style="margin-left: 8px">₽</span></div>-->
                         </div>
-                        <div class="bus">Остановка {{item?.busStop}}</div>
-                        <div class="bottom-desc">
-                            <div class="flex-col" style="    align-items: center;">
-                                <span class="typename">{{item?.roomsCount}}</span>
-                                <span class="type">Комнат</span>
-                            </div>
-                            <div class="desc-divider"></div>
-                            <div class="flex-col" style="    align-items: center;">
-                                <span class="typename">{{item?.floor}}/{{item?.floorsCount}}</span>
-                                <span class="type">Этаж</span>
-                            </div>
-                            <div class="desc-divider"></div>
-                            <div class="flex-col" style="    align-items: center;">
-                                <span  class="typename" *ngIf="(item?.typeCode == 'apartment' || item?.typeCode == 'house' || item?.typeCode == 'dacha' || item?.typeCode == 'cottage')">{{item?.squareTotal}}</span>
-                                <span  class="typename" *ngIf="item?.typeCode == 'room'">{{item?.squareLiving}}</span>
-                                <span class="type">Площадь</span>
-                            </div>
+                        <div class="price main-page" style="font-size: 18px;">
+                            <span style="letter-spacing: unset">{{formattedPrice}}<span style="margin-left: 4px">Р</span></span>
+                            <span style="font-size: 12px;    color: #72727D;font-weight: normal;line-height: 18px;" *ngIf="commission != 0">Комиссия {{commission}} {{item?.commisionType == 'fix' ? 'Р' : '%'}}</span>
+                            <span style="font-size: 12px;    color: #72727D;font-weight: normal;line-height: 18px;" *ngIf="commission == 0">Без комиссии</span>
                         </div>
                     </div>
-                    <div class="starFav" *ngIf="item != undefined" (mouseenter)="favHovered = true"
-                         (mouseleave)="favHovered = false">
-                        <img class="starImg" [class.open]="!favHovered && !item?.is_fav"
-                             src="../../../../assets/4-4.png" width="24px">
-                        <img class="starImg" (click)="delFavObject()"
-                             [class.open]="favHovered && item.is_fav" src="../../../../assets/4-4.png"
-                             width="24px">
-                        <img (click)="addFavObject()" class="starImg"
-                             [class.open]="favHovered  && !item.is_fav"
-                             src="../../../../assets/4-4%20watched.png" width="24px">
-                        <img (click)="delFavObject()" class="starImg"
-                             [class.open]="item.is_fav && !favHovered"
-                             src="../../../../assets/4-4%20watched.png" width="24px">
+                   
+                    <div class="address main-page">
+                        <span *ngIf="!item.address.includes('ул.')">ул.</span><span class="special">{{item?.address}}<span style="font-weight: bold; text-transform: lowercase"> {{item?.house_num}}</span></span>
                     </div>
-                    <div class="phone-block flex-col">
-                        <div class="contact-photo full" [ngStyle]="{'background-image': (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true') && item?.photo != undefined ? 'url('+item?.photo+')' : 'url(../../../../assets/user-icon.png)', 'background-size': (payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')  && item?.photo != undefined  ? 'cover':'125% 125%' }"></div>
-                        <div class="flex-col contact-info">
-                            <div class="name">{{item.name}}</div>
-                            <div class="middleman">{{item.IsMiddleman ? 'Посредник' : 'Частное лицо'}}</div>
+                    <div class="bottom-desc main-page">
+                        <div class="flex-col" style="    align-items: center;">
+                            <span class="type">Комнат {{item?.roomsCount}}</span>
                         </div>
-                        <div class="lineFull contact" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')"></div>
-                        <div style="display: flex;align-items: center;">
-<!--                            *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')"-->
-                            <div class="phone-photo" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')"></div>
-                            <div class="flex-col" style="justify-content: center;" *ngIf="(payingMode == true || payingMode == 'true') && (loggingMode == true || loggingMode == 'true')">
-                                <div class="phone" *ngIf="item?.phoneBlock?.main != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.main | mask: ' (000) 000-0000'}}</div>
-                                <div class="phone" *ngIf="item?.phoneBlock?.other != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.other | mask: ' (000) 000-0000'}}</div>
-                                <div class="phone" *ngIf="item?.phoneBlock?.home != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.home | mask: ' (000) 000-0000'}}</div>
-                                <div class="phone" *ngIf="item?.phoneBlock?.cellphone != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.cellphone | mask: ' (000) 000-0000'}}</div>
-                                <div class="phone" *ngIf="item?.phoneBlock?.fax != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.fax | mask: ' (000) 000-0000'}}</div>
-                                <div class="phone" *ngIf="item?.phoneBlock?.ip != null">{{item.phoneBlock != null ? '+7':''}}{{item?.phoneBlock?.ip | mask: ' (000) 000-0000'}}</div>
-                            </div>
-                            <ng-container *ngIf="(payingMode != true && payingMode != 'true') || (loggingMode != true && loggingMode != 'true')">
-                                <div class="button-contact" (click)="checklogin();">Контакты</div>
-                            </ng-container>
+                        <div class="flex-col" style="    align-items: center;">
+                            <span class="type">Этаж {{item?.floor}} / {{item?.floorsCount}}</span>
+                        </div>
+                        <div class="flex-col" style="    align-items: center;">
+                            <span class="type">Залог {{item?.prepayment ? 'Да' : 'Нет'}}</span>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="dark-line"  *ngIf="mode!='main_page'">
+                <div class="img" [ngStyle]="{'background-image': item?.photo != undefined ? 'url('+item?.photo+')' : 'url(../../../../assets/user-icon.png)', 'background-size': item?.photo != undefined  ? 'cover':'107% 107%' }"></div>
+                <div class="name"><span>{{item?.name}}</span></div>
+            </div>
+            <div class="flex-col list-bottom-block" *ngIf="mode!='main_page'">
+                <div class="starFav-list" *ngIf="item != undefined" (mouseenter)="favHovered = true"
+                     (mouseleave)="favHovered = false">
+                    <img class="starImg" [class.open]="!favHovered && !item?.is_fav"
+                         src="../../../../assets/4-4.png" width="24px">
+                    <img class="starImg" (click)="delFavObject()"
+                         [class.open]="favHovered && item.is_fav" src="../../../../assets/4-4.png"
+                         width="24px">
+                    <img (click)="addFavObject()" class="starImg"
+                         [class.open]="favHovered  && !item.is_fav"
+                         src="../../../../assets/4-4%20watched.png" width="24px">
+                    <img (click)="delFavObject()" class="starImg"
+                         [class.open]="item.is_fav && !favHovered"
+                         src="../../../../assets/4-4%20watched.png" width="24px">
+                </div>
+                <div class="flex-col">
+                    <div><span style="color: #72727D; font-size: 10px;">{{ itemType }}</span></div>
+                    <div class="price" style="margin-bottom: 3px;">
+                        <span style="letter-spacing: unset; font-size: 18px; margin-right: 15px;">{{formattedPrice}}<span style="font-size: 18px;margin-left: 5px;">Р</span></span>
+                        <span style="font-size: 12px;    color: #72727D;font-weight: normal;line-height: 18px;" *ngIf="commission != 0">Комиссия {{commission}} {{item?.commisionType == 'fix' ? 'Р' : '%'}}</span>
+                        <span style="font-size: 12px;    color: #72727D;font-weight: normal;line-height: 18px;" *ngIf="commission == 0">Без комиссии</span>
+                    </div>
+                    <div style="color: #72727D">{{item?.city}}</div>
+                    <div class="address">
+                        <span *ngIf="!item.address.includes('ул.')">ул.</span><span class="special">{{item?.address}}<span style="font-weight: bold; text-transform: lowercase"> {{item?.house_num}}</span></span>
+                    </div>
+                    <div style="color: #72727D">{{item?.admArea}}</div>
+                    <div style="color: #72727D">ост. {{item?.busStop}}</div>
+                    <div class="item-info">
+                        <div>Комнат {{item?.roomsCount}}</div>
+                        <div>Площадь {{item?.squareTotal}} / {{item?.squareLiving}} / {{item?.squareKitchen}}</div>
+                        <div>Этаж {{item?.floor}} / {{item?.floorsCount}}</div>
+                    </div>
+                    <div style="color: #72727D; font-size: 10px;">Добавлено: {{addDate}}</div>
+                </div>                
             </div>
         </div>
     `,
@@ -138,6 +156,8 @@ export class ItemMiddle implements AfterViewInit, OnChanges {
     public item: Item;
     public payingMode: any;
     public loggingMode: any;
+    itemType: any;
+    @Input() mode: any;
     @ViewChild('carousel', {static: false}) private carousel: ElementRef;
     objStop: any;
     favHovered = false;
@@ -151,11 +171,17 @@ export class ItemMiddle implements AfterViewInit, OnChanges {
     positionImg = 0;
     time: any;
     offItem = Item;
+    commission = 0;
 
     private player: AnimationPlayer;
     private currentSlide = 0;
     carouselWrapperStyle = {};
     itemWidth: any;
+    addDate: any;
+
+    firstName: any;
+    lastName: any;
+
 
     @Output() favItemMode = new EventEmitter();
     @Output() showBlock = new EventEmitter();
@@ -165,25 +191,6 @@ export class ItemMiddle implements AfterViewInit, OnChanges {
     }
 
     ngAfterViewInit() {
-        this.reSizeCarousel();
-        // this.getPlaces(this.item.lon, this.item.lat);
-    }
-
-    @HostListener('window:resize', ['$event'])
-    onResize(event) {
-        this.reSizeCarousel();
-    }
-
-    reSizeCarousel(): void {
-        // re-size the container
-        let photo = document.getElementsByClassName('photoBlock') as HTMLCollectionOf<HTMLElement>;
-        this.itemWidth  = photo.item(0).clientWidth;
-        this.carouselWrapperStyle = {
-            width: `${this.itemWidth}px`,
-        };
-
-        // trigger a fresh transition to the current slide to reset the position of the children
-        this.transitionCarousel(null);
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
@@ -244,6 +251,51 @@ export class ItemMiddle implements AfterViewInit, OnChanges {
         console.log('checkparams');
         this.conveniencesShort = '';
         if (this.item != undefined) {
+            if (this.item.typeCode != undefined) {
+                switch (this.item.typeCode) {
+                    case 'room':
+                        if (this.item.buildingClass == 'dormitory') {
+                            this.itemType = 'КОМНАТА В ОБЩЕЖИТИИ';
+                        }
+                        if (this.item.buildingClass == 'single_house') {
+                            this.itemType = 'КОМНАТА В ДОМЕ';
+                        }
+                        if (this.item.buildingClass == 'cottage') {
+                            this.itemType = 'КОМНАТА В КОТТЕДЖЕ';
+                        }
+                        if (this.item.buildingClass == 'dacha') {
+                            this.itemType = 'КОМНАТА НА ДАЧЕ';
+                        }
+                        if (this.item.buildingClass == 'duplex') {
+                            this.itemType = 'КОМНАТА В ДУПЛЕКСЕ';
+                        }
+                        if (this.item.buildingClass == 'townhouse') {
+                            this.itemType = 'КОМНАТА В ТАУНХАУСЕ';
+                        }
+                        if (this.item.buildingClass == 'barrack') {
+                            this.itemType = 'КОМНАТА В БАРАКЕ';
+                        }
+                        // "business", "elite", "economy", "new", "improved", "khrushchev", "brezhnev", "stalin", "old_fund"
+                        if (this.item.buildingClass == 'business' || this.item.buildingClass == 'elite'|| this.item.buildingClass == 'economy' || this.item.buildingClass == 'new'
+                            || this.item.buildingClass == 'improved' || this.item.buildingClass == 'khrushchev' || this.item.buildingClass == 'brezhnev' || this.item.buildingClass == 'stalin'
+                            || this.item.buildingClass == 'old_fund') {
+                            this.itemType = 'КОМНАТА В КВАРТИРЕ';
+                        }
+                        break;
+                    case 'apartment':
+                        this.itemType = 'КВАРТИРА';
+                        break;
+                    case 'house':
+                        this.itemType = 'ДОМ';
+                        break;
+                    case 'cottage':
+                        this.itemType = 'КОТТЕДЖ';
+                        break;
+                    case 'dacha':
+                        this.itemType = 'ДАЧА';
+                        break;
+                }
+            }
             if (this.item.photos != undefined) {
                 if (this.item.photos[0] != undefined) {
                     this.src = this.item.photos[0].href;
@@ -258,15 +310,35 @@ export class ItemMiddle implements AfterViewInit, OnChanges {
             if (this.item.name != undefined) {
                 let spArray = this.item.name.split(" ");
                 let ret = spArray[0].toUpperCase();
+                this.firstName = spArray[0].toUpperCase();
                 if (spArray.length > 1) {
                     for (let i = 1; i < spArray.length; i++) {
                         ret += " " + spArray[i];
+                        this.lastName += " " + spArray[i];
                     }
                 }
                 this.item.name = ret;
+
             }
 
-
+            if (this.item.commisionType != undefined) {
+                if (this.item.commisionType == 'percent') {
+                    if (this.item.commission != undefined) {
+                        this.commission = this.item.commission;
+                    } else {
+                        this.commission = 0;
+                    }
+                }
+                if (this.item.commisionType == 'fix') {
+                    if (this.item.commission != undefined) {
+                        this.commission = this.item.commission;
+                    } else {
+                        this.commission = 0;
+                    }
+                }
+            } else {
+                this.commission = 0;
+            }
             if (this.item.address != undefined) {
                 if (this.item.address.includes('ул.')) {
                     this.item.address = this.item.address.slice(this.item.address.indexOf('ул.') + 3, this.item.address.length);
@@ -304,6 +376,43 @@ export class ItemMiddle implements AfterViewInit, OnChanges {
             }
             this.roomC = this.item.roomsCount != undefined;
             this.squareC = this.item.squareTotal != undefined;
+
+            let date = this.item.addDate;
+            let day = moment.unix(this.item.addDate);
+            let curDate = new Date();
+            let secs = curDate.getTime() / 1000;
+            let timeHasCome = secs - date;
+            if (timeHasCome < 86400) {
+                if (day.minutes() < 10) {
+                    this.addDate = 'сегодня, ' + day.format("dddd") + ' в ' + day.hours() + ':0' + day.minutes();
+                } else {
+                    this.addDate = 'сегодня, ' + day.format("dddd") + ' в ' + day.hours() + ':' + day.minutes();
+                }
+            } else if (timeHasCome > 86400 && timeHasCome < 86400 * 2) {
+                if (day.minutes() < 10) {
+                    this.addDate = 'вчера, ' + day.format("dddd") + ' в ' + day.hours() + ':0' + day.minutes();
+                } else {
+                    this.addDate = 'вчера, ' + day.format("dddd") + ' в ' + day.hours() + ':' + day.minutes();
+                }
+            } else if (timeHasCome > 86400 * 2 && timeHasCome < 86400 * 3) {
+                if (day.minutes() < 10) {
+                    this.addDate = 'позавчера, ' + day.format("dddd") + ' в ' + day.hours() + ':0' + day.minutes();
+                } else {
+                    this.addDate = 'позавчера, ' + day.format("dddd") + ' в ' + day.hours() + ':' + day.minutes();
+                }
+            } else {
+                let hour = '';
+                if (Math.floor(timeHasCome / 60 / 60 / 24) < 4) {
+                    hour = Math.floor(timeHasCome / 60 / 60 / 24) + ' дня ';
+                } else {
+                    hour = Math.floor(timeHasCome / 60 / 60 / 24) + ' дней ';
+                }
+                if (day.minutes() < 10) {
+                    this.addDate = hour + 'назад, ' + day.format("dddd") + ' в ' + day.hours() + ':0' + day.minutes();
+                } else {
+                    this.addDate = hour + 'назад, ' + day.format("dddd") + ' в ' + day.hours() + ':' + day.minutes();
+                }
+            }
         }
         this.getNumWithDellimet();
     }

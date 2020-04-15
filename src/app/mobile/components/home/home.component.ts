@@ -128,9 +128,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }
 
     menuMode(mode) {
-
         this.blockOpen = mode;
-        console.log('blockopen: ', this.blockOpen);
     }
     redirSocial(href){
         document.location.href = href;
@@ -204,6 +202,5 @@ export class HomeComponent implements OnInit, AfterViewInit {
                 }
             }
         });
-        console.log(this.items);
     }
 }

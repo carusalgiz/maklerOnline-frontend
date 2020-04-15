@@ -170,8 +170,8 @@ export class AccountService {
         return ret_subj;
     }
 
-  saveUser(accountId: any, email_block: any, phone_block: any, messengerBlock: any, socialBlock: any, organisation: any, fio: any, description: any, isMiddleman: any ) {
-    const body = {accountId: accountId,
+  saveUser( email_block: any, phone_block: any, messengerBlock: any, socialBlock: any, organisation: any, fio: any, description: any, isMiddleman: any ) {
+    const body = {
         emailBlock: email_block,
         phoneBlock: phone_block,
         name: fio,
@@ -231,7 +231,7 @@ export class AccountService {
       let query = [];
       query.push('rand=' + Math.random().toFixed(20).replace('.', ''));
     let _resourceUrl =  this.servUrl + '/person/balance?' + query.join('&');
-     console.log(_resourceUrl);
+     // console.log(_resourceUrl);
     let ret_subj = <AsyncSubject<any>>new AsyncSubject();
 
     //, responseType: 'text'
@@ -292,12 +292,6 @@ export class AccountService {
             map((res: Response) => res)).subscribe(
             raw => {
                 let data = JSON.parse(JSON.stringify(raw));
-                console.log(data);
-                let struct = {
-                    'name': data.name,
-                    'email' : data.email
-                };
-
                     ret_subj.next(data);
 
                 ret_subj.complete();

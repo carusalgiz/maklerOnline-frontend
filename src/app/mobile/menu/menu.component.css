@@ -615,7 +615,7 @@ input.number::placeholder{
     opacity: 0.4;
     filter: blur(3px);
 }
-.filters {
+.filters-menu {
     flex-direction: column;
     /*overflow-y: auto;*/
     -webkit-overflow-scrolling: touch;
@@ -628,7 +628,7 @@ input.number::placeholder{
     max-width: 100vw;
     height: 100%;
 }
-.filters.open{
+.filters-menu.open{
     display: block;
 }
 .scroll-items {
