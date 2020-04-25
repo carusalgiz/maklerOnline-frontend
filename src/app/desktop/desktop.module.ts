@@ -20,6 +20,8 @@ import { VirtualScrollerModule } from 'ngx-virtual-scroller';
 import { NgxMetrikaModule } from '@kolkov/ngx-metrika';
 import { NgxMetrikaService } from '@kolkov/ngx-metrika';
 import {ScrollingModule} from '@angular/cdk/scrolling';
+import {InputRangeComponent} from './ui/input-range';
+import { ItemDesktop } from './components/item-desktop.component';
 
 const routes: Routes = [
     {path: 'pay', component: PayComponent},
@@ -58,7 +60,9 @@ const routes: Routes = [
     RatingComponent,
     ProposalComponent,
     AgreementComponent,
-      ItemMiddle
+      ItemMiddle,
+      InputRangeComponent,
+      ItemDesktop
   ],
     providers: [ {provide: LocationStrategy, useClass: PathLocationStrategy}]
 })

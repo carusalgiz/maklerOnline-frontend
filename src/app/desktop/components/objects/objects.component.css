@@ -167,7 +167,6 @@ body {
 .item-blur {
     position: relative;
     z-index: 1000;
-    border-left: 1px solid #d3d5d6;
     font-weight: normal !important;
 }
 
@@ -188,8 +187,8 @@ body {
 .main-objects {
     display: flex;
     /*padding-top: 7px;*/
-    height: calc(100vh - 70px);
-    top: 70px;
+    height: calc(100vh - 60px);
+    top: 60px;
     /*width: 100vw;*/
     position: fixed;
     transition: 0.3s;
@@ -220,8 +219,7 @@ body {
 
 .filters {
     background-color: #FAFAFA;
-    height: calc(100vh - 200px);
-    padding-left: 10px;
+    height: calc(100vh - 190px);
     display: flex;
     flex-direction: column;
     overflow-y: hidden;
@@ -231,13 +229,26 @@ body {
     z-index: 5;
     position: fixed;
     right: 0;
-    top: 200px;
+    top: 190px;
     font-family: OpenSans, sans-serif;
+    width: 487px;
 }
-.total-padding{
-    width: 455px;
+.found-items{
+    margin-bottom: 5px;
+    padding: 0 10px;
 }
-
+.found-items > span{
+    font-family: OpenSans, sans-serif;
+    letter-spacing: 0;
+    color: #32323d;
+}
+.found-items > span:first-child{
+    font-size: 12px;
+    margin-right: 5px;
+}
+.found-items > span:last-child{
+    font-size: 16px
+}
 .filters:hover {
     overflow-y: auto;
 }
@@ -285,10 +296,11 @@ body {
     position: fixed;
     right: 0;
     top: 130px;
-    height: 70px;
+    height: 60px;
     z-index: 10;
     transition: 0.3s;
     width: 100%;
+    background-color: #4b4b4b;
 }
 
 .filters-box {
@@ -297,7 +309,7 @@ body {
     background-color: #fff;
     position: absolute;
     height: calc(100vh - 200px);
-    width: 350px;
+    width: 400px;
     transition: 0.3s;
     z-index: 1500;
     left: 100vw;
@@ -306,8 +318,8 @@ body {
 }
 
 .filters-box.open {
-    left: calc(100vw - 350px);
-    box-shadow: #677578 0 2px 10px 0;
+    left: calc(100vw - 400px);
+    box-shadow: #d3d5d6 0 3px 4px 0;
 }
 
 .scroll-items {
@@ -401,23 +413,23 @@ body {
 }
 
 .mapTopButtons {
-    height: 35px;
+    height: 28px;
     display: flex;
     flex-grow: 1;
 }
 .mapTopButtons.l{
-    margin: 0 0 0 110px;
+    margin: 0 0 0 60px;
 }
-.mapTopButtons.r{
-    margin: 0 30px 0 80px;
-}
-
 .mapTopButton {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100px;
+    padding: 0 15px;
     font-size: 12px;
+    font-family: OpenSans, sans-serif;
+    text-transform: capitalize;
+    letter-spacing: 0;
+    width: 65px;
 }
 
 .mapTopButton.right, .mapTopButton.left {
@@ -451,12 +463,6 @@ body {
     color: #252f32;
     border: 1px solid #D3D5D6;
 }
-
-/*.mapTopButton.active:hover {*/
-/*    background-color: #4b4b4b;*/
-/*    color: white;*/
-/*}*/
-
 .mapTopButton.left:hover {
     border-right: 1px solid #4b4b4b !important;
 }
@@ -498,6 +504,9 @@ body {
     display: flex;
     align-items: center;
     width: auto;
+}
+.filter-right-buttons > div{
+    margin-right: 35px;
 }
 
 .offers {
@@ -597,10 +606,12 @@ body {
 .find-block{
     display: flex;
     height: 65px;
-    width: 100%;
+    min-height: 65px;
+    width: calc(100% - 20px);
     position: relative;
     top: 0;
     align-items: center;
+    padding:0 10px;
 }
 .find_icon{
     background-image: url("../../../../assets/лупа.png");
@@ -615,24 +626,47 @@ body {
 /*    color: #3d615b;*/
 /*}*/
 .input_line{
-    height: 35px;
-    width: 255px;
+    height: 28px;
+    width: 432px;
     border: 1px solid #D3D5D6;
     color: #252F32;
     font-size: 12px;
     padding-left: 15px;
     background-color: #FAFAFA;
 }
+.filter-menu-button > div{
+    font-family: OpenSans, sans-serif;
+    text-transform: uppercase;
+    color: #d3d5d6;
+}
+.filter-menu-button > .line{
+    width: 100%;
+    border-bottom: 3px solid white;
+    margin-top: -3px;
+    position: relative;
+    top: 4px;
+    opacity: 0;
+}
+.filter-menu-button:hover > div:first-child{
+    color: white;
+}
+.filter-menu-button:hover > .line{
+    opacity: 1;
+}
+.filter-menu-button.active > div:first-child{
+    color: white;
+}
+.filter-menu-button.active > .line{
+    opacity: 1;
+}
 input{
-    font-family: Cadillac, sans-serif;
-    letter-spacing: 0.05em;
+    font-family: OpenSans, sans-serif;
 }
 input::placeholder{
     color: #72727D;
     font-size: 12px;
     font-style: italic;
-    font-family: Cadillac, sans-serif;
-    letter-spacing: 0.05em;
+    font-family: OpenSans, sans-serif;
 }
 input:focus, input:active{
     outline: none;

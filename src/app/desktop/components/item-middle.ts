@@ -48,30 +48,12 @@ import * as moment from 'moment';
                      [src]="src" [class.avito]="src.indexOf('avito') != -1" [style.object-fit]="src.indexOf('assets/noph') != -1 ? 'unset' : 'cover'">
                 <div class="no-photo">{{photo_no_title}}</div>
             </div>
-            <div class="carousel open" *ngIf="imgLen > 0 && mode != 'main_page'">
-                <div class="arrow left img" (click)="prev()">
-                    <div class="arrowFull">
-                        <div class="barArrow1-left"></div>
-                        <div class="barArrow2-left"></div>
-                    </div>
-                </div>
-                <div class="objects hovered" [class.watched]="item?.watched">
-                    <ul id="carousel-ul-img1{{item?.id}}" #carousel>
-                        <li class="carousel-li-img1{{item?.id}}" *ngFor="let img of item?.photos, let i = index">
-                            <div class="photoBlock" [class.watched]="item?.watched">
-                                <img class="img" [class.avito]="img.href.indexOf('avito') != -1"
-                                     [src]="img.hrefMini != undefined ? img.hrefMini : img.href">
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="arrow right img" (click)="next()">
-                    <div class="arrowFull">
-                        <div class="barArrow1-right"></div>
-                        <div class="barArrow2-right"></div>
-                    </div>
-                </div>
+            <div class="photoBlock" [class.watched]="item?.watched" *ngIf="imgLen > 0 && mode != 'main_page'">
+                <div class="magnifier" (click)="openGallery.emit(true)"></div>
+                <img class="img"
+                     [title]="'makleronline снять ' + item?.roomsCount + ' комнатную квартиру в хабаровске без посредников'"
+                     [alt]="'makleronline аренда ' + item?.roomsCount + ' комнатной квартиры в хабаровске без посредников'"
+                     [src]="src" [class.avito]="src.indexOf('avito') != -1" [style.object-fit]="src.indexOf('assets/noph') != -1 ? 'unset' : 'cover'">
             </div>
             <div class="photoBlock" *ngIf="imgLen == 0 && mode!='main_page'">
                 <img class="img" [src]="'../../../../assets/noph.png'">
@@ -109,7 +91,7 @@ import * as moment from 'moment';
             </div>
             <div class="dark-line"  *ngIf="mode!='main_page'">
                 <div class="img" [ngStyle]="{'background-image': item?.photo != undefined ? 'url('+item?.photo+')' : 'url(../../../../assets/user-icon.png)', 'background-size': item?.photo != undefined  ? 'cover':'107% 107%' }"></div>
-                <div class="name"><span>{{item?.name}}</span></div>
+                <div class="name"><span style="margin-right: 4px;font-weight: bold">{{firstName}}</span><span style="font-family: OpenSans, sans-serif;">{{lastName}}</span></div>
             </div>
             <div class="flex-col list-bottom-block" *ngIf="mode!='main_page'">
                 <div class="starFav-list" *ngIf="item != undefined" (mouseenter)="favHovered = true"
@@ -129,13 +111,13 @@ import * as moment from 'moment';
                 <div class="flex-col">
                     <div><span style="color: #72727D; font-size: 10px;">{{ itemType }}</span></div>
                     <div class="price" style="margin-bottom: 3px;">
-                        <span style="letter-spacing: unset; font-size: 18px; margin-right: 15px;">{{formattedPrice}}<span style="font-size: 18px;margin-left: 5px;">Р</span></span>
+                        <span style="letter-spacing: unset; font-size: 18px; margin-right: 15px;font-family: OpenSansBold;">{{formattedPrice}}<span style="font-size: 18px;margin-left: 5px;">Р</span></span>
                         <span style="font-size: 12px;    color: #72727D;font-weight: normal;line-height: 18px;" *ngIf="commission != 0">Комиссия {{commission}} {{item?.commisionType == 'fix' ? 'Р' : '%'}}</span>
                         <span style="font-size: 12px;    color: #72727D;font-weight: normal;line-height: 18px;" *ngIf="commission == 0">Без комиссии</span>
                     </div>
                     <div style="color: #72727D">{{item?.city}}</div>
-                    <div class="address">
-                        <span *ngIf="!item.address.includes('ул.')">ул.</span><span class="special">{{item?.address}}<span style="font-weight: bold; text-transform: lowercase"> {{item?.house_num}}</span></span>
+                    <div class="address" >
+                        <span *ngIf="!item.address.includes('ул.')">ул.</span><span class="special">{{item?.address}}<span style="font-weight: bold; text-transform: lowercase;font-family: OpenSansBold;"> {{item?.house_num}}</span></span>
                     </div>
                     <div style="color: #72727D">{{item?.admArea}}</div>
                     <div style="color: #72727D">ост. {{item?.busStop}}</div>
@@ -175,16 +157,16 @@ export class ItemMiddle implements AfterViewInit, OnChanges {
 
     private player: AnimationPlayer;
     private currentSlide = 0;
-    carouselWrapperStyle = {};
     itemWidth: any;
     addDate: any;
 
-    firstName: any;
-    lastName: any;
+    firstName = '';
+    lastName = '';
 
 
     @Output() favItemMode = new EventEmitter();
     @Output() showBlock = new EventEmitter();
+    @Output() openGallery = new EventEmitter();
 
     constructor(private _account_service: AccountService,private builder: AnimationBuilder) {
 

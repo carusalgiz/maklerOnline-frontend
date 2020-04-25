@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     };
     @Input() otherComponent: boolean;
     @Input() itemOpen: boolean;
+    @Input() countOfItems: any;
     @Output() blockClose = new EventEmitter();
     @Output() userLoggedIn = new EventEmitter();
     @Output() loggingMode = new EventEmitter();
@@ -43,6 +44,41 @@ export class LoginComponent implements OnInit, AfterViewInit {
     pass: any;
     items: any[] = [];
     phone1 = "+7";
+    position: any;
+
+    model_name: any;
+    model_whatsapp: any;
+    model_vk: any;
+    model_ok: any;
+    model_instagram: any;
+    model_description: any;
+
+    advices = [
+        {
+            text: 'Сохраните Ваш запрос  как заявку. (кнопка в фильтрах)\n' +
+                'Для уточнения параметров поиска, с Вами свяжется \n' +
+                'наш менеджер.\n' +
+                'Когда будут найдены подходящие объявления, Вы \n' +
+                'получите оповещение. ( обработка заявки 1 день ).\n' +
+                'Создание заявки  - бесплатно!'
+        },
+        {
+            text: 'Сохраните Ваш запрос  как заявку. (кнопка в фильтрах)\n' +
+                'Для уточнения параметров поиска, с Вами свяжется \n' +
+                'наш менеджер.\n' +
+                'Когда будут найдены подходящие объявления, Вы \n' +
+                'получите оповещение. ( обработка заявки 1 день ).\n' +
+                'Создание заявки  - бесплатно!'
+        },
+        {
+            text: 'Сохраните Ваш запрос  как заявку. (кнопка в фильтрах)\n' +
+                'Для уточнения параметров поиска, с Вами свяжется \n' +
+                'наш менеджер.\n' +
+                'Когда будут найдены подходящие объявления, Вы \n' +
+                'получите оповещение. ( обработка заявки 1 день ).\n' +
+                'Создание заявки  - бесплатно!'
+        }
+    ];
 
     ngOnInit() {
         this.width = document.documentElement.clientWidth;
@@ -67,7 +103,46 @@ export class LoginComponent implements OnInit, AfterViewInit {
         this.pass = "";
         this.blockClose.emit(name);
     }
+    setFocus(name){
+        document.getElementById(name).focus();
+    }
+    prevAdvice() {
+        const listElems = document.getElementsByClassName('advice_carousel-li') as HTMLCollectionOf<HTMLElement>;
+        const list = document.getElementById('advice_carousel-ul') as HTMLElement;
+        let last = listElems.item(listElems.length - 1);
+        listElems.item(listElems.length - 1).remove();
+        list.insertBefore(last, listElems.item(0));
+        list.style.setProperty('transition', 'unset');
+        this.position= -330;
+        list.style.setProperty('margin-left', this.position + 'px');
+        setTimeout(() => {
+            list.style.setProperty('transition', 'margin-left .4s');
+            this.position = 0;
+            list.style.setProperty('margin-left', this.position + 'px');
+        }, 0);
+    }
+    nextAdvice() {
+        const listElems = document.getElementsByClassName('advice_carousel-li') as HTMLCollectionOf<HTMLElement>;
+        let first = listElems.item(0);
+        let clone = first.cloneNode(true);
+        listElems.item(0).remove();
+        const list = document.getElementById('advice_carousel-ul') as HTMLElement;
+        list.appendChild(clone);
+        list.style.setProperty('transition', 'unset');
+        this.position = 330;
 
+        list.style.setProperty('margin-left', this.position + 'px');
+        setTimeout(() => {
+            list.style.setProperty('transition', 'margin-left .4s');
+            this.position = 0;
+            list.style.setProperty('margin-left', this.position + 'px');
+        }, 0);
+    }
+    inputToCenter(ev){
+        setTimeout(() => {
+            ev.target.scrollIntoView({block: 'center', behavior: 'smooth'});
+        },300);
+    }
     onResize() {
         let hei = document.getElementsByClassName('left-block') as HTMLCollectionOf<HTMLElement>;
         let logo = document.getElementsByClassName('logo') as HTMLCollectionOf<HTMLElement>;
@@ -139,17 +214,22 @@ export class LoginComponent implements OnInit, AfterViewInit {
             'main': this.phone.slice(1, this.phone.length)
         };
         let emails = {
-            'main': this.login
+            'main': this.login.replace(' ','')
         };
-            this._account_service.saveUser( emails, phones,'','','','','','').subscribe(res => {
-                if (res != undefined) {
-                    this.enterMode('register');
-                    this.get_users();
-                } else {
-                    document.getElementById('res1').innerHTML = 'Произошла ошибка в системе. Регистрация на данный момент невозможна';
-                }
-            });
-
+        let messengers = {
+            'whatsapp': this.model_whatsapp
+        };
+        let socials = {
+            'vk': this.model_vk,
+            'ok': this.model_ok,
+            'instagram': this.model_instagram
+        };
+        this._account_service.saveUser(emails, phones, messengers, socials, undefined, this.model_name, this.model_description, false).subscribe(res => {
+            if (res != undefined) {
+                this.enterMode('register');
+                this.get_users();
+            }
+        });
     }
 
     selected(el: MouseEvent) {
@@ -204,20 +284,17 @@ export class LoginComponent implements OnInit, AfterViewInit {
         }
         this.items = [];
         if (this.mode === 'register' && this.login !== '' && this.pass !== '' && this.phone !== '') {
-            this._account_service.data(this.login, this.pass, this.phone, this.mode, recoverMethod).subscribe(res => {
+            this._account_service.data(this.login.replace(' ', ''), this.pass, this.phone, this.mode, recoverMethod).subscribe(res => {
                 let i = 0;
                 for (let str of Object.values(res)) {
-                    if (i == 0) {
-                        i++;
-                        console.log(str);
-                        if (str.toString() == "ok") {
-                            document.getElementById('res1').innerHTML = "Учетная запись успешно создана";
-                            this.register = false;
-                            this.log_in = true;
-                            this.phone1 = "+" + this.phone;
-                        }
+                    if (str.toString() == 'ok') {
+                        this.phone1 = '+' + this.phone;
+                        setTimeout(() => {
+                            this.enterMode('login');
+                            this.get_users();
+                        }, 300);
                     }
-
+                    i++;
                 }
             });
 

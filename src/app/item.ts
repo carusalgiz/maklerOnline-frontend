@@ -2,6 +2,8 @@ import {UploadFile} from "./class/UploadFile";
 import {ConditionsBlock} from "./class/conditionsBlock";
 import {PhoneBlock} from './class/phoneBlock';
 import {Person} from './class/person';
+import {AddressBlock} from './class/addressBlock';
+import {EmailBlock} from './class/emailBlock';
 
 export class Item {
     bus_stop: any;
@@ -53,93 +55,18 @@ export class Item {
     buildingType: string;           //тип дома
     buildingClass: string;          //тип недвижимости
 
-    constructor(id?: number,
-                buildingType?: string,
-                buildingClass?: string,
-                admArea?: string,
-                region?: string,
-                address?: string,
-                house_num?: string,
-                city?: string,
-                price?: number,
-                roomsCount?: number,
-                floor?: number,
-                floorsCount?: number,
-                squareTotal?: number,
-                squareLiving?: number,
-                name?: string,
-                photo?: string,
-                addDate?: number,
-                photos?: UploadFile,
-                documents?: UploadFile,
-                photoMini?: string,
-                conditions?: ConditionsBlock,
-                email?: string,
-                phone?: string,
-                prepayment?: boolean,
-                electrificPay?: boolean,
-                waterPay?: boolean,
-                gasPay?: boolean,
-                balcony?: boolean,
-                loggia?: boolean,
-                condition?: string,
-                bathroom?: string,
-                typeCode?: string,
-                heatingPay?: boolean,           //плата за отопление
-                utilityBills?: boolean,         // коммунальные платежи
-                paymentType?: string,           //Тип расчета
-                description?: string,
-                deposit?: boolean,
-                IsMiddleman?: boolean,
-                phoneBlock?: PhoneBlock,
-                busStop?: string,
-                commission?: number,
-                commisionType?: string,
-                person?: Person
-    ) {
-        this.id = id;
-        this.buildingClass = buildingClass;
-        this.buildingType = buildingType;
-        this.admArea = admArea;
-        this.region = region;
-        this.address = address;
-        this.price = price;
-        this.roomsCount = roomsCount;
-        this.city = city;
-        this.house_num = house_num;
-        this.floor = floor;
-        this.floorsCount = floorsCount;
-        this.squareTotal = squareTotal;
-        this.squareLiving = squareLiving;
-        this.busStop = busStop;
-        this.commission = commission;
-        this.commisionType = commisionType;
-        this.name = name;
+    constructor() {
+        // set default vals
+        this.buildingType =  'multisection_house';
+        this.buildingClass =  'economy';
+        this.typeCode = 'apartment';
+        this.bathroom = "other";
+        this.condition = "other";
         this.photos = [];
-        this.photos.push(photos);
         this.documents = [];
-        this.documents.push(documents);
-        this.addDate = addDate;
-        this.photo = photo;
-        this.photoMini = photoMini;
-        this.conditions = conditions;
-        this.email = email;
-        this.prepayment = prepayment;
-        this.electrificPay = electrificPay;
-        this.waterPay = waterPay;
-        this.gasPay = gasPay;
-        this.balcony = balcony;
-        this.loggia = loggia;
-        this.condition = condition;
-        this.bathroom = bathroom;
-        this.typeCode = typeCode;
-        this.heatingPay = heatingPay;
-        this.utilityBills = utilityBills;
-        this.paymentType = paymentType;
-        this.description = description;
-        this.deposit = deposit;
-        this.IsMiddleman = IsMiddleman;
-        this.person = person;
+        this.address = '';
+        this.house_num = '';
+        this.conditions = new ConditionsBlock();
     }
 
 

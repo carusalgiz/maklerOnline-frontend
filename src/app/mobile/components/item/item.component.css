@@ -1141,6 +1141,9 @@ app-rating {
     background-position-x: center;
     background-position-y: center;
 }
+.photoBlock:hover .magnifier{
+    display: block;
+}
 .magnifier{
     position: relative;
     top: 125px;
@@ -1148,14 +1151,13 @@ app-rating {
     margin-bottom: -70px;
     height: 70px;
     width: 70px;
-    display: flex;
-    -webkit-box-align: center;
-    align-items: center;
-    -webkit-box-pack: center;
-    justify-content: center;
+    display: none;
     background-color: #eaebeca1;
     border-radius: 50px;
     z-index: 90;
+    background-image: url("../../../../assets/лупа.png");
+    background-size: 50px 50px;
+    background-position: center;
 }
 .input-block{
     display: flex;

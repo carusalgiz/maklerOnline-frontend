@@ -27,6 +27,7 @@ export class MenuComponent implements OnInit {
     resTime: any;
     resDay: any;
     logging_var: any;
+    countOfItems: any;
     @Output() updateItems = new EventEmitter();
     @Output() Logging = new EventEmitter();
     @Output() Paying = new EventEmitter();
@@ -49,6 +50,9 @@ export class MenuComponent implements OnInit {
         clearInterval(this.timer);
         this.checklogin();
         this.redirect = false;
+        this._offer_service.list(0, 10000, '', '', '', '', '').subscribe(dataOffers => {
+            this.countOfItems = dataOffers.hitsCount;
+        });
     }
 
     update() {
@@ -194,35 +198,12 @@ export class MenuComponent implements OnInit {
     }
     openBlock(page) {
         let slide = document.getElementsByClassName('right-slide-box') as HTMLCollectionOf<HTMLElement>;
-        let useless = document.getElementsByClassName('uselessLine') as HTMLCollectionOf<HTMLElement>;
-        let header = document.getElementsByClassName('header') as HTMLCollectionOf<HTMLElement>;
-        for (let i = 0; i < slide.length; i++) {
-            slide.item(i).style.setProperty('z-index', '100');
-        }
         let items = document.getElementsByClassName('menuBlock') as HTMLCollectionOf<HTMLElement>;
         switch (page) {
             case 'login':
                 items.item(3).style.setProperty('border-top', '5px solid #821529');
                 items.item(3).style.setProperty('font-weight', 'bold');
                 slide.item(0).classList.add('open');
-                slide.item(0).style.setProperty('z-index', '1500');
-                if (useless.item(0).classList.contains('homePage')) {
-                    if (header.item(0).classList.contains('scroll')) {
-                        slide.item(0).style.setProperty('top', '0');
-                        slide.item(0).style.setProperty('height', '100vh');
-                    } else {
-                        slide.item(0).style.setProperty('top', '130px');
-                        slide.item(0).style.setProperty('height', 'calc(100vh - 130px)');
-                    }
-                } else {
-                    if (useless.item(0).classList.contains('scroll')) {
-                        slide.item(0).style.setProperty('top', '65px');
-                        slide.item(0).style.setProperty('height', 'calc(100vh - 65px)');
-                    } else {
-                        slide.item(0).style.setProperty('top', '195px');
-                        slide.item(0).style.setProperty('height', 'calc(100vh - 195px)');
-                    }
-                }
                 break;
             case 'pay':
                 if (this.loggedIn) {
@@ -230,24 +211,6 @@ export class MenuComponent implements OnInit {
                     items.item(2).style.setProperty('border-top', '5px solid #821529');
                     items.item(2).style.setProperty('font-weight', 'bold');
                     slide.item(1).classList.add('open');
-                    slide.item(1).style.setProperty('z-index', '1500');
-                    if (useless.item(0).classList.contains('homePage')) {
-                        if (header.item(0).classList.contains('scroll')) {
-                            slide.item(1).style.setProperty('top', '0');
-                            slide.item(1).style.setProperty('height', '100vh');
-                        } else {
-                            slide.item(1).style.setProperty('top', '130px');
-                            slide.item(1).style.setProperty('height', 'calc(100vh - 130px)');
-                        }
-                    } else {
-                        if (useless.item(0).classList.contains('scroll')) {
-                            slide.item(1).style.setProperty('top', '65px');
-                            slide.item(1).style.setProperty('height', 'calc(100vh - 65px)');
-                        } else {
-                            slide.item(1).style.setProperty('top', '195px');
-                            slide.item(1).style.setProperty('height', 'calc(100vh - 195px)');
-                        }
-                    }
                 } else {
                     this.openBlock('login');
                 }

@@ -369,11 +369,6 @@ export class ItemComponent implements OnInit, OnChanges, AfterViewInit {
                 }
                 this.addDate = hour + 'назад в ' + day.hours() + ':' + day.minutes();
             }
-
-            // if (this.item.bus_stop == undefined) {
-            //     this.getPlaces(this.item.lon, this.item.lat);
-            // }
-
         }
     }
 
@@ -401,11 +396,11 @@ export class ItemComponent implements OnInit, OnChanges, AfterViewInit {
                     }
                 } else {
                     if (useless.item(0).classList.contains('scroll')) {
-                        slide.item(0).style.setProperty('top', '65px');
-                        slide.item(0).style.setProperty('height', 'calc(100vh - 65px)');
+                        slide.item(0).style.setProperty('top', '60px');
+                        slide.item(0).style.setProperty('height', 'calc(100vh - 60px)');
                     } else {
-                        slide.item(0).style.setProperty('top', '195px');
-                        slide.item(0).style.setProperty('height', 'calc(100vh - 195px)');
+                        slide.item(0).style.setProperty('top', '190px');
+                        slide.item(0).style.setProperty('height', 'calc(100vh - 190px)');
                     }
                 }
                 break;
@@ -421,32 +416,11 @@ export class ItemComponent implements OnInit, OnChanges, AfterViewInit {
                     }
                 } else {
                     if (useless.item(0).classList.contains('scroll')) {
-                        slide.item(1).style.setProperty('top', '65px');
-                        slide.item(1).style.setProperty('height', 'calc(100vh - 65px)');
+                        slide.item(1).style.setProperty('top', '60px');
+                        slide.item(1).style.setProperty('height', 'calc(100vh - 60px)');
                     } else {
-                        slide.item(1).style.setProperty('top', '195px');
-                        slide.item(1).style.setProperty('height', 'calc(100vh - 195px)');
-                    }
-                }
-                break;
-            case 'save_token':
-                localStorage.setItem('obj_id', this.item.id.toString(10));
-                slide.item(4).classList.add('open');
-                if (useless.item(0).classList.contains('homePage')) {
-                    if (header.item(0).classList.contains('scroll')) {
-                        slide.item(4).style.setProperty('top', '0');
-                        slide.item(4).style.setProperty('height', '100vh');
-                    } else {
-                        slide.item(4).style.setProperty('top', '130px');
-                        slide.item(4).style.setProperty('height', 'calc(100vh - 130px)');
-                    }
-                } else {
-                    if (useless.item(0).classList.contains('scroll')) {
-                        slide.item(4).style.setProperty('top', '65px');
-                        slide.item(4).style.setProperty('height', 'calc(100vh - 65px)');
-                    } else {
-                        slide.item(4).style.setProperty('top', '195px');
-                        slide.item(4).style.setProperty('height', 'calc(100vh - 195px)');
+                        slide.item(1).style.setProperty('top', '190px');
+                        slide.item(1).style.setProperty('height', 'calc(100vh - 190px)');
                     }
                 }
                 break;

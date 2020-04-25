@@ -23,9 +23,9 @@ import {UIUploadFile} from './ui/ui-upload-file.component';
 import {ImageCropperModule} from 'ngx-image-cropper';
 import {TextareaAutosizeModule} from 'ngx-textarea-autosize';
 import {UiModalWindow} from '../ui/ui-modal-window';
-import {InputRangeComponent} from '../ui/input-range';
 import {RequestService} from '../services/request.service';
 import {RequestMiddleComponent} from './components/request-middle';
+import {InputRangeComponent} from './ui/input-range';
 
 const routes: Routes = [
     {path: '', component: HomeComponent},
@@ -61,8 +61,8 @@ const routes: Routes = [
         AgreementComponent,
         UIUploadFile,
         UiModalWindow,
-        InputRangeComponent,
-        RequestMiddleComponent
+        RequestMiddleComponent,
+        InputRangeComponent
     ],
     providers: [{provide: LocationStrategy, useClass: PathLocationStrategy}, RequestService]
 })

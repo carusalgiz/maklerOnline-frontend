@@ -22,6 +22,10 @@ h2, h1, h3{
   font-style: normal;
 }
 @font-face {
+    font-family: HelveticaBold;
+    src: url("assets/font/helveticaBold.otf") format('otf');
+}
+@font-face {
   font-family: Cadillac;
   src: url("assets/Cadillac.woff") format('woff');
   font-weight: normal;

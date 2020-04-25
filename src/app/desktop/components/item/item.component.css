@@ -75,13 +75,14 @@ div:hover, span:hover, p:hover {
 .catalog-item {
     width: 450px;
     overflow-x: hidden;
-    margin-bottom: 20px;
+    /*margin-bottom: 20px;*/
     box-shadow: 0 3px 4px #d3d5d6;
     background-color: white;
+    margin: 5px 10px 20px;
 }
 
-.hovered:hover {
-    background-color: #f6f6f6;
+.catalog-item.hovered:hover {
+    box-shadow: 0 3px 4px 5px #d3d5d6;
 }
 
 .catalog-item.hovered:hover .objects {
@@ -119,12 +120,30 @@ div:hover, span:hover, p:hover {
     letter-spacing: 0.05em;
     color: #252f32;
 }
-
+.photoBlock:hover .magnifier{
+    display: block;
+}
+.magnifier{
+    position: relative;
+    top: 125px;
+    left: calc(50% - 35px);
+    margin-bottom: -70px;
+    height: 70px;
+    width: 70px;
+    display: none;
+    background-color: #eaebeca1;
+    border-radius: 50px;
+    z-index: 90;
+    background-image: url("../../../../assets/лупа.png");
+    background-size: 50px 50px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
 .price,.address {
     font-family: Cadillac, sans-serif;
     letter-spacing: 0.05em;
     display: flex;
-    color: #252f32;
+    color: black;
     font-weight: bold;
 }
 .bottom-desc{
@@ -161,6 +180,9 @@ div:hover, span:hover, p:hover {
 .address{
    font-size: 14px;
 }
+.address > span{
+    font-family: OpenSansBold !important;
+}
 .address .special{
     text-transform: uppercase;
 }
@@ -178,13 +200,12 @@ div:hover, span:hover, p:hover {
     background-color: #252F32;
     height: 44px;
     width: 100%;
+    display: flex;
 }
 .dark-line > .name{
-    font-family: Open sans, sans-serif;
+    font-family: OpenSansBold, sans-serif;
     font-size: 14px;
     color: white;
-    letter-spacing: 0.05em;
-    font-weight: bold;
     margin-left: 15px;
     align-items: center;
     display: flex;
@@ -219,6 +240,8 @@ div:hover, span:hover, p:hover {
 .item-info > div{
     margin-right: 15px;
     color: #32323D;
+    font-weight: bold;
+    font-family: OpenSansBold;
 }
 .photoBlock .img {
     width: 100%;
@@ -403,7 +426,7 @@ div:hover, span:hover, p:hover {
 .arrow.right {
     width: 40px;
     position: relative;
-    right: calc(100% - 27vw);
+    right: 55px;
     display: none;
     align-items: center;
 }
@@ -514,7 +537,6 @@ div:hover, span:hover, p:hover {
     font-family: Cadillac;
     font-size: 14px;
     color: #32323d;
-    letter-spacing: 0.05em;
     margin-bottom: 5px;
 }
 .middleman{
@@ -587,7 +609,7 @@ div:hover, span:hover, p:hover {
     line-height: 17px;
     height: 17px;
     /*width: 50%;*/
-    letter-spacing: 0.05em;
+    letter-spacing: 0;
 }
 .add-info{
     display: flex;
@@ -671,10 +693,8 @@ div:hover, span:hover, p:hover {
     width: 360px !important;
     height: 333px;
     min-width: unset;
-    margin-right: 20px;
     border: 1px solid #d3d5d6 !important;
-    margin-top: 15px !important;
-    margin-bottom: 0;
+    margin: 15px 20px 0 0 !important;
 }
 .address.main-page{
     font-size: 14px !important;

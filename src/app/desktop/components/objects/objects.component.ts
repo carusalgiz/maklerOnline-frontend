@@ -16,6 +16,7 @@ import {AccountService} from '../../../services/account.service';
 export class ObjectsComponent implements OnInit, AfterViewInit {
 
     private subscription: Subscription;
+    galleryFullItem = false;
     listscroll = 0;
     scrollArr = [];
     panoramaActive = false;
@@ -71,6 +72,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     searchQuery: string = "";
     suggestionTo: any;
     sgList: string[] = [];
+    galleryType: any;
 
     constructor(private ym: NgxMetrikaService, @Inject(WINDOW) private window: Window, @Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, private router: Router,
                 private _offer_service: OfferService,
@@ -92,7 +94,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                  this.itemOpen = false;
                  this.activeButton = 'items';
                  this.itemsActive = true;
-                 this.get_list(10000, 'constructor')
+                 this.get_list(1000, 'constructor')
              }
         });
     }
@@ -156,6 +158,13 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     ymFunc(target) {
         this.ym.reachGoal.next({target: target});
     }
+    openGallery(obj, event) {
+        this.item = obj;
+        this.galleryFullItem = event;
+        this.itemOpen = true;
+        this.activeButton = 'obj';
+        this.galleryType = 'list';
+    }
     searchStringChanged(e) {
         let c = this;
         clearTimeout(this.suggestionTo);
@@ -191,6 +200,22 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     modeChange(type){
         this.closeBlock('item');
         localStorage.setItem('listType', type);
+        switch (type) {
+            case 'fav': {
+                this.activeButton = 'fav';
+                this.itemsActive = false;
+                this.listMode = true;
+                break;
+            }
+            case 'items': {
+                this.activeButton = 'items';
+                this.itemsActive = true;
+                this.historyClose();
+                this.listMode = true;
+                this.itemOpen = false;
+                break;
+            }
+        }
     }
 
     listActive() {
@@ -358,7 +383,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }
             this.drawActive = false;
         });
-        this.get_list(1000, 'initmap');
     }
 
     clearMap() {
@@ -417,7 +441,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             let catalog = document.getElementsByClassName('catalog-item') as HTMLCollectionOf<HTMLElement>;
             let objects = document.getElementsByClassName('objects') as HTMLCollectionOf<HTMLElement>;
             for (let i = 0; i < catalog.length; i++) {
-                catalog.item(i).style.removeProperty('background-color');
+                catalog.item(i).style.removeProperty('box-shadow');
                 catalog.item(i).style.removeProperty('position');
                 catalog.item(i).style.removeProperty('top');
                 catalog.item(i).style.removeProperty('padding-top');
@@ -429,7 +453,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             let el = document.getElementById(id) as HTMLElement;
             // el.scrollIntoView(true);
             if (el != undefined) {
-                el.style.setProperty('background-color', '#d3d5d6');
+                el.style.setProperty('box-shadow', '0 3px 4px 5px #d3d5d6');
                 el.style.setProperty('position', 'relative');
                 el.style.setProperty('top', '-1px');
                 el.style.setProperty('padding-top', '1px');
@@ -525,17 +549,23 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             case 'cottage': obj_type = 'Коттедж'; break;
             case 'room': obj_type = 'Комната'; break;
         }
+        let addr = item.address;
+        if (!item.address.includes('ул.')) {
+            addr = 'ул. ' + item.address.toUpperCase() + ' ' + item.house_num.toUpperCase();
+        } else {
+            addr = item.address.toUpperCase() + ' ' + item.house_num.toUpperCase();
+        }
         let baloon = new this.maps.Placemark([item.lat, item.lon], {
                     name: item.id,
-                    balloonContentHeader: '<span style="font-family: OpenSansBold, sans-serif;margin-top: 13px; font-size: 12px">' + item.address + ' ' + item.house_num + '</span>',
+                    balloonContentHeader: '<span style="font-family: OpenSansBold, sans-serif;margin-top: 13px; font-size: 12px;letter-spacing: 0;">' + addr + '</span>',
                     balloonContentBody: '<div style="display: flex;height: 100%;width: fit-content">' +
                         ' <div style="margin-right: 15px; height: 80px; width: 110px;    background-position-x: center;background-position-y: center;background-repeat: no-repeat; background-size: 140% auto; background-image:' + photo + '"></div> <div style="display: flex; flex-direction: column;font-family: Cadillac, sans-serif;' +
                         'font-size: 14px;">' +
                         // '<span style="font-family: OpenSansBold;margin-top: 7px; font-size: 12px">' + item.address + ' ' + item.house_num + '</span>' +
-                        '<div style="display: flex;font-family: OpenSans; font-size: 12px;padding: 0 30px 0 0 ;height: 15px"><div style="width: 75px">' + obj_type +'</div><div style="min-width: 85px;">' + rooms + ' комнатная</div></div>' +
-                        '<div style="display: flex;font-family: OpenSans; font-size: 12px;padding: 0;height: 15px"><div style="width: 75px">Этаж</div><div>' + floor + '/' + floorsCount + '</div></div>' +
-                        '<div style="display: flex;font-family: OpenSans; font-size: 12px; padding-bottom: 5px;height: 15px"><div style="width: 75px">Площадь</div><div>' + square + ' кв. м</div></div>' +
-                        '<div style="display: flex;font-family: OpenSans; font-size: 12px"><div style="width: 75px">Стоимость</div><span style="font-family: OpenSansBold">' + formattedPrice + ' Р/МЕС</span></div></div>'
+                        '<div style="display: flex;font-family: OpenSans; font-size: 12px;padding: 0 30px 0 0 ;height: 15px;letter-spacing: 0;"><div style="width: 75px">' + obj_type +'</div><div style="min-width: 85px;">' + rooms + ' комнатная</div></div>' +
+                        '<div style="display: flex;font-family: OpenSans; font-size: 12px;padding: 0;height: 15px;letter-spacing: 0;"><div style="width: 75px">Этаж</div><div>' + floor + '/' + floorsCount + '</div></div>' +
+                        '<div style="display: flex;font-family: OpenSans; font-size: 12px; padding-bottom: 5px;height: 15px;letter-spacing: 0;"><div style="width: 75px">Площадь</div><div>' + square + ' кв. м</div></div>' +
+                        '<div style="display: flex;font-family: OpenSans; font-size: 12px"><div style="width: 75px;letter-spacing: 0;">Стоимость</div><span style="font-family: OpenSansBold">' + formattedPrice + ' Р/МЕС</span></div></div>'
                 }, {
                     preset: 'islands#icon',
                     iconColor: '#c50101',
@@ -649,7 +679,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         let catalog = document.getElementsByClassName('catalog-item') as HTMLCollectionOf<HTMLElement>;
         let objects = document.getElementsByClassName('objects') as HTMLCollectionOf<HTMLElement>;
         for (let i = 0; i < catalog.length; i++) {
-            catalog.item(i).style.removeProperty('background-color');
             catalog.item(i).style.removeProperty('position');
             catalog.item(i).style.removeProperty('top');
             catalog.item(i).style.removeProperty('padding-top');
@@ -664,7 +693,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             let el = elem[i] as HTMLElement;
             if (el.classList != undefined && el.classList.contains('catalog-item') && el.classList.contains('hovered')) {
                 el.scrollTop = el.scrollHeight;
-                el.style.setProperty('background-color', '#d3d5d6');
                 el.style.setProperty('position', 'relative');
                 el.style.setProperty('top', '-1px');
                 el.style.setProperty('padding-top', '1px');
@@ -681,7 +709,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         this.objClickIterator++;
         let targ = event.target as HTMLElement;
         if (this.objClickIterator == 1 && !targ.classList.contains('starFav') && !targ.classList.contains('starImg') //&& targ.tagName != 'IMG'
-            && !targ.classList.contains('arrow') && !targ.classList.contains('arrowFull') && !targ.classList.contains('button-contact')) {
+            && !targ.classList.contains('arrow') && !targ.classList.contains('arrowFull') && !targ.classList.contains('button-contact') && !targ.classList.contains('magnifier')) {
             this.curItem = item;
             this.map.setZoom(17);
             this.map.setCenter([item.lat, item.lon]);
@@ -690,7 +718,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }, 200);
             this.selectbj();
         } else if (this.objClickIterator == 2 && !targ.classList.contains('starFav') && !targ.classList.contains('starImg') // && targ.tagName != 'IMG'
-            && item != this.curItem && !targ.classList.contains('arrow') && !targ.classList.contains('arrowFull') && !targ.classList.contains('button-contact')) {
+            && item != this.curItem && !targ.classList.contains('arrow') && !targ.classList.contains('arrowFull') && !targ.classList.contains('button-contact') && !targ.classList.contains('magnifier')) {
             // console.log('second');
             this.objClickIterator = 0;
             this.map.setZoom(17);
@@ -701,7 +729,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }, 200);
             this.selectbj();
         } else if (this.objClickIterator == 2 && item == this.curItem && !targ.classList.contains('starFav') && !targ.classList.contains('starImg') // && targ.tagName != 'IMG'
-            && !targ.classList.contains('arrow') && !targ.classList.contains('arrowFull') && !targ.classList.contains('button-contact')) {
+            && !targ.classList.contains('arrow') && !targ.classList.contains('arrowFull') && !targ.classList.contains('button-contact') && !targ.classList.contains('magnifier')) {
             let itemWatchCheck = false;
             for (let i = 0; i < this.localStorage.length; i++) {
                 if (this.localStorage.getItem(i) == item.id) {
@@ -731,6 +759,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 this.logged_in = false;
             }
             this.item = item;
+            this.galleryType = 'item';
             this.historyActive = false;
             this.itemOpen = true;
             this.activeButton = 'obj';
@@ -1071,6 +1100,9 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     }
 
     update_list(objsOnPage, flag) {
+        if (flag == 'menu' || flag == 'init') {
+            this.pagecounter = 0;
+        }
         this.get_favObjects();
         if (this.localStorage.length != 0) {
             this.watchedItems = [];
@@ -1210,7 +1242,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                     filters.item(0).style.setProperty('height', 'calc(100vh - 65px)');
                 } else {
                     filters.item(0).style.setProperty('top', '130px');
-                    filters.item(0).style.setProperty('height', 'calc(100vh - 195px)');
+                    filters.item(0).style.setProperty('height', 'calc(100vh - 190px)');
                 }
 
                 break;
@@ -1221,7 +1253,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                     filters.item(1).style.setProperty('height', 'calc(100vh - 65px)');
                 } else {
                     filters.item(1).style.setProperty('top', '130px');
-                    filters.item(1).style.setProperty('height', 'calc(100vh - 195px)');
+                    filters.item(1).style.setProperty('height', 'calc(100vh - 190px)');
                 }
                 break;
             case 'login':
@@ -1240,8 +1272,8 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                         slide.item(0).style.setProperty('top', '65px');
                         slide.item(0).style.setProperty('height', 'calc(100vh - 65px)');
                     } else {
-                        slide.item(0).style.setProperty('top', '195px');
-                        slide.item(0).style.setProperty('height', 'calc(100vh - 195px)');
+                        slide.item(0).style.setProperty('top', '190px');
+                        slide.item(0).style.setProperty('height', 'calc(100vh - 190px)');
                     }
                 }
                 break;
@@ -1261,8 +1293,8 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                         slide.item(1).style.setProperty('top', '65px');
                         slide.item(1).style.setProperty('height', 'calc(100vh - 65px)');
                     } else {
-                        slide.item(1).style.setProperty('top', '195px');
-                        slide.item(1).style.setProperty('height', 'calc(100vh - 195px)');
+                        slide.item(1).style.setProperty('top', '190px');
+                        slide.item(1).style.setProperty('height', 'calc(100vh - 190px)');
                     }
                 }
                 break;
@@ -1273,7 +1305,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                     filters.item(3).style.setProperty('height', 'calc(100vh - 65px)');
                 } else {
                     filters.item(3).style.setProperty('top', '130px');
-                    filters.item(3).style.setProperty('height', 'calc(100vh - 195px)');
+                    filters.item(3).style.setProperty('height', 'calc(100vh - 190px)');
                 }
                 break;
             case 'premium':
@@ -1283,7 +1315,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                     filters.item(4).style.setProperty('height', 'calc(100vh - 65px)');
                 } else {
                     filters.item(4).style.setProperty('top', '130px');
-                    filters.item(4).style.setProperty('height', 'calc(100vh - 195px)');
+                    filters.item(4).style.setProperty('height', 'calc(100vh - 190px)');
                 }
                 break;
             case 'item':
@@ -1350,7 +1382,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 filters.item(4).classList.remove('open');
                 break;
             case 'item':
-                // item.item(0).classList.remove('open');
                 this.itemOpen = false;
                 this.activeButton = 'items';
                 let catalog = document.getElementsByClassName('catalog-item') as HTMLCollectionOf<HTMLElement>;
@@ -1363,10 +1394,10 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                     catalog.item(k).style.removeProperty('border-bottom');
                 }
                 for (let k = 0; k < objects.length; k++) {
-                    objects.item(k).style.removeProperty('background-color');
+                    objects.item(k).style.removeProperty('box-shadow');
                 }
-                this.map.balloon.close();
-                if (!this.polygonActive) { this.map.geoObjects.removeAll()}
+                // this.map.balloon.close();
+                // if (!this.polygonActive) { this.map.geoObjects.removeAll()}
                 break;
             case 'objects':
                 item.item(0).classList.add('open');

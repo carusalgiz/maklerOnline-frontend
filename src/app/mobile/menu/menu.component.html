@@ -391,14 +391,6 @@
             </div>
         </div>
 </div>
-<!--<div class="add-block-menu" [class.open]="blockOpenInput == 'open_login' || innerBlockOpen == 'login'" >-->
-<!--    <app-login [otherComponent]="false" [itemOpen]="true" (userLoggedIn)="checklogin()" (blockClose)="closeFunc($event)" (loggingMode)="Logging.emit($event)"-->
-<!--    ></app-login>-->
-<!--</div>-->
-<!--<div class="add-block-menu open" *ngIf="blockOpenInput == 'open_pay' || innerBlockOpen == 'pay'">-->
-<!--    <app-pay [inpDay]="resDay" [inpTime]="resTime"  (payingMode)="Paying.emit($event)" [otherComponent]="false" [updateBalance]="logged_in" [itemOpen]="true" [redirect]="redirect" (days)="days = $event" (time)="time = $event" (blockClose)="closeFunc($event)">-->
-<!--    </app-pay>-->
-<!--</div>-->
 <div class="add-block-menu" [class.open]="blockOpenInput == 'open_proposal' || innerBlockOpen == 'proposal'">
     <app-proposal (blockClose)="closeFunc($event)" (checkOutput)="closeFunc($event); addFunc($event); openBlock($event)"></app-proposal>
 </div>

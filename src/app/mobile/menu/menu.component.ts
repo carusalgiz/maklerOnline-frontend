@@ -148,7 +148,6 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
         setTimeout(() => {
             ev.target.scrollIntoView({block: 'center', behavior: 'smooth'});
         },300);
-
     }
     clearInfo(){
         if (document.getElementById('res') != undefined)
