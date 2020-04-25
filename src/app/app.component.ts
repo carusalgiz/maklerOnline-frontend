@@ -31,42 +31,19 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         sessionStorage.clear();
-        // sessionStorage.removeItem('access');
-        //  sessionStorage.removeItem('session');
-        //  sessionStorage.removeItem('expires');
-        // sessionStorage
-        // sessionStorage.removeItem('logged_in');
         localStorage.clear();
         let Visible = function(elem) {
-            let mapbuttons = document.getElementsByClassName('map-buttons-tablet') as HTMLCollectionOf<HTMLElement>;
             let mapbuttonsMobile = document.getElementsByClassName('map-buttons-mobile') as HTMLCollectionOf<HTMLElement>;
             let mapbuttonsdesk = document.getElementsByClassName('map-buttons') as HTMLCollectionOf<HTMLElement>;
             let mobileMenu = document.getElementsByClassName('mobileTopMenu') as HTMLCollectionOf<HTMLElement>;
             let filters = document.getElementsByClassName('filters-menu-desktop') as HTMLCollectionOf<HTMLElement>;
             let arrowsmobile = document.getElementsByClassName('arrows-mobile') as HTMLCollectionOf<HTMLElement>;
-
-            // let targetPosition = {
-            //         top: window.pageYOffset + elem.getBoundingClientRect().top,
-            //         left: window.pageXOffset + elem.getBoundingClientRect().left,
-            //         right: window.pageXOffset + elem.getBoundingClientRect().right,
-            //         bottom: window.pageYOffset + elem.getBoundingClientRect().bottom
-            //     },
-            //     // Получаем позиции окна
-            //     windowPosition = {
-            //         top: window.pageYOffset,
-            //         left: window.pageXOffset,
-            //         right: window.pageXOffset + document.documentElement.clientWidth,
-            //         bottom: window.pageYOffset + document.documentElement.clientHeight
-            //     };
-
             let desk = document.getElementsByClassName('desk') as HTMLCollectionOf<HTMLElement>;
             let addRight = document.getElementsByClassName('output') as HTMLCollectionOf<HTMLElement>;
             let catalog = document.getElementsByClassName('catalog-item') as HTMLCollectionOf<HTMLElement>;
             let mapTest = document.getElementsByClassName('mapTest') as HTMLCollectionOf<HTMLElement>;
             let map = document.getElementsByClassName('filters-map') as HTMLCollectionOf<HTMLElement>;
             if (elem.getBoundingClientRect().top < 0 && elem.getBoundingClientRect().bottom > -150 && document.documentElement.clientWidth <= 1050 && desk.length != 0) {
-                console.log('Вы видите элемент :)');
-                // console.log('buttons' + mapbuttonsMobile.length);
                 if ((mobileMenu.length != 0 && (desk.length != 0 || catalog.length != 0) || (map.length != 0 && map.item(0).getBoundingClientRect().top < document.documentElement.clientHeight - 80))) {
                     console.log(mapbuttonsMobile);
                     mobileMenu.item(0).style.setProperty('display', 'flex');
@@ -89,7 +66,6 @@ export class AppComponent implements OnInit, AfterViewInit {
                     mapbuttonsdesk.item(0).style.setProperty('display', ' flex');
                 }
             } else {
-                // console.log('Вы не видите элемент');
                 if (filters.length != 0 && desk.length != 0 && document.documentElement.clientWidth > 1000) {
                     filters.item(0).style.setProperty('display', 'flex');
                 }
@@ -104,108 +80,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                 }
             }
         };
-        let touchstart, touchend;
-        // document.addEventListener('mouseup', event =>  {
-        //
-        //   let slide = document.getElementsByClassName('right-slide-box')   as HTMLCollectionOf<HTMLElement>;
-        //   // console.log( event.offsetX + " " + (document.documentElement.offsetWidth - slide.item(1).offsetWidth));
-        //   if (slide.item(0).classList.contains('open') && event.pageX < document.documentElement.offsetWidth - slide.item(0).offsetWidth) {
-        //     slide.item(0).classList.remove('open');
-        //   }
-        //   if (slide.item(1).classList.contains('open') && event.pageX < document.documentElement.offsetWidth - slide.item(1).offsetWidth) {
-        //     slide.item(1).classList.remove('open');
-        //   }
-        //   if (slide.item(2).classList.contains('open') && event.pageX < document.documentElement.offsetWidth - slide.item(2).offsetWidth) {
-        //     slide.item(2).classList.remove('open');
-        //   }
-        //   if (slide.item(3).classList.contains('open') && event.pageX < document.documentElement.offsetWidth - slide.item(3).offsetWidth) {
-        //     slide.item(3).classList.remove('open');
-        //   }
-        // });
-//         document.addEventListener('touchstart', event => {
-//             touchstart = event.changedTouches[0].clientY;
-//            // console.log('touchstart: ' + event.changedTouches[0].pageY);
-//         });
-//         document.addEventListener('touchend', event =>  {
-//           //   console.log('touchend: ' + event.changedTouches[0].pageY);
-//           //   let header = document.getElementsByClassName('header')   as HTMLCollectionOf<HTMLElement>;
-//           //   let main = document.getElementsByClassName('main-objects') as HTMLCollectionOf<HTMLElement>;
-//             let mainHome = document.getElementsByClassName('mainHome') as HTMLCollectionOf<HTMLElement>;
-//             // let bigGalleryBlock = document.getElementsByClassName('bigGalleryBlock') as HTMLCollectionOf<HTMLElement>;
-//             let showItemsButton = document.getElementsByClassName('show-items') as HTMLCollectionOf<HTMLElement>;
-//             // let add_block = document.getElementsByClassName('add-block-menu')   as HTMLCollectionOf<HTMLElement>;
-//             // let hideFilterButton = document.getElementsByClassName('hideFilterButton')   as HTMLCollectionOf<HTMLElement>;
-//             touchend = event.changedTouches[0].clientY;
-//             let num = touchstart - touchend;
-//             // let val = num > 0 ? '-80px' :  '30px';
-//             // if (hideFilterButton.length != 0) {
-//             //     hideFilterButton.item(0).style.setProperty('bottom', val);
-//             // }
-//             // console.log(num + " start:" + touchstart + " end:" + touchend);
-//             let wth = document.documentElement.clientWidth;
-//
-//             if (num > 0) {
-//               if ( document.documentElement.clientWidth <= 1200) {
-//                 if (showItemsButton.length != 0) {
-//                   showItemsButton.item(0).style.setProperty('top', '0');
-//                 }
-//                 // if (main.length != 0) {
-//                 //   main.item(0).style.setProperty('padding-top', '55px');
-//                 // }
-//                 if (mainHome.length != 0) {
-//                   if (wth < 1050) {
-//                     mainHome.item(0).style.setProperty('margin-top', '0');
-//                   }
-//                 }
-//               }
-// // -220 .getBoundingClientRect().top < 0
-//             } else if (num < 0) {
-//             //  console.log(map);
-//            //   console.log(map.item(0).getBoundingClientRect().top);map.length == 0 ||
-// //|| map.item(0).getBoundingClientRect().top > document.documentElement.clientHeight - 80
-// //                 if (header.length != 0 && (!add_block.item(0).classList.contains('close') || !add_block.item(1).classList.contains('close')
-// //                   || !add_block.item(2).classList.contains('close') )) {
-// //                   header.item(0).style.setProperty('top', '0');
-// //                   header.item(0).style.setProperty('z-index', '8');
-// //                 }
-//
-//
-//               if (showItemsButton.length != 0) {
-//                 showItemsButton.item(0).style.setProperty('top', '90px');
-//               }
-//
-//               if (mainHome.length != 0) {
-//                 if (wth < 650) {
-//                   mainHome.item(0).style.setProperty('margin-top', '90px');
-//                 }
-//                 if (wth > 650 && wth < 1050) {
-//                       mainHome.item(0).style.setProperty('margin-top', '130px');
-//                 }
-//               }
-//
-//                 // if (main.length != 0) {
-//                 //     if (bigGalleryBlock.length == 0) {
-//                 //             if (wth < 650) {
-//                 //               main.item(0).style.setProperty('padding-top', '95px');
-//                 //             } else {
-//                 //                 main.item(0).style.setProperty('padding-top', '137px');
-//                 //             }
-//                 //     } else {
-//                 //         main.item(0).style.setProperty('padding-top', '0');
-//                 //     }
-//                 // }
-//             }
-//         });
-        //  document.addEventListener('touchmove', function () {
-        //   //   console.log(event.changedTouches[0].pageY);
-        //      let map =  document.getElementsByClassName('map open') as HTMLCollectionOf<HTMLElement>;
-        // //   console.log(map);
-        //    if (document.documentElement.clientWidth < 650) {
-        //      if (map.length != 0) {
-        //        Visible(map.item(0));
-        //      }
-        //    }
-        //  });
+
         document.addEventListener('wheel', event => {
             let map = document.getElementsByClassName('map open') as HTMLCollectionOf<HTMLElement>;
             //     console.log(map);
@@ -342,9 +217,6 @@ export class AppComponent implements OnInit, AfterViewInit {
                         if (filters.length != 0) {
                             filters.item(0).style.setProperty('top', '0');
                         }
-                        // if (day.length != 0) {
-                        //   day.item(0).style.setProperty('top', '70px');
-                        // }
                         items.item(0).classList.add('scroll');
                     }
 
