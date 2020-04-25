@@ -1,3 +1,5 @@
+Current version of app is located on http://dev.makleronline.net/
+
 # MaklerOnlineFe
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.8.
