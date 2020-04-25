@@ -22,7 +22,7 @@ import {ItemMiddle} from './components/item-middle';
 import {UIUploadFile} from './ui/ui-upload-file.component';
 import {ImageCropperModule} from 'ngx-image-cropper';
 import {TextareaAutosizeModule} from 'ngx-textarea-autosize';
-import {UiModalWindow} from '../ui/ui-modal-window';
+import {UiModalWindow} from './ui/ui-modal-window';
 import {RequestService} from '../services/request.service';
 import {RequestMiddleComponent} from './components/request-middle';
 import {InputRangeComponent} from './ui/input-range';
