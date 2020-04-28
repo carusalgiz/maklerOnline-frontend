@@ -23,6 +23,7 @@ export class UploadService {
             formData.append('files[]', files[x]);
         }
 
+        console.log(formData);
         const req = new HttpRequest('POST', _resourceUrl, formData, {withCredentials: true, reportProgress: true});
         return this._http.request(req);
     }

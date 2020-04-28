@@ -8,11 +8,6 @@ import {ObjectsComponent} from './components/objects/objects.component';
 import {ItemComponent} from './components/item/item.component';
 import {AgmCoreModule} from '@agm/core';
 import {FiltersComponent} from './components/filters/filters.component';
-import {LoginComponent} from './components/login/login.component';
-import {PayComponent} from './components/pay/pay.component';
-import {RatingComponent} from './components/rating/rating.component';
-import {ContactComponent} from './components/contact/contact.component';
-import {EgrnComponent} from './components/egrn/egrn.component';
 import {NgxMaskModule} from 'ngx-mask';
 import {ProposalComponent} from './components/proposal/proposal.component';
 import {AgreementComponent} from './components/agreement/agreement.component';
@@ -22,16 +17,15 @@ import {ItemMiddle} from './components/item-middle';
 import {UIUploadFile} from './ui/ui-upload-file.component';
 import {ImageCropperModule} from 'ngx-image-cropper';
 import {TextareaAutosizeModule} from 'ngx-textarea-autosize';
-import {UiModalWindow} from './ui/ui-modal-window';
+
 import {RequestService} from '../services/request.service';
 import {RequestMiddleComponent} from './components/request-middle';
 import {InputRangeComponent} from './ui/input-range';
+import {UiModalWindow} from '../ui/ui-modal-window';
 
 const routes: Routes = [
     {path: '', component: HomeComponent},
     {path: 'objects/:mode', component: ObjectsComponent},
-    {path: 'login', component: LoginComponent},
-    {path: 'pay', component: PayComponent},
     {path: 'polzovatelskoe-soglashenie', component: AgreementComponent}
 ];
 
@@ -52,11 +46,6 @@ const routes: Routes = [
         ObjectsComponent,
         ItemComponent,
         FiltersComponent,
-        LoginComponent,
-        PayComponent,
-        RatingComponent,
-        ContactComponent,
-        EgrnComponent,
         ProposalComponent,
         AgreementComponent,
         UIUploadFile,

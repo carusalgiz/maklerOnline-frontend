@@ -1,7 +1,7 @@
 import {LOCAL_STORAGE, WINDOW} from '@ng-toolkit/universal';
 import {Component, OnInit, AfterViewInit, Inject, OnChanges, SimpleChanges} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {Item} from '../../../item';
+import {Item} from '../../../class/item';
 import {ActivatedRoute, Router} from '@angular/router';
 import {OfferService} from '../../../services/offer.service';
 import {AccountService} from '../../../services/account.service';

@@ -1,6 +1,5 @@
 import {LOCAL_STORAGE} from '@ng-toolkit/universal';
 import {Component, OnInit, OnChanges, AfterViewInit, Output, EventEmitter, Input, Inject, SimpleChanges, NgZone, ViewChild} from '@angular/core';
-import {Item} from '../../item';
 import {ActivatedRoute} from '@angular/router';
 import {OfferService} from '../../services/offer.service';
 import {AccountService} from '../../services/account.service';
@@ -126,7 +125,6 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
         this.modal_cancel = cancel;
     }
     triggerResize() {
-        // Wait for changes to be applied, then trigger textarea resize.
         this._ngZone.onStable.pipe(take(1))
             .subscribe(() => this.autosize.resizeToFitContent(true));
     }
@@ -179,7 +177,7 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
         });
     }
     addFile(event){
-        this.person.photoMini = event[0].href;
+        this.person.photoMini = event.href;
         this.updatePerson();
     }
     displayProgress(event) {
@@ -434,7 +432,7 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
         let organisation = {
             'name' : this.model_company
         };
-        this._account_service.saveUser(emails, phones, messengers, socials, undefined, this.model_name, this.model_description, false).subscribe(res => {
+        this._account_service.saveUser(emails, phones, messengers, socials, undefined, this.model_name, this.model_description, false, this.person.photoMini).subscribe(res => {
             if (res != undefined) {
                 this.enterMode('register');
                 this.get_users();
@@ -533,9 +531,7 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
 
     closeFunc(name) {
         let add_block = document.documentElement.getElementsByClassName('add-block-menu') as HTMLCollectionOf<HTMLElement>;
-        // let home = document.documentElement.getElementsByClassName('mainHome') as HTMLCollectionOf<HTMLElement>;
         let objects = document.documentElement.getElementsByClassName('main-objects') as HTMLCollectionOf<HTMLElement>;
-        // let menuMobile = document.documentElement.getElementsByClassName('menuMobile') as HTMLCollectionOf<HTMLElement>;
         let header = document.documentElement.getElementsByClassName('header') as HTMLCollectionOf<HTMLElement>;
         let bottomButtons = document.documentElement.getElementsByClassName('bottom-buttons1') as HTMLCollectionOf<HTMLElement>;
         let closeLogin = document.documentElement.getElementsByClassName('close-login') as HTMLCollectionOf<HTMLElement>;
@@ -543,7 +539,6 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
         let closeAppl = document.documentElement.getElementsByClassName('proposal') as HTMLCollectionOf<HTMLElement>;
         let showItems = document.documentElement.getElementsByClassName('show-items') as HTMLCollectionOf<HTMLElement>;
         let hideMenu = document.documentElement.getElementsByClassName('hideMenu') as HTMLCollectionOf<HTMLElement>;
-        // let mainHome = document.getElementsByClassName('mainHome')   as HTMLCollectionOf<HTMLElement>;
         if (hideMenu.length > 1) {
             hideMenu.item(0).classList.remove('exit-close');
             hideMenu.item(1).classList.add('exit-close');
@@ -597,8 +592,6 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
                 this.blockOpenInput = 'open_menu';
                 this.innerBlockOpen = 'menu';
                 this.openMenu.emit('close_agreement');
-                // add_block.item(3).classList.add('close');
-                // mainHome.item(0).style.setProperty('display', 'block');
                 break;
             }
             default: {
@@ -622,8 +615,6 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
     log_out() {
         this.person = new Person();
         this.person_name = '';
-        // this.user_email = '';
-        // this.userEmail = 'email';
         this.logged_in = false;
         this.days = '0дн.';
         this.time = '00ч.00мин.';
@@ -646,8 +637,6 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
                 let data = JSON.parse(JSON.stringify(res));
                 if (data.result == 'success') {
                     this._account_service.personInfo().subscribe(res1 => {
-                        // console.log("checkbalance");
-                        // console.log('pesronInfo:', res1);
                         let result = JSON.parse(JSON.stringify(res1));
                         if (result.person){
                             this.person = result.person;
@@ -781,9 +770,6 @@ export class MenuComponent implements OnInit, OnChanges, AfterViewInit {
 
         } else {
             window.location.reload();
-            // this.closeButtons();
-            // this.homePageOpen(home);
-            // this.menuOpen('close_menu')
         }
     }
     openBlock(pay: string) {

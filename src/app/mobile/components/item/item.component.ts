@@ -10,7 +10,7 @@ import {
     Inject,
     SimpleChanges
 } from '@angular/core';
-import {Item} from '../../../item';
+import {Item} from '../../../class/item';
 import ymaps from 'ymaps';
 import * as moment from 'moment';
 import 'moment/locale/ru.js';

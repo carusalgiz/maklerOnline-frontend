@@ -1,9 +1,9 @@
-import {UploadFile} from "./class/UploadFile";
-import {ConditionsBlock} from "./class/conditionsBlock";
-import {PhoneBlock} from './class/phoneBlock';
-import {Person} from './class/person';
-import {AddressBlock} from './class/addressBlock';
-import {EmailBlock} from './class/emailBlock';
+import {UploadFile} from "./UploadFile";
+import {ConditionsBlock} from "./conditionsBlock";
+import {PhoneBlock} from './phoneBlock';
+import {Person} from './person';
+import {AddressBlock} from './addressBlock';
+import {EmailBlock} from './emailBlock';
 
 export class Item {
     bus_stop: any;
@@ -69,12 +69,6 @@ export class Item {
         this.conditions = new ConditionsBlock();
     }
 
-
-    public paymentTypeOption = {
-        all:  {label: 'Все'},
-        cashless:  {label: 'Безналичный'},
-        cash: {label: 'Наличный'}
-    };
     public static bathroomOptions = {
         no: {label: 'Нет'},
         splited: {label: 'Раздельный'},

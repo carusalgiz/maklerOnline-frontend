@@ -286,13 +286,14 @@ export class UIUploadFile implements OnInit{
             fetch(this.croppedImage)
             .then(res => res.blob())
             .then(blob => {
-                let file = new File([blob], this.imageName,{ type: "image/png" })
+                let file = new File([blob], this.imageName,{ type: "image/png" });
                 this._uploadService.uploadFiles([file]).subscribe(
                     data => {
                         if (data.type === HttpEventType.UploadProgress) {
                             let progress = data as HttpProgressEvent;
                             this.progressState.emit(Math.floor(progress.loaded / progress.total*100));
                         } else if(data.type === HttpEventType.Response){
+                            console.log(data);
                             this.addNewFile.emit((data.body as any).result);
                             event = null;
                         }

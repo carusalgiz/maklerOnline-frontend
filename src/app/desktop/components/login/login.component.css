@@ -32,96 +32,6 @@ div:hover, span:hover, p:hover {
     cursor: pointer;
 }
 
-.barMenu1, .barMenu2 {
-    width: 30px;
-    height: 1.5px;
-    background-color: #8F8F8F;
-    margin: 3px 0;
-}
-
-.barMenu1 {
-    transform: rotate(45deg);
-}
-
-.barMenu2 {
-    transform: rotate(-45deg) translate(3px, -3px);
-}
-
-.exitButton {
-    position: relative;
-    top: 40px;
-    right: 30px;
-    transition: .03s;
-}
-
-.exitButton:hover .barMenu1, .exitButton:hover .barMenu2 {
-    background-color: #252f32;
-}
-
-.main-objects {
-    display: flex;
-    height: calc(100vh - 195px);
-    top: 195px;
-    position: fixed;
-    transition: .3s;
-}
-
-.text-block {
-    margin-left: 10vw;
-    position: relative;
-    left: 0;
-    z-index: 1;
-}
-
-.text {
-    display: flex;
-    flex-direction: column;
-    font-size: 50px;
-    color: white;
-    transition: 0.4s;
-}
-
-.text .special {
-    font-size: 70px;
-}
-
-.left-block {
-    background-image: url("../../../../assets/background.jpg");
-    background-size: auto auto;
-    min-height: calc(100vh - 70px);
-}
-
-.left-block.close {
-    display: none;
-}
-
-.left-block, .dark-layer {
-    flex-grow: 1;
-    min-width: calc(100vw - 440px);
-    max-width: calc(100vw - 350px);
-}
-
-.dark-layer {
-    background-color: #202b2f;
-    height: 100%;
-    position: relative;
-    top: -583px;
-    left: 0;
-    opacity: 0.85;
-    z-index: 0;
-}
-
-.logo {
-    margin-left: 5vw;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: relative;
-    left: 0;
-    z-index: 1;
-    color: #9E9E9E;
-}
-
 .right-block {
     display: flex;
     flex-direction: column;
@@ -130,14 +40,6 @@ div:hover, span:hover, p:hover {
     font-size: 12px;
     color: #252f32;
     background-color: white;
-}
-
-.right-block-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: calc(100% - 30px);
 }
 
 .right-block::-webkit-scrollbar {
@@ -198,6 +100,7 @@ div:hover, span:hover, p:hover {
     text-decoration: none;
     color: #252f32;
     margin-top: 10px;
+    min-width: 100px;
 }
 
 .check-block {
@@ -296,37 +199,6 @@ div:hover, span:hover, p:hover {
     padding-bottom: 5px;
 }
 
-.wordLine {
-    width: 100%;
-    height: 2px;
-    margin-top: 4px;
-}
-
-.wordLine.active {
-    background-color: #9d8c6c;
-}
-
-.arrowBar1 {
-    transform: rotate(37deg) translate(0px, 2px);
-}
-
-.arrowBar2 {
-    transform: rotate(-37deg) translate(-4px, 3px);
-}
-
-.arrowBars {
-    height: 20px;
-    margin-left: 10px;
-}
-
-.arrowBar1, .arrowBar2 {
-    width: 13px;
-    height: 2px;
-    border-radius: 5px;
-    background-color: #fff;
-    margin: 3px 0;
-}
-
 .barExit1, .barExit2 {
     width: 25px;
     height: 1px;
@@ -361,11 +233,6 @@ div:hover, span:hover, p:hover {
 .hideMenu:hover .barExit2 {
     background-color: #252f32;
     height: 2px;
-}
-
-.right-block.fullPage {
-    width: 23vw;
-    padding-top: 25px;
 }
 
 .carousel {
@@ -457,10 +324,4 @@ div:hover, span:hover, p:hover {
 .advice{
     padding-top: 10px;
     width: 330px;
-}
-
-@media all and (max-width: 1520px) {
-    .line.top {
-        max-width: 200px;
-    }
 }

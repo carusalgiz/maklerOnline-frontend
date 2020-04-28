@@ -9,8 +9,6 @@ import {PayComponent} from './components/pay/pay.component';
 import {MenuComponent} from './components/menu/menu.component';
 import {AgmCoreModule} from '@agm/core';
 import {ItemComponent} from './components/item/item.component';
-import {ContactComponent} from './components/contact/contact.component';
-import {RatingComponent} from './components/rating/rating.component';
 import {ProposalComponent} from './components/proposal/proposal.component';
 import {NgxMaskModule} from 'ngx-mask';
 import {AgreementComponent} from './components/agreement/agreement.component';
@@ -21,7 +19,10 @@ import { NgxMetrikaModule } from '@kolkov/ngx-metrika';
 import { NgxMetrikaService } from '@kolkov/ngx-metrika';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {InputRangeComponent} from './ui/input-range';
+import {UiModalWindow} from './ui/ui-modal-window';
+import {UIUploadFile} from './ui/ui-upload-file.component';
 import { ItemDesktop } from './components/item-desktop.component';
+import {ImageCropperModule} from 'ngx-image-cropper';
 
 const routes: Routes = [
     {path: 'pay', component: PayComponent},
@@ -46,7 +47,7 @@ const routes: Routes = [
         NgxMaskModule.forRoot(),
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyAi9zTbzWtEhLVZ8syBV6l7d3QMNLRokVY'
-        }), ScrollingModule
+        }), ScrollingModule, ImageCropperModule
     ],
   declarations: [
     ObjectsComponent,
@@ -56,12 +57,12 @@ const routes: Routes = [
     PayComponent,
     MenuComponent,
     ItemComponent,
-    ContactComponent,
-    RatingComponent,
     ProposalComponent,
     AgreementComponent,
       ItemMiddle,
       InputRangeComponent,
+      UiModalWindow,
+      UIUploadFile,
       ItemDesktop
   ],
     providers: [ {provide: LocationStrategy, useClass: PathLocationStrategy}]

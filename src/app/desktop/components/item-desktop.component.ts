@@ -1,5 +1,5 @@
 import {AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, SimpleChanges} from '@angular/core';
-import {Item} from '../../item';
+import {Item} from '../../class/item';
 import * as moment from 'moment';
 import ymaps from 'ymaps';
 import {AccountService} from '../../services/account.service';

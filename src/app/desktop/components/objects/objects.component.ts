@@ -1,13 +1,14 @@
 import {LOCAL_STORAGE, WINDOW} from '@ng-toolkit/universal';
 import {AfterViewInit, Component, OnInit, Inject, SimpleChanges} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {Item} from '../../../item';
+import {Item} from '../../../class/item';
 import {ActivatedRoute} from '@angular/router';
 import {OfferService} from '../../../services/offer.service';
 import {NgxMetrikaService} from '@kolkov/ngx-metrika';
 import ymaps from 'ymaps';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 import {AccountService} from '../../../services/account.service';
+
 @Component({
     selector: 'app-objects',
     templateUrl: './objects.component.html',
@@ -69,7 +70,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     polygonActive = false;
     hitsCount: number = 0;
     canLoad: number = 0;
-    searchQuery: string = "";
+    searchQuery: string = '';
     suggestionTo: any;
     sgList: string[] = [];
     galleryType: any;
@@ -82,20 +83,20 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         };
         let url = document.location.href;
         if (url.indexOf('access') != -1) {
-            let str = (url.slice(url.indexOf('access')+6, url.length)).split('&');
+            let str = (url.slice(url.indexOf('access') + 6, url.length)).split('&');
             let p = str[1];
             let s = str[2];
             console.log(str);
         }
         this.subscription = route.params.subscribe((urlParams) => {
-             if (urlParams['mode'] === 'list') {
-                 this.historyActive = false;
-                 this.filtersActive = true;
-                 this.itemOpen = false;
-                 this.activeButton = 'items';
-                 this.itemsActive = true;
-                 this.get_list(1000, 'constructor')
-             }
+            if (urlParams['mode'] === 'list') {
+                this.historyActive = false;
+                this.filtersActive = true;
+                this.itemOpen = false;
+                this.activeButton = 'items';
+                this.itemsActive = true;
+                this.get_list(1000, 'constructor');
+            }
         });
     }
 
@@ -158,6 +159,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     ymFunc(target) {
         this.ym.reachGoal.next({target: target});
     }
+
     openGallery(obj, event) {
         this.item = obj;
         this.galleryFullItem = event;
@@ -165,21 +167,13 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         this.activeButton = 'obj';
         this.galleryType = 'list';
     }
-    searchStringChanged(e) {
-        let c = this;
-        clearTimeout(this.suggestionTo);
-        this.suggestionTo = setTimeout(() => {
-            c.searchParamChanged();
-        }, 500);
-    }
+
     searchParamChanged() {
         if (this.searchQuery.length > 0) {
-            let sq = this.searchQuery.split(" ");
-            let lp = sq.pop()
-            let q = sq.join(" ");
+            let sq = this.searchQuery.split(' ');
+            let lp = sq.pop();
             this.sgList = [];
             if (lp.length > 0) {
-                // запросить варианты
                 this._offer_service.listKeywords(this.searchQuery).subscribe(sgs => {
                     sgs.forEach(ev => {
                         this.sgList.push(ev);
@@ -190,6 +184,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         this.pagecounter = 0;
         this.update_list(10000, 'filters');
     }
+
     changeLog(ev: any) {
         this.logged_in = ev;
     }
@@ -197,7 +192,8 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     changePay(ev: any) {
         this.payed = ev;
     }
-    modeChange(type){
+
+    modeChange(type) {
         this.closeBlock('item');
         localStorage.setItem('listType', type);
         switch (type) {
@@ -281,7 +277,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         let latDiff = bounds[1][0] - bounds[0][0];
         let lonDiff = bounds[1][1] - bounds[0][1];
 
-        canvas.onmousemove = function (e) {
+        canvas.onmousemove = function(e) {
             coordinates.push([e.offsetX, e.offsetY]);
 
             ctx2d.clearRect(0, 0, canvas.width, canvas.height);
@@ -400,7 +396,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }
         }
         this.canLoad = 1;
-        this._offer_service.list(this.pagecounter, 100, this.filters, this.sort, this.equipment, this.coordsPolygon,this.searchQuery).subscribe(data => {
+        this._offer_service.list(this.pagecounter, 100, this.filters, this.sort, this.equipment, this.coordsPolygon, this.searchQuery).subscribe(data => {
             console.log(data);
             this.countOfObjects = data.hitsCount;
             this.hitsCount = data.hitsCount || (this.hitsCount > 0 ? this.hitsCount : 0);
@@ -410,7 +406,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 data.list.forEach(i => {
                     this.items.push(i);
                 });
-                if(~~(this.hitsCount/20) != this.pagecounter+1 && data.list.length < 20){
+                if (~~(this.hitsCount / 20) != this.pagecounter + 1 && data.list.length < 20) {
                     this.hitsCount -= (20 - data.list.length);
                 }
             }
@@ -429,7 +425,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 }
             }
             this.canLoad = 0;
-        }),err => {
+        }), err => {
             console.log(err);
             this.canLoad = 0;
         };
@@ -475,7 +471,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             clusterHideIconOnBalloonOpen: false,
             geoObjectHideIconOnBalloonOpen: false
         });
-       // this.defineobj(item);
+        // this.defineobj(item);
         this.markerFocus(item.id);
 
         this.selectedMarker.events.add('balloonopen', () => {
@@ -503,51 +499,56 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }
         });
         let selectedBallon: any;
-        let index = 0;
-       // for (let i = 0; i < this.items.length; i++) {
+        let photo, rooms, floor, floorsCount, square: any;
+        if (item.roomsCount != undefined) {
+            rooms = item.roomsCount;
+        } else {
+            rooms = '';
+        }
+        if (item.floor != undefined) {
+            floor = item.floor;
+        } else {
+            floor = '';
+        }
+        if (item.floorsCount != undefined) {
+            floorsCount = item.floorsCount;
+        } else {
+            floorsCount = '';
+        }
+        if (item.squareTotal != undefined) {
+            square = item.squareTotal;
+        } else {
+            square = '';
+        }
+        if (item.photos == undefined) {
+            photo = 'url(https://makleronline.net/assets/noph.png)';
+        } else {
 
-      //      if (item.lat == this.items[i].lat && item.lon == this.items[i].lon) {
-                countOfSelected++;
-                let photo, rooms, floor, floorsCount, square: any;
-                if (item.roomsCount != undefined) {
-                    rooms = item.roomsCount;
-                } else {
-                    rooms = '';
-                }
-                if (item.floor != undefined) {
-                    floor = item.floor;
-                } else {
-                    floor = '';
-                }
-                if (item.floorsCount != undefined) {
-                    floorsCount = item.floorsCount;
-                } else {
-                    floorsCount = '';
-                }
-                if (item.squareTotal != undefined) {
-                    square = item.squareTotal;
-                } else {
-                    square = '';
-                }
-                if (item.photos == undefined) {
-                    photo = 'url(https://makleronline.net/assets/noph.png)';
-                } else {
-
-                    if (item.photos[0] != undefined) {
-                        photo = 'url(' + item.photos[0].href + ')';
-                    } else {
-                        photo = 'url(https://makleronline.net/assets/noph.png)';
-                    }
-                }
-                let formattedPrice = item.price.toString();
-                formattedPrice = formattedPrice.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
+            if (item.photos[0] != undefined) {
+                photo = 'url(' + item.photos[0].href + ')';
+            } else {
+                photo = 'url(https://makleronline.net/assets/noph.png)';
+            }
+        }
+        let formattedPrice = item.price.toString();
+        formattedPrice = formattedPrice.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
         let obj_type = '';
         switch (item.typeCode) {
-            case 'apartment': obj_type = 'Квартира'; break;
-            case 'house': obj_type = 'Дом'; break;
-            case 'dacha': obj_type = 'Дача'; break;
-            case 'cottage': obj_type = 'Коттедж'; break;
-            case 'room': obj_type = 'Комната'; break;
+            case 'apartment':
+                obj_type = 'Квартира';
+                break;
+            case 'house':
+                obj_type = 'Дом';
+                break;
+            case 'dacha':
+                obj_type = 'Дача';
+                break;
+            case 'cottage':
+                obj_type = 'Коттедж';
+                break;
+            case 'room':
+                obj_type = 'Комната';
+                break;
         }
         let addr = item.address;
         if (!item.address.includes('ул.')) {
@@ -556,83 +557,78 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             addr = item.address.toUpperCase() + ' ' + item.house_num.toUpperCase();
         }
         let baloon = new this.maps.Placemark([item.lat, item.lon], {
-                    name: item.id,
-                    balloonContentHeader: '<span style="font-family: OpenSansBold, sans-serif;margin-top: 13px; font-size: 12px;letter-spacing: 0;">' + addr + '</span>',
-                    balloonContentBody: '<div style="display: flex;height: 100%;width: fit-content">' +
-                        ' <div style="margin-right: 15px; height: 80px; width: 110px;    background-position-x: center;background-position-y: center;background-repeat: no-repeat; background-size: 140% auto; background-image:' + photo + '"></div> <div style="display: flex; flex-direction: column;font-family: Cadillac, sans-serif;' +
-                        'font-size: 14px;">' +
-                        // '<span style="font-family: OpenSansBold;margin-top: 7px; font-size: 12px">' + item.address + ' ' + item.house_num + '</span>' +
-                        '<div style="display: flex;font-family: OpenSans; font-size: 12px;padding: 0 30px 0 0 ;height: 15px;letter-spacing: 0;"><div style="width: 75px">' + obj_type +'</div><div style="min-width: 85px;">' + rooms + ' комнатная</div></div>' +
-                        '<div style="display: flex;font-family: OpenSans; font-size: 12px;padding: 0;height: 15px;letter-spacing: 0;"><div style="width: 75px">Этаж</div><div>' + floor + '/' + floorsCount + '</div></div>' +
-                        '<div style="display: flex;font-family: OpenSans; font-size: 12px; padding-bottom: 5px;height: 15px;letter-spacing: 0;"><div style="width: 75px">Площадь</div><div>' + square + ' кв. м</div></div>' +
-                        '<div style="display: flex;font-family: OpenSans; font-size: 12px"><div style="width: 75px;letter-spacing: 0;">Стоимость</div><span style="font-family: OpenSansBold">' + formattedPrice + ' Р/МЕС</span></div></div>'
-                }, {
-                    preset: 'islands#icon',
-                    iconColor: '#c50101',
-                });
-                baloon.events.add("balloonopen", () => {
-                    this.activeBalloon = baloon;
-                    let baloonlayout = document.getElementsByClassName('ymaps-2-1-76-balloon__layout') as HTMLCollectionOf<HTMLElement>;
-                    let baloon_content = document.getElementsByClassName('ymaps-2-1-76-balloon__content') as HTMLCollectionOf<HTMLElement>;
-                    let mainBaloon = document.getElementsByClassName('ymaps-2-1-76-balloon') as HTMLCollectionOf<HTMLElement>;
+            name: item.id,
+            balloonContentHeader: '<span style="font-family: OpenSansBold, sans-serif;margin-top: 13px; font-size: 12px;letter-spacing: 0;">' + addr + '</span>',
+            balloonContentBody: '<div style="display: flex;height: 100%;width: fit-content">' +
+                ' <div style="margin-right: 15px; height: 80px; width: 110px;    background-position-x: center;background-position-y: center;background-repeat: no-repeat; background-size: 140% auto; background-image:' + photo + '"></div> <div style="display: flex; flex-direction: column;font-family: Cadillac, sans-serif;' +
+                'font-size: 14px;">' +
+                // '<span style="font-family: OpenSansBold;margin-top: 7px; font-size: 12px">' + item.address + ' ' + item.house_num + '</span>' +
+                '<div style="display: flex;font-family: OpenSans; font-size: 12px;padding: 0 30px 0 0 ;height: 15px;letter-spacing: 0;"><div style="width: 75px">' + obj_type + '</div><div style="min-width: 85px;">' + rooms + ' комнатная</div></div>' +
+                '<div style="display: flex;font-family: OpenSans; font-size: 12px;padding: 0;height: 15px;letter-spacing: 0;"><div style="width: 75px">Этаж</div><div>' + floor + '/' + floorsCount + '</div></div>' +
+                '<div style="display: flex;font-family: OpenSans; font-size: 12px; padding-bottom: 5px;height: 15px;letter-spacing: 0;"><div style="width: 75px">Площадь</div><div>' + square + ' кв. м</div></div>' +
+                '<div style="display: flex;font-family: OpenSans; font-size: 12px"><div style="width: 75px;letter-spacing: 0;">Стоимость</div><span style="font-family: OpenSansBold">' + formattedPrice + ' Р/МЕС</span></div></div>'
+        }, {
+            preset: 'islands#icon',
+            iconColor: '#c50101',
+        });
+        baloon.events.add('balloonopen', () => {
+            this.activeBalloon = baloon;
+            let baloonlayout = document.getElementsByClassName('ymaps-2-1-76-balloon__layout') as HTMLCollectionOf<HTMLElement>;
+            let baloon_content = document.getElementsByClassName('ymaps-2-1-76-balloon__content') as HTMLCollectionOf<HTMLElement>;
+            let mainBaloon = document.getElementsByClassName('ymaps-2-1-76-balloon') as HTMLCollectionOf<HTMLElement>;
 
-                    for (let k = 0; k < mainBaloon.length; k++) {
-                        mainBaloon.item(k).style.setProperty('top', '-150px');
-                    }
-                    for (let k = 0; k < baloon_content.length; k++) {
-                        baloon_content.item(k).style.setProperty('padding-top', '5px');
-                        baloon_content.item(k).style.setProperty('height', '100%');
-                        let inner = baloon_content[k].children[0] as HTMLElement;
-                        inner.style.setProperty('height', '100%');
-                    }
-                    for (let k = 0; k < baloonlayout.length; k++) {
-                        baloonlayout.item(k).style.setProperty('height', '120px');
-                    }
-                    let cross =  document.getElementsByClassName('ymaps-2-1-76-balloon__close-button') as HTMLCollectionOf<HTMLElement>;
-                    for (let k = 0; k < cross.length; k++) {
-                        cross.item(k).style.setProperty('width', '16px');
-                        cross.item(k).style.setProperty('height', '16px');
-                        cross.item(k).style.setProperty('margin-right', '12px');
-                        cross.item(k).style.setProperty('margin-top', '12px');
-                    }
-                    this.markerFocus(item.id);
-                });
-                baloon.events.add("balloonclose", () => {
-                    let catalog = document.getElementsByClassName('catalog-item') as HTMLCollectionOf<HTMLElement>;
-                    let objects = document.getElementsByClassName('objects') as HTMLCollectionOf<HTMLElement>;
-                    for (let k = 0; k < catalog.length; k++) {
-                        catalog.item(k).style.removeProperty('background-color');
-                        catalog.item(k).style.removeProperty('position');
-                        catalog.item(k).style.removeProperty('top');
-                        catalog.item(k).style.removeProperty('padding-top');
-                        catalog.item(k).style.removeProperty('border-bottom');
-                    }
-                    for (let k = 0; k < objects.length; k++) {
-                        objects.item(k).style.removeProperty('background-color');
-                    }
-                });
-                baloon.events.add("mouseup", () => {
-                    this.map.setCenter([item.lat, item.lon], 15, {
-                        duration: 500
-                    });
-                });
-                this.selectedMarker.add(baloon);
-                if (item.id == item.id) {
-                    selectedBallon = baloon;
-                  //  index = i;
-                }
-                let objectState1 = this.selectedMarker.getObjectState(baloon);
-               // if (i != index) {
-                    if (objectState1.isClustered) {
-                        objectState1.cluster.events.add("click", () => {
-                            // console.log("index: ", i);
-                            this.markerFocus(item.id);
-                        });
-                    }
-              //  }
-        //    }
-      // }
-        this.selectedMarker.events.add("balloonclose", () => {
+            for (let k = 0; k < mainBaloon.length; k++) {
+                mainBaloon.item(k).style.setProperty('top', '-150px');
+            }
+            for (let k = 0; k < baloon_content.length; k++) {
+                baloon_content.item(k).style.setProperty('padding-top', '5px');
+                baloon_content.item(k).style.setProperty('height', '100%');
+                let inner = baloon_content[k].children[0] as HTMLElement;
+                inner.style.setProperty('height', '100%');
+            }
+            for (let k = 0; k < baloonlayout.length; k++) {
+                baloonlayout.item(k).style.setProperty('height', '120px');
+            }
+            let cross = document.getElementsByClassName('ymaps-2-1-76-balloon__close-button') as HTMLCollectionOf<HTMLElement>;
+            for (let k = 0; k < cross.length; k++) {
+                cross.item(k).style.setProperty('width', '16px');
+                cross.item(k).style.setProperty('height', '16px');
+                cross.item(k).style.setProperty('margin-right', '12px');
+                cross.item(k).style.setProperty('margin-top', '12px');
+            }
+            this.markerFocus(item.id);
+        });
+        baloon.events.add('balloonclose', () => {
+            let catalog = document.getElementsByClassName('catalog-item') as HTMLCollectionOf<HTMLElement>;
+            let objects = document.getElementsByClassName('objects') as HTMLCollectionOf<HTMLElement>;
+            for (let k = 0; k < catalog.length; k++) {
+                catalog.item(k).style.removeProperty('background-color');
+                catalog.item(k).style.removeProperty('position');
+                catalog.item(k).style.removeProperty('top');
+                catalog.item(k).style.removeProperty('padding-top');
+                catalog.item(k).style.removeProperty('border-bottom');
+            }
+            for (let k = 0; k < objects.length; k++) {
+                objects.item(k).style.removeProperty('background-color');
+            }
+        });
+        baloon.events.add('mouseup', () => {
+            this.map.setCenter([item.lat, item.lon], 15, {
+                duration: 500
+            });
+        });
+        this.selectedMarker.add(baloon);
+        if (item.id == item.id) {
+            selectedBallon = baloon;
+        }
+        let objectState1 = this.selectedMarker.getObjectState(baloon);
+        if (objectState1.isClustered) {
+            objectState1.cluster.events.add('click', () => {
+                this.markerFocus(item.id);
+            });
+        }
+
+        this.selectedMarker.events.add('balloonclose', () => {
             let catalog = document.getElementsByClassName('catalog-item') as HTMLCollectionOf<HTMLElement>;
             let objects = document.getElementsByClassName('objects') as HTMLCollectionOf<HTMLElement>;
             for (let k = 0; k < catalog.length; k++) {
@@ -649,10 +645,10 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         this.map.geoObjects.add(this.selectedMarker);
         let objectState = this.selectedMarker.getObjectState(selectedBallon);
         if (objectState.isClustered) {
-            objectState.cluster.events.add("click", () => {
+            objectState.cluster.events.add('click', () => {
                 this.markerFocus(item.id);
             });
-            objectState.cluster.events.add("balloonclose", () => {
+            objectState.cluster.events.add('balloonclose', () => {
                 let catalog = document.getElementsByClassName('catalog-item') as HTMLCollectionOf<HTMLElement>;
                 let objects = document.getElementsByClassName('objects') as HTMLCollectionOf<HTMLElement>;
                 for (let k = 0; k < catalog.length; k++) {
@@ -860,9 +856,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 break;
         }
     }
-    changeFav(mode, item) {
-        this.get_favObjects();
-    }
+
     get_favObjects() {
         this.favItems = [];
         this._account_service.getFavObjects().subscribe(offers => {
@@ -891,7 +885,9 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }
             this.favItems = [];
             for (let j = 0; j < this.items.length; j++) {
-                if (this.items[j].is_fav == true) {this.favItems.push(this.items[j]);}
+                if (this.items[j].is_fav == true) {
+                    this.favItems.push(this.items[j]);
+                }
             }
         });
     }
@@ -903,12 +899,19 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }
         }
     }
+
     redrawObjectsOnMap(items: Item[], flag) {
-        if (items.length == 0 && flag != 'clearmap') { this.map.geoObjects.removeAll();this.map.geoObjects.add(this.geoObject); }
-        if (flag == 'clearmap') { this.geoObject = null; this.map.geoObjects.removeAll();}
+        if (items.length == 0 && flag != 'clearmap') {
+            this.map.geoObjects.removeAll();
+            this.map.geoObjects.add(this.geoObject);
+        }
+        if (flag == 'clearmap') {
+            this.geoObject = null;
+            this.map.geoObjects.removeAll();
+        }
         this.countOfObjects = this.items.length;
-       // if (this.polygonActive) this.map.geoObjects.add(this.geoObject);
-         this.map.geoObjects.remove(this.clusterer);
+        // if (this.polygonActive) this.map.geoObjects.add(this.geoObject);
+        this.map.geoObjects.remove(this.clusterer);
         this.clusterer = new this.maps.Clusterer({
             preset: 'islands#invertedRedClusterIcons',
             clusterIconColor: '#c50101',
@@ -933,7 +936,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             for (let i = 0; i < custertab.length; i++) {
                 custertab.item(i).style.setProperty('max-height', '135px');
             }
-            let cross =  document.getElementsByClassName('ymaps-2-1-76-balloon__close-button') as HTMLCollectionOf<HTMLElement>;
+            let cross = document.getElementsByClassName('ymaps-2-1-76-balloon__close-button') as HTMLCollectionOf<HTMLElement>;
             for (let k = 0; k < cross.length; k++) {
                 cross.item(k).style.setProperty('width', '16px');
                 cross.item(k).style.setProperty('height', '16px');
@@ -950,7 +953,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 baloonmenu.item(i).style.setProperty('max-height', '110px');
             }
         });
-         console.log("redraw items: " , items);
+        console.log('redraw items: ', items);
         for (let i = 0; i < items.length; i++) {
 
             let photo, rooms, floor, floorsCount, square: any;
@@ -984,19 +987,30 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 }
             }
 
-             let formattedPrice = '';
+            let formattedPrice = '';
             if (this.items[i].price != undefined) {
                 formattedPrice = this.items[i].price.toString();
             }
-             formattedPrice = formattedPrice.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
+            formattedPrice = formattedPrice.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
             let obj_type = '';
             switch (items[i].typeCode) {
-                case 'apartment': obj_type = 'Квартира'; break;
-                case 'house': obj_type = 'Дом'; break;
-                case 'dacha': obj_type = 'Дача'; break;
-                case 'cottage': obj_type = 'Коттедж'; break;
-                case 'room': obj_type = 'Комната'; break;
-            };
+                case 'apartment':
+                    obj_type = 'Квартира';
+                    break;
+                case 'house':
+                    obj_type = 'Дом';
+                    break;
+                case 'dacha':
+                    obj_type = 'Дача';
+                    break;
+                case 'cottage':
+                    obj_type = 'Коттедж';
+                    break;
+                case 'room':
+                    obj_type = 'Комната';
+                    break;
+            }
+            ;
             let baloon = new this.maps.Placemark([items[i].lat, items[i].lon], {
                 name: items[i].id,
                 balloonContentHeader: '<span style="font-family: OpenSansBold, sans-serif; margin-top: 13px; font-size: 12px">' + items[i].address + ' ' + items[i].house_num + '</span>',
@@ -1012,7 +1026,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 preset: 'islands#icon',
                 iconColor: '#c50101',
             });
-            baloon.events.add("balloonopen", () => {
+            baloon.events.add('balloonopen', () => {
                 this.activeBalloon = baloon;
                 let baloonlayout = document.getElementsByClassName('ymaps-2-1-76-balloon__layout') as HTMLCollectionOf<HTMLElement>;
                 let baloon_content = document.getElementsByClassName('ymaps-2-1-76-balloon__content') as HTMLCollectionOf<HTMLElement>;
@@ -1026,7 +1040,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                     let inner = baloon_content[k].children[0] as HTMLElement;
                     inner.style.setProperty('height', '100%');
                 }
-                let cross =  document.getElementsByClassName('ymaps-2-1-76-balloon__close-button') as HTMLCollectionOf<HTMLElement>;
+                let cross = document.getElementsByClassName('ymaps-2-1-76-balloon__close-button') as HTMLCollectionOf<HTMLElement>;
                 for (let k = 0; k < cross.length; k++) {
                     cross.item(k).style.setProperty('width', '16px');
                     cross.item(k).style.setProperty('height', '16px');
@@ -1038,13 +1052,13 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 }
                 this.markerFocus(items[i].id);
             });
-            baloon.events.add("mouseup", () => {
+            baloon.events.add('mouseup', () => {
                 this.map.setCenter([items[i].lat, items[i].lon], 15, {
                     duration: 500
                 });
                 this.defineobj(items[i]);
             });
-            baloon.events.add("balloonclose", () => {
+            baloon.events.add('balloonclose', () => {
                 let catalog = document.getElementsByClassName('catalog-item') as HTMLCollectionOf<HTMLElement>;
                 let objects = document.getElementsByClassName('objects') as HTMLCollectionOf<HTMLElement>;
                 for (let k = 0; k < catalog.length; k++) {
@@ -1061,7 +1075,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             this.clusterer.add(baloon);
             let objectState = this.clusterer.getObjectState(baloon);
             if (objectState.isClustered) {
-                objectState.cluster.events.add("click", () => {
+                objectState.cluster.events.add('click', () => {
                     this.markerFocus(items[i].id);
                 });
             }
@@ -1113,73 +1127,73 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
 
         this.canLoad = 1;
         this._offer_service.list(this.pagecounter, objsOnPage, this.filters, this.sort, this.equipment, this.coordsPolygon, this.searchQuery).subscribe(
-            data => setTimeout(() =>{
-            // console.log(data);
-                    if (flag != 'listscroll') {this.items = []}
-             this.countOfObjects = data.hitsCount;
-            this.hitsCount = data.hitsCount || (this.hitsCount > 0 ? this.hitsCount : 0);
-            console.log("favs:",this.favItems);
-            console.log('list: ', data.list);
-            if (this.pagecounter == 0) {
-                for (let i = 0; i < data.hitsCount; i++) {
-                    if (this.items.indexOf(data.list[i]) == -1) {
+            data => setTimeout(() => {
+                // console.log(data);
+                if (flag != 'listscroll') {
+                    this.items = [];
+                }
+                this.countOfObjects = data.hitsCount;
+                this.hitsCount = data.hitsCount || (this.hitsCount > 0 ? this.hitsCount : 0);
+                if (this.pagecounter == 0) {
+                    for (let i = 0; i < data.hitsCount; i++) {
+                        if (this.items.indexOf(data.list[i]) == -1) {
 
-                        if (this.watchedItems.indexOf(data.list[i].id) != -1) {
-                            data.list[i].watched = true;
-                        }
-                        for (let i = 0; i < this.favItems.length; i++) {
-                            if (this.favItems[i].id == data.list[i].id) {
-                                data.list[i].is_fav = true;
-                                console.log('founded: ', data.list[i].id);
+                            if (this.watchedItems.indexOf(data.list[i].id) != -1) {
+                                data.list[i].watched = true;
                             }
-                        }
-                        this.items.push(data.list[i]);
-                    }
-                }
-                for (let i = 0; i < this.favItems.length; i++) {
-                    this.favItems[i].is_fav = true;
-                }
-            } else {
-                for (let i = 0; i < data.hitsCount; i++) {
-                    if (this.items.indexOf(data.list[i]) == -1) {
-                        if (this.watchedItems.indexOf(data.list[i].id) != -1) {
-                            data.list[i].watched = true;
-                        }
-                        for (let i = 0; i < this.favItems.length; i++) {
-                            if (this.favItems[i].id == data.list[i].id) {
-                                data.list[i].is_fav = true;
-                                console.log('founded: ', data.list[i].id);
+                            for (let i = 0; i < this.favItems.length; i++) {
+                                if (this.favItems[i].id == data.list[i].id) {
+                                    data.list[i].is_fav = true;
+                                    console.log('founded: ', data.list[i].id);
+                                }
                             }
+                            this.items.push(data.list[i]);
                         }
-                        this.items.push(data.list[i]);
                     }
-                }
-                    if(~~(this.hitsCount/20) != this.pagecounter+1 && data.list.length < 20){
+                    for (let i = 0; i < this.favItems.length; i++) {
+                        this.favItems[i].is_fav = true;
+                    }
+                } else {
+                    for (let i = 0; i < data.hitsCount; i++) {
+                        if (this.items.indexOf(data.list[i]) == -1) {
+                            if (this.watchedItems.indexOf(data.list[i].id) != -1) {
+                                data.list[i].watched = true;
+                            }
+                            for (let i = 0; i < this.favItems.length; i++) {
+                                if (this.favItems[i].id == data.list[i].id) {
+                                    data.list[i].is_fav = true;
+                                    console.log('founded: ', data.list[i].id);
+                                }
+                            }
+                            this.items.push(data.list[i]);
+                        }
+                    }
+                    if (~~(this.hitsCount / 20) != this.pagecounter + 1 && data.list.length < 20) {
                         this.hitsCount -= (20 - data.list.length);
                     }
-                for (let i = 0; i < this.favItems.length; i++) {
-                    this.favItems[i].is_fav = true;
-                }
-            }
-            if (flag == 'filters') { this.countOfObjects = this.items.length; } else {this.countOfObjects = data.hitsCount;}
-            // for (let i = 0; i < this.items.length; i++) {
-            //     if (this.watchedItems.indexOf(this.items[i].id) != -1) {
-            //         this.items[i].watched = true;
-            //     }
-            // }
                     for (let i = 0; i < this.favItems.length; i++) {
-                        for (let j = 0; j < this.items.length; j++) {
-                            if (this.favItems[i].id == this.items[j].id) {
-                                console.log(this.items[j]);
-                                this.items[j].is_fav = true;
-                                this.items[j].watched = true;
-                            }
+                        this.favItems[i].is_fav = true;
+                    }
+                }
+                if (flag == 'filters') {
+                    this.countOfObjects = this.items.length;
+                } else {
+                    this.countOfObjects = data.hitsCount;
+                }
+                for (let i = 0; i < this.favItems.length; i++) {
+                    for (let j = 0; j < this.items.length; j++) {
+                        if (this.favItems[i].id == this.items[j].id) {
+                            console.log(this.items[j]);
+                            this.items[j].is_fav = true;
+                            this.items[j].watched = true;
                         }
                     }
-            this.canLoad = 0;
-            console.log("items: ", this.items);
-            if (this.polygonActive && flag != 'listscroll') { this.redrawObjectsOnMap(this.items, flag); }
-        }),err => {
+                }
+                this.canLoad = 0;
+                if (this.polygonActive && flag != 'listscroll') {
+                    this.redrawObjectsOnMap(this.items, flag);
+                }
+            }), err => {
                 console.log(err);
                 this.canLoad = 0;
             }
@@ -1187,15 +1201,17 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         this.find_obj_check = false;
 
     }
+
     listScroll(event) {
-        if (this.canLoad == 0 && ~~(this.hitsCount/20)+1 != this.pagecounter){
-             if (event.currentTarget.scrollTop + event.currentTarget.clientHeight >= event.currentTarget.scrollHeight ) {
+        if (this.canLoad == 0 && ~~(this.hitsCount / 20) + 1 != this.pagecounter) {
+            if (event.currentTarget.scrollTop + event.currentTarget.clientHeight >= event.currentTarget.scrollHeight) {
                 console.log(this.scrollArr);
                 this.pagecounter += 1;
-                this.update_list(100,'listscroll');
+                this.update_list(100, 'listscroll');
             }
         }
     }
+
     get_list(objsOnPage, flag) {
         if (this.activeButton == 'fav') {
             this.get_favObjects();
@@ -1396,8 +1412,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 for (let k = 0; k < objects.length; k++) {
                     objects.item(k).style.removeProperty('box-shadow');
                 }
-                // this.map.balloon.close();
-                // if (!this.polygonActive) { this.map.geoObjects.removeAll()}
                 break;
             case 'objects':
                 item.item(0).classList.add('open');
@@ -1424,7 +1438,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     }
 
     onResize() {
-      let mapContainer = document.getElementsByClassName('ymaps-2-1-76-map') as HTMLCollectionOf<HTMLElement>;
+        let mapContainer = document.getElementsByClassName('ymaps-2-1-76-map') as HTMLCollectionOf<HTMLElement>;
         for (let i = 0; i < mapContainer.length; i++) {
             mapContainer.item(i).style.setProperty('width', '100%');
             mapContainer.item(i).style.setProperty('height', '100%');
@@ -1433,7 +1447,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         if (objects.length != 0) {
             this.widthPhoto = objects.item(0).offsetWidth / 2;
         }
-        // console.log(this.widthPhoto);
         let useless = document.getElementsByClassName('uselessLine') as HTMLCollectionOf<HTMLElement>;
         if (useless.item(0).classList.contains('scroll')) {
             let objs = document.getElementsByClassName('filters objs') as HTMLCollectionOf<HTMLElement>;

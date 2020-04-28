@@ -27,7 +27,7 @@ import {
     AnimationPlayer,
     style,
 } from '@angular/animations';
-import {Item} from '../../../item';
+import {Item} from '../../../class/item';
 import {ActivatedRoute} from '@angular/router';
 import {AccountService} from '../../../services/account.service';
 import * as moment from 'moment';

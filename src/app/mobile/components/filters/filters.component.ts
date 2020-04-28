@@ -1,6 +1,6 @@
 import {LOCAL_STORAGE} from '@ng-toolkit/universal';
 import {Component, EventEmitter, OnInit, Output, AfterViewInit, Inject, Input} from '@angular/core';
-import {Item} from '../../../item';
+import {Item} from '../../../class/item';
 import ymaps from 'ymaps';
 import {ActivatedRoute} from '@angular/router';
 import {OfferService} from '../../../services/offer.service';

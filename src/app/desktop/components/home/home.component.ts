@@ -4,7 +4,7 @@ import {OfferService} from '../../../services/offer.service';
 import {AccountService} from '../../../services/account.service';
 import {NgxMetrikaService} from '@kolkov/ngx-metrika';
 import {ConfigService} from '../../../services/config.service';
-import {Item} from '../../../item';
+import {Item} from '../../../class/item';
 
 @Component({
     selector: 'app-home',

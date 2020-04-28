@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AsyncSubject} from 'rxjs/AsyncSubject';
 import {map} from 'rxjs/operators';
-import {Item} from '../item';
+import {Item} from '../class/item';
 import {ConfigService} from './config.service';
 import {ListResult} from '../class/listResult';
 

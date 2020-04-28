@@ -2,7 +2,7 @@ import {Component, OnInit, AfterViewInit} from '@angular/core';
 import {OfferService} from '../../../services/offer.service';
 import {AccountService} from '../../../services/account.service';
 import {NgxMetrikaService} from '@kolkov/ngx-metrika';
-import {Item} from '../../../item';
+import {Item} from '../../../class/item';
 import {ConfigService} from '../../../services/config.service';
 
 @Component({

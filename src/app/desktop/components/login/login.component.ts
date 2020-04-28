@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output, AfterViewInit} from '@angular/core';
 import {AccountService} from '../../../services/account.service';
 import {NgxMetrikaService} from '@kolkov/ngx-metrika';
+import {Person} from '../../../class/person';
 
 @Component({
     selector: 'app-login',
@@ -45,6 +46,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     items: any[] = [];
     phone1 = "+7";
     position: any;
+    progressWidth: number = 0;
 
     model_name: any;
     model_whatsapp: any;
@@ -52,6 +54,15 @@ export class LoginComponent implements OnInit, AfterViewInit {
     model_ok: any;
     model_instagram: any;
     model_description: any;
+
+    modal_title: any;
+    modal_text: any;
+    modal_action: any;
+    modal_action_text: any;
+    modal_active = false;
+    modal_cancel = true;
+
+    person: Person = new Person();
 
     advices = [
         {
@@ -104,7 +115,18 @@ export class LoginComponent implements OnInit, AfterViewInit {
         this.blockClose.emit(name);
     }
     setFocus(name){
+        console.log(document.getElementById(name), name);
         document.getElementById(name).focus();
+    }
+    addFile(event){
+        console.log(event);
+        this.person.photoMini = event.href;
+    }
+    displayProgress(event) {
+        this.progressWidth = event;
+        if (event == 100) setTimeout(() => {
+            this.progressWidth = 0;
+        }, 1300);
     }
     prevAdvice() {
         const listElems = document.getElementsByClassName('advice_carousel-li') as HTMLCollectionOf<HTMLElement>;
@@ -143,44 +165,42 @@ export class LoginComponent implements OnInit, AfterViewInit {
             ev.target.scrollIntoView({block: 'center', behavior: 'smooth'});
         },300);
     }
-    onResize() {
-        let hei = document.getElementsByClassName('left-block') as HTMLCollectionOf<HTMLElement>;
-        let logo = document.getElementsByClassName('logo') as HTMLCollectionOf<HTMLElement>;
-        let text = document.getElementsByClassName('text-block') as HTMLCollectionOf<HTMLElement>;
-        let dark = document.getElementsByClassName('dark-layer') as HTMLCollectionOf<HTMLElement>;
-        let height = -text.item(0).clientHeight - logo.item(2).offsetHeight;
-        logo.item(2).style.setProperty('top', '50px');
 
-        dark.item(0).style.setProperty('top', height + 'px');
-        //  logo.item(2).style.setProperty('top', '50px');
-        text.item(0).style.setProperty('top', '300px');
-        this.height = hei.item(0).offsetHeight;
-        this.width = hei.item(0).offsetWidth;
+    modalFunc(name) {
+        switch (name) {
+            case 'cancel':
+                this.modal_active = false;
+                break;
+            case 'action':
+                this.modal_active = false;
+                switch (this.modal_action) {
+                    case 'login':
+                        this.log_in = true;
+                          break;
+                    case 'continue':
+                        break;
+                    case 'login_continue':
+                        this.user = this.phone1;
+                        this.logged_in = true;
+                        this.blockCloseFunc('login');
+                        this.phone1 = "+7";
+                        this.pass = "";
+                        this.register = false;
+                        this.log_in = true;
+                        this.loggingMode.emit(true);
+                        break;
+                }
+                break;
+        }
     }
-
     enterMode(name) {
-        if (name === 'log in') {
-            this.mode = 'login';
+        this.mode = name;
+        if (name === 'login') {
             this.log_in = true;
             this.register = false;
-            document.getElementById('res').innerHTML = "";
         } else if (name === 'register') {
-            this.mode = 'register';
             this.log_in = false;
             this.register = true;
-            document.getElementById('res1').innerHTML = "";
-        } else if (name === 'recoverPass') {
-            this.mode = 'recoverPass';
-        } else if (name === 'checkRecoverKey') {
-            this.mode = 'checkRecoverKey';
-        } else if (name === 'savePass') {
-            this.mode = 'savePass';
-        } else if (name === 'checkAccessKey') {
-            this.mode = 'checkAccessKey';
-        } else if (name === 'sendKey') {
-            this.mode = 'sendKey';
-        } else if (name === 'savePassRecover') {
-            this.mode = 'savePassRecover';
         }
     }
 
@@ -224,12 +244,26 @@ export class LoginComponent implements OnInit, AfterViewInit {
             'ok': this.model_ok,
             'instagram': this.model_instagram
         };
-        this._account_service.saveUser(emails, phones, messengers, socials, undefined, this.model_name, this.model_description, false).subscribe(res => {
+        this._account_service.saveUser(emails, phones, messengers, socials, undefined, this.model_name, this.model_description, false, this.person.photoMini).subscribe(res => {
+            console.log('save', res);
             if (res != undefined) {
-                this.enterMode('register');
+                this.mode = 'register';
+                this.log_in = false;
+                this.register = true;
                 this.get_users();
+            } else {
+                this.modal_info('Предупреждение','Произошла ошибка в системе. Регистрация на данный момент невозможна','Продолжить','continue',true);
             }
         });
+    }
+
+    modal_info(title, text, action_text, action, cancel) {
+        this.modal_title = title;
+        this.modal_text = text;
+        this.modal_action_text = action_text;
+        this.modal_action = action;
+        this.modal_active = true;
+        this.modal_cancel = cancel;
     }
 
     selected(el: MouseEvent) {
@@ -243,124 +277,133 @@ export class LoginComponent implements OnInit, AfterViewInit {
     }
 
     get_users() {
-        if (this.mode == 'login') {
-            document.getElementById('res').style.setProperty('display', 'block');
-        }
-        if (this.mode == 'register' || this.mode == 'recoverPass') {
-            document.getElementById('res1').style.setProperty('display', 'block');
-        }
-
         this.result = '';
         let recoverMethod = '';
-        console.log('get_users');
+        console.log('get_users', this.mode);
 
         if (this.mode === 'login') {
-            console.log('login: ' + this.phone1 + ' ' + 'pass: ' + this.pass);
-            this._account_service.login(this.phone1, this.pass).subscribe(res => {
-                console.log('login work');
-                console.log(res);
-                let i = 0;
-                for (let str of Object.values(res)) {
-                    i++;
-                    console.log(str);
-                    this.result = str.toString();
-                    if (i == 1) {
-                        document.getElementById('res').innerHTML = this.result;
-                        if (this.result == "Успешный вход") {
-                            this.user = this.phone1;
-                            this.logged_in = true;
-                            this.blockCloseFunc('login');
-                            this.phone1 = "+7";
-                            this.pass = "";
-                            this.register = false;
-                            this.log_in = true;
-                            this.loggingMode.emit(true);
+            if ((this.phone1 == '' || this.phone1 == undefined || this.phone1.length < 3) && (this.pass == '' || this.pass == undefined))                {
+                this.modal_info('Предупреждение','Для входа в систему, пожалуйста введите номер вашего телефона и пароль','Продолжить','continue',true);
+            }  else if ((this.phone1.length == 12) && (this.pass == '' || this.pass == undefined)) {
+                this.modal_info('Предупреждение','Для входа в систему, пожалуйста введите номер вашего телефона и пароль','Продолжить','continue',false);
+            } else if (this.phone1.length > 2 && this.phone1.length < 11) {
+                this.modal_info('Предупреждение','Некорректно введен номер телефона, пожалуйста проверьте правильность написания','Продолжить','continue',true);
+            } else if (this.pass != undefined && (this.pass.length > 0 && this.pass.length < 5)) {
+                this.modal_info('Предупреждение','Некорректно введен пароль, пожалуйста проверьте правильность написания','Продолжить','continue',false);
+            } else {
+                console.log('login: ' + this.phone1 + ' ' + 'pass: ' + this.pass);
+                this._account_service.login(this.phone1, this.pass).subscribe(res => {
+                    let i = 0;
+                    console.log(res);
+                    for (let str of Object.values(res)) {
+                        i++;
+                        this.result = str.toString();
+                        if (i == 1) {
+                            this.modal_title = 'Сообщение';
+                            this.modal_text = this.result;
+                            this.modal_action_text = 'Продолжить';
+                            this.modal_action = 'continue';
+                            this.modal_cancel = false;
+                            if (this.result == 'Успешный вход') {
+                                this.modal_action = 'login_continue';
+                            }
+                            this.modal_active = true;
+                        } else if (i == 3) {
+                            this.userLoggedIn.emit(this.result);
                         }
-                    } else if (i == 3) {
-                        this.userLoggedIn.emit(this.result);
                     }
-                }
-            });
+                });
+            }
         }
-        this.items = [];
-        if (this.mode === 'register' && this.login !== '' && this.pass !== '' && this.phone !== '') {
-            this._account_service.data(this.login.replace(' ', ''), this.pass, this.phone, this.mode, recoverMethod).subscribe(res => {
-                let i = 0;
-                for (let str of Object.values(res)) {
-                    if (str.toString() == 'ok') {
-                        this.phone1 = '+' + this.phone;
-                        setTimeout(() => {
-                            this.enterMode('login');
-                            this.get_users();
-                        }, 300);
-                    }
-                    i++;
-                }
-            });
 
-        } else if (this.mode === 'sendKey') {
+        if (this.mode === 'register' && this.login !== '' && this.pass !== '' && this.phone !== '') {
+            if (((this.login == '' || this.login == undefined ) && (this.phone == '' || this.phone == undefined || this.phone.length < 3))
+                || (this.phone.length == 11 && (this.login == '' || this.login == undefined)) ){
+                this.modal_info('Предупреждение','Для регистрации в системе, пожалуйста введите номер вашего телефона и почтовый адрес','Продолжить','continue',false);
+            } else if (this.phone.length > 2 && this.phone.length < 11) {
+                this.modal_info('Предупреждение','Некорректно введен номер телефона, пожалуйста проверьте правильность написания','Продолжить','continue',true);
+            } else if (this.login.indexOf('@') == -1) {
+                this.modal_info('Предупреждение','Некорректно введен почтовый адрес, пожалуйста проверьте правильность написания','Продолжить','continue',true);
+            }  else {
+                this._account_service.data(this.login.replace(' ', ''), this.pass, this.phone, this.mode, recoverMethod).subscribe(res => {
+                    if (res.response == 'ok') {
+                        this.phone1 = this.phone;
+                        this.mode = 'login';
+                        this.log_in = true;
+                        this.register = false;
+                        this.get_users();
+                    }
+                });
+            }
+        }
+        if (this.mode === 'sendKey') {
             recoverMethod = 'phone';
             let regexp = new RegExp('@');
             let test = regexp.test(this.login);
             if (this.recover) {
                 if (this.phone1 == '' || this.phone1 == undefined || this.phone1.length < 11) {
-                    document.getElementById('res').innerHTML = "Для восстановления пароля пожалуйста введите номер Вашего телефона";
+                    this.modal_info('Сообщение','Для восстановления пароля пожалуйста введите номер Вашего телефона','Продолжить','continue',false);
                 } else {
                     this.codeActive = true;
                     console.log('work ' + this.phone1 + " " + this.login);
                     this._account_service.data(this.login, this.pass, this.phone1, "recoverPass", recoverMethod).subscribe(res => {
-                        document.getElementById('res').style.setProperty('display', 'block');
                         let i = 0;
                         for (let str of Object.values(res)) {
                             if (i == 0) {
                                 this.result += str.toString();
-                                document.getElementById('res').innerHTML = this.result;
+                                this.modal_info('Сообщение',this.result,'Продолжить','continue',false);
                             }
                             i++;
                         }
                     });
                 }
             } else {
-                if (this.login == '' || this.login == undefined || !test) {
-                    document.getElementById('res1').innerHTML = "Некорректно введен адрес почтового ящика, пожалуйста проверьте правильность написания";
-                } else if (this.phone == '' || this.phone == undefined || this.phone.length < 11) {
-                    document.getElementById('res1').innerHTML = "Некорректно введен номер телефона, пожалуйста проверьте правильность написания";
-                } else {
-                    //  document.getElementById('res1').innerHTML = "На Ваш телефон и почтовый ящик был отправлен пароль для входа в систему";
-                    this.codeActive = true;
+                if (((this.login == '' || this.login == undefined || !test) && (this.phone == '' || this.phone == undefined || this.phone.length < 3))
+                    || (this.phone.length == 11 && (this.login == '' || this.login == undefined)) ){
+                    this.modal_info('Предупреждение','Для регистрации в системе, пожалуйста введите номер вашего телефона и почтовый адрес','Продолжить','continue',true);
+                } else if (this.phone.length > 2 && this.phone.length < 11) {
+                    this.modal_info('Предупреждение','Некорректно введен номер телефона, пожалуйста проверьте правильность написания','Продолжить','continue',true);
+                } else if (this.login.indexOf('@') == -1) {
+                    this.modal_info('Предупреждение','Некорректно введен почтовый адрес, пожалуйста проверьте правильность написания','Продолжить','continue',true);
+                }  else {
+                   this.codeActive = true;
                     this._account_service.data(this.login, this.pass, this.phone, this.mode, recoverMethod).subscribe(res => {
-                        document.getElementById('res1').style.setProperty('display', 'block');
                         let i = 0;
                         for (let str of Object.values(res)) {
                             if (i == 0) {
                                 this.result = str.toString();
-                                document.getElementById('res1').innerHTML = str.toString();
+                                this.modal_info('Сообщение',str.toString(),'Продолжить','continue',false);
                             }
                             i++;
                         }
                     });
-                    console.log(this.result);
-                    //  document.getElementById('res1').innerHTML = this.result;
                 }
             }
 
-        } else if (this.mode === 'checkAccessKey' && this.regVar == true) {
+        }
+        if (this.mode === 'checkAccessKey' && this.regVar == true) {
             this.counter = 0;
-            if (this.check) {
+            if (((this.login == '' || this.login == undefined ) && (this.phone == '' || this.phone == undefined || this.phone.length < 3))
+                || (this.phone.length == 11 && (this.login == '' || this.login == undefined)) ){
+                this.modal_info('Предупреждение','Для регистрации в системе, пожалуйста введите номер вашего телефона и почтовый адрес','Продолжить','continue',false);
+            } else if (this.phone.length > 2 && this.phone.length < 11) {
+                this.modal_info('Предупреждение','Некорректно введен номер телефона, пожалуйста проверьте правильность написания','Продолжить','continue',true);
+            } else if (this.login.indexOf('@') == -1) {
+                this.modal_info('Предупреждение','Некорректно введен почтовый адрес, пожалуйста проверьте правильность написания','Продолжить','continue',true);
+            }  else if (!this.check && this.phone.length == 11 && this.login.indexOf('@') != -1) {
+                this.modal_info('Предупреждение', 'Для регистрации в системе необходимо дать согласие на условия использования и политику конфиденциальности', 'Продолжить', 'continue', false);
+            } else {
                 let i = 0;
                 this._account_service.data(this.login, this.pass, this.phone, this.mode, recoverMethod).subscribe(res => {
                     for (let str of Object.values(res)) {
-                        i++;
-                        this.result = str.toString();
-                        if (str.toString() == 'ok' && i == 1) {
-                            document.getElementById('res1').innerHTML = "Учетная запись успешно создана";
-                            this.access_code = true;
-                            this.counter++;
-                            if (this.counter == 1) {
+                        if (i == 0) {
+                            i++;
+                            this.result = str.toString();
+                            if (str.toString() == 'ok') {
                                 this.save_user();
+                            } else {
+                                this.modal_info('Предупреждение',str.toString(),'Продолжить','continue',true);
                             }
-                        } else if (str.toString() != 'ok') {
-                            document.getElementById('res1').innerHTML = str.toString();
                         }
                     }
                 });
@@ -368,28 +411,13 @@ export class LoginComponent implements OnInit, AfterViewInit {
         }
     }
 
-    checkKey(key) {
-        if (document.getElementById('res') != null) {
-            document.getElementById('res').innerHTML = "";
+    checkKey(variable) {
+        if ((variable.charAt(0) == '7' || variable[0] == '7') && variable.length < 2) {
+            variable = "+7";
+        } else if (variable.charAt(0) != '7' && variable[0] != '7' && variable.charAt(0) != '8' && variable[0] != '8'
+            && variable.charAt(0) != '+' && variable[0] != '+' && variable.length < 2) {
+            variable = "+7";
         }
-        if (document.getElementById('res1') != null) {
-            document.getElementById('res1').innerHTML = "";
-        }
-        if (key == "phone") {
-            if ((this.phone.charAt(0) == '7' || this.phone[0] == '7') && this.phone.length < 2) {
-                this.phone = "+7";
-            } else if (this.phone.charAt(0) != '7' && this.phone[0] != '7' && this.phone.charAt(0) != '8' && this.phone[0] != '8'
-                && this.phone.charAt(0) != '+' && this.phone[0] != '+' && this.phone.length < 2) {
-                this.phone = "+7";
-            }
-        } else if (key == "phone1") {
-            // console.log(this.phone1.charAt(0) + " " + this.phone1[0]);
-            if ((this.phone1.charAt(0) == '7' || this.phone1[0] == '7') && this.phone1.length < 2) {
-                this.phone1 = "+7";
-            } else if (this.phone1.charAt(0) != '7' && this.phone1[0] != '7' && this.phone1.charAt(0) != '8' && this.phone1[0] != '8'
-                && this.phone1.charAt(0) != '+' && this.phone1[0] != '+' && this.phone1.length < 2) {
-                this.phone1 = "+7";
-            }
-        }
+        return variable;
     }
 }

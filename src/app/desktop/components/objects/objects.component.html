@@ -47,24 +47,6 @@
             <div>Добавить объявление</div>
             <div class="line"></div>
         </div>
-<!--        <div class="count-filters"><span>ДОБАВИТЬ ПРЕДЛОЖЕНИЕ</span></div>-->
-<!--        <div class="filters-divider"></div>-->
-<!--        <div class="fav" (click)="ymFunc('fav-offer');modeChange('fav');get_favObjects(); activeButton = 'fav';itemsActive = false;listMode = true; listActive()">-->
-<!--            <div class="fav-button" [class.open]=" itemsActive" ></div>-->
-<!--            <div class="count-filters" *ngIf="itemsActive"><span>ИЗБРАННОЕ</span></div>-->
-<!--        </div>-->
-<!--        <div class="list" (click)="modeChange('list');activeButton = 'items';itemsActive = true;historyClose();listMode = true;listActive()">-->
-<!--            <div class="fav-button" [class.open]=" !itemsActive"></div>-->
-<!--            <div class="count-filters" *ngIf="!itemsActive"><span>СПИСОК</span></div>-->
-<!--        </div>-->
-<!--        <div class="filter" [class.open]="!filtersInnerActive" (click)="ymFunc('filter-offer');checkFilters()">-->
-<!--            <div class="list-button open"></div>-->
-<!--            <div class="count-filters"><span>ФИЛЬТРЫ</span></div>-->
-<!--        </div>-->
-<!--        <div class="filter" [class.open]="filtersInnerActive" (click)="ymFunc('filter-offer');checkFilters();listMode=true; listActive()">-->
-<!--            <div class="list-button active open"></div>-->
-<!--            <div class="count-filters"><span>ФИЛЬТРЫ</span></div>-->
-<!--        </div>-->
         <div class="mapTopButtons">
             <div class="mapTopButton l" style="border-right: none;" [class.disable]="listMode" [class.active]="!listMode"
                  (click)="listMode = false; listActive()">
@@ -77,41 +59,34 @@
     </div>
 </div>
 <div class="main-objects">
-    <item-desktop [gallery]="galleryFullItem" [galleryType]="galleryType" *ngIf="itemOpen && activeButton == 'obj'" [item]="item" [logged]="logged_in" [payed]="payed" (closeItem)="closeBlock('item')" (favItemMode)="changeFav($event, '')" (galleryMode)="galleryFullItem = $event"></item-desktop>
+    <item-desktop [gallery]="galleryFullItem" [galleryType]="galleryType" *ngIf="itemOpen && activeButton == 'obj'" [item]="item" [logged]="logged_in" [payed]="payed" (closeItem)="closeBlock('item')" (favItemMode)="get_favObjects()" (galleryMode)="galleryFullItem = $event"></item-desktop>
     <div class="inner-left">
-        <div class="map filters-map open" id="filters-map-map1" [class.full]="!listMode"></div>
+        <div class="map filters-map" id="filters-map-map1" [class.full]="!listMode"></div>
         <div class="filters open blur" [class.close]="!listMode">
             <div class="find-block" *ngIf="!historyActive">
                 <input type="text" class="input_line" placeholder="Введите поисковый запрос" (click)="ymFunc('find-offer');">
-                <!--                <div class="find_icon_block"><div class="find_icon"></div></div>-->
             </div>
             <div class="found-items" *ngIf="!historyActive"><span>Найдено: </span><span>{{countOfObjects}}</span></div>
-            <div class="scroll-items open blur fav-list"
+            <div class="scroll-items blur fav-list"
                  *ngIf="!historyActive && (activeButton == 'fav' || activeButton == 'obj')">
                 <virtual-scroller #scroll [items]="favItems" [enableUnequalChildrenSizes]="true" style="height: 100%">
                     <ng-container *ngFor="let obj of scroll.viewPortItems, let i = index">
                         <item-middle *ngIf="obj.id != null" [item]="obj" [loggingMode]="logged_in" [payingMode]="payed" (showBlock)="openBlock($event)"
-                                     (favItemMode)="changeFav($event, obj)" (click)="focusOnObject($event, obj, i, 'fav')" (openGallery)="openGallery(obj, $event)"></item-middle>
+                                     (favItemMode)="get_favObjects()" (click)="focusOnObject($event, obj, i, 'fav')" (openGallery)="openGallery(obj, $event)"></item-middle>
                     </ng-container>
                 </virtual-scroller>
             </div>
 
-            <div class="scroll-items open blur common-list" (mousewheel)="listScroll($event)"
+            <div class="scroll-items blur common-list" (mousewheel)="listScroll($event)"
                  *ngIf="!historyActive && (activeButton == 'items' || activeButton == 'obj')">
 
                 <virtual-scroller #scroll [items]="items" [enableUnequalChildrenSizes]="true" style="height: 100%">
                     <ng-container *ngFor="let obj of scroll.viewPortItems, let i = index">
                         <item-middle *ngIf="obj.id != null" [item]="obj" [loggingMode]="logged_in" [payingMode]="payed" (showBlock)="openBlock($event)"
-                                     (favItemMode)="changeFav($event, obj)" (click)="focusOnObject($event, obj, i, 'item')" (openGallery)="openGallery(obj, $event)"></item-middle>
+                                     (favItemMode)="get_favObjects()" (click)="focusOnObject($event, obj, i, 'item')" (openGallery)="openGallery(obj, $event)"></item-middle>
                     </ng-container>
                 </virtual-scroller>
             </div>
-<!--            <app-item class="item-blur" *ngIf="itemOpen && activeButton == 'obj'" [compareItem]="true" [loggingMode]="logged_in" [payingMode]="payed"-->
-<!--                      [similarOpen]="false"-->
-<!--                      [compare]="false" [item]="item" [mode]="'full'" (favItemMode)="changeFav($event, '')"-->
-<!--                      (closeItem)="closeBlock($event)"-->
-<!--                      (similarItem)="item = $event" (comparison)="openBlock('compare')">-->
-<!--            </app-item>-->
         </div>
 
     </div>
