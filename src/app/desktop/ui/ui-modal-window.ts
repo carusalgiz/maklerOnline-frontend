@@ -39,6 +39,9 @@ import {AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, 
             font-family: OpenSans, sans-serif;
             box-shadow: 0 0 3px 0 #d3d5d6;
         }
+        .modal-title, .modal-text, .button{
+            letter-spacing: 0;
+        }
         .modal-title{
             font-size: 18px;
             margin-bottom: 10px;
@@ -62,6 +65,9 @@ import {AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, 
             align-items: center;
             justify-content: center;
             font-weight: bold;
+        }
+        .button:hover{
+            cursor: pointer;
         }
     `]
 })

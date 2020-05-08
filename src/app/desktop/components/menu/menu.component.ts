@@ -5,6 +5,7 @@ import {OfferService} from '../../../services/offer.service';
 import {AccountService} from '../../../services/account.service';
 import {ConfigService} from "../../../services/config.service";
 import {NgxMetrikaService} from '@kolkov/ngx-metrika';
+import {HubService} from '../../../services/hub.service';
 @Component({
     selector: 'app-menu',
     templateUrl: './menu.component.html',
@@ -35,7 +36,7 @@ export class MenuComponent implements OnInit {
 
     constructor(private ym: NgxMetrikaService,@Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, config: ConfigService,
                 private _offer_service: OfferService,
-                private _account_service: AccountService) {
+                private _account_service: AccountService, private router: Router) {
         this.siteUrl = config.getConfig('siteUrl');
         if (sessionStorage.getItem('useremail') != undefined) {
             this.userEmail = sessionStorage.getItem('useremail');

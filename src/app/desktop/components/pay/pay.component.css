@@ -1,6 +1,24 @@
 div:hover, span:hover, p:hover {
   cursor: default;
 }
+.exit-panel {
+    width: calc(100% - 60px);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 0 30px 25px 30px;
+}
+.exit-panel span:hover, .exit-panel:hover .exitButton{
+    cursor: pointer;
+}
+.exitButton{
+    height: 33px;
+    width: 33px;
+    background-size: 100% 100%;
+    background-position: center;
+    background-image: url('../../../../assets/exit.png');
+    margin-left: 8px;
+}
 .barMenu1, .barMenu2{
   width: 30px;
   height: 1.5px;
@@ -12,11 +30,6 @@ div:hover, span:hover, p:hover {
 }
 .barMenu2{
   transform: rotate(-45deg) translate(3px, -3px);
-}
-.exitButton{
-  position: relative;
-  top: 5px;
-  right: 25px;
 }
 .rating-count{
   font-family: Cadillac, sans-serif;
@@ -255,7 +268,7 @@ div:hover, span:hover, p:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 40px;
+  padding-top: 15px;
   font-family: Cadillac, sans-serif;
   letter-spacing: 0.05em;
   font-size: 12px;

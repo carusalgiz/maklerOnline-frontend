@@ -113,7 +113,7 @@
             </div>
             <div class="additional-block" [class.open]="cost">
                 <div class="button-box filters-options-box" id="filters-options-box4">
-                    <input-range [mode]="'desktop'" [name]="'Стоимость'" [valueMin]="priceMin" [valueMax]="priceMax" [min]="0" [max]="200" [step]="1"
+                    <input-range [name]="'Стоимость'" [valueMin]="priceMin" [valueMax]="priceMax" [min]="0" [max]="200" [step]="1"
                                  (newValue)="request.ownerPrice = $event.max; priceMin = $event.min; priceMax = $event.max; selectOption(4,0, $event.min, 'cost', '')"></input-range>
                 </div>
             </div>

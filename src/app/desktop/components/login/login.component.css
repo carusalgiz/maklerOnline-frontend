@@ -36,7 +36,7 @@ div:hover, span:hover, p:hover {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 40px 0;
+    padding: 15px 0;
     font-size: 12px;
     color: #252f32;
     background-color: white;
@@ -145,7 +145,7 @@ div:hover, span:hover, p:hover {
     width: fit-content;
     font-size: 12px;
     color: #3B5998;
-    text-decoration: underline;
+
     margin-top: 25px;
     margin-bottom: 20px;
 }
@@ -153,7 +153,9 @@ div:hover, span:hover, p:hover {
 .confirmButton:hover, .button-next:hover {
     cursor: pointer;
 }
-
+.confirmButton:hover {
+    text-decoration: underline;
+}
 .recover {
     font-size: 12px;
     color: #3B5998;
@@ -171,6 +173,7 @@ div:hover, span:hover, p:hover {
 .registerButtons {
     display: flex;
     margin-bottom: 35px;
+    margin-top: 20px;
 }
 
 .similar-button {
@@ -255,7 +258,6 @@ div:hover, span:hover, p:hover {
     overflow: hidden;
     min-width: 330px;
     position: relative;
-    left: 25px;
 }
 .advices ul{
     position: relative;
@@ -324,4 +326,42 @@ div:hover, span:hover, p:hover {
 .advice{
     padding-top: 10px;
     width: 330px;
+}
+.exit-panel {
+    width: calc(100% - 60px);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 0 30px 25px 30px;
+}
+.exit-panel span:hover, .exit-panel:hover .exitButton{
+    cursor: pointer;
+}
+.exitButton{
+    height: 33px;
+    width: 33px;
+    background-size: 100% 100%;
+    background-position: center;
+    background-image: url('../../../../assets/exit.png');
+    margin-left: 8px;
+}
+.advice_arrows{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 56px;
+}
+.advice_arrows > .left, .advice_arrows > .right{
+    height: 33px;
+    width: 25px;
+    background-size: 100% 100%;
+    background-position: center;
+    background-image: url('../../../../assets/gray_arrow.png');
+}
+.advice_arrows > .left{
+    transform: rotate(90deg);
+    margin-right: 50px;
+}
+.advice_arrows > .right{
+    transform: rotate(-90deg);
 }

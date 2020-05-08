@@ -5,6 +5,8 @@ import {AccountService} from '../../../services/account.service';
 import {NgxMetrikaService} from '@kolkov/ngx-metrika';
 import {ConfigService} from '../../../services/config.service';
 import {Item} from '../../../class/item';
+import {HubService} from '../../../services/hub.service';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-home',
@@ -14,7 +16,7 @@ import {Item} from '../../../class/item';
 export class HomeComponent implements OnInit, AfterViewInit {
 
     constructor(private ym: NgxMetrikaService, @Inject(LOCAL_STORAGE) private localStorage: any, private _offer_service: OfferService, config: ConfigService,
-                private _account_service: AccountService) {
+                private _account_service: AccountService, private _hub_service: HubService, private router: Router) {
         this.siteUrl = config.getConfig('siteUrl');
     }
 
@@ -69,9 +71,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
         name: 'Александр Кузин',
         text: 'Огромное спасибо сайту и его создателям за то, что смог найти квартиру быстро без затрат и комиссий.'
     }];
-    allowshift = true;
-    slideIndex = 0;
-    slidesLength = 0;
     slideAction: any;
     itemSlideAction: any;
 
@@ -83,15 +82,30 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         this.resize();
-        let items = document.getElementsByClassName('menuBlock') as HTMLCollectionOf<HTMLElement>;
-        items.item(0).style.setProperty('border-top', '5px solid #821529');
-        items.item(0).style.setProperty('font-weight', 'bold');
+        let itemsMenu = document.getElementsByClassName('menuBlock') as HTMLCollectionOf<HTMLElement>;
+        if (itemsMenu.length != 0) {
+            for (let i = 0; i < itemsMenu.length; i++) {
+                if (i != 0 && i != 4) {
+                    itemsMenu.item(i).style.removeProperty('border-top');
+                    itemsMenu.item(i).style.removeProperty('font-weight');
+                } else {
+                    itemsMenu.item(i).style.setProperty('border-top', '5px solid #821529');
+                    itemsMenu.item(i).style.setProperty('font-weight', 'bold');
+                }
+            }
+        }
         let line = document.documentElement.getElementsByClassName('uselessLine') as HTMLCollectionOf<HTMLElement>;
         line.item(0).classList.add('homePage');
     }
 
     ymFunc(target) {
         this.ym.reachGoal.next({target: target});
+    }
+
+    openItem(item) {
+        this._hub_service.setMode('home');
+        this._hub_service.setTransferItem(item);
+        this.router.navigate(['d/objects/list']);
     }
 
     redirectFunc(href) {
@@ -108,11 +122,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
             console.log(res);
             if (res != undefined) {
                 let data = JSON.parse(JSON.stringify(res));
-                if (data.result == 'success') {
-                    this.loggedIn = true;
-                } else {
-                    this.loggedIn = false;
-                }
+                this.loggedIn = data.result == 'success';
             } else {
                 this.loggedIn = false;
                 console.log('not athorized!');
@@ -146,7 +156,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         listElems.item(listElems.length - 1).remove();
         list.insertBefore(last, listElems.item(0));
         list.style.setProperty('transition', 'unset');
-        this.position = -382;
+        this.position = -370;
         list.style.setProperty('margin-left', this.position + 'px');
         setTimeout(() => {
             list.style.setProperty('transition', 'margin-left .4s');
@@ -166,7 +176,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
         list.appendChild(clone);
         list.style.setProperty('transition', 'unset');
 
-        this.position = 382;
+        this.position = 370;
 
 
         list.style.setProperty('margin-left', this.position + 'px');

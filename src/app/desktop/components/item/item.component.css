@@ -126,16 +126,16 @@ div:hover, span:hover, p:hover {
 .magnifier{
     position: relative;
     top: 125px;
-    left: calc(50% - 35px);
-    margin-bottom: -70px;
-    height: 70px;
-    width: 70px;
+    left: calc(50% - 30px);
+    margin-bottom: -60px;
+    height: 60px;
+    width: 60px;
     display: none;
     background-color: #eaebeca1;
     border-radius: 50px;
     z-index: 90;
     background-image: url("../../../../assets/лупа.png");
-    background-size: 50px 50px;
+    background-size: 30px 30px;
     background-position: center;
     background-repeat: no-repeat;
 }
@@ -234,8 +234,8 @@ div:hover, span:hover, p:hover {
 
 .item-info{
     display: flex;
-    margin-top: 5px;
-    margin-bottom: 12px;
+    margin-top: 12px;
+    margin-bottom: 20px;
 }
 .item-info > div{
     margin-right: 15px;
@@ -250,14 +250,13 @@ div:hover, span:hover, p:hover {
     object-position: 0;
 }
 .no-photo{
-    font-family: Cadillac, sans-serif;
+    font-family: Helvetica, sans-serif;
     font-size: 40px;
-    width: 200px;
+    width: 100%;
     position: relative;
     height: 200px;
-    left: calc(50% - 118px);
     top: calc(-50% - 100px);
-    color: #252f32;
+    color: #32323D;
     display: flex;
     align-items: center;
     line-height: 40px;
@@ -694,7 +693,7 @@ div:hover, span:hover, p:hover {
     height: 333px;
     min-width: unset;
     border: 1px solid #d3d5d6 !important;
-    margin: 15px 20px 0 0 !important;
+    margin: 15px 10px 10px 0 !important;
 }
 .address.main-page{
     font-size: 14px !important;

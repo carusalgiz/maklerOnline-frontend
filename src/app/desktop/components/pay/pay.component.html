@@ -1,9 +1,9 @@
 <app-menu *ngIf="!itemOpen"></app-menu>
 <div class="right-block addRight"  [class.fullPage]="!itemOpen">
-  <div class="hideMenu" *ngIf="itemOpen" (click)="blockCloseFunc('pay');">
-    <div class="barExit1"></div>
-    <div class="barExit2"></div>
-  </div>
+    <div class="exit-panel" *ngIf="itemOpen">
+        <span  (click)="blockCloseFunc('pay');">Закрыть</span>
+        <div class="exitButton" (click)="blockCloseFunc('pay');"></div>
+    </div>
   <div class="account-balance font">
     <div>
       <span style="margin-right: 15px">ВАШ БАЛАНС:</span>

@@ -30,9 +30,9 @@
                         <div class="barArrow2-left"></div>
                     </div>
                 </div>
-                <div class="items" style="overflow: hidden;width: 100%;">
-                    <ul id="items_carousel-ul" style="width: max-content;" [style.left.px]="items.length < 5 ? 0 : -382">
-                        <li class="items_carousel-li" *ngFor="let item of items; let i = index">
+                <div class="items">
+                    <ul id="items_carousel-ul" style="width: max-content;" [style.left.px]="items.length < 5 ? 0 : -370">
+                        <li class="items_carousel-li" *ngFor="let item of items; let i = index" (click)="openItem(item)">
                             <item-middle [mode]="'main_page'" [index]="i" [item]="item" [loggingMode]="false"
                                          [payingMode]="false"></item-middle>
                         </li>
@@ -334,10 +334,7 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
-
         </footer>
     </div>
 </div>

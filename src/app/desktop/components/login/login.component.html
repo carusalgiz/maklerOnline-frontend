@@ -1,7 +1,7 @@
 <div class="right-block addRight">
-    <div class="hideMenu" (click)="blockCloseFunc('login');">
-        <div class="barExit1"></div>
-        <div class="barExit2"></div>
+    <div class="exit-panel">
+        <span  (click)="blockCloseFunc('login');">Закрыть</span>
+        <div class="exitButton" (click)="blockCloseFunc('login');"></div>
     </div>
     <div class="title1">ДОБРО ПОЖАЛОВАТЬ НА</div>
     <div class="title2">МАКЛЕРОНЛАЙН</div>
@@ -60,7 +60,7 @@
                                                                (click)="openDocument()">
           условиями использования</span> и политикой конфиденциальности.</span>
         </div>
-        <div *ngIf="register" style="color: #E64A19; margin-top: 30px">После регистрации будет доступен бесплатный период</div>
+        <div *ngIf="register" style="color: #24780A; margin-top: 30px">После регистрации будет доступен бесплатный период</div>
         <div class="button-next" *ngIf="register" style="margin-top: 20px"
              (click)="ymFunc('registration-login');enterMode('checkAccessKey');get_users()">
             <span>ЗАРЕГИСТРИРОВАТЬСЯ</span>
@@ -72,25 +72,19 @@
         <ng-container *ngIf="log_in">
             <div class="advice_title">Советы:</div>
             <div class="carousel">
-                <div class="arrow left" (click)="prevAdvice()">
-                    <div class="arrowFull">
-                        <div class="barArrow1-left"></div>
-                        <div class="barArrow2-left"></div>
-                    </div>
-                </div>
+
                 <div class="advices">
                     <ul id="advice_carousel-ul" style="width: max-content;">
-                        <li class="advice_carousel-li" *ngFor="let advice of advices">
+                        <li class="advice_carousel-li" *ngFor="let advice of advices, let i = index">
                             <div class="advice">{{advice.text}}</div>
                         </li>
                     </ul>
                 </div>
-                <div class="arrow right" (click)="nextAdvice()">
-                    <div class="arrowFull">
-                        <div class="barArrow1-right"></div>
-                        <div class="barArrow2-right"></div>
-                    </div>
-                </div>
+
+            </div>
+            <div class="advice_arrows">
+                <div class="left" (click)="prevAdvice()"></div>
+                <div class="right" (click)="nextAdvice()"></div>
             </div>
         </ng-container>
         <ng-container *ngIf="register">

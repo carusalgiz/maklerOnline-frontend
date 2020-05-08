@@ -3,7 +3,7 @@ div:hover, span:hover, p:hover {
 }
 *{
     font-family: Cadillac, sans-serif;
-    letter-spacing: 0.05em;
+    letter-spacing: 0;
 }
 body {
     overflow: hidden;
@@ -144,11 +144,11 @@ body {
     right: 0;
     top: 190px;
     font-family: OpenSans, sans-serif;
-    width: 487px;
+    width: 480px;
 }
 .found-items{
     margin-bottom: 5px;
-    padding: 0 10px;
+    padding: 0 15px;
 }
 .found-items > span{
     font-family: OpenSans, sans-serif;
@@ -204,14 +204,14 @@ body {
     display: flex;
     flex-direction: column;
     background-color: #fff;
-    position: absolute;
-    height: calc(100vh - 200px);
+    position: fixed;
+    height: 100vh;
     width: 400px;
     transition: 0.3s;
-    z-index: 1500;
+    z-index: 1700;
     left: 100vw;
     overflow-y: auto;
-    top: 130px;
+    top: 0;
 }
 
 .filters-box.open {
@@ -229,6 +229,7 @@ body {
     height: 100%;
     overflow-x: hidden;
     overflow-y: hidden;
+    padding: 0 5px;
 }
 
 .scroll-items.open:hover {
@@ -302,7 +303,7 @@ body {
     flex-grow: 1;
 }
 .mapTopButtons.l{
-    margin: 0 0 0 60px;
+    margin: 0 0 0 50px;
 }
 .mapTopButton {
     display: flex;
@@ -396,11 +397,11 @@ body {
     display: flex;
     height: 65px;
     min-height: 65px;
-    width: calc(100% - 20px);
+    width: calc(100% - 30px);
     position: relative;
     top: 0;
     align-items: center;
-    padding:0 10px;
+    padding: 0 15px;
 }
 .input_line{
     height: 28px;

@@ -61,7 +61,7 @@ a.social-link:hover{
 }
 .items ul{
     position: relative;
-    left: -382px;
+    left: -370px;
 }
 .carousel li {
   display: inline-block;
@@ -861,15 +861,24 @@ border-bottom: 3px solid #821529;
     flex: 0 0 calc(50% + 110px);
 }
 
+.items{
+    overflow: hidden;
+    width: 100%;
+}
 .inner-main::-webkit-scrollbar { width: 0;height: 0; }
 @media all and (max-width: 1600px){
     .planBlock, .additionalPlan{
-      margin: 0 25px;
+        margin: 0 25px;
     }
-  .planText{
-    max-width: 25vw;
-  }
-  .planExt{
-    margin: 0;
-  }
+    .planText{
+        max-width: 25vw;
+    }
+    .planExt{
+        margin: 0;
+    }
+}
+@media all and (max-width: 1620px) and (min-width: 1600px){
+    .items{
+        width: 1485px;
+    }
 }

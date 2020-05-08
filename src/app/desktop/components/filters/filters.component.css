@@ -298,9 +298,19 @@ div:hover, span:hover, p:hover {
     background-color: #202b2f;
     color: white;
 }
+.news-button:hover{
+    background-color: #3C4D52;
+    border: 1px solid #3C4D52;;
+    cursor: pointer;
+}
 .news-button.green{
     background-color: #307742;
     border: 1px solid #307742;
+}
+.news-button.green:hover{
+    background-color: #458b55;
+    border: 1px solid #458b55;
+    cursor: pointer;
 }
 .news-button.map {
     border-left: none;
@@ -350,7 +360,9 @@ div:hover, span:hover, p:hover {
     align-items: center;
     margin: 0 0 25px 30px;
 }
-
+.exit-panel span:hover, .exit-panel:hover .exitButton{
+    cursor: pointer;
+}
 .hideMenu {
     position: relative;
     right: calc(-100% + 50px);
@@ -382,8 +394,8 @@ div:hover, span:hover, p:hover {
     transform: rotate(-45deg) translate(-3px, 11px);
 }
 .exitButton{
-    height: 20px;
-    width: 21px;
+    height: 33px;
+    width: 33px;
     background-size: 100% 100%;
     background-position: center;
     background-image: url('../../../../assets/exit.png');

@@ -11,6 +11,7 @@ import {LocationStrategy} from '@angular/common';
 import {HttpModule} from '@angular/http';
 import {OfferService} from './services/offer.service';
 import {AccountService} from './services/account.service';
+import {HubService} from './services/hub.service';
 import {DeviceDetectorModule} from 'ngx-device-detector';
 import {NgxMaskModule} from 'ngx-mask';
 import {HttpClientModule} from '@angular/common/http';
@@ -57,7 +58,7 @@ const appRoutes: Routes = [
     ],
     exports: [RouterModule],
     bootstrap: [AppComponent],
-    providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}, OfferService, AccountService, ConfigService, UploadService],
+    providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}, OfferService, AccountService, ConfigService, UploadService, HubService],
 })
 
 export class AppModule {

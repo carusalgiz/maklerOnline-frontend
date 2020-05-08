@@ -8,6 +8,7 @@ import {NgxMetrikaService} from '@kolkov/ngx-metrika';
 import ymaps from 'ymaps';
 import {Router} from '@angular/router';
 import {AccountService} from '../../../services/account.service';
+import {HubService} from '../../../services/hub.service';
 
 @Component({
     selector: 'app-objects',
@@ -56,7 +57,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     paintProcess: any;
     polygons: any[] = [];
     clearActive = false;
-    filters: any;
+    filters = {};
     equipment: any;
     coordsPolygon: any[] = [];
     logged_in: boolean = false;
@@ -75,9 +76,10 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     sgList: string[] = [];
     galleryType: any;
 
+
     constructor(private ym: NgxMetrikaService, @Inject(WINDOW) private window: Window, @Inject(LOCAL_STORAGE) private localStorage: any, route: ActivatedRoute, private router: Router,
                 private _offer_service: OfferService,
-                private _account_service: AccountService) {
+                private _account_service: AccountService, private _hub_service: HubService) {
         this.router.routeReuseStrategy.shouldReuseRoute = () => {
             return false;
         };
@@ -90,11 +92,22 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         }
         this.subscription = route.params.subscribe((urlParams) => {
             if (urlParams['mode'] === 'list') {
+                let hub_mode = this._hub_service.getMode();
+                let hub_item = this._hub_service.getTransferItem();
+                if (hub_mode == 'home') {
+                    this._hub_service.setMode('list');
+                    this.item = hub_item;
+                    this.galleryType = 'item';
+                    this.itemOpen = true;
+                    this.activeButton = 'obj';
+                    this.objClickIterator = 0;
+                } else {
+                    this.itemOpen = false;
+                    this.activeButton = 'items';
+                    this.itemsActive = true;
+                    this.filtersActive = true;
+                }
                 this.historyActive = false;
-                this.filtersActive = true;
-                this.itemOpen = false;
-                this.activeButton = 'items';
-                this.itemsActive = true;
                 this.get_list(1000, 'constructor');
             }
         });
@@ -110,9 +123,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         let item = document.getElementsByClassName('total-padding').item(0) as HTMLElement;
         item.style.setProperty('width', '460px');
-        let items = document.getElementsByClassName('menuBlock') as HTMLCollectionOf<HTMLElement>;
-        items.item(1).style.setProperty('border-top', '5px solid #821529');
-        items.item(1).style.setProperty('font-weight', 'bold');
 
         let objects = document.getElementsByClassName('filters') as HTMLCollectionOf<HTMLElement>;
         if (objects.length != 0) {
@@ -121,9 +131,6 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         ymaps.load('https://api-maps.yandex.ru/2.1/?apikey=c9d5cf84-277c-4432-a839-2e371a6f2e21&lang=ru_RU&amp;load=package.full').then(maps => {
             this.initMap(maps);
             setTimeout(() => {
-                if (this.item != undefined) {
-                    this.openMarker(this.item);
-                }
                 let mapContainer = document.getElementsByClassName('ymaps-2-1-76-map') as HTMLCollectionOf<HTMLElement>;
                 for (let i = 0; i < mapContainer.length; i++) {
                     mapContainer.item(i).style.setProperty('width', '100% !important');
@@ -143,9 +150,9 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             }
         }
         let itemsMenu = document.getElementsByClassName('menuBlock') as HTMLCollectionOf<HTMLElement>;
-        if (itemsMenu.length !== 0) {
+        if (itemsMenu.length != 0) {
             for (let i = 0; i < itemsMenu.length; i++) {
-                if (i !== 1) {
+                if (i != 1 && i != 5) {
                     itemsMenu.item(i).style.removeProperty('border-top');
                     itemsMenu.item(i).style.removeProperty('font-weight');
                 } else {
@@ -162,6 +169,8 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
 
     openGallery(obj, event) {
         this.item = obj;
+        let header = document.getElementsByClassName('header') as HTMLCollectionOf<HTMLElement>;
+        header.item(0).style.setProperty('display', 'none');
         this.galleryFullItem = event;
         this.itemOpen = true;
         this.activeButton = 'obj';
@@ -318,7 +327,9 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
         );
         let mapStyle = document.getElementsByClassName('ymaps-2-1-76-ground-pane') as HTMLCollectionOf<HTMLElement>;
         if (mapStyle.length != 0) {
-            mapStyle.item(0).style.setProperty('filter', 'grayscale(.9)');
+            for (let i = 0; i < mapStyle.length; i++) {
+                mapStyle.item(i).style.setProperty('filter', 'grayscale(.9)');
+            }
         }
 
         this.map.events.add('mousedown', () => {
@@ -455,13 +466,12 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 el.style.setProperty('padding-top', '1px');
                 el.style.setProperty('border-bottom', 'none');
                 // break;
-                el.scrollIntoView(true);
+                // el.scrollIntoView(true);
             }
         }
     }
 
     openMarker(item: Item) {
-        let countOfSelected = 0;
         this.map.geoObjects.remove(this.selectedMarker);
         this.selectedMarker = new this.maps.Clusterer({
             preset: 'islands#invertedRedClusterIcons',
@@ -566,7 +576,7 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
                 '<div style="display: flex;font-family: OpenSans; font-size: 12px;padding: 0 30px 0 0 ;height: 15px;letter-spacing: 0;"><div style="width: 75px">' + obj_type + '</div><div style="min-width: 85px;">' + rooms + ' комнатная</div></div>' +
                 '<div style="display: flex;font-family: OpenSans; font-size: 12px;padding: 0;height: 15px;letter-spacing: 0;"><div style="width: 75px">Этаж</div><div>' + floor + '/' + floorsCount + '</div></div>' +
                 '<div style="display: flex;font-family: OpenSans; font-size: 12px; padding-bottom: 5px;height: 15px;letter-spacing: 0;"><div style="width: 75px">Площадь</div><div>' + square + ' кв. м</div></div>' +
-                '<div style="display: flex;font-family: OpenSans; font-size: 12px"><div style="width: 75px;letter-spacing: 0;">Стоимость</div><span style="font-family: OpenSansBold">' + formattedPrice + ' Р/МЕС</span></div></div>'
+                '<div style="display: flex;font-family: OpenSans; font-size: 12px"><div style="width: 75px;letter-spacing: 0;">Стоимость</div><span style="font-family: OpenSansBold;letter-spacing: 0;">' + formattedPrice + ' Р/МЕС</span></div></div>'
         }, {
             preset: 'islands#icon',
             iconColor: '#c50101',
@@ -1252,87 +1262,23 @@ export class ObjectsComponent implements OnInit, AfterViewInit {
             case 'filters':
                 this.filtersInnerActive = true;
                 filters.item(0).classList.add('open'); // filters
-
-                if (useless.item(0).classList.contains('scroll')) {
-                    filters.item(0).style.setProperty('top', '0');
-                    filters.item(0).style.setProperty('height', 'calc(100vh - 65px)');
-                } else {
-                    filters.item(0).style.setProperty('top', '130px');
-                    filters.item(0).style.setProperty('height', 'calc(100vh - 190px)');
-                }
-
                 break;
             case 'proposal':
                 filters.item(1).classList.add('open'); // proposal
-                if (useless.item(0).classList.contains('scroll')) {
-                    filters.item(1).style.setProperty('top', '0');
-                    filters.item(1).style.setProperty('height', 'calc(100vh - 65px)');
-                } else {
-                    filters.item(1).style.setProperty('top', '130px');
-                    filters.item(1).style.setProperty('height', 'calc(100vh - 190px)');
-                }
                 break;
             case 'login':
                 slide.item(0).classList.add('open');
                 slide.item(0).style.setProperty('z-index', '1500');
-                if (useless.item(0).classList.contains('homePage')) {
-                    if (header.item(0).classList.contains('scroll')) {
-                        slide.item(0).style.setProperty('top', '0');
-                        slide.item(0).style.setProperty('height', '100vh');
-                    } else {
-                        slide.item(0).style.setProperty('top', '130px');
-                        slide.item(0).style.setProperty('height', 'calc(100vh - 130px)');
-                    }
-                } else {
-                    if (useless.item(0).classList.contains('scroll')) {
-                        slide.item(0).style.setProperty('top', '65px');
-                        slide.item(0).style.setProperty('height', 'calc(100vh - 65px)');
-                    } else {
-                        slide.item(0).style.setProperty('top', '190px');
-                        slide.item(0).style.setProperty('height', 'calc(100vh - 190px)');
-                    }
-                }
                 break;
             case 'pay':
                 slide.item(1).classList.add('open');
                 slide.item(1).style.setProperty('z-index', '1500');
-                if (useless.item(0).classList.contains('homePage')) {
-                    if (header.item(0).classList.contains('scroll')) {
-                        slide.item(1).style.setProperty('top', '0');
-                        slide.item(1).style.setProperty('height', '100vh');
-                    } else {
-                        slide.item(1).style.setProperty('top', '130px');
-                        slide.item(1).style.setProperty('height', 'calc(100vh - 130px)');
-                    }
-                } else {
-                    if (useless.item(0).classList.contains('scroll')) {
-                        slide.item(1).style.setProperty('top', '65px');
-                        slide.item(1).style.setProperty('height', 'calc(100vh - 65px)');
-                    } else {
-                        slide.item(1).style.setProperty('top', '190px');
-                        slide.item(1).style.setProperty('height', 'calc(100vh - 190px)');
-                    }
-                }
                 break;
             case 'special':
                 filters.item(3).classList.add('open'); // special
-                if (useless.item(0).classList.contains('scroll')) {
-                    filters.item(3).style.setProperty('top', '0');
-                    filters.item(3).style.setProperty('height', 'calc(100vh - 65px)');
-                } else {
-                    filters.item(3).style.setProperty('top', '130px');
-                    filters.item(3).style.setProperty('height', 'calc(100vh - 190px)');
-                }
                 break;
             case 'premium':
                 filters.item(4).classList.add('open'); // premium
-                if (useless.item(0).classList.contains('scroll')) {
-                    filters.item(4).style.setProperty('top', '0');
-                    filters.item(4).style.setProperty('height', 'calc(100vh - 65px)');
-                } else {
-                    filters.item(4).style.setProperty('top', '130px');
-                    filters.item(4).style.setProperty('height', 'calc(100vh - 190px)');
-                }
                 break;
             case 'item':
                 this.itemOpen = true;

@@ -1,4 +1,4 @@
-<app-menu *ngIf="!galleryFullItem"
+<app-menu
     (updateItems)="activeButton = 'items';itemOpen = false;listMode = true; filtersInnerActive = false; listActive();get_list(10000, 'menu')" (Logging)="changeLog($event)" (Paying)="changePay($event)"></app-menu>
 <div class="filters-menu-desktop" (window:resize)="onResize()" *ngIf="!galleryFullItem">
     <div class="mapTopButtons l" *ngIf="activeButton != 'obj'">
@@ -59,7 +59,8 @@
     </div>
 </div>
 <div class="main-objects">
-    <item-desktop [gallery]="galleryFullItem" [galleryType]="galleryType" *ngIf="itemOpen && activeButton == 'obj'" [item]="item" [logged]="logged_in" [payed]="payed" (closeItem)="closeBlock('item')" (favItemMode)="get_favObjects()" (galleryMode)="galleryFullItem = $event"></item-desktop>
+    <item-desktop (changeOpenedItem)="item = $event" [gallery]="galleryFullItem" [galleryType]="galleryType" *ngIf="itemOpen && activeButton == 'obj'" [item]="item" [logged]="logged_in"
+                  [payed]="payed" (closeItem)="closeBlock('item')" (favItemMode)="get_favObjects()" (galleryMode)="galleryFullItem = $event"></item-desktop>
     <div class="inner-left">
         <div class="map filters-map" id="filters-map-map1" [class.full]="!listMode"></div>
         <div class="filters open blur" [class.close]="!listMode">
@@ -69,7 +70,7 @@
             <div class="found-items" *ngIf="!historyActive"><span>Найдено: </span><span>{{countOfObjects}}</span></div>
             <div class="scroll-items blur fav-list"
                  *ngIf="!historyActive && (activeButton == 'fav' || activeButton == 'obj')">
-                <virtual-scroller #scroll [items]="favItems" [enableUnequalChildrenSizes]="true" style="height: 100%">
+                <virtual-scroller #scroll [items]="favItems" [enableUnequalChildrenSizes]="true" style="height: 100%;    overflow-x: hidden;">
                     <ng-container *ngFor="let obj of scroll.viewPortItems, let i = index">
                         <item-middle *ngIf="obj.id != null" [item]="obj" [loggingMode]="logged_in" [payingMode]="payed" (showBlock)="openBlock($event)"
                                      (favItemMode)="get_favObjects()" (click)="focusOnObject($event, obj, i, 'fav')" (openGallery)="openGallery(obj, $event)"></item-middle>
@@ -80,7 +81,7 @@
             <div class="scroll-items blur common-list" (mousewheel)="listScroll($event)"
                  *ngIf="!historyActive && (activeButton == 'items' || activeButton == 'obj')">
 
-                <virtual-scroller #scroll [items]="items" [enableUnequalChildrenSizes]="true" style="height: 100%">
+                <virtual-scroller #scroll [items]="items" [enableUnequalChildrenSizes]="true" style="height: 100%;    overflow-x: hidden;">
                     <ng-container *ngFor="let obj of scroll.viewPortItems, let i = index">
                         <item-middle *ngIf="obj.id != null" [item]="obj" [loggingMode]="logged_in" [payingMode]="payed" (showBlock)="openBlock($event)"
                                      (favItemMode)="get_favObjects()" (click)="focusOnObject($event, obj, i, 'item')" (openGallery)="openGallery(obj, $event)"></item-middle>
@@ -90,97 +91,98 @@
         </div>
 
     </div>
-    <app-filters class="filters-box" [count]="countOfObjects" (showlist)="checkFilters();listMode=true; listActive()"
-                 (searchInCity)="setCityObjects($event)" (closeFilters)="closeBlock($event)"
-                 (openBlock)="openBlock($event)" (sendEquipment)="setEquipment($event)"
-                 (sendFilters)="setFilters($event)" (sendSort)="setSort($event)" [activeButton]="activeButton"></app-filters>
-    <div class="filters-box">
-        <div class="filters-inner">
-            <div class="hideMenu" (click)="closeBlock('proposal')">
-                <div class="barExit1"></div>
-                <div class="barExit2"></div>
+
+</div>
+<app-filters class="filters-box" [count]="countOfObjects" (showlist)="checkFilters();listMode=true; listActive()"
+             (searchInCity)="setCityObjects($event)" (closeFilters)="closeBlock($event)"
+             (openBlock)="openBlock($event)" (sendEquipment)="setEquipment($event)"
+             (sendFilters)="setFilters($event)" (sendSort)="setSort($event)" [activeButton]="activeButton"></app-filters>
+<div class="filters-box">
+    <div class="filters-inner">
+        <div class="hideMenu" (click)="closeBlock('proposal')">
+            <div class="barExit1"></div>
+            <div class="barExit2"></div>
+        </div>
+        <div class="additionalPlan">
+            <span class="planTitle" style="font-size: 20px;margin: 40px 0 15px;">Я САМ</span>
+            <div class="planLine"></div>
+            <div class="planText title-add">
+                <span>ДОСТУП К БАЗЕ ПРОВЕРЕННЫХ ОБЪЯВЛЕНИЙ</span>
             </div>
-            <div class="additionalPlan">
-                <span class="planTitle" style="font-size: 20px;margin: 40px 0 15px;">Я САМ</span>
-                <div class="planLine"></div>
-                <div class="planText title-add">
-                    <span>ДОСТУП К БАЗЕ ПРОВЕРЕННЫХ ОБЪЯВЛЕНИЙ</span>
+            <div class="planText add">
+                <div class="add-text"><span style="margin-right: 3px">1.</span><span>Проверенная база объявлений без комиссии;</span>
                 </div>
-                <div class="planText add">
-                    <div class="add-text"><span style="margin-right: 3px">1.</span><span>Проверенная база объявлений без комиссии;</span>
-                    </div>
-                    <div class="add-text"><span style="margin-right: 3px">2.</span><span>Экономию от 5 000 рублей.  Нет необходимости
+                <div class="add-text"><span style="margin-right: 3px">2.</span><span>Экономию от 5 000 рублей.  Нет необходимости
                 оплачивать комиссиию риэлтору. Все объекты сдаются без комиссии;</span></div>
-                    <div class="add-text"><span style="margin-right: 3px">3.</span><span>Вам будут приходить новые, объявления на
+                <div class="add-text"><span style="margin-right: 3px">3.</span><span>Вам будут приходить новые, объявления на
                 почту и в раздел меню Ваши заявки (функция действительна в период действия подписки);</span></div>
-                    <div class="add-text"><span style="margin-right: 3px">4.</span><span>Гибкий выбор тарифов, оплачивайте только тот
+                <div class="add-text"><span style="margin-right: 3px">4.</span><span>Гибкий выбор тарифов, оплачивайте только тот
                  период, который необходим для поиска объекта;</span></div>
-                </div>
-                <div class="planText title-add">
-                    <span>Только проверенные  объявления</span>
-                </div>
-                <a class="planButton" (click)="openBlock('checklogin')">ПРОДОЛЖИТЬ</a>
             </div>
+            <div class="planText title-add">
+                <span>Только проверенные  объявления</span>
+            </div>
+            <a class="planButton" (click)="openBlock('checklogin')">ПРОДОЛЖИТЬ</a>
         </div>
     </div>
-    <app-login class="filters-box" [itemOpen]="true" (blockClose)="closeBlock($event)"></app-login>
-    <div class="filters-box">
-        <div class="filters-inner">
-            <div class="hideMenu" (click)="closeBlock('special')">
-                <div class="barExit1"></div>
-                <div class="barExit2"></div>
+</div>
+<app-login class="filters-box" [itemOpen]="true" (blockClose)="closeBlock($event)"></app-login>
+<div class="filters-box">
+    <div class="filters-inner">
+        <div class="hideMenu" (click)="closeBlock('special')">
+            <div class="barExit1"></div>
+            <div class="barExit2"></div>
+        </div>
+        <div class="additionalPlan">
+            <span class="planTitle" style="font-size: 20px;margin: 40px 0 15px;">ОСОБЫЕ УСЛОВИЯ</span>
+            <div class="planLine"></div>
+            <div class="planText title-add">
+                <span>МЫ САМИ ПРОВЕРИМ ОБЪЯВЛЕНИЯ НА АКТУАЛЬНОСТЬ</span>
+                <span>Результат в течении часа гарантирован!</span>
             </div>
-            <div class="additionalPlan">
-                <span class="planTitle" style="font-size: 20px;margin: 40px 0 15px;">ОСОБЫЕ УСЛОВИЯ</span>
-                <div class="planLine"></div>
-                <div class="planText title-add">
-                    <span>МЫ САМИ ПРОВЕРИМ ОБЪЯВЛЕНИЯ НА АКТУАЛЬНОСТЬ</span>
-                    <span>Результат в течении часа гарантирован!</span>
+            <div class="planText add">
+                <div class="add-text"><span style="margin-right: 3px">1.</span><span>Вы выбираете пакет ОСОБЫЕ УСЛОВИЯ. Наш менеджер связывается с Вами. Уточняет детали;</span>
                 </div>
-                <div class="planText add">
-                    <div class="add-text"><span style="margin-right: 3px">1.</span><span>Вы выбираете пакет ОСОБЫЕ УСЛОВИЯ. Наш менеджер связывается с Вами. Уточняет детали;</span>
-                    </div>
-                    <div class="add-text"><span style="margin-right: 3px">2.</span><span>Система подбирает подходящие объекты;</span>
-                    </div>
-                    <div class="add-text"><span style="margin-right: 3px">3.</span><span>Отдел качества проверяет эти объекты на предмет актуальности, и безопасности;</span>
-                    </div>
-                    <div class="add-text"><span style="margin-right: 3px">4.</span><span>Система высылает актуальные объекты на Вашу почту, а также они будут сохранены в  Ваши заявки. (пункт раздела меню сайта);</span>
-                    </div>
+                <div class="add-text"><span style="margin-right: 3px">2.</span><span>Система подбирает подходящие объекты;</span>
                 </div>
-                <div class="planText title-add">
-                    <span>​Только актуальные объявления</span>
+                <div class="add-text"><span style="margin-right: 3px">3.</span><span>Отдел качества проверяет эти объекты на предмет актуальности, и безопасности;</span>
                 </div>
-                <a class="planButton" (click)="openBlock('checklogin')">ПРОДОЛЖИТЬ</a>
+                <div class="add-text"><span style="margin-right: 3px">4.</span><span>Система высылает актуальные объекты на Вашу почту, а также они будут сохранены в  Ваши заявки. (пункт раздела меню сайта);</span>
+                </div>
             </div>
+            <div class="planText title-add">
+                <span>​Только актуальные объявления</span>
+            </div>
+            <a class="planButton" (click)="openBlock('checklogin')">ПРОДОЛЖИТЬ</a>
         </div>
     </div>
-    <div class="filters-box">
-        <div class="filters-inner">
-            <div class="hideMenu" (click)="closeBlock('premium')">
-                <div class="barExit1" style="width: 24px;transform: rotate(45deg) translate(14px,7px);"></div>
-                <div class="barExit2"></div>
+</div>
+<div class="filters-box">
+    <div class="filters-inner">
+        <div class="hideMenu" (click)="closeBlock('premium')">
+            <div class="barExit1" style="width: 24px;transform: rotate(45deg) translate(14px,7px);"></div>
+            <div class="barExit2"></div>
+        </div>
+        <div class="additionalPlan">
+            <span class="planTitle" style="font-size: 20px;margin: 40px 0 15px;">ПРЕМИУМ</span>
+            <div class="planLine"></div>
+            <div class="planText title-add">
+                <span>СОВЕРШЕННО НОВЫЙ УРОВЕНЬ СЕРВИСА</span>
+                <span>Найдем любую недвижимость!</span>
             </div>
-            <div class="additionalPlan">
-                <span class="planTitle" style="font-size: 20px;margin: 40px 0 15px;">ПРЕМИУМ</span>
-                <div class="planLine"></div>
-                <div class="planText title-add">
-                    <span>СОВЕРШЕННО НОВЫЙ УРОВЕНЬ СЕРВИСА</span>
-                    <span>Найдем любую недвижимость!</span>
+            <div class="planText add">
+                <div class="add-text"><span style="margin-right: 3px">1.</span><span>Ваш персональный менеджер свяжется с Вами, и поможет согласовать  Вашу заявку;</span>
                 </div>
-                <div class="planText add">
-                    <div class="add-text"><span style="margin-right: 3px">1.</span><span>Ваш персональный менеджер свяжется с Вами, и поможет согласовать  Вашу заявку;</span>
-                    </div>
-                    <div class="add-text"><span style="margin-right: 3px">2.</span><span>Система формирует  подборку подходящих объектов;</span>
-                    </div>
-                    <div class="add-text"><span style="margin-right: 3px">3.</span><span>Отдел качества проверяет эти объекты на предмет актуальности и безопастности;</span>
-                    </div>
-                    <div class="add-text"><span style="margin-right: 3px">4.</span><span>Ваш персональный менеджер прорабатывает условия сдачи объекта и сообщает Вам  время просмотра;</span>
-                    </div>
-                    <div class="add-text"><span style="margin-right: 3px">5.</span><span>Отчет о проделанной работе будет выслан на 
+                <div class="add-text"><span style="margin-right: 3px">2.</span><span>Система формирует  подборку подходящих объектов;</span>
+                </div>
+                <div class="add-text"><span style="margin-right: 3px">3.</span><span>Отдел качества проверяет эти объекты на предмет актуальности и безопастности;</span>
+                </div>
+                <div class="add-text"><span style="margin-right: 3px">4.</span><span>Ваш персональный менеджер прорабатывает условия сдачи объекта и сообщает Вам  время просмотра;</span>
+                </div>
+                <div class="add-text"><span style="margin-right: 3px">5.</span><span>Отчет о проделанной работе будет выслан на 
                 Вашу почту, а также он будет сохранен в Сообщениях. (пункт раздела меню сайта)</span></div>
-                </div>
-                <a class="planButton" (click)="openBlock('checklogin')">ПРОДОЛЖИТЬ</a>
             </div>
+            <a class="planButton" (click)="openBlock('checklogin')">ПРОДОЛЖИТЬ</a>
         </div>
     </div>
 </div>

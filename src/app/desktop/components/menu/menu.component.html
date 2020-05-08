@@ -18,12 +18,14 @@
     <ul>
       <li>
         <div class="ext">
-          <a class="menuBlock" (click)="ymFunc('main-menu');" (mousedown)="timeUpdate()" href="//{{siteUrl}}/#/d" routerLinkActive="active">ГЛАВНАЯ</a>
+<!--             href="//{{siteUrl}}/#/d"-->
+          <a class="menuBlock" (click)="ymFunc('main-menu');" (mousedown)="timeUpdate()" [routerLink]="['/d']" routerLinkActive="active">ГЛАВНАЯ</a>
         </div>
       </li>
       <li>
         <div class="ext">
-          <a class="menuBlock" (mousedown)="timeUpdate()" (click)="ymFunc('offer-menu'); update()" href="//{{siteUrl}}/#/d/objects/list"
+<!--      href="//{{siteUrl}}/#/d/objects/list"      -->
+          <a class="menuBlock" (mousedown)="timeUpdate()" (click)="ymFunc('offer-menu'); update()" [routerLink]="['../d/objects/list']"
                routerLinkActive="active">ПРЕДЛОЖЕНИЯ
           </a>
         </div>
@@ -50,7 +52,7 @@
     <div class="time" id="timeHeader">{{days}}{{time}}</div>
   </div>
 </header>
-<div class="uselessLine"></div>
+<div class="uselessLine" [class.homePage]="homePage"></div>
 <app-login class="right-slide-box" [countOfItems]="countOfItems" [class.home]="homePage" [itemOpen]="true" (userLoggedIn)="checklogin()"  (blockClose)="closeBlock($event)" (loggingMode)="Logging.emit($event); logging_var = $event"></app-login>
 <app-pay class="right-slide-box" [logging]="logging_var"  [class.home]="homePage" [inpDay]="resDay" [inpTime]="resTime" [itemOpen]="true" [redirect]="redirect" (payingMode)="Paying.emit($event)" [updateBalance]="loggedIn" (logout)="log_out()" (days)="days = $event" (time)="time = $event" (blockClose)="closeBlock($event)"></app-pay>
 <div class="right-slide-box agreement"  [class.home]="homePage"><app-agreement (blockClose)="closeBlock($event)" [mode]="'agreement'"></app-agreement></div>

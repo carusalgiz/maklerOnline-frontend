@@ -1,12 +1,13 @@
-import {AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, SimpleChanges} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ChangeDetectorRef} from '@angular/core';
 import {Item} from '../../class/item';
 import * as moment from 'moment';
 import ymaps from 'ymaps';
 import {AccountService} from '../../services/account.service';
 import {UploadFile} from '../../class/UploadFile';
+import {OfferService} from '../../services/offer.service';
 
 @Component({
-    inputs: ['item', 'logged', 'payed'],
+    inputs: ['item', 'logged', 'payed', 'search_params'],
     selector: 'item-desktop',
     changeDetection: ChangeDetectionStrategy.OnPush,
     styles: [`
@@ -208,7 +209,8 @@ import {UploadFile} from '../../class/UploadFile';
         }
         .map{
             width: 546px;
-            height: 196px;
+            height: 230px;
+            margin-bottom: -30px;
         }
         .starFav {
             height: fit-content;
@@ -231,6 +233,16 @@ import {UploadFile} from '../../class/UploadFile';
         .similar-title{
             font-family: OpenSansBold, sans-serif;
             font-size: 20px;
+            display: flex;
+            align-items: flex-end;
+        }
+        .similar-title > .address{
+            height: 23px;
+            margin-left: 15px;
+        }
+        .similar-title > .address span{
+            font-family: OpenSans, sans-serif !important;
+            font-size: 20px !important;
         }
         .carousel {
             display: none;
@@ -243,8 +255,10 @@ import {UploadFile} from '../../class/UploadFile';
             justify-content: center;
             -webkit-animation: fade ease-in 0.3s;
             animation: fade ease-in 0.3s;
-            border-top: 1px solid #eaebec;
-            border-bottom: 1px solid #eaebec;
+        }
+        .carousel.gallery{
+            border-bottom: 1px solid #EAEBEC;
+            border-top: 1px solid #EAEBEC;
         }
         .carousel ul {
             width: 9999px;
@@ -256,7 +270,7 @@ import {UploadFile} from '../../class/UploadFile';
         }
         .items ul{
             position: relative;
-            left: -382px;
+            left: -370px;
         }
         .photos{
             width: 1200px;
@@ -359,6 +373,9 @@ import {UploadFile} from '../../class/UploadFile';
             align-items: center;
             justify-content: center;
         }
+        .button-contact:hover{
+            background-color: #458b55;
+        }
         .gallery-header{
             display: flex;
             width: 1600px;
@@ -374,6 +391,7 @@ import {UploadFile} from '../../class/UploadFile';
         }
         .returnBack > a{
             font-size: 16px;
+            margin-bottom: 4px;
         }
         .returnBack:focus{
             outline: none;
@@ -461,20 +479,52 @@ import {UploadFile} from '../../class/UploadFile';
             background-color: rgba(255,255,255,1);
             cursor: pointer;
         }
+        .items{
+            overflow: hidden;
+            width: 100%;
+        }
+        .item-photo:hover .magnifier{
+            display: block;
+        }
+        .magnifier{
+            position: relative;
+            top: 235px;
+            left: calc(50% - 35px);
+            margin-bottom: -70px;
+            height: 70px;
+            width: 70px;
+            display: none;
+            background-color: #eaebeca1;
+            border-radius: 50px;
+            z-index: 90;
+            background-image: url("../../../../assets/лупа.png");
+            background-size: 40px 40px;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .magnifier:hover{
+            cursor: pointer;
+        }
+        @media all and (max-width: 1620px) and (min-width: 1600px){
+            .items{
+                min-width: 1485px;
+            }
+        }
     `],
     template: `
         <div class="scroll-container" [style.top.px]="scrollTop">
             <div class="item-main">
-                <div class="exit" (click)="closeItem.emit()"></div>
-                <div class="item-photo" (click)="item.photos.length != 0 ? galleryOpen = true : false;this.galleryMode.emit(galleryOpen);" 
-                     [ngStyle]="{'background-image': item?.photos[0]?.href != undefined ? 'url('+item?.photos[0].href+')' : 'url(../../../../assets/noph.png)', 'background-size': item?.photos[0]?.href != undefined  ? 'cover':'125% 125%' }"></div>
+                <div class="item-photo" id="item_photo" 
+                     [ngStyle]="{'background-image': main_image, 'background-size': photos[0]?.href != undefined  ? 'cover':'100% auto' }">
+                    <div class="magnifier" (click)="galleryOpenFunc()" ></div>
+                </div>
                 <div class="item-header">
                     <div class="flex-col">
                         <div class="price">
                             <span>{{itemType}}</span>
                             <span>{{formattedPrice}} Р</span>
-                            <span *ngIf="commission != 0">Комиссия {{commission}} {{item?.commisionType == 'fix' ? 'Р' : '%'}}</span>
-                            <span *ngIf="commission == 0">Без комиссии</span>
+                            <span *ngIf="commission != 0" style="line-height: 13px;">Комиссия {{commission}} {{item?.commisionType == 'fix' ? 'Р' : '%'}}</span>
+                            <span *ngIf="commission == 0" style="line-height: 13px;">Без комиссии</span>
                         </div>
                         <hr>
                         <div class="add-date">Предложение добавлено {{addDate}}</div>
@@ -528,10 +578,11 @@ import {UploadFile} from '../../class/UploadFile';
                 <div class="item-description">
                     <div class="flex-col">
                         <div class="title">Адрес объекта</div>
+                        <div>{{item?.region}}</div>
                         <div>{{item?.city}}</div>
                         <div class="address"><span *ngIf="!item.address.includes('ул.')">ул.</span><span class="special">{{item?.address}}<span style="text-transform: lowercase;"> {{item?.house_num}}</span></span></div>
                         <div>{{item?.admArea}}</div>
-                        <div>Ост. {{item?.busStop}}</div>
+                        <div>ост. {{item?.busStop}}</div>
                         <div class="title">Описание объекта</div>
                         <div class="flex-col" style="flex-grow: 1;">
                             <div class="item-params"><div>Комнат</div><div>{{item?.roomsCount}}</div></div>
@@ -540,7 +591,7 @@ import {UploadFile} from '../../class/UploadFile';
                             <div class="item-params"><div>Лоджия</div><div>{{ item.loggia ? 'Да' : 'Нет'}}</div></div>
                             <div class="item-params"><div>Этаж</div><div>{{item?.floor}}</div></div>
                             <div class="item-params"><div>Этажность</div><div>{{item?.floorsCount}}</div></div>
-                            <div class="item-params"><div>Санузел</div><div>{{item?.bathroom ? 'Да' : 'Нет'}}</div></div>
+                            <div class="item-params"><div>Санузел</div><div>{{ offClass.bathroomOptions[item?.bathroom]?.label}}</div></div>
                         </div>
                         <div class="starFav" *ngIf="item != undefined" (mouseenter)="favHovered = true"
                              (mouseleave)="favHovered = false">
@@ -571,26 +622,51 @@ import {UploadFile} from '../../class/UploadFile';
                         <div class="map" id="item-map"></div>
                     </div>
                 </div>
-                <div class="item-description" style="flex-direction: column;">
-                    <div class="similar-title">ПОХОЖИЕ ОБЪЯВЛЕНИЯ</div>
+                <div class="item-description" style="flex-direction: column;" style="display: none">
+                    <div class="similar-title">ПОХОЖИЕ ОБЪЯВЛЕНИЯ РЯДОМ С <div class="address"><span *ngIf="!item.address.includes('ул.')">ул.</span><span class="special">{{item?.address}}<span style="text-transform: lowercase;font-size: 20px !important;"> {{item?.house_num}}</span></span></div></div>
                     <hr style="margin: 10px 0">                    
                 </div>
-                <div class="carousel open" *ngIf="items.length != 0">
-                    <div class="arrow left img" (click)="prev()" style="top: 95px;">
+                <div class="carousel open" *ngIf="items.length != 0"  style="display: none">
+                    <div class="arrow left img" (click)="prev('near')" style="top: 95px;">
                         <div class="arrowFull">
                             <div class="barArrow1-left"></div>
                             <div class="barArrow2-left"></div>
                         </div>
                     </div>
-                    <div class="items" style="overflow: hidden;width: 1480px;">
-                        <ul id="items_carousel-ul" style="width: max-content;" [style.left.px]="items.length < 5 ? 0 : -382">
-                            <li class="items_carousel-li" *ngFor="let item of items; let i = index">
+                    <div class="items">
+                        <ul id="near_items_carousel-ul" style="width: max-content;" [style.left.px]="items.length < 5 ? 0 : -370">
+                            <li class="near_items_carousel-li" *ngFor="let item of items; let i = index">
                                 <item-middle [mode]="'main_page'" [item]="item" [loggingMode]="false"
                                              [payingMode]="false"></item-middle>
                             </li>
                         </ul>
                     </div>
-                    <div class="arrow right img" (click)="next()" style="top: 95px;">
+                    <div class="arrow right img" (click)="next('near')" style="top: 95px;">
+                        <div class="arrowFull">
+                            <div class="barArrow1-right"></div>
+                            <div class="barArrow2-right"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="item-description" style="flex-direction: column;">
+                    <div class="similar-title">ПОХОЖИЕ ОБЪЯВЛЕНИЯ ПО СТОИМОСТИ</div>
+                    <hr style="margin: 10px 0">
+                </div>
+                <div class="carousel open">
+                    <div class="arrow left img" (click)="prev('price')" style="top: 95px;">
+                        <div class="arrowFull">
+                            <div class="barArrow1-left"></div>
+                            <div class="barArrow2-left"></div>
+                        </div>
+                    </div>
+                    <div class="items">
+                        <ul id="price_items_carousel-ul" style="width: max-content;" [style.left.px]="price_items.length < 5 ? 0 : -370">
+                            <li class="price_items_carousel-li" *ngFor="let item of price_items" (click)="openItem(item)">
+                                <item-middle [mode]="'main_page'" [item]="item" [loggingMode]="false" [payingMode]="false"></item-middle>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="arrow right img" (click)="next('price')" style="top: 95px;">
                         <div class="arrowFull">
                             <div class="barArrow1-right"></div>
                             <div class="barArrow2-right"></div>
@@ -608,7 +684,7 @@ import {UploadFile} from '../../class/UploadFile';
                         <a>назад</a>
                     </a>
                     <div class="gallery-address">                       
-                        <div><span>{{itemType}}</span><span *ngIf="item.roomsCount">{{item.roomsCount}} комнатная</span></div>
+                        <div><span>{{itemType}}</span><span *ngIf="item.roomsCount && !itemType.includes('КОМНАТА В')">{{item.roomsCount}} комнатная</span></div>
                         <div class="gallery-price">
                             <span>{{formattedPrice}} Р</span>
                             <span *ngIf="commission != 0">Комиссия {{commission}} {{item?.commisionType == 'fix' ? 'Р' : '%'}}</span>
@@ -679,6 +755,9 @@ export class ItemDesktop implements AfterViewInit, OnInit {
     @Input() gallery: any;
     @Input() galleryType: any;
 
+    price_items: Item[] = [];
+    main_image: any;
+
     items: Item[] = [];
     photos: UploadFile[] = [];
     public map: any;
@@ -696,23 +775,28 @@ export class ItemDesktop implements AfterViewInit, OnInit {
     positionGallery = 0;
     scrollTop = 60;
     galleryOpen: any;
+    price_items_ul: any;
+
+    offClass = Item;
 
     @Output() favItemMode = new EventEmitter();
     @Output() galleryMode = new EventEmitter();
     @Output() closeItem = new EventEmitter();
+    @Output() changeOpenedItem = new EventEmitter();
 
-    constructor(private _account_service: AccountService) {
+    constructor(private _account_service: AccountService,
+                private _offer_service: OfferService,
+                private changeDetector: ChangeDetectorRef) {
     }
     ngOnInit(): void {
-        this.photos = this.item.photos;
 
-        this.photos.unshift(this.item.photos[this.item.photos.length-1]);
-        this.photos.pop();
 
         let obj = new Item();
         let upload = new UploadFile();
-        upload.href = 'https://avatars.mds.yandex.net/get-pdb/1931145/fc277421-43fd-46a0-9d61-cf36444f2c7a/s1200';
+        upload.href = 'https://sun5-3.userapi.com/hoHlWywsWxL3OI9pHpO1Clhh6c-WVN6tiiMCTA/b1d9gfELAFU.jpg';
         obj.photos.push(upload);
+        this.items.push(obj);
+        this.items.push(obj);
         this.items.push(obj);
         this.items.push(obj);
         this.items.push(obj);
@@ -728,6 +812,16 @@ export class ItemDesktop implements AfterViewInit, OnInit {
     }
 
     ngAfterViewInit(): void {
+        this._offer_service.list(0, 30, {price: "до " + this.item.price.toString() + " рублей",
+                                                             typeCode: this.itemType,
+                                                             roomsCount: this.item.roomsCount.toString() + " комн."}, '', '', '', '').subscribe(dataOffers => {
+            for (let offer of dataOffers.list) {
+                if (this.price_items.indexOf(offer) == -1 && offer.id != this.item.id) {
+                    this.price_items.push(offer);
+                }
+            }
+            this.changeDetector.detectChanges();
+        });
         ymaps.load('https://api-maps.yandex.ru/2.1/?apikey=c9d5cf84-277c-4432-a839-2e371a6f2e21&lang=ru_RU&amp;load=package.full').then(maps => {
             this.initMap(maps);
             setTimeout(() => {
@@ -754,7 +848,40 @@ export class ItemDesktop implements AfterViewInit, OnInit {
             this.galleryMode.emit(this.galleryOpen);
         }
     }
+    openItem(item) {
+        console.log(item);
+        console.log(typeof item);
+        this.changeOpenedItem.emit(item);
+        document.getElementById('item_photo').scrollIntoView(true);
+        this.price_items = [];
+        this._offer_service.list(0, 30, {price: "до " + item.price.toString() + " рублей",
+                                                             typeCode: this.itemType,
+                                                             roomsCount: item.roomsCount.toString() + " комн."}, '', '', '', '').subscribe(dataOffers => {
+
+            for (let offer of dataOffers.list) {
+                if (this.price_items.indexOf(offer) == -1 && offer.id != item.id) {
+                    this.price_items.push(offer);
+                }
+            }
+            console.log(this.price_items);
+            this.changeDetector.markForCheck();
+        });
+    }
+    galleryOpenFunc() {
+        if (this.item.photos.length != 0) {
+            let header = document.getElementsByClassName('header') as HTMLCollectionOf<HTMLElement>;
+            header.item(0).style.setProperty('display', 'none');
+            this.galleryOpen = true;
+        } else {
+            this.galleryOpen = false;
+        }
+
+        this.galleryMode.emit(this.galleryOpen);
+    }
     galleryClose(){
+        let header = document.getElementsByClassName('header') as HTMLCollectionOf<HTMLElement>;
+        header.item(0).style.setProperty('display', 'flex');
+        header.item(0).style.setProperty('top', '0');
         this.galleryOpen = false;
         this.galleryMode.emit(false);
         if (this.galleryType == 'list') {
@@ -762,7 +889,7 @@ export class ItemDesktop implements AfterViewInit, OnInit {
         }
     }
     checkData(type, ev) {
-        if (!type) {
+        if (!type || (type && (this.logged == false || this.logged == 'false' || this.payed == false || this.payed == 'false'))) {
             ev.preventDefault();
         }
     }
@@ -776,48 +903,12 @@ export class ItemDesktop implements AfterViewInit, OnInit {
     }
     openBlock(page) {
         let slide = document.getElementsByClassName('right-slide-box') as HTMLCollectionOf<HTMLElement>;
-        let useless = document.getElementsByClassName('uselessLine') as HTMLCollectionOf<HTMLElement>;
-        let header = document.getElementsByClassName('header') as HTMLCollectionOf<HTMLElement>;
         switch (page) {
             case 'login':
                 slide.item(0).classList.add('open');
-                if (useless.item(0).classList.contains('homePage')) {
-                    if (header.item(0).classList.contains('scroll')) {
-                        slide.item(0).style.setProperty('top', '0');
-                        slide.item(0).style.setProperty('height', '100vh');
-                    } else {
-                        slide.item(0).style.setProperty('top', '130px');
-                        slide.item(0).style.setProperty('height', 'calc(100vh - 130px)');
-                    }
-                } else {
-                    if (useless.item(0).classList.contains('scroll')) {
-                        slide.item(0).style.setProperty('top', '60px');
-                        slide.item(0).style.setProperty('height', 'calc(100vh - 60px)');
-                    } else {
-                        slide.item(0).style.setProperty('top', '190px');
-                        slide.item(0).style.setProperty('height', 'calc(100vh - 190px)');
-                    }
-                }
                 break;
             case 'pay':
                 slide.item(1).classList.add('open');
-                if (useless.item(0).classList.contains('homePage')) {
-                    if (header.item(0).classList.contains('scroll')) {
-                        slide.item(1).style.setProperty('top', '0');
-                        slide.item(1).style.setProperty('height', '100vh');
-                    } else {
-                        slide.item(1).style.setProperty('top', '130px');
-                        slide.item(1).style.setProperty('height', 'calc(100vh - 130px)');
-                    }
-                } else {
-                    if (useless.item(0).classList.contains('scroll')) {
-                        slide.item(1).style.setProperty('top', '60px');
-                        slide.item(1).style.setProperty('height', 'calc(100vh - 60px)');
-                    } else {
-                        slide.item(1).style.setProperty('top', '190px');
-                        slide.item(1).style.setProperty('height', 'calc(100vh - 190px)');
-                    }
-                }
                 break;
         }
     }
@@ -840,37 +931,73 @@ export class ItemDesktop implements AfterViewInit, OnInit {
         }
     }
 
-    prev() {
-        const listElems = document.getElementsByClassName('items_carousel-li') as HTMLCollectionOf<HTMLElement>;
-        const list = document.getElementById('items_carousel-ul') as HTMLElement;
-        let last = listElems.item(listElems.length - 1);
+    prev(type) {
+        let listElems: any, list: any;
+        if (type == 'near') {
+            listElems = document.getElementsByClassName('near_items_carousel-li') as HTMLCollectionOf<HTMLElement>;
+            list = document.getElementById('near_items_carousel-ul') as HTMLElement;
+        }
+        if (type == 'price') {
+            listElems = document.getElementsByClassName('price_items_carousel-li') as HTMLCollectionOf<HTMLElement>;
+            list = document.getElementById('price_items_carousel-ul') as HTMLElement;
+        }
+
+        let last = listElems.item(listElems.length - 1) as HTMLElement;
+        let id = ((last.children as HTMLCollectionOf<HTMLElement>).item(0).children as HTMLCollectionOf<HTMLElement>).item(0).getAttribute('id');
+        console.log(id);
+        console.log(this.price_items);
+        let last_item = new Item;
+        for (let i = 0; i < this.price_items.length; i++) {
+            if (this.price_items[i].id == Number.parseInt(id)) {
+                last_item = this.price_items[i];
+            }
+        }
+        console.log(last_item);
+        last.addEventListener('click', () => this.openItem(last_item));
         listElems.item(listElems.length - 1).remove();
         list.insertBefore(last, listElems.item(0));
         list.style.setProperty('transition', 'unset');
-        this.position = -382;
-        list.style.setProperty('margin-left', this.position + 'px');
+
+        list.style.setProperty('margin-left', '-370px');
         setTimeout(() => {
             list.style.setProperty('transition', 'margin-left .4s');
-            this.position = 0;
-            list.style.setProperty('margin-left', this.position + 'px');
+            list.style.setProperty('margin-left', '0');
         }, 0);
     }
 
-    next() {
-        const listElems = document.getElementsByClassName('items_carousel-li') as HTMLCollectionOf<HTMLElement>;
-        let first = listElems.item(0);
-        let clone = first.cloneNode(true);
-        listElems.item(0).remove();
-        const list = document.getElementById('items_carousel-ul') as HTMLElement;
-        list.appendChild(clone);
-        list.style.setProperty('transition', 'unset');
-        this.position = 382;
+    next(type) {
+        let listElems: any, list: any;
+        if (type == 'near') {
+            listElems = document.getElementsByClassName('near_items_carousel-li') as HTMLCollectionOf<HTMLElement>;
+            list = document.getElementById('near_items_carousel-ul') as HTMLElement;
+        }
+        if (type == 'price') {
+            listElems = document.getElementsByClassName('price_items_carousel-li') as HTMLCollectionOf<HTMLElement>;
+            list = document.getElementById('price_items_carousel-ul') as HTMLElement;
+        }
 
-        list.style.setProperty('margin-left', this.position + 'px');
+        let first = listElems.item(0);
+        let id = ((first.children as HTMLCollectionOf<HTMLElement>).item(0).children as HTMLCollectionOf<HTMLElement>).item(0).getAttribute('id');
+        console.log(id);
+        console.log(this.price_items);
+        let last_item = new Item;
+        for (let i = 0; i < this.price_items.length; i++) {
+            if (this.price_items[i].id == Number.parseInt(id)) {
+                last_item = this.price_items[i];
+            }
+        }
+        console.log(last_item);
+        let clone = first.cloneNode(true);
+        clone.addEventListener('click', () => this.openItem(last_item));
+        list.appendChild(clone);
+        listElems.item(0).remove();
+
+        list.style.setProperty('transition', 'unset');
+        list.style.setProperty('margin-left', '370px');
+
         setTimeout(() => {
             list.style.setProperty('transition', 'margin-left .4s');
-            this.position = 0;
-            list.style.setProperty('margin-left', this.position + 'px');
+            list.style.setProperty('margin-left', '0');
         }, 0);
     }
     prevPhoto() {
@@ -916,7 +1043,9 @@ export class ItemDesktop implements AfterViewInit, OnInit {
         );
         let mapStyle = document.getElementsByClassName('ymaps-2-1-76-ground-pane') as HTMLCollectionOf<HTMLElement>;
         if (mapStyle.length != 0) {
-            mapStyle.item(0).style.setProperty('filter', 'grayscale(.9)');
+            for (let i = 0; i < mapStyle.length; i++) {
+                mapStyle.item(i).style.setProperty('filter', 'grayscale(.9)');
+            }
         }
     }
 
@@ -1020,6 +1149,7 @@ export class ItemDesktop implements AfterViewInit, OnInit {
         this.conditions = '';
         this.conveniences = '';
         if (this.item != undefined) {
+
             if (this.item.typeCode != undefined) {
                 switch (this.item.typeCode) {
                     case 'room':
@@ -1065,6 +1195,7 @@ export class ItemDesktop implements AfterViewInit, OnInit {
                         break;
                 }
             }
+            this.lastName = '';
             if (this.item.name != undefined) {
                 let spArray = this.item.name.split(" ");
                 this.firstName = spArray[0].toUpperCase();
@@ -1181,6 +1312,20 @@ export class ItemDesktop implements AfterViewInit, OnInit {
             this.conditions = this.conditions.substring(0, this.conditions.length - 2);
             this.formattedPrice = this.item.price != undefined ? this.item.price.toString() : '';
             this.formattedPrice = this.formattedPrice.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
+
+            this.photos = this.item.photos;
+
+            this.photos.unshift(this.item.photos[this.item.photos.length-1]);
+            this.photos.pop();
+            if (this.photos.length > 1 ) {
+                this.main_image = 'url('+this.photos[1].href+')';
+            }
+            if (this.photos.length == 1) {
+                this.main_image = 'url('+this.photos[0].href+')';
+            }
+            if (this.photos.length == 0) {
+                this.main_image = 'url(../../../../assets/noph.png)';
+            }
         }
     }
 }

@@ -57,6 +57,7 @@ import * as moment from 'moment';
             </div>
             <div class="photoBlock" *ngIf="imgLen == 0 && mode!='main_page'">
                 <img class="img" [src]="'../../../../assets/noph.png'">
+                <div class="no-photo">{{photo_no_title}}</div>
             </div>
             <div class="bottom-block main-page" *ngIf="mode=='main_page'">
                 <div class="info main-page">
@@ -78,13 +79,13 @@ import * as moment from 'moment';
                     </div>
                     <div class="bottom-desc main-page">
                         <div class="flex-col" style="    align-items: center;">
-                            <span class="type">Комнат {{item?.roomsCount}}</span>
+                            <div class="type">Комнат {{item?.roomsCount}}</div>
                         </div>
                         <div class="flex-col" style="    align-items: center;">
-                            <span class="type">Этаж {{item?.floor}} / {{item?.floorsCount}}</span>
+                            <div class="type">Этаж {{item?.floor}} / {{item?.floorsCount}}</div>
                         </div>
                         <div class="flex-col" style="    align-items: center;">
-                            <span class="type">Залог {{item?.prepayment ? 'Да' : 'Нет'}}</span>
+                            <div class="type">Залог {{item?.prepayment ? 'Да' : 'Нет'}}</div>
                         </div>
                     </div>
                 </div>
@@ -109,24 +110,24 @@ import * as moment from 'moment';
                          src="../../../../assets/4-4%20watched.png" width="24px">
                 </div>
                 <div class="flex-col">
-                    <div><span style="color: #72727D; font-size: 10px;">{{ itemType }}</span></div>
-                    <div class="price" style="margin-bottom: 3px;">
-                        <span style="letter-spacing: unset; font-size: 18px; margin-right: 15px;font-family: OpenSansBold;">{{formattedPrice}}<span style="font-size: 18px;margin-left: 5px;">Р</span></span>
-                        <span style="font-size: 12px;    color: #72727D;font-weight: normal;line-height: 18px;" *ngIf="commission != 0">Комиссия {{commission}} {{item?.commisionType == 'fix' ? 'Р' : '%'}}</span>
-                        <span style="font-size: 12px;    color: #72727D;font-weight: normal;line-height: 18px;" *ngIf="commission == 0">Без комиссии</span>
+                    <div><div style="color: #72727D; font-size: 10px;line-height: 10px;">{{ itemType }}</div></div>
+                    <div class="price" style="margin-bottom: 12px;margin-top: 8px;">
+                        <div style="letter-spacing: unset; font-size: 20px; margin-right: 15px;font-family: OpenSansBold;line-height: 15px;">{{formattedPrice}}<span style="font-size: 20px;margin-left: 5px;">Р</span></div>
+                        <div style="font-size: 12px;    color: #72727D;font-weight: normal;line-height: 15px;" *ngIf="commission != 0">Комиссия {{commission}} {{item?.commisionType == 'fix' ? 'Р' : '%'}}</div>
+                        <div style="font-size: 12px;    color: #72727D;font-weight: normal;line-height: 15px;" *ngIf="commission == 0">Без комиссии</div>
                     </div>
-                    <div style="color: #72727D">{{item?.city}}</div>
-                    <div class="address" >
-                        <span *ngIf="!item.address.includes('ул.')">ул.</span><span class="special">{{item?.address}}<span style="font-weight: bold; text-transform: lowercase;font-family: OpenSansBold;"> {{item?.house_num}}</span></span>
+                    <div style="color: #72727D;line-height: 14px;">{{item?.city}}</div>
+                    <div class="address" style="line-height: 14px;margin: 4px 0 8px;">
+                        <span style="font-size: 14px;" *ngIf="!item.address.includes('ул.')">ул.</span><span  style="font-size: 14px;" class="special">{{item?.address}}<span style="font-weight: bold; text-transform: lowercase;font-family: OpenSansBold; font-size: 14px"> {{item?.house_num}}</span></span>
                     </div>
-                    <div style="color: #72727D">{{item?.admArea}}</div>
-                    <div style="color: #72727D">ост. {{item?.busStop}}</div>
+                    <div style="color: #72727D;line-height: 14px;">{{item?.admArea}}</div>
+                    <div style="color: #72727D;line-height: 14px;margin-top: 4px;">ост. {{item?.busStop}}</div>
                     <div class="item-info">
-                        <div>Комнат {{item?.roomsCount}}</div>
-                        <div>Площадь {{item?.squareTotal}} / {{item?.squareLiving}} / {{item?.squareKitchen}}</div>
-                        <div>Этаж {{item?.floor}} / {{item?.floorsCount}}</div>
+                        <div style="line-height: 14px;">Комнат {{item?.roomsCount}}</div>
+                        <div style="line-height: 14px;">Площадь {{item?.squareTotal}} / {{item?.squareLiving}} / {{item?.squareKitchen}}</div>
+                        <div style="line-height: 14px;">Этаж {{item?.floor}} / {{item?.floorsCount}}</div>
                     </div>
-                    <div style="color: #72727D; font-size: 10px;">Добавлено: {{addDate}}</div>
+                    <div style="color: #72727D; font-size: 10px;line-height: 11px;">Добавлено: {{addDate}}</div>
                 </div>                
             </div>
         </div>
@@ -230,7 +231,6 @@ export class ItemMiddle implements AfterViewInit, OnChanges {
         });
     }
     checkParams() {
-        console.log('checkparams');
         this.conveniencesShort = '';
         if (this.item != undefined) {
             if (this.item.typeCode != undefined) {

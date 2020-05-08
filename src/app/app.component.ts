@@ -101,7 +101,7 @@ export class AppComponent implements OnInit, AfterViewInit {
             let addButton = document.getElementsByClassName('add-button') as HTMLCollectionOf<HTMLElement>;
             let addr = document.getElementsByClassName('address-block') as HTMLCollectionOf<HTMLElement>;
             let mapbuttonstab = document.getElementsByClassName('map-buttons-tablet') as HTMLCollectionOf<HTMLElement>;
-            let items = document.getElementsByClassName('header') as HTMLCollectionOf<HTMLElement>;
+            let header = document.getElementsByClassName('header') as HTMLCollectionOf<HTMLElement>;
             let uselessLine = document.getElementsByClassName('uselessLine') as HTMLCollectionOf<HTMLElement>;
             let mobileMenu = document.getElementsByClassName('mobileTopMenu') as HTMLCollectionOf<HTMLElement>;
             let filters = document.getElementsByClassName('filters-menu-desktop') as HTMLCollectionOf<HTMLElement>;
@@ -114,6 +114,7 @@ export class AppComponent implements OnInit, AfterViewInit {
             let catalog = document.getElementsByClassName('catalog-item') as HTMLCollectionOf<HTMLElement>;
             let photofull = document.getElementsByClassName('photoFull') as HTMLCollectionOf<HTMLElement>;
             let objs = document.getElementsByClassName('filters objs') as HTMLCollectionOf<HTMLElement>;
+            let itemfullpage = document.getElementsByClassName('item-main') as HTMLCollectionOf<HTMLElement>;
             let ymaps = document.documentElement.getElementsByTagName('ymaps');
             let hide = document.documentElement.getElementsByClassName('hideMenu');
 
@@ -125,7 +126,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             if (show.length != 0) {
                                 show.item(0).style.setProperty('top', '60px');
                             }
-                            items.item(0).style.setProperty('top', '-130px');
+
                             if (uselessLine.length != 0) {
                                 uselessLine.item(0).style.setProperty('top', '0');
                                 uselessLine.item(0).style.setProperty('margin-bottom', '0');
@@ -138,10 +139,6 @@ export class AppComponent implements OnInit, AfterViewInit {
                                 main.item(0).style.setProperty('top', '60px');
                                 main.item(0).style.setProperty('height', 'calc(100vh - 60px)');
                             }
-                            for (let q = 0; q < filtersbox.length; q++) {
-                                filtersbox.item(q).style.setProperty('height', 'calc(100vh - 60px)');
-                                filtersbox.item(q).style.setProperty('top', '0');
-                            }
 
                             if (filters.length != 0) {
                                 filters.item(0).style.setProperty('top', '0');
@@ -149,7 +146,10 @@ export class AppComponent implements OnInit, AfterViewInit {
                             if (uselessLine.length != 0) {
                                 uselessLine.item(0).classList.add('scroll');
                             }
-                            items.item(0).classList.add('scroll');
+
+                            header.item(0).style.setProperty('top', '-130px');
+                            header.item(0).classList.add('scroll');
+
                             if (objs.length != 0) {
                                 objs.item(0).style.setProperty('top', '0');
                             }
@@ -159,20 +159,20 @@ export class AppComponent implements OnInit, AfterViewInit {
                             main.item(0).style.setProperty('top', '60px');
                             main.item(0).style.setProperty('height', 'calc(100vh - 60px)');
                     }
-                    if  ((filtersbox.length != 0 && filtersbox.item(0).classList.contains('open') && (addButton.item(0).getBoundingClientRect().top < 100 || hide.item(0).getBoundingClientRect().top < 100
+                    if  (((filtersbox.length != 0 && filtersbox.item(0).classList.contains('open') && (addButton.item(0).getBoundingClientRect().top < 100 || hide.item(0).getBoundingClientRect().top < 100
                         || hide.item(1).getBoundingClientRect().top < 100 || hide.item(2).getBoundingClientRect().top < 100 || hide.item(3).getBoundingClientRect().top < 100))
-                    || (main.length != 0 && main.item(0).getBoundingClientRect().top < 200)){
+                    || (main.length != 0 && main.item(0).getBoundingClientRect().top < 200))  && !uselessLine.item(0).classList.contains('homePage') ){
                         if (main.length != 0) {
                             main.item(0).style.setProperty('top', '60px');
                             main.item(0).style.setProperty('height', 'calc(100vh - 60px)');
                         }
-                        items.item(0).style.setProperty('top', '-130px');
+                        header.item(0).style.setProperty('top', '-130px');
                         if (uselessLine.length != 0) {
                             uselessLine.item(0).classList.add('scroll');
                             uselessLine.item(0).style.setProperty('top', '0');
                             uselessLine.item(0).style.setProperty('margin-bottom', '0');
                         }
-                        items.item(0).classList.add('scroll');
+                        header.item(0).classList.add('scroll');
 
                         if (filter.length != 0) {
                             filter.item(0).style.setProperty('top', '60px');
@@ -183,24 +183,15 @@ export class AppComponent implements OnInit, AfterViewInit {
                         }
                         if (filters.length != 0) {
                             filters.item(0).style.setProperty('top', '0');
-                        }
-                        for (let i = 0; i < filtersbox.length; i++) {
-                            filtersbox.item(i).style.setProperty('height', 'calc(100vh - 60px)');
-                            filtersbox.item(i).style.setProperty('top', '0');
                         }
                     }
 
-                    if (
-                        (catalog.length != 0 && catalog.item(0).getBoundingClientRect().top < 0) ||
-                        (photofull.length != 0 && photofull.item(0).getBoundingClientRect().top < 0)) {
+                    if (((catalog.length != 0 && catalog.item(0).getBoundingClientRect().top < 0) || (photofull.length != 0 && photofull.item(0).getBoundingClientRect().top < 0)) &&
+                        !uselessLine.item(0).classList.contains('homePage')) {
                         if (show.length != 0) {
                             show.item(0).style.setProperty('top', '60px');
                         }
-                        for (let i = 0; i < filtersbox.length; i++) {
-                            filtersbox.item(i).style.setProperty('height', 'calc(100vh - 60px)');
-                            filtersbox.item(i).style.setProperty('top', '0');
-                        }
-                        items.item(0).style.setProperty('top', '-130px');
+                        header.item(0).style.setProperty('top', '-130px');
                         if (uselessLine.length != 0) {
                             uselessLine.item(0).style.setProperty('top', '0');
                             uselessLine.item(0).style.setProperty('margin-bottom', '0');
@@ -217,13 +208,13 @@ export class AppComponent implements OnInit, AfterViewInit {
                         if (filters.length != 0) {
                             filters.item(0).style.setProperty('top', '0');
                         }
-                        items.item(0).classList.add('scroll');
+                        header.item(0).classList.add('scroll');
                     }
 
 
                     if (mainHome.length != 0 && document.documentElement.clientWidth > 1050) {
                         mainHome.item(0).style.setProperty('margin-top', '0');
-                        items.item(0).classList.add('scroll');
+                        header.item(0).classList.add('scroll');
                     }
                     if (mobileMenu.length != 0) {
                         mobileMenu.item(0).style.setProperty('top', '0');
@@ -245,18 +236,14 @@ export class AppComponent implements OnInit, AfterViewInit {
                 } else {
                     this.delta += event.deltaY;
                     if (uselessLine.item(0).classList.contains('homePage')) {
-                        items.item(0).style.setProperty('top', '0');
+                        header.item(0).style.setProperty('top', '0');
                     }
 
-                    if ((scrollItems.length != 0 || main.length != 0) && uselessLine.length != 0 && this.delta < -300) {
+                    if ((scrollItems.length != 0 || main.length != 0) && uselessLine.length != 0 && this.delta < -300 && itemfullpage.length == 0 && !uselessLine.item(0).classList.contains('homePage')) {
                         if (main.length != 0) {
                             main.item(0).style.setProperty('top', '190px');
                             main.item(0).style.setProperty('height', 'calc(100vh - 190px)');
                         }
-                        for (let i = 0; i < filtersbox.length; i++) {
-                            filtersbox.item(i).style.setProperty('top', '130px');
-                            filtersbox.item(i).style.setProperty('height', 'calc(100vh - 190px)');
-                        }
                         if (show.length != 0) {
                             show.item(0).style.setProperty('top', '190px');
                         }
@@ -268,34 +255,30 @@ export class AppComponent implements OnInit, AfterViewInit {
                             uselessLine.item(0).style.setProperty('top', '130px');
                             uselessLine.item(0).style.setProperty('margin-bottom', '130px');
                         }
-                        items.item(0).classList.remove('scroll');
+                        header.item(0).classList.remove('scroll');
 
                         if (filters.length != 0) {
                             filters.item(0).style.setProperty('top', '130px');
                         }
-                        items.item(0).style.setProperty('top', '0');
+                        header.item(0).style.setProperty('top', '0');
                         if (filter.length != 0) {
                             filter.item(0).style.setProperty('top', '190px');
                             filter.item(0).style.setProperty('height', 'calc(100vh - 190px)');
                         }
-                    } else if (scrollItems.length == 0 && uselessLine.length != 0 && !uselessLine.item(0).classList.contains('homePage')) {
-                        for (let i = 0; i < filtersbox.length; i++) {
-                            filtersbox.item(i).style.setProperty('top', '130px');
-                            filtersbox.item(i).style.setProperty('height', 'calc(100vh - 190px)');
-                        }
+                    } else if (scrollItems.length == 0 && uselessLine.length != 0 && !uselessLine.item(0).classList.contains('homePage') && itemfullpage.length == 0 && !uselessLine.item(0).classList.contains('homePage')) {
                         if (show.length != 0) {
                             show.item(0).style.setProperty('top', '190px');
                         }
                         if (objs.length != 0) {
                             objs.item(0).style.setProperty('top', '130px');
                         }
-                        items.item(0).style.setProperty('top', '0');
+                        header.item(0).style.setProperty('top', '0');
                         if (uselessLine.length != 0) {
                             uselessLine.item(0).classList.remove('scroll');
                             uselessLine.item(0).style.setProperty('top', '130px');
                             uselessLine.item(0).style.setProperty('margin-bottom', '130px');
                         }
-                        items.item(0).classList.remove('scroll');
+                        header.item(0).classList.remove('scroll');
 
                         if (filters.length != 0) {
                             filters.item(0).style.setProperty('top', '130px');
@@ -303,12 +286,30 @@ export class AppComponent implements OnInit, AfterViewInit {
                         if (filter.length != 0) {
                             filter.item(0).style.setProperty('top', '190px');
                             filter.item(0).style.setProperty('height', 'calc(100vh - 190px)');
+                        }
+                    } else if (itemfullpage.length != 0 && itemfullpage.item(0).getBoundingClientRect().top > -50 && !uselessLine.item(0).classList.contains('homePage')) {
+                        console.log(itemfullpage.item(0).getBoundingClientRect().top);
+                        header.item(0).style.setProperty('top', '0');
+                        header.item(0).classList.remove('scroll');
+
+                        if (uselessLine.length != 0) {
+                            uselessLine.item(0).classList.remove('scroll');
+                            uselessLine.item(0).style.setProperty('top', '130px');
+                            uselessLine.item(0).style.setProperty('margin-bottom', '130px');
+                        }
+
+                        if (filters.length != 0) {
+                            filters.item(0).style.setProperty('top', '130px');
+                        }
+                        if (main.length != 0) {
+                            main.item(0).style.setProperty('top', '190px');
+                            main.item(0).style.setProperty('height', 'calc(100vh - 190px)');
                         }
                     }
 
-                    if (mainHome.length != 0 && document.documentElement.clientWidth > 1050) {
+                    if (mainHome.length != 0 && document.documentElement.clientWidth > 1050 && itemfullpage.length == 0) {
                         mainHome.item(0).style.setProperty('margin-top', '130px');
-                        items.item(0).classList.remove('scroll');
+                        header.item(0).classList.remove('scroll');
                     }
                     if (mobileMenu.length != 0) {
                         mobileMenu.item(0).style.setProperty('top', '130px');

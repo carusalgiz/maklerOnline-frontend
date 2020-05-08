@@ -82,7 +82,7 @@ div:hover, span:hover, p:hover {
 }
 .right-slide-box.open {
   right: 0;
-  box-shadow: #677578 0 2px 10px 0;
+    box-shadow: #d3d5d6 0 3px 4px 0;
 }
 .header{
   width: 100%;
@@ -94,7 +94,8 @@ div:hover, span:hover, p:hover {
   background-color: white;
   transition: 0.3s;
   z-index: 1600;
-  box-shadow: #677578 0px 2px 10px 0px;
+  /*box-shadow: #677578 0px 2px 10px 0px;*/
+    box-shadow: #d3d5d6 3px 0 4px 0;
 }
 .active{
   outline: none;
@@ -140,11 +141,11 @@ div:hover, span:hover, p:hover {
   justify-content: flex-end;
 }
 .menuBlock{
-  font-family: Cadillac, sans-serif;
-  letter-spacing: 0.05em;
+  font-family: Helvetica, sans-serif;
+  letter-spacing: 0;
   font-size: 14px;
   margin: 0 15px;
-  color: #4b4b4b;
+  color: #32323d;
   height: 119px;
   display: flex;
   align-items: center;
